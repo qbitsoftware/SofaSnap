@@ -1,3 +1,4 @@
+import { Categories } from "./components/categories";
 import { LandingPage } from "./components/landing-page";
 
 export default async function Index() {
@@ -5,6 +6,7 @@ export default async function Index() {
     <>
       <main className="w-full">
         <LandingPage/>
+        <Categories/>
       </main>
     </>
   );

@@ -9,7 +9,7 @@ import { SearchButton } from './search-button'
 
 export const LandingPage = () => {
     return (
-        <div className='w-full md:min-h-[810px] max-w-[1440px] mx-auto'>
+        <div className='w-full md:min-h-[510px] lg:min-h-[810px] max-w-[1440px] mx-auto'>
             <div className='md:flex md:justify-between w-full'>
                 <div className="md:ml-16 md:flex md:flex-col md:items-start mt-[83px]">
                     <div className='md:relative md:h-[150px] lg:h-[250px]'>
@@ -19,8 +19,8 @@ export const LandingPage = () => {
                         Lisa oma tooted
                     </Button>
                 </div>
-                <div className='relative md:w-[58vw] md:h-[39vw]  md:flex justify-self-end max-w-[739px] max-h-[513px]'>
-                    <Image className='absolute w-full h-full' objectFit='contain' src={"/images/landing.svg"} alt="furniture" fill />
+                <div className='relative aspect-[1.47/1] md:w-[48vw] lg:w-[54vw] xl:w-[60vw] xl:mr-20 md:flex justify-self-end max-w-[821px]'>
+                    <Image  className='absolute w-full h-full' objectFit='contain' src={"/images/landing.png"} alt="furniture" fill priority />
                 </div>
             </div>
             <div className='md:w-[523px] md:ml-16 relative mt-[26px]'>

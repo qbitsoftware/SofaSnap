@@ -22,9 +22,11 @@ const NavBar = () => {
                 <NavLinks />
             </div>
             <div className="">
-                <Button className="rounded-full bg-accent text-bg-foreground lg:py-[11px] lg:px-[18px] xl:p-[11px] shadow-xl">
-                    Log in or Sign up
-                </Button>
+                <Link href={"/sign-in"}>
+                    <Button className="rounded-full bg-accent text-bg-foreground lg:py-[11px] lg:px-[18px] xl:p-[11px] shadow-xl">
+                        Log in or Sign up
+                    </Button>
+                </Link>
             </div>
         </div>
         <div className="xl:w-[132px]">

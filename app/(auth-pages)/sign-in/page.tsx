@@ -1,42 +1,76 @@
-// import { signInAction } from "@/app/actions";
+import { signInAction } from "@/app/actions";
+import { Auth } from "@/components/auth";
+import { FormMessage, Message } from "@/components/form-message";
+import { SubmitButton } from "@/components/submit-button";
+import { Button } from "@/components/ui/button";
 
-// import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
-// import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
+import Link from "next/link";
 
-// export default function Login({ searchParams }: { searchParams: Message }) {
-//   return (
-//     <form className="flex-1 flex flex-col min-w-64">
-      {/* <h1 className="text-2xl font-medium">Sign in</h1>
-      <p className="text-sm text-foreground">
-        Don't have an account?{" "}
-        <Link className="text-foreground font-medium underline" href="/sign-up">
-          Sign up
-        </Link>
-      </p>
-      <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
-        <Label htmlFor="email">Email</Label>
-        <Input name="email" placeholder="you@example.com" required />
-        <div className="flex justify-between items-center">
-          <Label htmlFor="password">Password</Label>
-          <Link
-            className="text-xs text-foreground underline"
-            href="/forgot-password"
-          >
-            Forgot Password?
+export default function Login({ searchParams }: { searchParams: Message }) {
+  return (
+    <div className="flex justify-center items-center w-full flex-col md:min-h-[80vh] pb-20">
+      <Image src={"/images/profile.svg"} width={185} height={185} alt="profile" priority/>
+      <Auth className="mt-10"/>
+      <div className="relative md:w-[406px]">
+        <Separator color="[#FBFBFB]" className="w-full mt-5"/>
+        <p className="text-[#CFCFCF] text-center font-semibold absolute top-2/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background w-8">OR</p>
+      </div>
+      <form className="flex flex-col min-w-64 md:w-[400px] mx-auto">
+        {/* <h1 className="text-2xl font-medium">Sign in</h1>
+        <p className="text-sm text-foreground">
+          Don't have an account?{" "}
+          <Link className="text-foreground font-medium underline" href="/sign-up">
+            Sign up
           </Link>
+        </p> */}
+        <div className="flex flex-col gap-4 [&>input]:mb-3 mt-8">
+          <div className="relative">
+            <Label className="absolute top-[-6px] bg-background left-3 py-[2px] px-[4px] rounded-xl" htmlFor="email">Email</Label>
+            <Input className="bg-accent-foreground h-12" name="email" placeholder="you@example.com" required />
+          </div>
+          <div className="relative">
+            <Label className="absolute top-[-6px] bg-background left-3 py-[2px] px-[4px] rounded-xl" htmlFor="password">Parool</Label>
+            <Input
+              className="h-12 bg-[#D9D9D980]"
+              type="password"
+              name="password"
+              placeholder="Your password"
+              required
+            />
+          </div>
+          <div className="flex flex-row-reverse justify-end gap-[10px] items-center font-medium mt-[2px]">
+            <Label
+              htmlFor="remember"
+            >
+              Remember me
+            </Label>
+            <Input
+              className="w-4 h-4"
+              type="checkbox"
+              name="remember"
+            />
+          </div>
+          <div className="flex justify-between items-center">
+            <Link
+              className="text-base text-accent-foreground font-normal underline"
+              href="/forgot-password"
+            >
+              Forgot Password?
+            </Link>
+          </div>
+          <SubmitButton className="bg-accent hover:bg-accent md:w-[376px] md:h-[65px] mx-auto mt-10" pendingText="Signing In..." formAction={signInAction}>
+            Logi sisse
+          </SubmitButton>
+          <Button className="md:w-[376px] md:h-[65px] bg-[#D9D9D9] mx-auto">
+            Registreeri
+          </Button>
+          <FormMessage message={searchParams} />
         </div>
-        <Input
-          type="password"
-          name="password"
-          placeholder="Your password"
-          required
-        />
-        <SubmitButton pendingText="Signing In..." formAction={signInAction}>
-          Sign in
-        </SubmitButton>
-        <FormMessage message={searchParams} />
-      </div> */}
-    {/* </form>
+      </form>
+    </div>
   );
-} */}
+} 
