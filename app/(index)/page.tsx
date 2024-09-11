@@ -1,5 +1,10 @@
 import { Categories } from "./components/categories";
+import { Cta } from "./components/cta-picture";
 import { LandingPage } from "./components/landing-page";
+import { PopularProducts } from "./components/popular-products";
+import RecentProducts from "./components/recent-products";
+import { ReviewCarousel } from "./components/review-carousel";
+import { Reviews } from "./components/reviews";
 
 export default async function Index() {
   return (
@@ -7,6 +12,11 @@ export default async function Index() {
       <main className="w-full">
         <LandingPage/>
         <Categories/>
+        <Reviews/>
+        <Cta/>
+        <RecentProducts/>
+        <></>
+        <PopularProducts/>
       </main>
     </>
   );

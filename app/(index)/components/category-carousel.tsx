@@ -11,18 +11,20 @@ import {
 import { Category } from "@/types"
 import Image from "next/image"
 import { capitalize } from "@/utils/utils"
+import { cn } from "@/lib/utils"
 
 interface CategoryCarouselProps {
     Categories: Category[] | null
+    className: string
 }
 
-export const CategoryCarousel:React.FC<CategoryCarouselProps> = ({Categories}) => {
+export const CategoryCarousel:React.FC<CategoryCarouselProps> = ({Categories, className}) => {
   return (
     <Carousel
       opts={{
         align: "start",
       }}
-      className="md:max-w-[856px] w-[85%] lg:max-w-[1267px] xl:max-w-[1440px]"
+      className={cn("md:max-w-[856px] w-[85%] lg:max-w-[1267px] xl:max-w-[1440px]", className)}
     >
       <CarouselContent className="items-center">
         {Categories && Categories.map((category) => (

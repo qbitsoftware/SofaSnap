@@ -19,8 +19,8 @@ export const LandingPage = () => {
                         Lisa oma tooted
                     </Button>
                 </div>
-                <div className='relative aspect-[1.47/1] md:w-[48vw] lg:w-[54vw] xl:w-[60vw] xl:mr-20 md:flex justify-self-end max-w-[821px]'>
-                    <Image  className='absolute w-full h-full' objectFit='contain' src={"/images/landing.png"} alt="furniture" fill priority />
+                <div className='relative aspect-[1.47/1] w-0 md:w-[48vw] lg:w-[54vw] xl:w-[60vw] xl:mr-20 md:flex justify-self-end max-w-[821px]'>
+                    <Image className='absolute w-full h-full' objectFit='contain' src={"/images/landing.png"} alt="furniture" fill priority />
                 </div>
             </div>
             <div className='md:w-[523px] md:ml-16 relative mt-[26px]'>

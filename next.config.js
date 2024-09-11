@@ -7,7 +7,8 @@ const nextConfig = {
                 hostname:"wzsyfikztrtmbdaebxtf.supabase.co",
                 // port:"",
                 // pathname:"",
-            }
+            },
+            
         ],
     }
 };
