@@ -23,12 +23,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
-      <body className="no-scrollbar">
-        <div className="px-[56px]">
+      <body className="no-scrollbar min-w-[300px]">
+        <div className="px-[24px] md:px-[56px]">
           <NavBar />
         </div>
         <div >
-        {children}
+          {children}
         </div>
         <div>
           <Footer />

@@ -29,7 +29,7 @@ const NavLinks = () => {
 
 
   return (
-    <div className="w-full flex lg:gap-[29px] xl:gap-[19px] items-center justify-center text-bg-foreground">
+    <div className="w-full flex lg:gap-[10px]  xl:gap-[19px] items-center justify-center text-bg-foreground">
       <div className='p-[10px]'>
         <Link href={"/meist"}>
           <h1>Meist</h1>

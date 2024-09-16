@@ -30,7 +30,7 @@ const Footer = () => {
                 url: "/vastutustundlik-rentija"
             }
         ]
-    } 
+    }
 
     const menu_2: FooterMenuProps = {
         title: "Tugi",
@@ -52,32 +52,37 @@ const Footer = () => {
                 url: "/hinnakiri"
             }
         ]
-    } 
+    }
 
-  return (
-    <footer className='w-full flex flex-col bg-secondary items-center'>
-        <div className='flex flex-col h-[360px] justify-between px-[85px] w-full text-white max-w-[1440px]'>
-            <div className='flex justify-between items-end pt-[64px]'>
-                <div className='flex gap-[181px]'>
-                    <div className='pt-[19px]'>
-                    <FooterMenu {...menu_1}/>
+    return (
+        <footer className='w-full flex flex-col bg-secondary items-center '>
+            <div className='flex flex-col items-center md:items-stretch  md:h-[360px] justify-center  md:justify-between md:px-[50px] lg:px-[85px] w-full text-white max-w-[1440px]'>
+                <div className='flex justify-center md:justify-between items-end pt-[64px]'>
+                    <div className='flex gap-[60px] flex-col text-center md:text-left md:flex-row lg:gap-[181px]'>
+                        <div className='lg:pt-[19px]'>
+                            <FooterMenu {...menu_1} />
+                        </div>
+                        <div className=''>
+                            <FooterMenu {...menu_2} />
+                        </div>
                     </div>
-                    <div className=''>
-                    <FooterMenu {...menu_2}/>
+                    <div className='hidden md:flex w-[160px] h-[72px] items-center justify-center'>
+                        <Link href={"/"}>
+                            <Image alt='footer-logo' width={110} height={72} src={"/branding/logo-white.png"} />
+                        </Link>
                     </div>
                 </div>
-                <div className='w-[160px] h-[72px] items-center justify-center flex'>
+                <div className='flex items-center justify-center md:hidden w-[160px] h-[72px] py-[75px]'>
                     <Link href={"/"}>
-                        <Image alt='footer-logo' width={110} height={72} src={"/branding/logo-white.png"}/>
+                        <Image alt='footer-logo' width={110} height={72} src={"/branding/logo-white.png"} />
                     </Link>
                 </div>
+                <div className='flex'>
+                    <FooterBottom />
+                </div>
             </div>
-            <div className='flex'>
-                <FooterBottom />
-            </div>
-        </div>
-    </footer>
-  )
+        </footer>
+    )
 }
 
 export { Footer }
