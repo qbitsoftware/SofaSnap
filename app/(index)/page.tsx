@@ -1,3 +1,5 @@
+import Image from "next/image";
+import { Benefits } from "./components/benefits";
 import { Categories } from "./components/categories";
 import { Cta } from "./components/cta-picture";
 import { LandingPage } from "./components/landing-page";
@@ -5,6 +7,7 @@ import { PopularProducts } from "./components/popular-products";
 import RecentProducts from "./components/recent-products";
 import { ReviewCarousel } from "./components/review-carousel";
 import { Reviews } from "./components/reviews";
+import { Globe } from "./components/globe";
 
 export default async function Index() {
   return (
@@ -15,8 +18,9 @@ export default async function Index() {
         <Reviews/>
         <Cta/>
         <RecentProducts/>
-        <></>
+        <Benefits/>
         <PopularProducts/>
+        <Globe/>
       </main>
     </>
   );

@@ -54,8 +54,9 @@ export const ReviewCarousel:React.FC<ReviewProps> = ({Reviews}) => {
                   <Image
                     src={review.image}
                     alt={review.name}
-                    width={100}
-                    height={100}
+                    width={0}
+                    height={0}
+                    style={{ width: '100px', height: 'auto' }}
                     className="rounded-full mb-4"
                   />
                   <h3 className="text-lg font-semibold mb-2">{review.name}</h3>

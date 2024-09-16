@@ -7,6 +7,8 @@ import Image from 'next/image'
 import React from 'react'
 import { SearchButton } from './search-button'
 
+// image 46kb
+
 export const LandingPage = () => {
     return (
         <div className='w-full md:min-h-[510px] lg:min-h-[810px] max-w-[1440px] mx-auto'>
@@ -20,7 +22,7 @@ export const LandingPage = () => {
                     </Button>
                 </div>
                 <div className='relative aspect-[1.47/1] w-0 md:w-[48vw] lg:w-[54vw] xl:w-[60vw] xl:mr-20 md:flex justify-self-end max-w-[821px]'>
-                    <Image className='absolute w-full h-full' objectFit='contain' src={"/images/landing.png"} alt="furniture" fill priority />
+                    <Image className='absolute w-full h-full' src={"/images/landing.png"} alt="furniture" fill sizes='(max-width: 1024) 48vw, (max-width: 1280px) 54vw, 60vw'  priority />
                 </div>
             </div>
             <div className='md:w-[523px] md:ml-16 relative mt-[26px]'>

@@ -27,10 +27,10 @@ export default function RootLayout({
         <div className="px-[56px]">
           <NavBar />
         </div>
-        <div className="">
+        <div >
         {children}
         </div>
-        <div className="">
+        <div>
           <Footer />
         </div>
       </body>

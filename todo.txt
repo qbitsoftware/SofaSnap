@@ -1,0 +1,10 @@
+Mina:
+1. Navbar responsiveks
+    1.1 Navbari muud vidinad ja asjad t66le redirectima
+2. Footer responsiveks
+    2.1 Muud lingid ja vidinad tootavaks / different language support
+
+
+Koos:
+1. Supabase schema
+2. 
