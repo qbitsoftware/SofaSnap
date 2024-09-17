@@ -7,4 +7,6 @@ Mina:
 
 Koos:
 1. Supabase schema
-2. 
+
+Kristo:
+1. Category image if missing site goes kaboom

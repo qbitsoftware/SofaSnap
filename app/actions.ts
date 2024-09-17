@@ -128,3 +128,9 @@ export const signOutAction = async () => {
   await supabase.auth.signOut();
   return redirect("/sign-in");
 };
+
+export const GetUserInfo = async () => {
+  const supabase = createClient();
+  const user = await supabase.auth.getUser()
+  return user
+}

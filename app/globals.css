@@ -72,6 +72,7 @@ body,
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -79,10 +80,21 @@ body,
 
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
-      display: none; 
+    display: none;
   }
+
   .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@layer components {
+  .shadow-inner-heavy {
+    box-shadow: inset 0px 4px 12px 4px rgb(0 0 0 / 0.25);
+  }
+
+  .shadow-inner-light {
+    box-shadow: inset 0px 4px 4px 0px rgb(0 0 0 / 0.25);
   }
 }

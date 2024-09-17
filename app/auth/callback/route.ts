@@ -9,11 +9,14 @@ export async function GET(request: Request) {
   const code = requestUrl.searchParams.get("code");
   const origin = requestUrl.origin;
   const redirectTo = requestUrl.searchParams.get("redirect_to")?.toString();
+  console.log("0")
 
   if (code) {
     const supabase = createClient();
     await supabase.auth.exchangeCodeForSession(code);
+    console.log("This is test")
   }
+  console.log("1")
 
   if (redirectTo) {
     return NextResponse.redirect(`${origin}${redirectTo}`);

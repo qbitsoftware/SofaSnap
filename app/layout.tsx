@@ -1,9 +1,8 @@
-import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { NavBar } from "@/components/navbar";
-import Link from "next/link";
 import { Footer } from "@/components/footer";
 import "./globals.css";
 import { inter } from "@/fonts";
+import { Toaster } from "@/components/ui/toaster";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -32,6 +31,9 @@ export default function RootLayout({
         </div>
         <div>
           <Footer />
+        </div>
+        <div>
+          <Toaster />
         </div>
       </body>
     </html>
