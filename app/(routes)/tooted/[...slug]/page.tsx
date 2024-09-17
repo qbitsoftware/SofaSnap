@@ -1,6 +1,9 @@
 import React from 'react'
 import ProductPage from './components/product-page'
 import { CategoryNavigation } from './components/category-navigation'
+import { ChevronLeft } from 'lucide-react'
+import { MapButton } from '@/components/map-button'
+import { capitalize } from '@/utils/utils'
 
 const CategoryPage = ({
   params
@@ -16,8 +19,13 @@ const CategoryPage = ({
     return (
       <div className='md:mx-auto md:px-[64px] max-w-[1440px]'>
         <CategoryNavigation categories={params.slug} />
-        <div className='mt-16'>
-          Teree
+        <div className='md:mt-16 md:flex md:items-center md:justify-between'>
+          <ChevronLeft color='#555555' size={44} />
+          <h2 className='md:text-5xl'>{capitalize(params.slug[params.slug.length - 1])}</h2>
+          <MapButton className=''/>
+        </div>
+        <div className='md:px-10'>
+
         </div>
         {/* {...params.slug} */}
       </div>

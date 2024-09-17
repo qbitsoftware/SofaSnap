@@ -1,3 +1,4 @@
+import { capitalize } from '@/utils/utils';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
@@ -18,9 +19,9 @@ export const CategoryNavigation: React.FC<CategoryNavigationProps> = ({ categori
           return (
             <div className='flex items-center' key={idx}>
               <Link className='font-sm text-md text-[#555555]' href={`/tooted${path}`} >
-                {category}
+                {capitalize(category)}
               </Link>
-              {idx < categories.length - 1 && <ChevronRight color='#555555'/>}
+              {<ChevronRight color='#555555'/>}
             </div>
           );
         })
