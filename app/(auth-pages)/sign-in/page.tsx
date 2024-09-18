@@ -1,4 +1,4 @@
-import { signInAction } from "@/app/actions";
+import { GetUserInfo, signInAction } from "@/app/actions";
 import { Auth } from "@/components/auth";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
@@ -9,14 +9,19 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default function Login({ searchParams }: { searchParams: Message }) {
+export default async function Login({ searchParams }: { searchParams: Message }) {
+  const user = await GetUserInfo()
+  if (user.data.user) {
+    redirect("/account")
+  }
   return (
     <div className="flex justify-center items-center w-full flex-col md:min-h-[80vh] pb-20">
-      <Image src={"/images/profile.svg"} width={185} height={185} alt="profile" priority/>
-      <Auth className="mt-10"/>
+      <Image src={"/images/profile.svg"} width={185} height={185} alt="profile" priority />
+      <Auth className="mt-10" />
       <div className="relative md:w-[406px]">
-        <Separator color="[#FBFBFB]" className="w-full mt-5"/>
+        <Separator color="[#FBFBFB]" className="w-full mt-5" />
         <p className="text-[#CFCFCF] text-center font-semibold absolute top-2/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background w-8">OR</p>
       </div>
       <form className="flex flex-col min-w-64 md:w-[400px] mx-auto">
@@ -65,9 +70,11 @@ export default function Login({ searchParams }: { searchParams: Message }) {
           <SubmitButton className="bg-accent hover:bg-accent md:w-[376px] md:h-[65px] mx-auto mt-10" pendingText="Signing In..." formAction={signInAction}>
             Logi sisse
           </SubmitButton>
-          <Button className="md:w-[376px] md:h-[65px] bg-[#D9D9D9] mx-auto">
-            Registreeri
-          </Button>
+          <Link href={"/register"} className="md:w-[376px] md:h-[65px] bg-[#D9D9D9] mx-auto rounded-lg">
+            <Button className="md:w-[376px] md:h-[65px] bg-[#D9D9D9] mx-auto">
+              Registreeri
+            </Button>
+          </Link>
           <FormMessage message={searchParams} />
         </div>
       </form>
