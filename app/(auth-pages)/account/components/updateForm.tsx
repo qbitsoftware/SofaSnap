@@ -3,7 +3,7 @@ import { useToast } from "@/components/hooks/use-toast"
 import { SubmitButton } from "@/components/submit-button"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { TAccountInformationSchema, updateInformation } from "@/lib/register-validation"
+import { TAccountInformationSchemaClient, updateInformationClient } from "@/lib/register-validation"
 import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Check } from "lucide-react"
@@ -14,14 +14,14 @@ import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
 import { Address, TAddressSearchSchema } from "@/lib/search-validation"
 import { debounce } from "lodash"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Separator } from "@radix-ui/react-separator"
+import { Suggestions } from "./suggestions"
 
-const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchema, email: string, id: string }) => {
+const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient, email: string, id: string }) => {
 
     const toast = useToast()
     const router = useRouter()
     const [suggestions, setSuggestions] = useState<Address[]>([]);
+    const [chosenSuggestion, setChosenSuggestion] = useState<Address>();
     const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
     const [inputValue, setInputValue] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -33,15 +33,17 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchema, emai
         reset,
         getValues,
         setError,
-    } = useForm<TAccountInformationSchema>({
-        resolver: zodResolver(updateInformation),
+    } = useForm<TAccountInformationSchemaClient>({
+        resolver: zodResolver(updateInformationClient),
         defaultValues: user,
     });
 
 
     useEffect(() => {
         function suggestion() {
-            setShowSuggestions(false);
+            setTimeout(() => {
+                setShowSuggestions(false);
+            }, 200)
         }
         document.addEventListener('mousedown', suggestion);
         return () => {
@@ -49,10 +51,16 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchema, emai
         };
     }, []);
 
-    const onSubmit = async (data: TAccountInformationSchema) => {
+    const onSubmit = async (data: TAccountInformationSchemaClient) => {
+        const formData = {
+            ...data,
+            address: chosenSuggestion,
+        };
+
+        console.log("FormData", formData)
         const response = await fetch("/api/account", {
             method: "POST",
-            body: JSON.stringify(data),
+            body: JSON.stringify(formData),
             headers: {
                 "Content-Type": "application/json",
             },
@@ -139,6 +147,7 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchema, emai
                 if (response.ok) {
                     setSuggestions(responseData.data);
                 }
+                setIsLoading(false)
             } catch (error) {
                 console.error('Error fetching suggestions:', error);
             }
@@ -149,14 +158,9 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchema, emai
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setInputValue(value);
+        setIsLoading(true)
         fetchSuggestions(value);
     };
-
-    // const handleSuggestionClick = (suggestion: string) => {
-    //     setInputValue(suggestion); // Set input value to the selected suggestion
-    //     setShowSuggestions(false); // Hide suggestions
-    //     // Optionally, you might also want to set this value in the form state
-    // };
 
 
     return (
@@ -167,10 +171,11 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchema, emai
                 </div>
                 <div className="flex flex-col gap-[11px] w-[424px] leading-4">
                     <Input disabled={true} placeholder={email} />
-                    <Input  {...register("first_name")} placeholder="Nimi" />
+                    <Input  {...register("first_name")} placeholder="Nimi" autoComplete="off" />
                     {errors.first_name && <p className="text-red-500">{errors.first_name.message}</p>}
-                    <Input {...register("last_name")} placeholder="Perekonnanimi" />
+                    <Input {...register("last_name")} placeholder="Perekonnanimi" autoComplete="off" />
                     {errors.last_name && <p className="text-red-500">{errors.last_name.message}</p>}
+
                     <div className="relative">
                         <Input
                             {...register("address")}
@@ -179,31 +184,14 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchema, emai
                             value={inputValue}
                             autoComplete="off"
                         />
-                        {isLoading ?
-                            <div className="space-y-2 bg-red-500">
-                                <Skeleton className="h-4 w-[250px]" />
-                                <Skeleton className="h-4 w-[200px]" />
-                            </div>
-                            :
-                            <div>
-                            </div>}
-                        {showSuggestions && suggestions.length > 0 && (
-                            <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-300 rounded-md shadow-xl z-50">
-                                {suggestions.map((suggestion, index) => (
-                                    <div key={index} className="hover:bg-gray-200 cursor-pointer w-full">
-                                        <div className="p-4">
-                                            <h1 className="font-bold pb-3">{suggestion.name}</h1>
-                                            <p className="text-slate-500">{suggestion.place_formatted}</p>
-                                        </div>
-                                        {index + 1 != suggestions.length ?
-                                            <Separator className="w-full h-[2px] bg-gray-300" />
-                                            :
-                                            ""
-                                        }
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                        <Suggestions
+                            isLoading={isLoading}
+                            suggestions={suggestions}
+                            showSuggestions={showSuggestions}
+                            inputValue={inputValue}
+                            setChosenSuggestion={setChosenSuggestion}
+                            setInputValue={setInputValue}
+                        />
                     </div>
                     {errors.address && <p className="text-red-500">{errors.address.message}</p>}
                     <Input {...register("phone")} placeholder="Tel nr" />

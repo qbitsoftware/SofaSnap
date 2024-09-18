@@ -1,11 +1,12 @@
 import { z } from 'zod';
+import { AddressSchema } from './search-validation';
 
 export type TSignUpSchema = z.infer<typeof registerValidator>
 
 export const registerValidator = z.object({
     first_name: z.string().min(1, 'Nimi on noutud'),
     last_name: z.string().min(1, 'Perekonnanimi on noutud'),
-    address: z.string().min(1, 'Aadress on noutud'),
+    address: z.string().min(1, 'Aadress ei saa puududa'),
     phone: z.string().min(1, 'Tel nr on noutud'),
     email: z.string().email('Ebakorrektne email address'),
     password: z.string().min(6, 'Parool peab olema vahemalt 6 tahemarki pikk'),
@@ -26,12 +27,21 @@ export const passwordChangeValidator = z.object({
     path: ['confirm_password'],
 })
 
-export type TAccountInformationSchema = z.infer<typeof updateInformation>
+export type TAccountInformationSchemaClient = z.infer<typeof updateInformationClient>
+export type TAccountInformationSchemaServer = z.infer<typeof updateInformationServer>
 
-export const updateInformation = z.object({
+export const updateInformationClient = z.object({
     first_name: z.string().min(1, 'Nimi ei saa puududa'),
     last_name: z.string().min(1, 'Perekonnanimi ei saa puududa'),
     address: z.string().min(1, 'Aadress ei saa puududa'),
+    phone: z.string().min(1, 'Tel nr ei saa puududa'),
+    agreement: z.boolean().refine(val => val, 'Vali peab olema taidetud'),
+})
+
+export const updateInformationServer = z.object({
+    first_name: z.string().min(1, 'Nimi ei saa puududa'),
+    last_name: z.string().min(1, 'Perekonnanimi ei saa puududa'),
+    address: AddressSchema,
     phone: z.string().min(1, 'Tel nr ei saa puududa'),
     agreement: z.boolean().refine(val => val, 'Vali peab olema taidetud'),
 })

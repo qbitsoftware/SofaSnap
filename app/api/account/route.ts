@@ -1,4 +1,4 @@
-import { passwordChangeValidator, updateInformation } from "@/lib/register-validation";
+import { passwordChangeValidator, updateInformationServer } from "@/lib/register-validation";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
 
-        const result = updateInformation.safeParse(body);
+        const result = updateInformationServer.safeParse(body);
         let zodErrors: Record<string, string> = {};
 
         if (!result.success) {
