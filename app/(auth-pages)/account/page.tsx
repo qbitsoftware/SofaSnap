@@ -21,7 +21,7 @@ const Page = async () => {
                 }
 
                 <div className="flex">
-                    <UpdateForm user={userInfo} email={userInfo.email} />
+                    <UpdateForm user={userInfo} email={userInfo.email} id={user.data.user.id}/>
                     <ChangePassword />
                 </div>
             </div>

@@ -25,13 +25,6 @@ export default async function Login({ searchParams }: { searchParams: Message })
         <p className="text-[#CFCFCF] text-center font-semibold absolute top-2/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background w-8">OR</p>
       </div>
       <form className="flex flex-col min-w-64 md:w-[400px] mx-auto">
-        {/* <h1 className="text-2xl font-medium">Sign in</h1>
-        <p className="text-sm text-foreground">
-          Don't have an account?{" "}
-          <Link className="text-foreground font-medium underline" href="/sign-up">
-            Sign up
-          </Link>
-        </p> */}
         <div className="flex flex-col gap-4 [&>input]:mb-3 mt-8">
           <div className="relative">
             <Label className="absolute top-[-6px] bg-background left-3 py-[2px] px-[4px] rounded-xl" htmlFor="email">Email</Label>
