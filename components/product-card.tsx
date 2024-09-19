@@ -1,9 +1,12 @@
+"use client"
+
 import React from 'react'
 import { Card, CardContent } from './ui/card'
 import Image from 'next/image'
 import { Star } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Product } from '@/utils/supabase/supabase.types'
+import { useRouter } from 'next/navigation'
 
 interface ProductCardProps {
     product: Product
@@ -11,8 +14,16 @@ interface ProductCardProps {
 }
 
 export const ProductCard:React.FC<ProductCardProps> = ({product, className}) => {
+    const router = useRouter();
+
+    const handleClick = () => {
+        // add logic here
+        // router.push(`/${product.id}`)
+    }
+
+
     return (
-            <Card className={cn("border-0 bg-transparent rounded-tr-[165px]", className)}>
+            <Card onClick={handleClick} className={cn("border-0 bg-transparent rounded-tr-[165px]", className)}>
                 <CardContent className="relative flex aspect-square w-full h-full items-center justify-center p-6">
                     <Image
                         className="absolute rounded-tr-[165px]"

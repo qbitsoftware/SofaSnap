@@ -4,7 +4,7 @@ import db from '@/utils/supabase/db'
 import { category, category_join, product } from '@/utils/supabase/schema'
 import { eq, and, sql } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
-import { Product } from './supabase.types'
+import { Product } from '../supabase.types'
 
 interface FetchProductsResponse {
     success: boolean;
