@@ -1,21 +1,22 @@
 import React from 'react'
 import { Card, CardContent } from './ui/card'
 import Image from 'next/image'
-import { Product } from '@/types'
 import { Star } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Product } from '@/utils/supabase/supabase.types'
 
 interface ProductCardProps {
     product: Product
+    className: string
 }
 
-export const ProductCard:React.FC<ProductCardProps> = ({product}) => {
+export const ProductCard:React.FC<ProductCardProps> = ({product, className}) => {
     return (
-        <div>
-            <Card className="border-0 bg-transparent rounded-tr-[165px] ">
-                <CardContent className="relative flex xl:w-[312px] md:w-[265px] md:h-[410px] aspect-square items-center justify-center p-6">
+            <Card className={cn("border-0 bg-transparent rounded-tr-[165px]", className)}>
+                <CardContent className="relative flex aspect-square w-full h-full items-center justify-center p-6">
                     <Image
                         className="absolute rounded-tr-[165px]"
-                        src={product.image} alt={product.name}
+                        src={product.preview_image} alt={product.name}
                         fill
                         sizes="(max-width:1024px) 33vw, (max-width:2048px) 25vw"
                         style={{ objectFit: "cover" }}
@@ -32,6 +33,5 @@ export const ProductCard:React.FC<ProductCardProps> = ({product}) => {
                     </div>
                 </CardContent>
             </Card>
-        </div>
     )
 }

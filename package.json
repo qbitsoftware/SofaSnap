@@ -1,9 +1,16 @@
 {
   "private": true,
   "scripts": {
+    "lint": "next lint",
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "push": "drizzle-kit push:pg",
+    "pull": "drizzle-kit introspect:pg ",
+    "generate": "drizzle-kit generate",
+    "drop": "drizzle-kit drop",
+    "check": "drizzle-kit check:pg",
+    "up": "drizzle-kit up:pg"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -21,12 +28,15 @@
     "autoprefixer": "10.4.17",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.33.0",
     "embla-carousel-react": "^8.2.1",
     "geist": "^1.2.1",
     "lodash": "^4.17.21",
     "lucide-react": "^0.436.0",
     "next": "latest",
     "next-themes": "^0.3.0",
+    "postgres": "^3.4.4",
     "prettier": "^3.3.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -38,6 +48,9 @@
     "@types/node": "20.10.6",
     "@types/react": "18.2.46",
     "@types/react-dom": "18.2.18",
+    "drizzle-kit": "^0.24.2",
+    "eslint": "8.57.1",
+    "eslint-config-next": "14.2.12",
     "postcss": "8.4.33",
     "tailwind-merge": "^2.5.2",
     "tailwindcss": "3.4.1",
