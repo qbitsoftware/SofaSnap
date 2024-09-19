@@ -11,10 +11,22 @@ import { Check } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { ClipLoader } from "react-spinners"
 import { Contract } from "./contract"
+import { Suggestions } from "../../account/components/suggestions"
+import { Address, TAddressSearchSchema } from "@/lib/search-validation"
+import { useCallback, useEffect, useState } from "react"
+import { debounce } from "lodash"
+import { useRouter } from "next/navigation"
 
 const RegisterForm = () => {
 
+    const router = useRouter()
     const toast = useToast()
+    //search bar stuff
+    const [suggestions, setSuggestions] = useState<Address[]>([]);
+    const [chosenSuggestion, setChosenSuggestion] = useState<Address>();
+    const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
+    const [inputValue, setInputValue] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const {
         register,
@@ -29,9 +41,16 @@ const RegisterForm = () => {
 
 
     const onSubmit = async (data: TSignUpSchema) => {
+        const formData = {
+            ...data,
+            address: chosenSuggestion,
+        };
+
+        console.log(chosenSuggestion)
+
         const response = await fetch("/api/register", {
             method: "POST",
-            body: JSON.stringify(data),
+            body: JSON.stringify(formData),
             headers: {
                 "Content-Type": "application/json",
             },
@@ -39,7 +58,16 @@ const RegisterForm = () => {
 
         const responseData = await response.json()
 
+        console.log("Response", response)
+
         if (!response.ok) {
+            const { code } = responseData
+            if (code == "user_already_exists") {
+                toast.toast({
+                    title: "User with this email already exists",
+                })
+                return
+            }
             toast.toast({
                 title: "Register failed, contact administrator",
             })
@@ -107,8 +135,67 @@ const RegisterForm = () => {
             toast.toast({
                 title: "Account created successfully",
             })
+            router.push("/")
+            router.refresh()
         }
     }
+
+    useEffect(() => {
+        function suggestion() {
+            setTimeout(() => {
+                setShowSuggestions(false);
+            }, 200)
+        }
+        document.addEventListener('mousedown', suggestion);
+        return () => {
+            document.removeEventListener('mousedown', suggestion);
+        };
+    }, []);
+
+    const fetchSuggestions = useCallback(
+        debounce(async (value: string) => {
+            if (value.length === 0) {
+                setShowSuggestions(false);
+                return;
+            }
+
+            setShowSuggestions(true);
+
+            const data: TAddressSearchSchema = {
+                input: value,
+                //just take email instead of userid becuase user is not logged in and does not have id at that moment
+                user_id: getValues("first_name"),
+            };
+
+            try {
+                const response = await fetch("/api/suggestion", {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                const responseData = await response.json();
+
+                if (response.ok) {
+                    setSuggestions(responseData.data);
+                }
+                setIsLoading(false)
+            } catch (error) {
+                console.error('Error fetching suggestions:', error);
+            }
+        }, 300),
+        []
+    );
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        setInputValue(value);
+        setIsLoading(true)
+        fetchSuggestions(value);
+    };
+
 
     return (
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
@@ -121,7 +208,23 @@ const RegisterForm = () => {
                     {errors.first_name && <p className="text-red-500">{errors.first_name.message}</p>}
                     <Input {...register("last_name")} placeholder="Perekonnanimi" />
                     {errors.last_name && <p className="text-red-500">{errors.last_name.message}</p>}
-                    <Input {...register("address")} placeholder="Aadress" />
+                    <div className="relative">
+                        <Input
+                            {...register("address")}
+                            placeholder="Aadress"
+                            onChange={handleInputChange}
+                            value={inputValue}
+                            autoComplete="off"
+                        />
+                        <Suggestions
+                            isLoading={isLoading}
+                            suggestions={suggestions}
+                            showSuggestions={showSuggestions}
+                            inputValue={inputValue}
+                            setChosenSuggestion={setChosenSuggestion}
+                            setInputValue={setInputValue}
+                        />
+                    </div>
                     {errors.address && <p className="text-red-500">{errors.address.message}</p>}
                     <Input {...register("phone")} placeholder="Tel nr" />
                     {errors.phone && <p className="text-red-500">{errors.phone.message}</p>}

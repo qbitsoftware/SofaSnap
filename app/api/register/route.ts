@@ -1,4 +1,4 @@
-import { registerValidator } from "@/lib/register-validation";
+import { registerValidatorServer } from "@/lib/register-validation";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
@@ -8,19 +8,24 @@ export async function POST(request: Request) {
         const body = await request.json();
         const origin = headers().get("origin");
 
-        const result = registerValidator.safeParse(body);
+        console.log("b ", body)
+
+        const result = registerValidatorServer.safeParse(body);
         let zodErrors: Record<string, string> = {};
+
 
         if (result.error) {
             result.error.issues.forEach((issue) => {
                 zodErrors[issue.path[0]] = issue.message;
             });
+            console.log("this is error", zodErrors)
             return NextResponse.json({ errors: zodErrors }, { status: 400 });
         }
 
         if (result.data) {
             const supabase = createClient();
             //register logic
+            console.log("This is the address", result.data.address)
             const { error } = await supabase.auth.signUp({
                 email: result.data.email,
                 password: result.data.password,
@@ -30,7 +35,7 @@ export async function POST(request: Request) {
                     data: {
                         first_name: result.data.first_name,
                         last_name: result.data.last_name,
-                        address: result.data.address,
+                        // address: result.data.address,
                         phone: result.data.phone,
                         agreement: result.data.agreement,
 
@@ -39,9 +44,11 @@ export async function POST(request: Request) {
             });
 
             if (error) {
-                return NextResponse.json({ error: 'Unexpected error occurred' + error }, { status: 500 });
+                console.log("Error", error)
+                return NextResponse.json({ error: 'Unexpected error occurred' + error, code: error.code }, { status: 500 });
             } else {
-                return NextResponse.redirect("/")
+                console.log("koik lkas hasti")
+                return NextResponse.json({ success: true }, { status: 200 })
             }
         }
 
