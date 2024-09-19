@@ -21,5 +21,5 @@ export type Product = {
     description: string
     price: number
     rating: number
-    image: string
+    preview_image: string
 }
