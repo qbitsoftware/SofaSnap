@@ -9,7 +9,9 @@ import { capitalize } from '@/utils/utils'
 import { Filter } from './components/filter'
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import { Products } from './components/products'
-import fetchProducts from '@/utils/supabase/queries'
+import fetchProducts from '@/utils/supabase/queries/products'
+import { CheckCategories } from '@/utils/supabase/queries/categories'
+import { redirect, useRouter } from 'next/navigation'
 
 const CategoryPage = async ({
   params,
@@ -33,15 +35,18 @@ const CategoryPage = async ({
     )
   } else {
 
+    const {isValid, error} = await CheckCategories(categories)
+    console.log(isValid, error)
+    if (error && !isValid) {
+      redirect('/404')
+    } 
+    
     const {success, products, totalPages, message} = await fetchProducts(categories, page)
 
     if (!success) {
       return
      // todo: motle mingi error lahendus valja 
     }
-
-    console.log("DATAAAA",)
-    console.log("Success", success)
 
     return (
       <div className='md:mx-auto md:px-[64px] max-w-[1440px]'>
