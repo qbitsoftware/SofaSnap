@@ -15,6 +15,7 @@ const Suggestions = ({ isLoading, inputValue, showSuggestions, suggestions, setC
 
     function saveState(suggestion: Address) {
         setChosenSuggestion(suggestion)
+        console.log(suggestion)
         setInputValue(suggestion.full_address || suggestion.name || "")
     }
     return (

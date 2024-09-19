@@ -46,7 +46,6 @@ const RegisterForm = () => {
             address: chosenSuggestion,
         };
 
-        console.log(chosenSuggestion)
 
         const response = await fetch("/api/register", {
             method: "POST",
@@ -57,8 +56,6 @@ const RegisterForm = () => {
         })
 
         const responseData = await response.json()
-
-        console.log("Response", response)
 
         if (!response.ok) {
             const { code } = responseData
@@ -164,7 +161,7 @@ const RegisterForm = () => {
             const data: TAddressSearchSchema = {
                 input: value,
                 //just take email instead of userid becuase user is not logged in and does not have id at that moment
-                user_id: getValues("first_name"),
+                user_id: "somerandomidchangelater",
             };
 
             try {
@@ -204,9 +201,9 @@ const RegisterForm = () => {
                     <h2 className="font-medium text-lg">Isikuandmed</h2>
                 </div>
                 <div className="flex flex-col gap-[11px] pl-[75px] w-[424px] leading-4">
-                    <Input  {...register("first_name")} placeholder="Nimi" />
+                    <Input  {...register("first_name")} placeholder="Nimi" autoComplete="off" />
                     {errors.first_name && <p className="text-red-500">{errors.first_name.message}</p>}
-                    <Input {...register("last_name")} placeholder="Perekonnanimi" />
+                    <Input {...register("last_name")} placeholder="Perekonnanimi" autoComplete="off" />
                     {errors.last_name && <p className="text-red-500">{errors.last_name.message}</p>}
                     <div className="relative">
                         <Input
@@ -224,9 +221,10 @@ const RegisterForm = () => {
                             setChosenSuggestion={setChosenSuggestion}
                             setInputValue={setInputValue}
                         />
+                        <p className="italic text-sm pl-1 pt-1 text-slate-700">Naide: Tamme 5</p>
                     </div>
                     {errors.address && <p className="text-red-500">{errors.address.message}</p>}
-                    <Input {...register("phone")} placeholder="Tel nr" />
+                    <Input {...register("phone")} placeholder="Tel nr" autoComplete="off" />
                     {errors.phone && <p className="text-red-500">{errors.phone.message}</p>}
                 </div>
             </div>
@@ -235,11 +233,11 @@ const RegisterForm = () => {
                     <h2 className="font-medium text-lg">Kasutaja info</h2>
                 </div>
                 <div className="flex flex-col gap-[11px] pl-[75px] leading-4 w-[424px]">
-                    <Input {...register("email")} placeholder="Meiliaadress" />
+                    <Input {...register("email")} placeholder="Meiliaadress" autoComplete="off" />
                     {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-                    <Input {...register("password")} placeholder="Parool" type="password" />
+                    <Input {...register("password")} placeholder="Parool" type="password" autoComplete="off" />
                     {errors.password && <p className="text-red-500">{errors.password.message}</p>}
-                    <Input {...register("confirm_password")} placeholder="Parool veel kord" type="password" />
+                    <Input {...register("confirm_password")} placeholder="Parool veel kord" type="password" autoComplete="off" />
                     {errors.confirm_password && <p className="text-red-500">{errors.confirm_password.message}</p>}
                 </div>
             </div>

@@ -40,9 +40,6 @@ const CategoryPage = async ({
      // todo: motle mingi error lahendus valja 
     }
 
-    console.log("DATAAAA",)
-    console.log("Success", success)
-
     return (
       <div className='md:mx-auto md:px-[64px] max-w-[1440px]'>
         <CategoryNavigation categories={params.slug} />

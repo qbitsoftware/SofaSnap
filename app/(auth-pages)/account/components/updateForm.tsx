@@ -57,7 +57,6 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
             address: chosenSuggestion,
         };
 
-        console.log("FormData", formData)
         const response = await fetch("/api/account", {
             method: "POST",
             body: JSON.stringify(formData),
@@ -192,6 +191,7 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
                             setChosenSuggestion={setChosenSuggestion}
                             setInputValue={setInputValue}
                         />
+                    <p className="italic text-sm pl-1 pt-1 text-slate-700">Naide: Tamme 5</p>
                     </div>
                     {errors.address && <p className="text-red-500">{errors.address.message}</p>}
                     <Input {...register("phone")} placeholder="Tel nr" />

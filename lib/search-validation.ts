@@ -7,40 +7,6 @@ export const addressSearch = z.object({
     user_id: z.string().min(1, ''),
 })
 
-const AddressContextSchema = z.object({
-    country: z.object({
-        name: z.string(),
-        code: z.string(),
-    }),
-    region: z.object({
-        name: z.string(),
-        code: z.string(),
-    }),
-    postcode: z.object({
-        name: z.string(),
-    }),
-    place: z.object({
-        name: z.string(),
-    }),
-    address: z.object({
-        name: z.string(),
-    }),
-});
-
-// export const AddressSchema = z.object({
-//     address: z.string(),
-//     context: AddressContextSchema,
-//     feature_type: z.string(),
-//     full_address: z.string(),
-//     language: z.string(),
-//     maki: z.string(),
-//     mapbox_id: z.string(),
-//     metadata: z.record(z.unknown()),
-//     name: z.string(),
-//     place_formatted: z.string(),
-// });
-
-
 export const AddressSchema = z.object({
     name: z.string().min(1, 'Address name is required'),
     mapbox_id: z.string().optional(),

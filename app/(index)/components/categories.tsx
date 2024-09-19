@@ -13,8 +13,6 @@ export const Categories = async () => {
   const { data: categories, error } = await supabase.from('categories').select('*');
 
   if (!categories || error) {
-    console.log('Categories:', categories);
-    console.log('Error:', error);
     return (
       <div className='relative md:h-[645px] bg-card w-full flex md:flex-col items-center justify-center'>
         <h1>
@@ -32,7 +30,7 @@ export const Categories = async () => {
         <MapButton className='md:mr-16 lg:mr-[4%] 2xl:mr-0 gap-4' />
       </div>
       <h2 className='md:text-5xl font-medium max-w-[1360px] mx-auto w-[80%] xl:w-[83%] 2xl:w-[80%] text-left'>Kategooriad</h2>
-      <CategoryCarousel Categories={categories} className='py-12'/>
+      <CategoryCarousel Categories={categories} className='py-12' />
     </div>
   )
 }

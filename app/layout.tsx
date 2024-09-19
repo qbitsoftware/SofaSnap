@@ -3,7 +3,6 @@ import { Footer } from "@/components/footer";
 import "./globals.css";
 import { inter } from "@/fonts";
 import { Toaster } from "@/components/ui/toaster";
-import db from "@/utils/supabase/db";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -21,7 +20,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  console.log(db)
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
       <body className="no-scrollbar min-w-[300px]">

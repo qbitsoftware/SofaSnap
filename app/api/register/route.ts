@@ -8,7 +8,6 @@ export async function POST(request: Request) {
         const body = await request.json();
         const origin = headers().get("origin");
 
-        console.log("b ", body)
 
         const result = registerValidatorServer.safeParse(body);
         let zodErrors: Record<string, string> = {};
@@ -25,7 +24,6 @@ export async function POST(request: Request) {
         if (result.data) {
             const supabase = createClient();
             //register logic
-            console.log("This is the address", result.data.address)
             const { error } = await supabase.auth.signUp({
                 email: result.data.email,
                 password: result.data.password,

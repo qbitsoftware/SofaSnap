@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 //use user_id as session token
-export const fetchSuggestions = async (search_input: string, session_token: string, for_map: boolean = false) => {
+export const fetchSuggestions = async (search_input: string, session_token: string) => {
   const suggestUrl = "https://api.mapbox.com/search/searchbox/v1/suggest?"
 
   const params = {
@@ -16,7 +16,7 @@ export const fetchSuggestions = async (search_input: string, session_token: stri
     limit: "3",
     country: "EE",
     language: "et",
-    types: for_map ? "place,locality,address,postcode,neighborhood" : "address"
+    types: "address",
   };
 
   const queryParams = new URLSearchParams(params);
