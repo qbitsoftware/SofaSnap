@@ -1,5 +1,5 @@
 import { ProductCard } from '@/components/product-card'
-import { Product } from '@/types'
+import { Product } from '@/utils/supabase/supabase.types'
 import React from 'react'
 
 interface ProductsProps {

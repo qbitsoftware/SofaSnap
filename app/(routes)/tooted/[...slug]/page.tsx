@@ -6,10 +6,10 @@ import { CategoryNavigation } from './components/category-navigation'
 import { ChevronLeft } from 'lucide-react'
 import { MapButton } from '@/components/map-button'
 import { capitalize } from '@/utils/utils'
-import { Products } from './components/products'
 import { Filter } from './components/filter'
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
-import { createClient } from '@/utils/supabase/server'
+import { Products } from './components/products'
+import fetchProducts from '@/utils/supabase/queries'
 
 const CategoryPage = async ({
   params,
@@ -19,39 +19,29 @@ const CategoryPage = async ({
   searchParams: { [key: string]: string | string[] | undefined }
 }) => {
 
-  console.log(searchParams)
+  let page = 1
+  if (searchParams && searchParams.page) {
+    page = Number(searchParams.page)
+  }
 
-  if (Number(params.slug[params.slug.length - 1]) && params.slug.length > 1) {
+  const categories = params.slug.slice(0, params.slug.length);
+  const isProductPage = Number(params.slug[params.slug.length - 1]);
+
+  if (isProductPage && params.slug.length > 1) {
     return (
       <ProductPage product_id={Number(params.slug[params.slug.length - 1])} />
     )
   } else {
 
-    const supabase = createClient()
+    const {success, products, totalPages, message} = await fetchProducts(categories, page)
 
-    let page = 1
-
-    if (searchParams && searchParams.page) {
-      page = Number(searchParams.page)
+    if (!success) {
+      return
+     // todo: motle mingi error lahendus valja 
     }
 
-    const { data, error } = await supabase
-    .from('category_join')
-    .select(`product_id, category_name,
-      products(id), categories(name, parent)
-    `)
-    .range(12 * page - (page == 1 ? 11 : 12), 12 * page)
-
-
-
-    console.log(data)
-
-    const { count } = await supabase
-      .from("products")
-      .select('*', { count: 'exact', head: true })
-
-    const totalPages = count ? Math.ceil(count / 12) : 1;
-
+    console.log("DATAAAA",)
+    console.log("Success", success)
 
     return (
       <div className='md:mx-auto md:px-[64px] max-w-[1440px]'>
@@ -101,7 +91,5 @@ const CategoryPage = async ({
       </div>
     )
   }
-
 }
-
 export default CategoryPage

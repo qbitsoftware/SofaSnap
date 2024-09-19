@@ -1,9 +1,9 @@
 import React from 'react'
 import { Card, CardContent } from './ui/card'
 import Image from 'next/image'
-import { Product } from '@/types'
 import { Star } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Product } from '@/utils/supabase/supabase.types'
 
 interface ProductCardProps {
     product: Product
