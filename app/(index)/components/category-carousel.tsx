@@ -10,11 +10,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { Category } from "@/types"
 import Image from "next/image"
 import { capitalize } from "@/utils/utils"
 import { cn } from "@/lib/utils"
 import { useRouter } from "next/navigation"
+import { Category } from "@/utils/supabase/supabase.types"
 
 interface CategoryCarouselProps {
   Categories: Category[] | null
@@ -24,11 +24,6 @@ interface CategoryCarouselProps {
 export const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ Categories, className }) => {
 
   const router = useRouter()
-
-
-  // const handleClick = () => {
-
-  // }
 
   return (
     <Carousel

@@ -203,7 +203,7 @@ const RegisterForm = () => {
                     <h2 className="font-medium text-lg">Isikuandmed</h2>
                 </div>
                 <div className="flex flex-col gap-[11px] pl-[75px] w-[424px] leading-4">
-                    <Input  {...register("first_name")} placeholder="Nimi" autoComplete="off" />
+                    <Input {...register("first_name")} placeholder="Nimi" autoComplete="off" />
                     {errors.first_name && <p className="text-red-500">{errors.first_name.message}</p>}
                     <Input {...register("last_name")} placeholder="Perekonnanimi" autoComplete="off" />
                     {errors.last_name && <p className="text-red-500">{errors.last_name.message}</p>}
