@@ -41,5 +41,11 @@ export const AddressSchema = z.object({
     metadata: z.object({}).optional(),
 });
 
-
 export type Address = z.infer<typeof AddressSchema>;
+
+export const coordinateSearch = z.object({
+    mapbox_id: z.string().min(3, ''),
+    user_id: z.string().min(1, ''),
+})
+export type Coordinates = z.infer<typeof coordinateSearch>;
+

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { AddressSchema } from './search-validation';
+import { FeatureSchema } from '@/types';
 
 export type TSignUpSchema = z.infer<typeof registerValidator>
 export type TSignUpSchemaServer = z.infer<typeof registerValidatorServer>
@@ -21,7 +22,7 @@ export const registerValidator = z.object({
 export const registerValidatorServer = z.object({
     first_name: z.string().min(1, 'Nimi on noutud'),
     last_name: z.string().min(1, 'Perekonnanimi on noutud'),
-    address: AddressSchema.optional(),
+    address: FeatureSchema,
     phone: z.string().min(1, 'Tel nr on noutud'),
     email: z.string().email('Ebakorrektne email address'),
     password: z.string().min(6, 'Parool peab olema vahemalt 6 tahemarki pikk'),
@@ -56,7 +57,7 @@ export const updateInformationClient = z.object({
 export const updateInformationServer = z.object({
     first_name: z.string().min(1, 'Nimi ei saa puududa'),
     last_name: z.string().min(1, 'Perekonnanimi ei saa puududa'),
-    address: AddressSchema,
+    address: FeatureSchema,
     phone: z.string().min(1, 'Tel nr ei saa puududa'),
     agreement: z.boolean().refine(val => val, 'Vali peab olema taidetud'),
 })

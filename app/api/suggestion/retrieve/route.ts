@@ -1,12 +1,12 @@
-import { Address, addressSearch } from "@/lib/search-validation";
-import { fetchSuggestions } from "@/lib/utils";
+import { Address, coordinateSearch } from "@/lib/search-validation";
+import { fetchCoordinates } from "@/lib/utils";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
     try {
         const body = await request.json();
 
-        const result = addressSearch.safeParse(body);
+        const result = coordinateSearch.safeParse(body);
         let zodErrors: Record<string, string> = {};
 
         if (result.error) {
@@ -16,12 +16,12 @@ export async function POST(request: Request) {
             return NextResponse.json({ errors: zodErrors }, { status: 400 });
         }
 
-        let fetchedSuggestions: Address[] = []
+        let fetchedCoordinates;
         if (result.data) {
-            fetchedSuggestions = await fetchSuggestions(result.data.input, result.data.user_id);
+            fetchedCoordinates = await fetchCoordinates(result.data.mapbox_id, result.data.user_id);
         }
 
-        return NextResponse.json({ data: fetchedSuggestions }, { status: 200 });
+        return NextResponse.json({ data: fetchedCoordinates }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: 'Unexpected error occurred' }, { status: 500 });
     }

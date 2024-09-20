@@ -1,21 +1,39 @@
 "use client"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Address } from "@/lib/search-validation"
+import { Feature } from "@/types"
 import { Separator } from "@radix-ui/react-separator"
 import React, { Dispatch, SetStateAction } from "react"
 
 
-const Suggestions = ({ isLoading, inputValue, showSuggestions, suggestions, setChosenSuggestion, setInputValue }:
+const Suggestions = ({ isLoading, inputValue, showSuggestions, suggestions, setChosenSuggestion, setInputValue, id }:
     {
-        isLoading: boolean, inputValue: string, showSuggestions: boolean, suggestions: Address[], setChosenSuggestion: Dispatch<SetStateAction<Address | undefined>>, setInputValue: Dispatch<SetStateAction<string>>
+        isLoading: boolean, inputValue: string, showSuggestions: boolean, suggestions: Address[], setChosenSuggestion: Dispatch<SetStateAction<Feature | undefined>>, setInputValue: Dispatch<SetStateAction<string>>, id: string
 
     }) => {
     //how many suggestions we want
     const test = [1, 2, 3]
 
-    function saveState(suggestion: Address) {
-        setChosenSuggestion(suggestion)
-        console.log(suggestion)
+    async function saveState(suggestion: Address) {
+        const data = {
+            mapbox_id: suggestion.mapbox_id!,
+            user_id: id,
+        }
+        try {
+            const response = await fetch("/api/suggestion/retrieve", {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            const responseData = await response.json()
+            const address = responseData.data[0] as Feature
+            setChosenSuggestion(address)
+        } catch (error) {
+            console.error('Error fetching coordinates:', error);
+        }
         setInputValue(suggestion.full_address || suggestion.name || "")
     }
     return (

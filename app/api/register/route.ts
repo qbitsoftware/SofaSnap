@@ -17,7 +17,6 @@ export async function POST(request: Request) {
             result.error.issues.forEach((issue) => {
                 zodErrors[issue.path[0]] = issue.message;
             });
-            console.log("this is error", zodErrors)
             return NextResponse.json({ errors: zodErrors }, { status: 400 });
         }
 
@@ -33,7 +32,7 @@ export async function POST(request: Request) {
                     data: {
                         first_name: result.data.first_name,
                         last_name: result.data.last_name,
-                        // address: result.data.address,
+                        address: result.data.address.properties.full_address,
                         phone: result.data.phone,
                         agreement: result.data.agreement,
 

@@ -15,13 +15,14 @@ import { useCallback, useEffect, useState } from "react"
 import { Address, TAddressSearchSchema } from "@/lib/search-validation"
 import { debounce } from "lodash"
 import { Suggestions } from "./suggestions"
+import { Feature } from "@/types"
 
 const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient, email: string, id: string }) => {
 
     const toast = useToast()
     const router = useRouter()
     const [suggestions, setSuggestions] = useState<Address[]>([]);
-    const [chosenSuggestion, setChosenSuggestion] = useState<Address>();
+    const [chosenSuggestion, setChosenSuggestion] = useState<Feature>();
     const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
     const [inputValue, setInputValue] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -52,6 +53,7 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
     }, []);
 
     const onSubmit = async (data: TAccountInformationSchemaClient) => {
+        console.log(chosenSuggestion)
         const formData = {
             ...data,
             address: chosenSuggestion,
@@ -190,8 +192,9 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
                             inputValue={inputValue}
                             setChosenSuggestion={setChosenSuggestion}
                             setInputValue={setInputValue}
+                            id={id}
                         />
-                    <p className="italic text-sm pl-1 pt-1 text-slate-700">Naide: Tamme 5</p>
+                        <p className="italic text-sm pl-1 pt-1 text-slate-700">Naide: Tamme 5</p>
                     </div>
                     {errors.address && <p className="text-red-500">{errors.address.message}</p>}
                     <Input {...register("phone")} placeholder="Tel nr" />

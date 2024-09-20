@@ -16,6 +16,7 @@ import { Address, TAddressSearchSchema } from "@/lib/search-validation"
 import { useCallback, useEffect, useState } from "react"
 import { debounce } from "lodash"
 import { useRouter } from "next/navigation"
+import { Feature } from "@/types"
 
 const RegisterForm = () => {
 
@@ -23,10 +24,11 @@ const RegisterForm = () => {
     const toast = useToast()
     //search bar stuff
     const [suggestions, setSuggestions] = useState<Address[]>([]);
-    const [chosenSuggestion, setChosenSuggestion] = useState<Address>();
+    const [chosenSuggestion, setChosenSuggestion] = useState<Feature>();
     const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
     const [inputValue, setInputValue] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const id = "somerandomuseridchangelater"
 
     const {
         register,
@@ -161,7 +163,7 @@ const RegisterForm = () => {
             const data: TAddressSearchSchema = {
                 input: value,
                 //just take email instead of userid becuase user is not logged in and does not have id at that moment
-                user_id: "somerandomidchangelater",
+                user_id: id,
             };
 
             try {
@@ -220,6 +222,7 @@ const RegisterForm = () => {
                             inputValue={inputValue}
                             setChosenSuggestion={setChosenSuggestion}
                             setInputValue={setInputValue}
+                            id={id}
                         />
                         <p className="italic text-sm pl-1 pt-1 text-slate-700">Naide: Tamme 5</p>
                     </div>

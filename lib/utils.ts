@@ -1,3 +1,4 @@
+import { Feature } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -33,6 +34,34 @@ export const fetchSuggestions = async (search_input: string, session_token: stri
     const suggestions = json.suggestions
     if (!suggestions) return []
     return suggestions
+
+  } catch (err) {
+    console.error(err)
+    return []
+  }
+}
+
+export const fetchCoordinates = async (mapbox_id: string, session_token: string) => {
+  const coordinateUrl = `https://api.mapbox.com/search/searchbox/v1/retrieve/${mapbox_id}?`
+
+  const params = {
+    access_token: process.env.MAPBOX_KEY!,
+    session_token,
+  }
+
+
+  const queryParams = new URLSearchParams(params);
+
+  try {
+    const response = await fetch(coordinateUrl + queryParams, {
+      method: "GET"
+    })
+
+    const json = await response.json()
+    if (response.ok !== true || response.status !== 200) return []
+    const feature = json.features as Feature
+    if (!feature) return []
+    return feature
 
   } catch (err) {
     console.error(err)
