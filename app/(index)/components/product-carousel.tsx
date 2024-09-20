@@ -8,12 +8,9 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import Image from "next/image"
-import { capitalize } from "@/utils/utils"
 import { cn } from "@/lib/utils"
-import { Product } from "@/types"
-import { Star } from "lucide-react"
 import { ProductCard } from "@/components/product-card"
+import { Product } from "@/utils/supabase/supabase.types"
 
 interface ProductCarouselProps {
   products: Product[] | null
@@ -32,7 +29,7 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, clas
         {products && products.map((product, idx) => (
           <CarouselItem key={idx} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/3 ">
             <div className="p-1 flex justify-center">
-             <ProductCard product={product} className="xl:w-[312px] md:w-[265px] md:h-[410px]"/>
+             <ProductCard product={product} className="xl:w-[312px] md:w-[265px] md:h-[410px] drop-shadow-sm"/>
             </div>
           </CarouselItem>
         ))}

@@ -6,7 +6,7 @@ const NavIcons = () => {
     return (
         <div className="w-[132px] flex justify-center  gap-[19px] py-[6px]">
             <div className=''>
-                <Link href={"/globe"}>
+                <Link href={"/add-product"}>
                     <Globe width={31} height={31} />
                 </Link>
             </div>

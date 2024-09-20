@@ -9,7 +9,7 @@ import { capitalize } from '@/utils/utils'
 import { Filter } from './components/filter'
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import { Products } from './components/products'
-import fetchProducts from '@/utils/supabase/queries/products'
+import { fetchProductsByCategories } from '@/utils/supabase/queries/products'
 import { CheckCategories } from '@/utils/supabase/queries/categories'
 import { redirect, useRouter } from 'next/navigation'
 
@@ -41,7 +41,7 @@ const CategoryPage = async ({
       redirect('/404')
     } 
     
-    const {success, products, totalPages, message} = await fetchProducts(categories, page)
+    const {success, products, totalPages, message} = await fetchProductsByCategories(categories, page)
 
     if (!success) {
       return

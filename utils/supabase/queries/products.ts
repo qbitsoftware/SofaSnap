@@ -5,6 +5,7 @@ import { category, category_join, product } from '@/utils/supabase/schema'
 import { eq, and, sql } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
 import { Product } from '../supabase.types'
+import { error } from 'console'
 
 interface FetchProductsResponse {
     success: boolean;
@@ -13,7 +14,7 @@ interface FetchProductsResponse {
     message?: string;
 }
 
-const fetchProducts = async (categories: string[], page: number): Promise<FetchProductsResponse> => {
+export const fetchProductsByCategories = async (categories: string[], page: number): Promise<FetchProductsResponse> => {
     const categoryJoinAlias = alias(category_join, 'cj2');
 
     try {
@@ -85,15 +86,37 @@ const fetchProducts = async (categories: string[], page: number): Promise<FetchP
             totalPages,
             message: "",
         };
-} catch (error) {
-    console.error("Error fetching products:", error);
-    return {
-        products: [],
-        totalPages: 0,
-        success: false,
-        message: "Failed to fetch products.",
-    };
-}
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        return {
+            products: [],
+            totalPages: 0,
+            success: false,
+            message: "Failed to fetch products.",
+        };
+    }
 };
 
-export default fetchProducts;
+export const fetchAllProducts = async () => {
+    try {
+        const result = await db.select().from(product)
+        if (result.length == 0) {
+            return {
+                data: undefined,
+                error: "No results found"
+            }
+        }
+
+        return {
+            data: result,
+            error: undefined
+        }
+    } catch (error) {
+        return {
+            data: undefined,
+            error: "Server error"
+        }
+    }
+}
+
+
