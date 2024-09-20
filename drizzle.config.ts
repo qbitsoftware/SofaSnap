@@ -10,6 +10,7 @@ export default {
   schema: "./utils/supabase/schema.ts",
   out: "./migrations",
   dialect: "postgresql",
+  schemaFilter: ["public"],
     dbCredentials: {
         url: process.env.DATABASE_URL || "",
     }
