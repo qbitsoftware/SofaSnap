@@ -5,8 +5,6 @@ import { NextResponse } from "next/server"
 import { isValid } from "zod"
 
 
-
-
 export const CheckCategories = async (categories: string[]) => {
     try {
         const result = await db.select()
