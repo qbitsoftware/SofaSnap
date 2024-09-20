@@ -1,7 +1,7 @@
 "use client"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Feature } from "@/lib/coordinates-validation"
 import { Address } from "@/lib/search-validation"
-import { Feature } from "@/types"
 import { Separator } from "@radix-ui/react-separator"
 import React, { Dispatch, SetStateAction } from "react"
 

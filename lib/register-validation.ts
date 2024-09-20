@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { AddressSchema } from './search-validation';
-import { FeatureSchema } from '@/types';
+import { FeatureSchema } from './coordinates-validation';
 
 export type TSignUpSchema = z.infer<typeof registerValidator>
 export type TSignUpSchemaServer = z.infer<typeof registerValidatorServer>

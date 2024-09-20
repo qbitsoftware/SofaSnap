@@ -16,7 +16,7 @@ import { Address, TAddressSearchSchema } from "@/lib/search-validation"
 import { useCallback, useEffect, useState } from "react"
 import { debounce } from "lodash"
 import { useRouter } from "next/navigation"
-import { Feature } from "@/types"
+import { Feature } from "@/lib/coordinates-validation"
 
 const RegisterForm = () => {
 

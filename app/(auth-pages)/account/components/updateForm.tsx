@@ -15,7 +15,7 @@ import { useCallback, useEffect, useState } from "react"
 import { Address, TAddressSearchSchema } from "@/lib/search-validation"
 import { debounce } from "lodash"
 import { Suggestions } from "./suggestions"
-import { Feature } from "@/types"
+import { Feature } from "@/lib/coordinates-validation"
 
 const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient, email: string, id: string }) => {
 

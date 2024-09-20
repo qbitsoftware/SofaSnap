@@ -49,3 +49,4 @@ export const coordinateSearch = z.object({
 })
 export type Coordinates = z.infer<typeof coordinateSearch>;
 
+
