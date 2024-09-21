@@ -1,6 +1,6 @@
-import { Feature } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { Feature } from "./coordinates-validation";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

@@ -1,7 +1,7 @@
 import React from 'react'
-import { AddProduct } from './components/breadcrumb'
 import { AddProductForm } from './components/addProductForm'
 import { GetUserInfo } from '@/app/actions'
+import { AddProduct } from './components/breadcrumb'
 
 
 const Page = async () => {
@@ -13,7 +13,7 @@ const Page = async () => {
                 <AddProduct />
             </div>
             <div className='ml-[135px] mb-[179px]'>
-                <AddProductForm id={user.data.user?.id!}/>
+                <AddProductForm id={user.data.user?.id!} />
             </div>
 
             {/* <div className='w-[326px] h-[130px] mb-[200px] mx-auto'>
