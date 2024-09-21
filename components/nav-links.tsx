@@ -6,10 +6,15 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 
 import { ChevronDown } from 'lucide-react'
+// import { FetchCategories } from '@/utils/supabase/queries/categories'
+import { Category } from '@/utils/supabase/supabase.types'
+import { capitalize } from '@/utils/utils'
 
-const NavLinks = () => {
+interface NavLinksProps {
+  categories: Category[] | undefined
+}
 
-  const categories: string[] = ["Esik", "Kook", "Elutuba", "Kontor", "Magamistuba", "Lastetuba", "Vannituba", "Garaaz", "Saun", "Oues"]
+const NavLinks: React.FC<NavLinksProps> = ({ categories }) => {
 
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const moobelButtonRef = useRef<HTMLDivElement | null>(null);
@@ -67,11 +72,12 @@ const NavLinks = () => {
         <div className="relative mt-[70px] px-[39px] pb-[143px] max-w-[937px] w-full max-h-[533px] h-full before:absolute before:inset-0 before:bg-cover before:bg-center before:bg-[url('/images/navbar-background.png')] before:mix-blend-overlay before:content-[''] ">
           <h1 className="text-xl pt-[46px] pb-[24px]">Koik kategooriad</h1>
           <div className='grid grid-cols-2 gap-y-[4px] gap-x-[300px]'>
-            {categories.map((category) => (
-              <Link key={category} href={"/" + category}>
-                <h1 className='p-[10px] cursor-pointer text-lg leading-5'>{category}</h1>
-              </Link>
-            ))}
+            {
+              categories && categories.map((category) => (
+                <Link key={category.name} href={"/" + category.name}>
+                  <h1 className='p-[10px] cursor-pointer text-lg leading-5'>{capitalize(category.name)}</h1>
+                </Link>
+              ))}
           </div>
         </div>
       </div>

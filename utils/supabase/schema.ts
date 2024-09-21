@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { AnyPgColumn, integer, pgSchema, pgTable, point, real, serial, text, time, timestamp, uuid } from "drizzle-orm/pg-core";
+import { integer, pgSchema, pgTable, point, real, serial, text, time, timestamp, uuid } from "drizzle-orm/pg-core";
 
 const authSchema = pgSchema('auth');
 
@@ -25,6 +25,7 @@ export const product = pgTable('products', {
      preview_image: text("preview_image").notNull(),
      price: real("price").notNull(),
      rating: real("rating"),
+     
 })
 
 export const category = pgTable('categories', {

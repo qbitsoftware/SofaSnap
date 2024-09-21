@@ -5,7 +5,6 @@ import { category, category_join, product } from '@/utils/supabase/schema'
 import { eq, and, sql } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
 import { Product } from '../supabase.types'
-import { error } from 'console'
 
 interface FetchProductsResponse {
     success: boolean;
@@ -54,7 +53,7 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
         const result = await query
             .limit(12)
             .offset((page - 1) * 12);
-
+        console.log(result)
         let countQuery = db
             .select({ count: sql`count(*)`.mapWith(Number) })
             .from(category_join)
@@ -75,6 +74,7 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
             countQuery = countQuery
                 .where(eq(category_join.category_name, categories[0]));
         }
+
 
         const countResult = await countQuery;
         const totalCount = countResult[0]?.count || 0;

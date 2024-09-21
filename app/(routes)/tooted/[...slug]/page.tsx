@@ -10,8 +10,9 @@ import { Filter } from './components/filter'
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import { Products } from './components/products'
 import { fetchProductsByCategories } from '@/utils/supabase/queries/products'
-import { CheckCategories } from '@/utils/supabase/queries/categories'
+// import { CheckCategories } from '@/utils/supabase/queries/categories'
 import { redirect, useRouter } from 'next/navigation'
+import { CheckCategories } from '@/utils/supabase/queries/categories'
 
 const CategoryPage = async ({
   params,
@@ -36,10 +37,11 @@ const CategoryPage = async ({
   } else {
 
     const {isValid, error} = await CheckCategories(categories)
-    console.log(isValid, error)
     if (error && !isValid) {
       redirect('/404')
     } 
+
+
     
     const {success, products, totalPages, message} = await fetchProductsByCategories(categories, page)
 

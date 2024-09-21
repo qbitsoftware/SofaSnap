@@ -1,15 +1,11 @@
-import { arrayContains, inArray } from "drizzle-orm"
+import { inArray } from "drizzle-orm"
 import db from "../db"
 import { category } from "../schema"
-import { NextResponse } from "next/server"
-import { isValid } from "zod"
 
 
 export const CheckCategories = async (categories: string[]) => {
     try {
-        const result = await db.select()
-            .from(category)
-            .where(inArray(category.name, categories))
+        const result = await db.select().from(category).where(inArray(category.name, categories))
 
         if (result.length != categories.length) {
             return {
@@ -25,7 +21,32 @@ export const CheckCategories = async (categories: string[]) => {
     } catch (error) {
         return {
             isValid: false,
-            error: "Server Error"
+            error: "Server error"
+        }
+    }
+}
+
+
+export const FetchCategories = async () => {
+    try {
+        // console.log(db)
+        const result = await db.select().from(category)
+
+        if (result.length == 0) {
+            return {
+                data: [],
+                error: "No categories found",
+            }
+        }
+
+        return {
+            data: result,
+            error: undefined
+        }
+    } catch (error) {
+        return {
+            data: undefined,
+            error: "Server error"
         }
     }
 }

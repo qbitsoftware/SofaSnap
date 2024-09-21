@@ -5,15 +5,10 @@ import Image from 'next/image'
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Review } from '@/types'
-import { Reviews } from './reviews'
-
 
 interface ReviewProps {
   Reviews: Review[]
 }
-
-
-
 
 export const ReviewCarousel:React.FC<ReviewProps> = ({Reviews}) => {
   const [currentReview, setCurrentReview] = useState(0)
@@ -21,7 +16,7 @@ export const ReviewCarousel:React.FC<ReviewProps> = ({Reviews}) => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentReview((prev) => (prev + 1) % Reviews.length)
-    }, 5000) // Change review every 5 seconds
+    }, 5000) 
 
     return () => clearInterval(timer)
   }, [])
