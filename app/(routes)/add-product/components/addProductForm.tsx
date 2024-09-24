@@ -11,7 +11,7 @@ import { productSchema, TProduct } from '@/lib/product-validation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from "@/components/ui/calendar"
 import { Label } from '@/components/ui/label';
-import { CalendarIcon, Map } from 'lucide-react';
+import { CalendarDays, CalendarIcon, Map } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { DateRange } from 'react-day-picker';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -19,6 +19,8 @@ import { Address, TAddressSearchSchema } from '@/lib/search-validation';
 import { Feature } from '@/lib/coordinates-validation';
 import { Suggestions } from '@/app/(auth-pages)/account/components/suggestions';
 import { debounce } from 'lodash';
+import { AdvancedImageInput } from './uploadForm';
+
 
 const AddProductForm = ({ id }: { id: string }) => {
     const toast = useToast()
@@ -49,7 +51,9 @@ const AddProductForm = ({ id }: { id: string }) => {
         formState: { errors, isSubmitting },
         reset,
         getValues,
+        trigger,
         setError,
+        setValue,
     } = useForm<TProduct>({
         resolver: zodResolver(productSchema),
     });
@@ -237,14 +241,19 @@ const AddProductForm = ({ id }: { id: string }) => {
         fetchSuggestions(value);
     };
 
+    const handleSelectChange = async (value: string) => {
+        setValue("category", value);
+        await trigger("category");
+    }
+
     return (
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-[46px]">
                 <div className="mb-[27px]">
                     <h2 className="font-medium text-lg">Kategooriad</h2>
                 </div>
-                <div className="flex flex-col gap-[11px] leading-4 w-[424px]">
-                    <Select {...register("category")}>
+                <div className="flex flex-col gap-[11px] leading-4 min-w-[424px] lg:w-[500px] max-w-[1440px]">
+                    <Select onValueChange={handleSelectChange}>
                         <SelectTrigger>
                             <SelectValue placeholder="Vali kategooria" />
                         </SelectTrigger>
@@ -256,42 +265,44 @@ const AddProductForm = ({ id }: { id: string }) => {
                             <SelectItem value="option5">Piduvark</SelectItem>
                         </SelectContent>
                     </Select>
-                    <Input {...register("description")} placeholder="Mis tootega on tegemist" autoComplete='off' />
-                    {errors.description && <p className="text-red-500">{errors.description.message}</p>}
-                    {/* Size input */}
-                    <div className='flex items-center gap-2'>
-                        <Input {...register("width")} placeholder='Laius' className="w-20 text-center" onChange={data => setW(data.target.value)} />
-                        {errors.width && <p className="text-red-500">{errors.width.message}</p>}
-                        <span className="text-gray-500">x</span>
-                        <Input {...register("heigth")} placeholder='Korgus' className="w-20 text-center" onChange={data => setH(data.target.value)} />
-                        {errors.heigth && <p className="text-red-500">{errors.heigth.message}</p>}
-                        <span className="text-gray-500">x</span>
-                        <Input {...register("length")} placeholder='Pikkus' className="w-20 text-center" onChange={data => setL(data.target.value)} />
-                        {errors.length && <p className="text-red-500">{errors.length.message}</p>}
+                    <div className="flex flex-col mt-[44px] gap-[30px]">
+                        <h2 className="font-medium text-lg">Toote kirjeldus</h2>
+                        <Input {...register("description")} placeholder="Mis tootega on tegemist" autoComplete='off' />
+                        {errors.description && <p className="text-red-500">{errors.description.message}</p>}
+                        {/* Size input */}
+                        <div className='flex items-center gap-2'>
+                            <Input {...register("width")} placeholder='Laius' className="w-20 text-center" onChange={data => setW(data.target.value)} />
+                            {errors.width && <p className="text-red-500">{errors.width.message}</p>}
+                            <span className="text-gray-500">x</span>
+                            <Input {...register("heigth")} placeholder='Korgus' className="w-20 text-center" onChange={data => setH(data.target.value)} />
+                            {errors.heigth && <p className="text-red-500">{errors.heigth.message}</p>}
+                            <span className="text-gray-500">x</span>
+                            <Input {...register("length")} placeholder='Pikkus' className="w-20 text-center" onChange={data => setL(data.target.value)} />
+                            {errors.length && <p className="text-red-500">{errors.length.message}</p>}
+                            <p className="text-sm text-gray-500">
+                                {width || '0'} cm x {heigth || '0'} cm x {length || '0'} cm
+                            </p>
+                        </div>
+                        {/* Some random easy inputs */}
+                        <Input {...register("material")} placeholder='Materjal' autoComplete='off' />
+                        {errors.material && <p className="text-red-500">{errors.material.message}</p>}
+                        <Input {...register("details")} placeholder='Uksikasjad' autoComplete='off' />
+                        {errors.details && <p className="text-red-500">{errors.details.message}</p>}
                     </div>
-                    <p className="text-sm text-gray-500">
-                        Mootmed: {width || '0'}x{heigth || '0'}x{length || '0'}
-                    </p>
-                    {/* Some random easy inputs */}
-                    <Input {...register("material")} placeholder='Materjal' autoComplete='off' />
-                    {errors.material && <p className="text-red-500">{errors.material.message}</p>}
-                    <Input {...register("details")} placeholder='Uksikasjad' autoComplete='off' />
-                    {errors.details && <p className="text-red-500">{errors.details.message}</p>}
                     {/* Date picker */}
-                    <div className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="date-range">Date Range</Label>
+                    <div className="py-[108px]">
+                        <div className="">
                             <Popover>
-                                <PopoverTrigger asChild>
+                                <PopoverTrigger asChild className='py-8 px-2'>
                                     <Button
                                         id="date-range"
                                         variant="outline"
                                         className={cn(
-                                            "w-full justify-start text-left font-normal",
-                                            !dateRange?.from && "text-muted-foreground"
+                                            "w-full justify-center text-center font-normal rounded-2xl",
+                                            !dateRange?.from
                                         )}
                                     >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        <CalendarDays className="mr-2 h-[26px] w-[29px] " />
                                         {dateRange?.from ? (
                                             dateRange.to ? (
                                                 <>
@@ -301,7 +312,7 @@ const AddProductForm = ({ id }: { id: string }) => {
                                                 formatDate(dateRange.from)
                                             )
                                         ) : (
-                                            <span>Pick a date range</span>
+                                            <span className='text-muted-foreground'>Kuulutuse algus ja lopu kuupaevad</span>
                                         )}
                                     </Button>
                                 </PopoverTrigger>
@@ -318,41 +329,41 @@ const AddProductForm = ({ id }: { id: string }) => {
                             </Popover>
                         </div>
                         {dateRange?.from && dateRange.to && (
-                            <p className="text-sm text-muted-foreground">
-                                Selected range: {formatDate(dateRange.from)} to {formatDate(dateRange.to)}
+                            <p className="text-sm text-center text-muted-foreground">
+                                Valitud vahemik: {formatDate(dateRange.from)} to {formatDate(dateRange.to)}
                             </p>
                         )}
                     </div>
                     <RadioGroup
                         value={listingType || ""}
                         onValueChange={handleListingTypeChange}
-                        className="flex flex-col space-y-1 mt-2 h-full"
+                        className="flex flex-col space-y-1 mt-2 h-full mb-[100px]"
                     >
                         <div className="flex items-center space-x-2">
+                            <Label htmlFor="rent" className='w-[50px]'>Rent</Label>
                             <RadioGroupItem value="rent" id="rent" />
-                            <Label htmlFor="rent">Rent</Label>
-                            <div className="relative">
+                            <div className="relative pl-[20px]">
                                 <Input
+                                    disabled={listingType != "rent"}
                                     placeholder="Rendi hind"
-                                    className={`max-w-[200px] transition-opacity duration-300 ${listingType === "rent" ? "opacity-100" : "opacity-0 invisible"
-                                        }`}
+                                    className={`max-w-[200px] rounded-xl`}
                                 />
                             </div>
                         </div>
                         <div className="flex items-center space-x-2">
+                            <Label htmlFor="sell" className='w-[50px]'>Müük</Label>
                             <RadioGroupItem value="sell" id="sell" />
-                            <Label htmlFor="sell">Sell</Label>
-                            <div className="relative">
+                            <div className="relative pl-[20px]">
                                 <Input
-                                    placeholder="Myygi hind"
-                                    className={`max-w-[200px] transition-opacity duration-300 ${listingType === "sell" ? "opacity-100" : "opacity-0 invisible"
-                                        }`}
+                                    disabled={listingType != "sell"}
+                                    placeholder="Müügi hind"
+                                    className={`max-w-[200px] rounded-xl`}
                                 />
                             </div>
                         </div>
                     </RadioGroup>
                     <p className='flex items-center gap-1'>Aadress <span><Map /></span></p>
-                    <div className="relative">
+                    <div className="relative mb-[167px]">
                         <Input
                             {...register("address")}
                             placeholder="Sisesta aadress"
@@ -371,12 +382,15 @@ const AddProductForm = ({ id }: { id: string }) => {
                         />
                         <p className="italic text-sm pl-1 pt-1 text-slate-700">Naide: Tamme 5</p>
                     </div>
+                    <div>
+                        <AdvancedImageInput />
+                    </div>
                 </div>
             </div>
             <div className="flex items-center justify-center">
                 <Button disabled={isSubmitting} className="bg-accent hover:bg-accent md:w-[202px] md:h-[55px] text-black cursor" type="submit">
                     <h1 className={cn(isSubmitting ? " hidden " : "block")}>
-                        Vaheta parool
+                        Lisa toode
                     </h1>
                     <ClipLoader
                         color={"#ffffff"}
@@ -392,142 +406,3 @@ const AddProductForm = ({ id }: { id: string }) => {
 }
 
 export { AddProductForm }
-
-// "use client"
-
-// import React, { useState, useRef } from 'react'
-// import { Button } from "@/components/ui/button"
-// import { Label } from "@/components/ui/label"
-// import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-// import { Checkbox } from "@/components/ui/checkbox"
-// import { ScrollArea } from "@/components/ui/scroll-area"
-// import { ImagePlus, X } from 'lucide-react'
-
-// interface ImageFile extends File {
-//   preview: string;
-// }
-
-// export function MultiImageUpload() {
-//   const [images, setImages] = useState<ImageFile[]>([])
-//   const [primaryImage, setPrimaryImage] = useState<string | null>(null)
-//   const [secondaryImages, setSecondaryImages] = useState<string[]>([])
-//   const fileInputRef = useRef<HTMLInputElement>(null)
-
-//   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     if (e.target.files) {
-//       const newImages = Array.from(e.target.files).map(file => 
-//         Object.assign(file, { preview: URL.createObjectURL(file) })
-//       ) as ImageFile[]
-//       setImages(prev => [...prev, ...newImages])
-//       if (!primaryImage && newImages.length > 0) {
-//         setPrimaryImage(newImages[0].preview)
-//       }
-//     }
-//   }
-
-//   const handleRemoveImage = (imageToRemove: ImageFile) => {
-//     setImages(images.filter(image => image !== imageToRemove))
-//     if (primaryImage === imageToRemove.preview) {
-//       setPrimaryImage(images.length > 1 ? images[1].preview : null)
-//     }
-//     setSecondaryImages(secondaryImages.filter(img => img !== imageToRemove.preview))
-//     URL.revokeObjectURL(imageToRemove.preview)
-//   }
-
-//   const handlePrimaryImageChange = (value: string) => {
-//     setPrimaryImage(value)
-//     setSecondaryImages(secondaryImages.filter(img => img !== value))
-//   }
-
-//   const handleSecondaryImageChange = (checked: boolean, value: string) => {
-//     if (checked) {
-//       setSecondaryImages([...secondaryImages, value])
-//     } else {
-//       setSecondaryImages(secondaryImages.filter(img => img !== value))
-//     }
-//   }
-
-//   return (
-//     <div className="space-y-6">
-//       <div>
-//         <Label htmlFor="image-upload" className="text-base font-semibold">Upload Images</Label>
-//         <div className="mt-2">
-//           <Button
-//             onClick={() => fileInputRef.current?.click()}
-//             variant="outline"
-//             className="w-full h-32 border-dashed"
-//           >
-//             <ImagePlus className="mr-2 h-6 w-6" />
-//             Add Images
-//           </Button>
-//           <input
-//             type="file"
-//             id="image-upload"
-//             ref={fileInputRef}
-//             onChange={handleFileChange}
-//             multiple
-//             accept="image/*"
-//             className="sr-only"
-//           />
-//         </div>
-//       </div>
-
-//       {images.length > 0 && (
-//         <ScrollArea className="h-72 w-full rounded-md border p-4">
-//           <div className="space-y-4">
-//             <Label className="text-base font-semibold">Select Primary Image</Label>
-//             <RadioGroup value={primaryImage || ''} onValueChange={handlePrimaryImageChange}>
-//               {images.map((image, index) => (
-//                 <div key={image.preview} className="flex items-center space-x-2 py-2">
-//                   <RadioGroupItem value={image.preview} id={`primary-${index}`} />
-//                   <Label htmlFor={`primary-${index}`} className="flex items-center space-x-2">
-//                     <img src={image.preview} alt={`Uploaded ${index + 1}`} className="h-12 w-12 object-cover rounded" />
-//                     <span>Image {index + 1}</span>
-//                   </Label>
-//                   <Button variant="ghost" size="icon" onClick={() => handleRemoveImage(image)}>
-//                     <X className="h-4 w-4" />
-//                   </Button>
-//                 </div>
-//               ))}
-//             </RadioGroup>
-//           </div>
-
-//           <div className="mt-6 space-y-4">
-//             <Label className="text-base font-semibold">Select Secondary Images</Label>
-//             {images.map((image, index) => (
-//               <div key={image.preview} className="flex items-center space-x-2 py-2">
-//                 <Checkbox
-//                   id={`secondary-${index}`}
-//                   checked={secondaryImages.includes(image.preview)}
-//                   onCheckedChange={(checked) => handleSecondaryImageChange(checked as boolean, image.preview)}
-//                   disabled={image.preview === primaryImage}
-//                 />
-//                 <Label htmlFor={`secondary-${index}`} className="flex items-center space-x-2">
-//                   <img src={image.preview} alt={`Uploaded ${index + 1}`} className="h-12 w-12 object-cover rounded" />
-//                   <span>Image {index + 1}</span>
-//                 </Label>
-//               </div>
-//             ))}
-//           </div>
-//         </ScrollArea>
-//       )}
-
-//       {images.length > 0 && (
-//         <div className="space-y-2">
-//           <p className="font-semibold">Summary:</p>
-//           <p>Primary Image: Image {images.findIndex(img => img.preview === primaryImage) + 1}</p>
-//           <p>Secondary Images: {secondaryImages.map(img => `Image ${images.findIndex(image => image.preview === img) + 1}`).join(', ')}</p>
-//         </div>
-//       )}
-//     </div>
-//   )
-// }
-
-// export default function Component() {
-//   return (
-//     <div className="w-full max-w-2xl p-6 bg-white rounded-lg shadow-md">
-//       <h2 className="text-2xl font-bold mb-6">Product Images</h2>
-//       <MultiImageUpload />
-//     </div>
-//   )
-// }
