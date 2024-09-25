@@ -14,7 +14,9 @@ interface ImageFile {
   preview: string;
 }
 
-function AdvancedImageInput() {
+function AdvancedImageInput({ insertFunc }: {
+  insertFunc: (value: string[]) => Promise<void>
+}) {
   const [images, setImages] = useState<ImageFile[]>([])
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
@@ -52,6 +54,10 @@ function AdvancedImageInput() {
         preview: URL.createObjectURL(file)
       }))
       setImages(prevImages => [...prevImages, ...newImages])
+      let i: string[] = []
+      images.map((img) => i.push(img.preview))
+      console.log("i", i)
+      insertFunc(i)
     }
   }, [])
 
@@ -191,11 +197,11 @@ function AdvancedImageInput() {
             className="flex flex-col p-2 bg-gray-100 rounded-md cursor-move transition-all duration-200 ease-in-out"
             style={getItemStyle(index)}
           >
-            {index === 0 && 
-            <div>
-              <p className='text-center pb-1'>Kaane pilt</p>
-              <Separator className='h-[2px mb-2'/>
-            </div>}
+            {index === 0 &&
+              <div>
+                <p className='text-center pb-1'>Kaane pilt</p>
+                <Separator className='h-[2px mb-2' />
+              </div>}
             <div className='flex items-center'>
 
               <img src={image.preview} alt={image.file.name} className="w-16 h-16 object-cover rounded mr-2" />
@@ -221,9 +227,9 @@ function AdvancedImageInput() {
               zIndex: 10,
             }}
           >
-            <div className="flex items-center p-2 bg-primary text-primary-foreground rounded-md shadow-lg">
+            <div className="flex items-center p-2 bg-primary rounded-md">
               <img src={images[draggedIndex].preview} alt={images[draggedIndex].file.name} className="w-16 h-16 object-cover rounded mr-2" />
-              <span className="flex-grow truncate">{images[draggedIndex].file.name}</span>
+              <span className="flex-grow truncate text-white">{images[draggedIndex].file.name}</span>
             </div>
           </div>
         )}

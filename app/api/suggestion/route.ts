@@ -13,6 +13,7 @@ export async function POST(request: Request) {
             result.error.issues.forEach((issue) => {
                 zodErrors[issue.path[0]] = issue.message;
             });
+            console.log(zodErrors)
             return NextResponse.json({ errors: zodErrors }, { status: 400 });
         }
 

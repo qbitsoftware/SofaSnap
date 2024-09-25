@@ -8,6 +8,8 @@ export async function POST(request: Request) {
         const result = productSchema.safeParse(body);
         let zodErrors: Record<string, string> = {};
 
+        console.log("THIS IS THE REPSONSE FINALLY", result)
+
         if (result.error) {
             result.error.issues.forEach((issue) => {
                 zodErrors[issue.path[0]] = issue.message;

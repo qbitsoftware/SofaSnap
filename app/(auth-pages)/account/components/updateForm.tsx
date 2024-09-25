@@ -31,8 +31,6 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-        reset,
-        getValues,
         setError,
     } = useForm<TAccountInformationSchemaClient>({
         resolver: zodResolver(updateInformationClient),

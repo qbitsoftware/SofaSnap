@@ -7,11 +7,11 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { ClipLoader } from 'react-spinners';
 import { useToast } from '@/components/hooks/use-toast';
-import { productSchema, TProduct } from '@/lib/product-validation';
+import { productSchema, TProductClient } from '@/lib/product-validation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from "@/components/ui/calendar"
 import { Label } from '@/components/ui/label';
-import { CalendarDays, CalendarIcon, Map } from 'lucide-react';
+import { CalendarDays, Map } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { DateRange } from 'react-day-picker';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -20,24 +20,30 @@ import { Feature } from '@/lib/coordinates-validation';
 import { Suggestions } from '@/app/(auth-pages)/account/components/suggestions';
 import { debounce } from 'lodash';
 import { AdvancedImageInput } from './uploadForm';
+import { Category } from '@/utils/supabase/supabase.types';
+import { capitalize } from '@/utils/utils';
+import { SubmitButton } from '@/components/submit-button';
 
 
-const AddProductForm = ({ id }: { id: string }) => {
+const AddProductForm = ({ id, categories }: { id: string, categories: Category[] }) => {
     const toast = useToast()
     const [dateRange, setDateRange] = useState<DateRange | undefined>()
-    const [width, setW] = useState<string>()
-    const [heigth, setH] = useState<string>()
-    const [length, setL] = useState<string>()
+    const [category, setCategory] = useState<string>('')
+    const [width, setW] = useState<number>(0)
+    const [heigth, setH] = useState<number>(0)
+    const [length, setL] = useState<number>(0)
     const [suggestions, setSuggestions] = useState<Address[]>([]);
     const [chosenSuggestion, setChosenSuggestion] = useState<Feature>();
     const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
     const [inputValue, setInputValue] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const [listingType, setListingType] = useState<"rent" | "sell" | null>(null)
+    const [listingType, setListingType] = useState<"rent" | "sell" | null>("rent")
 
-    const handleListingTypeChange = (value: "rent" | "sell") => {
+    const handleListingTypeChange = async (value: "rent" | "sell") => {
         setListingType(value)
+        setValue("type", value)
+        await trigger("type")
     }
 
     const formatDate = (date: Date | undefined) => {
@@ -50,11 +56,11 @@ const AddProductForm = ({ id }: { id: string }) => {
         handleSubmit,
         formState: { errors, isSubmitting },
         reset,
-        getValues,
         trigger,
         setError,
         setValue,
-    } = useForm<TProduct>({
+        getValues,
+    } = useForm<TProductClient>({
         resolver: zodResolver(productSchema),
     });
 
@@ -70,10 +76,14 @@ const AddProductForm = ({ id }: { id: string }) => {
         };
     }, []);
 
-    const onSubmit = async (data: TProduct) => {
+    const onSubmit = async (data: TProductClient) => {
+        const formData = {
+            ...data,
+            address: chosenSuggestion,
+        };
         const response = await fetch("/api/product", {
             method: "POST",
-            body: JSON.stringify(data),
+            body: JSON.stringify(formData),
             headers: {
                 "Content-Type": "application/json",
             },
@@ -139,9 +149,9 @@ const AddProductForm = ({ id }: { id: string }) => {
                 })
             }
             if (errors.details) {
-                setError("details", {
+                setError("sub_category", {
                     type: "server",
-                    message: errors.details,
+                    message: errors.sub_category,
                 })
             }
             if (errors.start_date) {
@@ -211,7 +221,7 @@ const AddProductForm = ({ id }: { id: string }) => {
                 input: value,
                 user_id: id,
             };
-
+            console.log("DATA", data)
             try {
                 const response = await fetch("/api/suggestion", {
                     method: "POST",
@@ -234,6 +244,15 @@ const AddProductForm = ({ id }: { id: string }) => {
         []
     );
 
+    const handleDates = async (item: React.SetStateAction<DateRange | undefined>) => {
+        setDateRange(item);
+
+        setValue("start_date", item?.from)
+        setValue("end_date", item?.to)
+        await trigger("start_date")
+        await trigger("end_date")
+    };
+
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setInputValue(value);
@@ -241,9 +260,27 @@ const AddProductForm = ({ id }: { id: string }) => {
         fetchSuggestions(value);
     };
 
-    const handleSelectChange = async (value: string) => {
+    const handleCategoryChange = async (value: string) => {
         setValue("category", value);
         await trigger("category");
+        setCategory(value.toLocaleLowerCase())
+        console.log(value)
+    }
+
+    const setImages = async (value: string[]) => {
+        setValue("all_img", value)
+        await trigger("all_img")
+    }
+
+    const handleSubCategoryChange = async (value: string) => {
+        setValue("sub_category", value);
+        await trigger("sub_category");
+    }
+
+    const handleInput = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(event.target.value)
+        setValue("price", event.target.value)
+        await trigger("price");
     }
 
     return (
@@ -253,41 +290,68 @@ const AddProductForm = ({ id }: { id: string }) => {
                     <h2 className="font-medium text-lg">Kategooriad</h2>
                 </div>
                 <div className="flex flex-col gap-[11px] leading-4 min-w-[424px] lg:w-[500px] max-w-[1440px]">
-                    <Select onValueChange={handleSelectChange}>
+                    <Select onValueChange={handleCategoryChange}>
                         <SelectTrigger>
                             <SelectValue placeholder="Vali kategooria" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="option1">Esik</SelectItem>
-                            <SelectItem value="option2">Elutuba</SelectItem>
-                            <SelectItem value="option3">Kook</SelectItem>
-                            <SelectItem value="option4">Vannituba</SelectItem>
-                            <SelectItem value="option5">Piduvark</SelectItem>
+                            {categories.map((item, index) => (
+                                <SelectItem key={index} value={item.name}>{capitalize(item.name)}</SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
+                    {errors.category && <p className="text-red-500">{errors.category.message}</p>}
                     <div className="flex flex-col mt-[44px] gap-[30px]">
-                        <h2 className="font-medium text-lg">Toote kirjeldus</h2>
-                        <Input {...register("description")} placeholder="Mis tootega on tegemist" autoComplete='off' />
-                        {errors.description && <p className="text-red-500">{errors.description.message}</p>}
+                        <div>
+                            <h2 className="font-medium text-lg">Toote kirjeldus</h2>
+                            <Select onValueChange={handleSubCategoryChange} disabled={category === ''}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Mis tootega on tegemist" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {categories.map((c) => (
+                                        c.name.toLocaleLowerCase() === category && c.sub_categories ? (
+                                            c.sub_categories.map((sub_c, i) => (
+                                                <SelectItem key={i} value={sub_c}>
+                                                    {sub_c}
+                                                </SelectItem>
+                                            ))
+                                        ) : null
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {errors.sub_category && <p className="text-red-500">{errors.sub_category.message}</p>}
+                        </div>
                         {/* Size input */}
                         <div className='flex items-center gap-2'>
-                            <Input {...register("width")} placeholder='Laius' className="w-20 text-center" onChange={data => setW(data.target.value)} />
-                            {errors.width && <p className="text-red-500">{errors.width.message}</p>}
+                            <div>
+                                <Input {...register("width", { valueAsNumber: true })} value={width} placeholder='Laius' type='number' className="w-20 text-center" autoComplete='off' onChange={data => setW(Number(data.target.value))} />
+                                {errors.width && <p className="text-red-500">{errors.width.message}</p>}
+                            </div>
                             <span className="text-gray-500">x</span>
-                            <Input {...register("heigth")} placeholder='Korgus' className="w-20 text-center" onChange={data => setH(data.target.value)} />
-                            {errors.heigth && <p className="text-red-500">{errors.heigth.message}</p>}
+                            <div>
+                                <Input {...register("heigth", { valueAsNumber: true })} value={heigth} placeholder='Korgus' type='number' className="w-20 text-center" autoComplete='off' onChange={data => setH(Number(data.target.value))} />
+                                {errors.heigth && <p className="text-red-500">{errors.heigth.message}</p>}
+                            </div>
                             <span className="text-gray-500">x</span>
-                            <Input {...register("length")} placeholder='Pikkus' className="w-20 text-center" onChange={data => setL(data.target.value)} />
-                            {errors.length && <p className="text-red-500">{errors.length.message}</p>}
+                            <div>
+                                <Input {...register("length", { valueAsNumber: true })} value={length} placeholder='Pikkus' type='number' className="w-20 text-center" autoComplete='off' onChange={data => setL(Number(data.target.value))} />
+                                {errors.length && <p className="text-red-500">{errors.length.message}</p>}
+                            </div>
                             <p className="text-sm text-gray-500">
                                 {width || '0'} cm x {heigth || '0'} cm x {length || '0'} cm
                             </p>
                         </div>
                         {/* Some random easy inputs */}
-                        <Input {...register("material")} placeholder='Materjal' autoComplete='off' />
-                        {errors.material && <p className="text-red-500">{errors.material.message}</p>}
-                        <Input {...register("details")} placeholder='Uksikasjad' autoComplete='off' />
-                        {errors.details && <p className="text-red-500">{errors.details.message}</p>}
+                        <div>
+                            <Input {...register("material")} placeholder='Materjal' autoComplete='off' />
+                            {errors.material && <p className="text-red-500">{errors.material.message}</p>}
+
+                        </div>
+                        <div>
+                            <Input {...register("description")} placeholder='Uksikasjad' autoComplete='off' />
+                            {errors.description && <p className="text-red-500">{errors.description.message}</p>}
+                        </div>
                     </div>
                     {/* Date picker */}
                     <div className="py-[108px]">
@@ -322,17 +386,14 @@ const AddProductForm = ({ id }: { id: string }) => {
                                         mode="range"
                                         defaultMonth={dateRange?.from}
                                         selected={dateRange}
-                                        onSelect={setDateRange}
+                                        onSelect={handleDates}
                                         numberOfMonths={2}
                                     />
                                 </PopoverContent>
                             </Popover>
                         </div>
-                        {dateRange?.from && dateRange.to && (
-                            <p className="text-sm text-center text-muted-foreground">
-                                Valitud vahemik: {formatDate(dateRange.from)} to {formatDate(dateRange.to)}
-                            </p>
-                        )}
+                        {errors.start_date && <p className="text-red-500">{errors.start_date.message}</p>}
+                        {errors.end_date && <p className="text-red-500">{errors.end_date.message}</p>}
                     </div>
                     <RadioGroup
                         value={listingType || ""}
@@ -347,6 +408,8 @@ const AddProductForm = ({ id }: { id: string }) => {
                                     disabled={listingType != "rent"}
                                     placeholder="Rendi hind"
                                     className={`max-w-[200px] rounded-xl`}
+                                    onChange={handleInput}
+                                    type='number'
                                 />
                             </div>
                         </div>
@@ -358,9 +421,12 @@ const AddProductForm = ({ id }: { id: string }) => {
                                     disabled={listingType != "sell"}
                                     placeholder="Müügi hind"
                                     className={`max-w-[200px] rounded-xl`}
+                                    onChange={handleInput}
+                                    type='number'
                                 />
                             </div>
                         </div>
+                        {errors.price && <p className="text-red-500">{errors.price.message}</p>}
                     </RadioGroup>
                     <p className='flex items-center gap-1'>Aadress <span><Map /></span></p>
                     <div className="relative mb-[167px]">
@@ -381,14 +447,15 @@ const AddProductForm = ({ id }: { id: string }) => {
                             id={id}
                         />
                         <p className="italic text-sm pl-1 pt-1 text-slate-700">Naide: Tamme 5</p>
+                        {errors.address && <p className="text-red-500">{errors.address.message}</p>}
                     </div>
                     <div>
-                        <AdvancedImageInput />
+                        <AdvancedImageInput insertFunc={setImages} />
                     </div>
                 </div>
             </div>
             <div className="flex items-center justify-center">
-                <Button disabled={isSubmitting} className="bg-accent hover:bg-accent md:w-[202px] md:h-[55px] text-black cursor" type="submit">
+                <SubmitButton disabled={isSubmitting} onClick={() => console.log(getValues())} className="bg-accent hover:bg-accent md:w-[202px] md:h-[55px] text-black cursor" type="submit">
                     <h1 className={cn(isSubmitting ? " hidden " : "block")}>
                         Lisa toode
                     </h1>
@@ -399,7 +466,7 @@ const AddProductForm = ({ id }: { id: string }) => {
                         aria-label="Loading Spinner"
                         data-testid="loader"
                     />
-                </Button>
+                </SubmitButton>
             </div>
         </form>
     )
