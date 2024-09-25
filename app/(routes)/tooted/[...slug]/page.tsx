@@ -32,7 +32,7 @@ const CategoryPage = async ({
 
   if (isProductPage && params.slug.length > 1) {
     return (
-      <ProductPage product_id={Number(params.slug[params.slug.length - 1])} />
+      <ProductPage product_id={Number(params.slug[params.slug.length - 1])} slugs={params.slug} />
     )
   } else {
 

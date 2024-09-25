@@ -53,7 +53,6 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
         const result = await query
             .limit(12)
             .offset((page - 1) * 12);
-        console.log(result)
         let countQuery = db
             .select({ count: sql`count(*)`.mapWith(Number) })
             .from(category_join)
@@ -120,3 +119,25 @@ export const fetchAllProducts = async () => {
 }
 
 
+export const fetchProduct =async (id:number) =>{
+    try {
+        const result = await db.select().from(product)
+            .where(eq(product.id,id ))
+        if (result.length == 0) {
+               return {
+                data: undefined,
+                error: "No results found"
+               } 
+        }
+        return {
+            data:result,
+            error: undefined
+        }
+    } catch (error) {
+        return {
+            data: undefined,
+            error:"Server error"
+        }
+    }
+
+}
