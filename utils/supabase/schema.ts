@@ -3,7 +3,7 @@ import { integer, pgSchema, pgTable, point, real, serial, text, time, timestamp,
 
 const authSchema = pgSchema('auth');
 
-const users = authSchema.table('users', {
+export const user = authSchema.table('users', {
 	id: uuid('id').primaryKey(),
 });
 
@@ -64,6 +64,6 @@ export const address_join = pgTable("address_join", {
         withTimezone: true,
         mode: 'string',
     }).defaultNow().notNull(),
-    user_id: uuid('user_id').references(() => users.id).notNull(),
+    user_id: uuid('user_id').references(() => user.id).notNull(),
     address_id: uuid("address_id").references(() => address.id).notNull(),
 })
