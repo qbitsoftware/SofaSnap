@@ -35,8 +35,8 @@ export const Reviews: React.FC<ReviewsProps> = ({ reviews, className }) => {
 
     return (
         <div className={cn("md:flex justify-between md:min-h-[180px] w-full max-w-[1000px]", className)}>
-            {displayedReviews.map((review) => (
-                <div className='md:max-w-[180px] md:flex md:flex-col gap-2'>
+            {displayedReviews.map((review, idx) => (
+                <div key={idx} className='md:max-w-[180px] md:flex md:flex-col gap-2'>
                     <div className='md:flex items-center gap-4'>
                         <Image src={"/images/profiil-must.svg"} alt='avatar' width={68} height={68} />
                         <p className='font-bold'>{"Marje"}</p>
