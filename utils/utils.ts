@@ -15,6 +15,11 @@ export function encodedRedirect(
   return redirect(`${path}?${type}=${encodeURIComponent(message)}`);
 }
 
-export function capitalize(text:string) {
+export function capitalize(text: string) {
   return text[0].toUpperCase() + text.slice(1);
+}
+
+export function formatDate(date: Date | undefined) {
+  if (!date) return ''
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 }

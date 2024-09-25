@@ -1,5 +1,4 @@
 "use client"
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,11 +22,11 @@ import { AdvancedImageInput } from './uploadForm';
 import { Category } from '@/utils/supabase/supabase.types';
 import { capitalize } from '@/utils/utils';
 import { SubmitButton } from '@/components/submit-button';
+import { Calender } from '@/components/calender';
 
 
 const AddProductForm = ({ id, categories }: { id: string, categories: Category[] }) => {
     const toast = useToast()
-    const [dateRange, setDateRange] = useState<DateRange | undefined>()
     const [category, setCategory] = useState<string>('')
     const [width, setW] = useState<number>(0)
     const [heigth, setH] = useState<number>(0)
@@ -44,11 +43,6 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
         setListingType(value)
         setValue("type", value)
         await trigger("type")
-    }
-
-    const formatDate = (date: Date | undefined) => {
-        if (!date) return ''
-        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
     }
 
     const {
@@ -244,13 +238,11 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
         []
     );
 
-    const handleDates = async (item: React.SetStateAction<DateRange | undefined>) => {
-        setDateRange(item);
-
-        setValue("start_date", item?.from)
-        setValue("end_date", item?.to)
-        await trigger("start_date")
-        await trigger("end_date")
+    const handleDates = async (item: DateRange | undefined) => {
+        setValue("start_date", item?.from!);
+        setValue("end_date", item?.to!);
+        await trigger("start_date");
+        await trigger("end_date");
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -261,10 +253,8 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
     };
 
     const handleCategoryChange = async (value: string) => {
-        setValue("category", value);
         await trigger("category");
         setCategory(value.toLocaleLowerCase())
-        console.log(value)
     }
 
     const setImages = async (value: string[]) => {
@@ -278,7 +268,6 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
     }
 
     const handleInput = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(event.target.value)
         setValue("price", event.target.value)
         await trigger("price");
     }
@@ -353,48 +342,16 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                             {errors.description && <p className="text-red-500">{errors.description.message}</p>}
                         </div>
                     </div>
-                    {/* Date picker */}
-                    <div className="py-[108px]">
-                        <div className="">
-                            <Popover>
-                                <PopoverTrigger asChild className='py-8 px-2'>
-                                    <Button
-                                        id="date-range"
-                                        variant="outline"
-                                        className={cn(
-                                            "w-full justify-center text-center font-normal rounded-2xl",
-                                            !dateRange?.from
-                                        )}
-                                    >
-                                        <CalendarDays className="mr-2 h-[26px] w-[29px] " />
-                                        {dateRange?.from ? (
-                                            dateRange.to ? (
-                                                <>
-                                                    {formatDate(dateRange.from)} - {formatDate(dateRange.to)}
-                                                </>
-                                            ) : (
-                                                formatDate(dateRange.from)
-                                            )
-                                        ) : (
-                                            <span className='text-muted-foreground'>Kuulutuse algus ja lopu kuupaevad</span>
-                                        )}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                        initialFocus
-                                        mode="range"
-                                        defaultMonth={dateRange?.from}
-                                        selected={dateRange}
-                                        onSelect={handleDates}
-                                        numberOfMonths={2}
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                        </div>
+
+
+
+                    {/* CALENDER COMES HERE */}
+                    {listingType == "rent" && <div>
+                        <Calender changeValueFunc={handleDates} disabled={["test", "test1", "test2", 'test3']} />
                         {errors.start_date && <p className="text-red-500">{errors.start_date.message}</p>}
                         {errors.end_date && <p className="text-red-500">{errors.end_date.message}</p>}
-                    </div>
+                    </div>}
+
                     <RadioGroup
                         value={listingType || ""}
                         onValueChange={handleListingTypeChange}

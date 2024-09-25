@@ -12,6 +12,7 @@ import Image from 'next/image'
 import { ProductImage } from './product-image'
 import { OwnerRating } from './owner-rating'
 import { Reviews } from './reviews'
+import { DateForm } from './rent-form'
 
 interface ProductPageProps {
   product_id: number
@@ -76,6 +77,9 @@ const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id }) =>
         </div>
       </div>
       <Reviews reviews={sampleReviews} className='md:my-[150px] mx-auto md:w-[80%] max-w-[1280px]'/>
+      <div>
+        <DateForm/>
+      </div>
     </div >
   )
 }
