@@ -20,6 +20,7 @@ const Suggestions = ({ isLoading, inputValue, showSuggestions, suggestions, setC
             user_id: id,
         }
         try {
+            setInputValue("Laeb...")
             const response = await fetch("/api/suggestion/retrieve", {
                 method: "POST",
                 body: JSON.stringify(data),

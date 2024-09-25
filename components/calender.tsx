@@ -26,7 +26,7 @@ export const Calender: React.FC<CalenderProps> = ({ changeValueFunc }: CalenderP
                             id="date-range"
                             variant="outline"
                             className={cn(
-                                "w-full justify-center text-center font-normal rounded-2xl",
+                                "w-full justify-center text-center font-normal rounded-2xl bg-white",
                                 !dateRange?.from
                             )}
                         >

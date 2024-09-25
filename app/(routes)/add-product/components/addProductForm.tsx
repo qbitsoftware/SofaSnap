@@ -6,12 +6,10 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { ClipLoader } from 'react-spinners';
 import { useToast } from '@/components/hooks/use-toast';
-import { productSchema, TProductClient } from '@/lib/product-validation';
+import { IImage, productSchema, productSchemaServer, TProductClient } from '@/lib/product-validation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar } from "@/components/ui/calendar"
 import { Label } from '@/components/ui/label';
-import { CalendarDays, Map } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Map } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Address, TAddressSearchSchema } from '@/lib/search-validation';
@@ -36,8 +34,8 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
     const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
     const [inputValue, setInputValue] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false)
-
-    const [listingType, setListingType] = useState<"rent" | "sell" | null>("rent")
+    const [images, setImages] = useState<IImage[]>([])
+    const [listingType, setListingType] = useState<"rent" | "sell" | null>()
 
     const handleListingTypeChange = async (value: "rent" | "sell") => {
         setListingType(value)
@@ -71,10 +69,47 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
     }, []);
 
     const onSubmit = async (data: TProductClient) => {
-        const formData = {
+        let formData = {
             ...data,
             address: chosenSuggestion,
+            start_date: data.start_date instanceof Date ? data.start_date.toISOString() : "",
+            end_date: data.end_date instanceof Date ? data.end_date.toISOString() : "",
+            all_img: ["test", "test"],
         };
+
+        //validate with server stuff first
+        const validationResult = productSchemaServer.safeParse(formData);
+        if (validationResult.error) {
+            toast.toast({
+                title: "Formi on valesit taidetud!",
+            })
+            console.log(validationResult.error)
+            return
+        }
+        const imgData = new FormData();
+
+        images.forEach((img) => {
+            imgData.append('images', img.file)
+        });
+
+        const uploadResp = await fetch('/api/upload', {
+            method: 'POST',
+            body: imgData,
+        });
+
+
+        const uploadData = await uploadResp.json();
+
+        if (!uploadResp.ok) {
+            console.log('Upload successful:', data);
+            toast.toast({
+                title: "Pildi uleslaadimine ebaonnestus. Proovige hiljem uuesti",
+            })
+            return;
+        }
+        //update all_img with correct img data
+        formData.all_img = uploadData.data
+        //after validation if everythign is okay send the correct data
         const response = await fetch("/api/product", {
             method: "POST",
             body: JSON.stringify(formData),
@@ -172,18 +207,6 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                     message: errors.price,
                 })
             }
-            if (errors.primary_img) {
-                setError("primary_img", {
-                    type: "server",
-                    message: errors.primary_img,
-                })
-            }
-            if (errors.secondary_img) {
-                setError("secondary_img", {
-                    type: "server",
-                    message: errors.secondary_img,
-                })
-            }
             if (errors.all_img) {
                 setError("all_img", {
                     type: "server",
@@ -199,6 +222,16 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
             })
         }
 
+
+        //RESET ALL THE FORM VALUES FOR UX
+        setCategory('')
+        setValue("category", "")
+        setW(0)
+        setH(0)
+        setL(0)
+        setInputValue('')
+        setImages([])
+        setListingType(null)
         reset()
     }
 
@@ -215,7 +248,6 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                 input: value,
                 user_id: id,
             };
-            console.log("DATA", data)
             try {
                 const response = await fetch("/api/suggestion", {
                     method: "POST",
@@ -239,25 +271,33 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
     );
 
     const handleDates = async (item: DateRange | undefined) => {
-        setValue("start_date", item?.from!);
-        setValue("end_date", item?.to!);
-        await trigger("start_date");
-        await trigger("end_date");
+        setValue("start_date", item?.from);
+        setValue("end_date", item?.to);
+        await trigger(["start_date", "end_date"]);
     };
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setInputValue(value);
         setIsLoading(true)
-        fetchSuggestions(value);
+        if (value.length >= 2) {
+            fetchSuggestions(value);
+        } else {
+            setTimeout(() => {
+                setIsLoading(false)
+            }, 2000)
+        }
+        setValue("address", inputValue)
+        await trigger("address")
     };
 
     const handleCategoryChange = async (value: string) => {
-        await trigger("category");
         setCategory(value.toLocaleLowerCase())
+        setValue("category", value.toLocaleLowerCase())
+        await trigger("category");
     }
 
-    const setImages = async (value: string[]) => {
+    const setImagesBase = async (value: string[]) => {
         setValue("all_img", value)
         await trigger("all_img")
     }
@@ -279,13 +319,13 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                     <h2 className="font-medium text-lg">Kategooriad</h2>
                 </div>
                 <div className="flex flex-col gap-[11px] leading-4 min-w-[424px] lg:w-[500px] max-w-[1440px]">
-                    <Select onValueChange={handleCategoryChange}>
-                        <SelectTrigger>
+                    <Select value={category} onValueChange={handleCategoryChange}>
+                        <SelectTrigger className='bg-white'>
                             <SelectValue placeholder="Vali kategooria" />
                         </SelectTrigger>
                         <SelectContent>
                             {categories.map((item, index) => (
-                                <SelectItem key={index} value={item.name}>{capitalize(item.name)}</SelectItem>
+                                <SelectItem key={index} value={item.name} className='bg-[#ffffff]'>{capitalize(item.name)}</SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
@@ -294,14 +334,14 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                         <div>
                             <h2 className="font-medium text-lg">Toote kirjeldus</h2>
                             <Select onValueChange={handleSubCategoryChange} disabled={category === ''}>
-                                <SelectTrigger>
+                                <SelectTrigger className='bg-white'>
                                     <SelectValue placeholder="Mis tootega on tegemist" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {categories.map((c) => (
                                         c.name.toLocaleLowerCase() === category && c.sub_categories ? (
                                             c.sub_categories.map((sub_c, i) => (
-                                                <SelectItem key={i} value={sub_c}>
+                                                <SelectItem className='bg-white' key={i} value={sub_c}>
                                                     {sub_c}
                                                 </SelectItem>
                                             ))
@@ -312,59 +352,106 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                             {errors.sub_category && <p className="text-red-500">{errors.sub_category.message}</p>}
                         </div>
                         {/* Size input */}
-                        <div className='flex items-center gap-2'>
-                            <div>
-                                <Input {...register("width", { valueAsNumber: true })} value={width} placeholder='Laius' type='number' className="w-20 text-center" autoComplete='off' onChange={data => setW(Number(data.target.value))} />
-                                {errors.width && <p className="text-red-500">{errors.width.message}</p>}
+                        <div className=''>
+                            <div className='flex items-center gap-2'>
+
+                                <div>
+                                    <Input
+                                        {...register("width", { valueAsNumber: true })}
+                                        value={width}
+                                        placeholder='Laius'
+                                        type='number'
+                                        className="w-20 text-center bg-white"
+                                        autoComplete='off'
+                                        onChange={data => {
+                                            setW(Number(data.target.value))
+                                            setValue("width", Number(data.target.value))
+                                            trigger("width")
+                                        }}
+                                    />
+                                </div>
+                                <span className="text-gray-500">x</span>
+                                <div>
+                                    <Input
+                                        {...register("heigth", { valueAsNumber: true })}
+                                        value={heigth}
+                                        placeholder='Korgus'
+                                        type='number'
+                                        className="w-20 text-center bg-white"
+                                        autoComplete='off'
+                                        onChange={data => {
+                                            setH(Number(data.target.value))
+                                            setValue("heigth", Number(data.target.value))
+                                            trigger("heigth")
+                                        }}
+                                    />
+                                </div>
+                                <span className="text-gray-500">x</span>
+                                <div>
+                                    <Input
+                                        {...register("length", { valueAsNumber: true })}
+                                        value={length}
+                                        placeholder='Pikkus'
+                                        type='number'
+                                        className="w-20 text-center bg-white"
+                                        autoComplete='off'
+                                        onChange={data => {
+                                            setL(Number(data.target.value))
+                                            setValue("length", Number(data.target.value))
+                                            trigger("length")
+                                        }}
+                                    />
+                                </div>
+                                <p className="text-sm text-gray-500">
+                                    {width || '0'} cm x {heigth || '0'} cm x {length || '0'} cm
+                                </p>
                             </div>
-                            <span className="text-gray-500">x</span>
-                            <div>
-                                <Input {...register("heigth", { valueAsNumber: true })} value={heigth} placeholder='Korgus' type='number' className="w-20 text-center" autoComplete='off' onChange={data => setH(Number(data.target.value))} />
-                                {errors.heigth && <p className="text-red-500">{errors.heigth.message}</p>}
+                            <div className='flex flex-col gap-1'>
+                                {(() => {
+                                    const dimensionErrors = [
+                                        errors.width,
+                                        errors.heigth,
+                                        errors.length
+                                    ].filter(Boolean)
+
+                                    if (dimensionErrors.length >= 2) {
+                                        return <p className="text-red-500">Sisesta mõõtmed</p>
+                                    }
+
+                                    if (dimensionErrors.length === 1) {
+                                        return <p className="text-red-500">{dimensionErrors[0]?.message}</p>
+                                    }
+
+                                    return null;
+                                })()}
                             </div>
-                            <span className="text-gray-500">x</span>
-                            <div>
-                                <Input {...register("length", { valueAsNumber: true })} value={length} placeholder='Pikkus' type='number' className="w-20 text-center" autoComplete='off' onChange={data => setL(Number(data.target.value))} />
-                                {errors.length && <p className="text-red-500">{errors.length.message}</p>}
-                            </div>
-                            <p className="text-sm text-gray-500">
-                                {width || '0'} cm x {heigth || '0'} cm x {length || '0'} cm
-                            </p>
                         </div>
-                        {/* Some random easy inputs */}
+
+
                         <div>
-                            <Input {...register("material")} placeholder='Materjal' autoComplete='off' />
+                            <Input {...register("material")} placeholder='Materjal' className='bg-white' autoComplete='off' />
                             {errors.material && <p className="text-red-500">{errors.material.message}</p>}
 
                         </div>
                         <div>
-                            <Input {...register("description")} placeholder='Uksikasjad' autoComplete='off' />
+                            <Input {...register("description")} placeholder='Kirjeldus' className='bg-white' autoComplete='off' />
                             {errors.description && <p className="text-red-500">{errors.description.message}</p>}
                         </div>
                     </div>
 
-
-
-                    {/* CALENDER COMES HERE */}
-                    {listingType == "rent" && <div>
-                        <Calender changeValueFunc={handleDates} disabled={["test", "test1", "test2", 'test3']} />
-                        {errors.start_date && <p className="text-red-500">{errors.start_date.message}</p>}
-                        {errors.end_date && <p className="text-red-500">{errors.end_date.message}</p>}
-                    </div>}
-
                     <RadioGroup
                         value={listingType || ""}
                         onValueChange={handleListingTypeChange}
-                        className="flex flex-col space-y-1 mt-2 h-full mb-[100px]"
+                        className="flex flex-col space-y-1 mt-2 h-full"
                     >
                         <div className="flex items-center space-x-2">
                             <Label htmlFor="rent" className='w-[50px]'>Rent</Label>
-                            <RadioGroupItem value="rent" id="rent" />
+                            <RadioGroupItem value="rent" id="rent" className='cursor-pointer' />
                             <div className="relative pl-[20px]">
                                 <Input
                                     disabled={listingType != "rent"}
                                     placeholder="Rendi hind"
-                                    className={`max-w-[200px] rounded-xl`}
+                                    className='max-w-[200px] rounded-xl bg-white'
                                     onChange={handleInput}
                                     type='number'
                                 />
@@ -372,19 +459,31 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                         </div>
                         <div className="flex items-center space-x-2">
                             <Label htmlFor="sell" className='w-[50px]'>Müük</Label>
-                            <RadioGroupItem value="sell" id="sell" />
+                            <RadioGroupItem value="sell" id="sell" className='cursor-pointer' />
                             <div className="relative pl-[20px]">
                                 <Input
                                     disabled={listingType != "sell"}
                                     placeholder="Müügi hind"
-                                    className={`max-w-[200px] rounded-xl`}
+                                    className='max-w-[200px] rounded-xl bg-white'
                                     onChange={handleInput}
                                     type='number'
                                 />
                             </div>
                         </div>
-                        {errors.price && <p className="text-red-500">{errors.price.message}</p>}
+                        <p className="text-red-500">
+                            {errors.type ? errors.type.message : errors.price?.message}
+                        </p>
                     </RadioGroup>
+
+                    {listingType == "rent" && <div>
+                        <Calender changeValueFunc={handleDates} disabled={["test", "test1", "test2", 'test3']} />
+                        {(errors.start_date || errors.end_date) && (
+                            <p className="text-red-500">
+                                {errors.start_date ? errors.start_date.message : errors.end_date?.message}
+                            </p>
+                        )}
+                    </div>}
+
                     <p className='flex items-center gap-1'>Aadress <span><Map /></span></p>
                     <div className="relative mb-[167px]">
                         <Input
@@ -393,6 +492,7 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                             onChange={handleInputChange}
                             value={inputValue}
                             autoComplete="off"
+                            className='bg-white'
                         />
                         <Suggestions
                             isLoading={isLoading}
@@ -407,12 +507,13 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                         {errors.address && <p className="text-red-500">{errors.address.message}</p>}
                     </div>
                     <div>
-                        <AdvancedImageInput insertFunc={setImages} />
+                        <AdvancedImageInput images={images} setImages={setImages} baseValue={setImagesBase} />
+                        {errors.all_img && <p className="text-red-500">{errors.all_img.message}</p>}
                     </div>
                 </div>
             </div>
             <div className="flex items-center justify-center">
-                <SubmitButton disabled={isSubmitting} onClick={() => console.log(getValues())} className="bg-accent hover:bg-accent md:w-[202px] md:h-[55px] text-black cursor" type="submit">
+                <SubmitButton onClick={() => { console.log(getValues()) }} disabled={isSubmitting} className="bg-accent hover:bg-accent md:w-[202px] md:h-[55px] text-black cursor" type="submit">
                     <h1 className={cn(isSubmitting ? " hidden " : "block")}>
                         Lisa toode
                     </h1>
