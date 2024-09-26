@@ -5,7 +5,7 @@ import { category } from "../schema"
 
 export const CheckCategories = async (categories: string[]) => {
     try {
-        const result = await db.select().from(category).where(inArray(category.name, categories))
+        const result = await db.select().from(category).where(inArray(category.name_slug, categories))
 
         if (result.length != categories.length) {
             return {

@@ -14,17 +14,21 @@ import { OwnerRating } from './owner-rating'
 import { Reviews } from './reviews'
 import { DateForm } from './rent-form'
 import db from '@/utils/supabase/db'
+import { FetchCategories } from '@/utils/supabase/queries/categories'
 
 interface ProductPageProps {
   product_id: number
   slugs: string[]
+  categories: {
+    name: string
+    name_slug: string
+  }[]
 }
 
-const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id }) => {
+const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id, categories }) => {
   const { data, error } = await fetchProduct(product_id)
+
   const result = await db.select().from(user)
-  console.log(result)
-  console.log()
   if (error == "Server error") {
     return (
       <ServerError />
@@ -63,7 +67,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id }) =>
   return (
     <div className='md:min-h-screen w-full'>
       <div className='max-w-[1440px] md:px-16 mx-auto'>
-        <CategoryNavigation categories={slugs.slice(0, -1).concat(data![0].name)} />
+        <CategoryNavigation categories={categories.slice(0, -1)} product={data[0]}/>
         <div className='md:mt-16 md:flex md:items-center md:justify-between'>
           <ChevronLeft color='#555555' size={44} />
         </div>

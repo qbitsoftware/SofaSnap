@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { integer, pgSchema, pgTable, point, real, serial, text, time, timestamp, uuid } from "drizzle-orm/pg-core";
+import { integer, pgSchema, pgTable, point, real, serial, text,  timestamp, uuid } from "drizzle-orm/pg-core";
 
 const authSchema = pgSchema('auth');
 
@@ -62,7 +62,8 @@ export const productReal = pgTable('products', {
 
 export const category = pgTable('categories', {
     id: serial("id").primaryKey().notNull(),
-    name: text("name").unique().notNull(),
+    name: text("name").notNull(),
+    name_slug: text("name_slug").notNull(),
     created_at: timestamp('created_at', {
         withTimezone: true,
         mode: 'string',
