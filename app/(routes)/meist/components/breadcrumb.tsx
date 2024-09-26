@@ -6,14 +6,14 @@ import Link from 'next/link'
 const Mission = () => {
   return (
     <div className='flex max-w-[1440px] w-full items-center'>
-        <div className='flex gap-[85px] items-center '>
-            <div className='cursor-pointer'>
-                <Link href={"/"}>
-                    <ChevronLeft width={50} height={50}/>
-                </Link>
-            </div>
-            <h2 className='font-medium text-[44px]'>Mission</h2>
-        </div>
+      <div className='flex pr-[40px] md:pr-[45px] lg:pr-[85px] items-center'>
+        <Link className='cursor-pointer' href={"/"}>
+          <ChevronLeft width={50} height={50} />
+        </Link>
+      </div>
+      <div>
+        <h2 className='font-medium text-[36px] md:text-[44px]'>Mission</h2>
+      </div>
     </div>
   )
 }

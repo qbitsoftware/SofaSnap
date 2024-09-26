@@ -8,21 +8,21 @@ import { CircleUser } from 'lucide-react';
 import { MobileNav } from "./mobile-nav"
 import { GetUserInfo } from "@/app/actions"
 import { LogOut } from "./logout"
+import { FetchCategories } from "@/utils/supabase/queries/categories"
+import { ServerError } from "./server-error"
 
 
 const NavBar = async () => {
     const user = await GetUserInfo()
-    // const {data, error} = await FetchCategories()
+    const { data, error } = await FetchCategories()
 
-    // if (error && error == "Server error") {
-    //     console.log(error)
-    //     return (
-    //         <div>Server Error</div>
-    //     )
-    // }
+    if (error && error == "Server error") {
+        return (
+            <div><ServerError /></div>
+        )
+    }
 
-    // console.log(error)
- 
+
     return (
         <div className="flex w-full lg:max-w-[1152px] xl:max-w-[1310px] h-[68px] md:h-[50px] mt-[14px] mb-[35px] md:my-[35px] items-center justify-between mx-auto">
             <div className="md:hidden">
@@ -39,7 +39,7 @@ const NavBar = async () => {
                 <div className="hidden md:flex lg:w-[540px] xl:w-[530px] items-center py-[4px] justify-between">
 
                     <div className="md:gap-[50px]">
-                        {/* <NavLinks categories={data} /> */}
+                        <NavLinks categories={data} />
                     </div>
                     <div className="">
                         {user.data.user ? (

@@ -5,17 +5,17 @@ import Image from 'next/image'
 
 const Page = () => {
   return (
-    <div className='flex flex-col justify-center xl:max-w-[1440px] w-full px-[56px] pt-[30px] mx-auto'>
-        <div className='mb-[38px]'>
-            <Mission />
-        </div>
-        <div className='ml-[135px] mb-[179px]'>
-            <Text />
-        </div>
+    <div className='flex flex-col justify-center  xl:max-w-[1440px] w-full px-[56px] pt-[30px] mx-auto'>
+      <div className='mb-[38px]'>
+        <Mission />
+      </div>
+      <div className='md:ml-[60px] lg:ml-[135px] mb-[179px]'>
+        <Text />
+      </div>
 
-        <div className='w-[326px] h-[130px] mb-[200px] mx-auto'>
-            <Image alt='logo' width={326} height={130} src={"/branding/logo-meist.svg"}/>
-        </div>
+      <div className='w-[240px] md:w-[280px] lg:w-[326px] h-[130px] mb-[100px] md:mb-[160px] lg:mb-[200px] mx-auto'>
+        <Image alt='logo' width={326} height={130} src={"/branding/logo-meist.svg"} />
+      </div>
     </div>
   )
 }

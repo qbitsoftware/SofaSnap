@@ -39,7 +39,7 @@ export const FetchCategories = async () => {
             }
         }
 
-        console.log(result)
+        // console.log(result)
         return {
             data: result,
             error: undefined

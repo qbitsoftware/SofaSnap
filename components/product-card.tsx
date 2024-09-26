@@ -36,7 +36,7 @@ export const ProductCard:React.FC<ProductCardProps> = ({product, className}) => 
                         <div className="flex flex-col gap-1">
                             <div className="flex justify-between items-center text-lg font-semibold">
                                 <p>{product.name}</p>
-                                <span className="flex" >{product.rating}<Star className="w-8" color="" fill="#FE9F73" /></span>
+                                <span className="flex" >5<Star className="w-8" color="" fill="#FE9F73" /></span>
                             </div>
                             <p className="text-lg font-normal">{product.description}</p>
                         </div>
