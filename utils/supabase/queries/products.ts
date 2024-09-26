@@ -1,10 +1,11 @@
 "use server"
 
 import db from '@/utils/supabase/db'
-import { category, category_join, product } from '@/utils/supabase/schema'
+import { category, category_join, product, productReal } from '@/utils/supabase/schema'
 import { eq, and, sql } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
-import { Product } from '../supabase.types'
+import { Category, CategoryJoin, CategoryTS, Product, ProductRealTS } from '../supabase.types'
+import { TProductServer } from '@/lib/product-validation'
 
 interface FetchProductsResponse {
     success: boolean;
@@ -118,25 +119,75 @@ export const fetchAllProducts = async () => {
     }
 }
 
+export const addProduct = async (prod: TProductServer) => {
+    const product: ProductRealTS = {
+        name: prod.name,
+        description: prod.description!,
+        user_id: prod.user_id,
+        preview_image: prod.all_img[0],
+        price: prod.price,
+        width: prod.width,
+        heigth: prod.heigth,
+        length: prod.length,
+        material: prod.material,
+        type: prod.type,
+        start_date: prod.start_date!,
+        end_date: prod.end_date!,
+        all_img: prod.all_img,
 
-export const fetchProduct =async (id:number) =>{
+    }
+
+    try {
+        await db.transaction(async (tx) => {
+            const insertedProduct = await tx.insert(productReal)
+                .values(product)
+                .returning({ id: productReal.id });
+
+            const productId = insertedProduct[0]?.id;
+
+            if (!productId) {
+                throw new Error("Failed to insert product.");
+            }
+
+            const category: CategoryTS = {
+                category_name: prod.category,
+                product_id: productId,
+            };
+
+            await tx.insert(category_join)
+                .values(category);
+        });
+
+        return {
+            data: "Product and category successfully added",
+            error: undefined,
+        };
+    } catch (error) {
+        return {
+            data: undefined,
+            error: "Server error",
+        };
+    }
+};
+
+export const fetchProduct = async (id: number) => {
     try {
         const result = await db.select().from(product)
-            .where(eq(product.id,id ))
+            .where(eq(product.id, id))
         if (result.length == 0) {
-               return {
+            return {
                 data: undefined,
                 error: "No results found"
-               } 
+            }
         }
         return {
-            data:result,
+            data: result,
             error: undefined
         }
     } catch (error) {
         return {
             data: undefined,
-            error:"Server error"
+            error: "Server error"
         }
     }
 

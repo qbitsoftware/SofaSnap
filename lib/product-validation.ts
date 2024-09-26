@@ -3,6 +3,8 @@ import { FeatureSchema } from "./coordinates-validation";
 
 export const productSchema = z
     .object({
+        user_id: z.string(),
+        name: z.string().min(4, "Nimi peab olema vahemalt 4 tahe pikkune"),
         category: z.string({ message: "Valige kategooria" }).min(1),
         sub_category: z.string({ message: "Valige toote kategooria" }).min(1),
         width: z.number().min(1, "Sisesta laius"),
@@ -54,6 +56,8 @@ export const productSchema = z
 
 
 export const productSchemaServer = z.object({
+    user_id: z.string(),
+    name: z.string().min(4, "Nimi peab olema vahemalt 4 tahe pikkune"),
     category: z.string({ message: "Valige kategooria" }).min(1),
     sub_category: z.string({ message: "Valige toote kategooria" }).min(1),
     width: z.number().min(1, "Sisesta laius"),

@@ -18,6 +18,18 @@ export async function POST(req: Request, res: NextApiResponse) {
 
         for (const [name, value] of formData.entries()) {
             if (value instanceof File) {
+                // Validate the file size (limit to 10MB)
+                if (value.size > 10 * 1024 * 1024) {
+                    return NextResponse.json({ error: 'Fail on liiga suur' }, { status: 400 });
+                }
+
+                // Validate the file type (only allow PNG, JPG, JPEG, SVG)
+                const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
+                if (!allowedTypes.includes(value.type)) {
+                    return NextResponse.json({ error: 'Faili tüüp on keelatud' }, { status: 400 });
+                }
+
+                // If validation passes, add the file to the list
                 files.push(value);
             }
         }

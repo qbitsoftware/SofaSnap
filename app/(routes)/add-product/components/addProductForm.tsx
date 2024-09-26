@@ -63,13 +63,15 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
             }, 200)
         }
         document.addEventListener('mousedown', suggestion);
-        return () => {            document.removeEventListener('mousedown', suggestion);
+        return () => {
+            document.removeEventListener('mousedown', suggestion);
         };
     }, []);
 
     const onSubmit = async (data: TProductClient) => {
         let formData = {
             ...data,
+            user_id: id,
             address: chosenSuggestion,
             start_date: data.start_date instanceof Date ? data.start_date.toISOString() : "",
             end_date: data.end_date instanceof Date ? data.end_date.toISOString() : "",
@@ -138,6 +140,12 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                 setError("address", {
                     type: "server",
                     message: errors.address,
+                })
+            }
+            if (errors.name) {
+                setError("name", {
+                    type: "server",
+                    message: errors.name,
                 })
             }
             if (errors.category) {
@@ -329,27 +337,29 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                         </SelectContent>
                     </Select>
                     {errors.category && <p className="text-red-500">{errors.category.message}</p>}
+                    <div>
+                        <Select onValueChange={handleSubCategoryChange} disabled={category === ''}>
+                            <SelectTrigger className='bg-white'>
+                                <SelectValue placeholder="Mis tootega on tegemist" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {categories.map((c) => (
+                                    c.name.toLocaleLowerCase() === category && c.sub_categories ? (
+                                        c.sub_categories.map((sub_c, i) => (
+                                            <SelectItem className='bg-white' key={i} value={sub_c}>
+                                                {sub_c}
+                                            </SelectItem>
+                                        ))
+                                    ) : null
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        {errors.sub_category && <p className="text-red-500">{errors.sub_category.message}</p>}
+                    </div>
                     <div className="flex flex-col mt-[44px] gap-[30px]">
-                        <div>
-                            <h2 className="font-medium text-lg">Toote kirjeldus</h2>
-                            <Select onValueChange={handleSubCategoryChange} disabled={category === ''}>
-                                <SelectTrigger className='bg-white'>
-                                    <SelectValue placeholder="Mis tootega on tegemist" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {categories.map((c) => (
-                                        c.name.toLocaleLowerCase() === category && c.sub_categories ? (
-                                            c.sub_categories.map((sub_c, i) => (
-                                                <SelectItem className='bg-white' key={i} value={sub_c}>
-                                                    {sub_c}
-                                                </SelectItem>
-                                            ))
-                                        ) : null
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            {errors.sub_category && <p className="text-red-500">{errors.sub_category.message}</p>}
-                        </div>
+                        <h2 className="font-medium text-lg">Toote kirjeldus</h2>
+                        <Input {...register("name")} placeholder='Nimi' className='bg-white' autoComplete='off' />
+                        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
                         {/* Size input */}
                         <div className=''>
                             <div className='flex items-center gap-2'>

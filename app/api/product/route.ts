@@ -17,6 +17,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ errors: zodErrors }, { status: 400 });
         }
 
+
         console.log("Successfull")
         console.log(result)
 

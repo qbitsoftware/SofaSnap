@@ -15,6 +15,9 @@ const Page = async () => {
     } else if (error || !data) {
         redirect("/404")
     } 
+    if (!user.data.user){
+        redirect("/sign-in")
+    }
 
     return (
         <div className='flex flex-col justify-center xl:max-w-[1440px] w-full px-[56px] pt-[30px] mx-auto'>
