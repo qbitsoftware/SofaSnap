@@ -12,9 +12,6 @@ interface ProductProps {
 export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
     const [currentImage, setCurrentImage] = useState(0)
 
-    // ajutine
-
-    let images = [product.preview_image, "/images/leht.svg", product.preview_image]
 
 
     const handleDotClick = (index: number) => {
@@ -22,18 +19,18 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
     }
 
     const handlePrev = () => {
-        setCurrentImage((prev) => (prev - 1 + images.length) % images.length)
+        setCurrentImage((prev) => (prev - 1 + product.all_img!.length) % product.all_img!.length)
     }
 
     const handleNext = () => {
-        setCurrentImage((prev) => (prev + 1) % images.length)
+        setCurrentImage((prev) => (prev + 1) % product.all_img!.length)
     }
 
     return (
         <div className='md:flex lg:gap-[130px] md:gap-[80px] 2xl:gap-[260px]'>
             <div className='relative'>
                 <div className='relative lg:w-[510px] lg:h-[450px] md:w-[350px] md:h-[309px] rounded-xl overflow-hidden'>
-                    {images.map((image, index) => (
+                    {product.all_img!.map((image, index) => (
                         <div
                             key={index}
                             className={`absolute top-0 left-0 w-full h-full transition-opacity duration-500 ease-in-out ${index === currentImage ? 'opacity-100 z-10' : 'opacity-0 z-0'
@@ -41,7 +38,7 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
                         >
                             <Image
                                 className='absolute w-full h-full rounded-xl object-cover'
-                                src={image}  // Assuming 'image' is the URL
+                                src={image} 
                                 alt={product.name}
                                 fill
                                 objectFit='cover'
@@ -58,7 +55,7 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
                         <ChevronLeft size={40} className="" />
                     </button>
                     <div className="flex space-x-2 mx-4">
-                        {images.map((_, index) => (
+                        {product.all_img!.map((_, index) => (
                             <button
                                 key={index}
                                 onClick={() => handleDotClick(index)}

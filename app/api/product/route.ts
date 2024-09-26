@@ -1,4 +1,5 @@
 import { productSchemaServer } from "@/lib/product-validation";
+import { addProduct } from "@/utils/supabase/queries/products";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -17,12 +18,17 @@ export async function POST(request: Request) {
             return NextResponse.json({ errors: zodErrors }, { status: 400 });
         }
 
-
+        const { error } = await addProduct(result.data)
+        if (error) {
+            console.log("error", error)
+            return NextResponse.json({ error: 'Unexpected error occurred' }, { status: 500 });
+        }
         console.log("Successfull")
         console.log(result)
 
         return NextResponse.json({ data: "GOOOD" }, { status: 200 });
     } catch (error) {
+        console.log("ERROR", error)
         return NextResponse.json({ error: 'Unexpected error occurred' }, { status: 500 });
     }
 }

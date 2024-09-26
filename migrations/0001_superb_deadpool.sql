@@ -1,1 +1,0 @@
-ALTER TABLE "categories" ADD COLUMN "sub_categories" text[] DEFAULT '{}'::text[];

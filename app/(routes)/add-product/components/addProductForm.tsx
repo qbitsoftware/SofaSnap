@@ -62,6 +62,8 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                 setShowSuggestions(false);
             }, 200)
         }
+        // set user name beforehand
+        setValue("user_id", id)
         document.addEventListener('mousedown', suggestion);
         return () => {
             document.removeEventListener('mousedown', suggestion);
@@ -315,7 +317,7 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
     }
 
     const handleInput = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValue("price", event.target.value)
+        setValue("price", event.target.valueAsNumber)
         await trigger("price");
     }
 
@@ -332,7 +334,7 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                         </SelectTrigger>
                         <SelectContent>
                             {categories.map((item, index) => (
-                                <SelectItem key={index} value={item.name} className='bg-[#ffffff]'>{capitalize(item.name)}</SelectItem>
+                                <SelectItem key={index} value={item.name_slug} className='bg-[#ffffff]'>{capitalize(item.name)}</SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
@@ -344,7 +346,7 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                             </SelectTrigger>
                             <SelectContent>
                                 {categories.map((c) => (
-                                    c.name.toLocaleLowerCase() === category && c.sub_categories ? (
+                                    c.name_slug.toLocaleLowerCase() === category && c.sub_categories ? (
                                         c.sub_categories.map((sub_c, i) => (
                                             <SelectItem className='bg-white' key={i} value={sub_c}>
                                                 {sub_c}
@@ -381,8 +383,11 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                                 </div>
                                 <span className="text-gray-500">x</span>
                                 <div>
+                                    <Label htmlFor='heigth'>Korgus</Label>
                                     <Input
                                         {...register("heigth", { valueAsNumber: true })}
+                                        id='heigth'
+                                        name='heigth'
                                         value={heigth}
                                         placeholder='Korgus'
                                         type='number'
@@ -463,6 +468,7 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                                     className='max-w-[200px] rounded-xl bg-white'
                                     onChange={handleInput}
                                     type='number'
+                                    step="0.01"
                                 />
                             </div>
                         </div>
@@ -476,6 +482,7 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                                     className='max-w-[200px] rounded-xl bg-white'
                                     onChange={handleInput}
                                     type='number'
+                                    step="0.01"
                                 />
                             </div>
                         </div>

@@ -15,7 +15,7 @@ export const productSchema = z
         start_date: z.date().optional(),
         end_date: z.date().optional(),
         type: z.string({ message: "Valige kuulutuse tüüp" }).min(1),
-        price: z.string({ message: "Sisestage sobiv hind" }).min(1, "Madalaim hind on 1 euro"),
+        price: z.number({ message: "Sisestage sobiv hind" }).min(1, "Madalaim hind on 1 euro"),
         address: z.string().min(1, "Aadress on nõutud"),
         all_img: z.array(z.string(), { message: "Lisa vähemalt 1 pilt tootest" }).min(1),
     }).superRefine((value, ctx) => {
@@ -68,7 +68,7 @@ export const productSchemaServer = z.object({
     start_date: z.string().optional(),
     end_date: z.string().optional(),
     type: z.string({ message: "Valige kuulutuse tüüp" }).min(1),
-    price: z.string({ message: "Sisestage sobiv hind" }).min(1, "Madalaim hind on 1 euro"),
+    price: z.number({ message: "Sisestage sobiv hind" }).min(1, "Madalaim hind on 1 euro"),
     address: FeatureSchema,
     all_img: z.array(z.string(), { message: "Lisa vähemalt 1 pilt tootest" }).min(1),
 }).superRefine((value, ctx) => {

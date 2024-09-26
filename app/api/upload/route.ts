@@ -1,8 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
-import { IncomingForm } from 'formidable';
 
 
 export const config = {
@@ -16,7 +15,7 @@ export async function POST(req: Request, res: NextApiResponse) {
         const formData = await req.formData()
         const files: File[] = [];
 
-        for (const [name, value] of formData.entries()) {
+        for (const [_, value] of formData.entries()) {
             if (value instanceof File) {
                 // Validate the file size (limit to 10MB)
                 if (value.size > 10 * 1024 * 1024) {
@@ -43,15 +42,15 @@ export async function POST(req: Request, res: NextApiResponse) {
 
             const { data, error } = await supabase.storage
                 .from("resources")
-                .upload(`products/${filename}`, file, {
+                .upload(`/products/${filename}`, file, {
                     cacheControl: "3600",
                     upsert: false,
                 });
 
+
             if (data) {
                 const filepath = data.path;
-                console.log("Adding to filePaths", filepath);
-                filePaths.push(filepath);
+                filePaths.push(process.env.BUCKET_URL! + "/" + filepath);
             }
 
             if (error) {

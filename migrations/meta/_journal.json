@@ -5,50 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1726662790364,
-      "tag": "0000_quiet_moonstone",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1726726129628,
-      "tag": "0001_superb_deadpool",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1726754030492,
-      "tag": "0002_cooing_jamie_braddock",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1727333174766,
-      "tag": "0003_regular_sharon_carter",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1727333833876,
-      "tag": "0004_swift_squadron_sinister",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1727333906874,
-      "tag": "0005_amazing_swordsman",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1727333950246,
-      "tag": "0006_wide_white_tiger",
+      "when": 1727350370286,
+      "tag": "0000_yummy_thing",
       "breakpoints": true
     }
   ]

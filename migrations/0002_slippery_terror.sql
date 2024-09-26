@@ -1,1 +1,0 @@
-ALTER TABLE "category_join" ADD COLUMN "id" serial PRIMARY KEY NOT NULL;

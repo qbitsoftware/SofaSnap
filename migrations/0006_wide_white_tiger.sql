@@ -1,1 +1,0 @@
-ALTER TABLE "categories" ADD COLUMN "name_slug" text NOT NULL;

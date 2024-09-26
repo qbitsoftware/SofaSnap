@@ -1,10 +1,10 @@
 "use server"
 
 import db from '@/utils/supabase/db'
-import { category, category_join, product, productReal } from '@/utils/supabase/schema'
+import { category, category_join, product, address } from '@/utils/supabase/schema'
 import { eq, and, sql } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
-import { Category, CategoryJoin, CategoryTS, Product, ProductRealTS } from '../supabase.types'
+import { Address, AddressTS, CategoryTS, Product, ProductRealTS } from '../supabase.types'
 import { TProductServer } from '@/lib/product-validation'
 
 interface FetchProductsResponse {
@@ -23,16 +23,22 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
                 id: category_join.product_id,
                 name: product.name,
                 created_at: product.created_at,
-                updatedAt: product.updatedAt,
-                condition: product.condition,
+                updated_at: product.updated_at,
                 description: product.description,
                 user_id: product.user_id,
                 preview_image: product.preview_image,
                 price: product.price,
-                rating: product.rating,
+                width: product.width,
+                heigth: product.heigth,
+                length: product.length,
+                type: product.type,
+                material: product.material,
+                start_date: product.start_date,
+                end_date: product.end_date,
+                all_img: product.all_img,
             })
             .from(category_join)
-            .innerJoin(category, eq(category.name, category_join.category_name))
+            .innerJoin(category, eq(category.name, category_join.category_name_slug))
             .innerJoin(product, eq(product.id, category_join.product_id));
 
         if (categories.length > 1) {
@@ -41,14 +47,14 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
                 .innerJoin(categoryJoinAlias, eq(category_join.product_id, categoryJoinAlias.product_id))
                 .where(
                     and(
-                        eq(category_join.category_name, categories[0]),
-                        eq(categoryJoinAlias.category_name, categories[1])
+                        eq(category_join.category_name_slug, categories[0]),
+                        eq(categoryJoinAlias.category_name_slug, categories[1])
                     )
                 );
         } else {
             // @ts-ignore
             query = query
-                .where(eq(category_join.category_name, categories[0]));
+                .where(eq(category_join.category_name_slug, categories[0]));
         }
 
         const result = await query
@@ -65,14 +71,14 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
                 .innerJoin(categoryJoinAlias, eq(category_join.product_id, categoryJoinAlias.product_id))
                 .where(
                     and(
-                        eq(category_join.category_name, categories[0]),
-                        eq(categoryJoinAlias.category_name, categories[1])
+                        eq(category_join.category_name_slug, categories[0]),
+                        eq(categoryJoinAlias.category_name_slug, categories[1])
                     )
                 );
         } else {
             // @ts-ignore
             countQuery = countQuery
-                .where(eq(category_join.category_name, categories[0]));
+                .where(eq(category_join.category_name_slug, categories[0]));
         }
 
 
@@ -120,7 +126,7 @@ export const fetchAllProducts = async () => {
 }
 
 export const addProduct = async (prod: TProductServer) => {
-    const product: ProductRealTS = {
+    const p: ProductRealTS = {
         name: prod.name,
         description: prod.description!,
         user_id: prod.user_id,
@@ -134,28 +140,49 @@ export const addProduct = async (prod: TProductServer) => {
         start_date: prod.start_date!,
         end_date: prod.end_date!,
         all_img: prod.all_img,
-
     }
 
     try {
         await db.transaction(async (tx) => {
-            const insertedProduct = await tx.insert(productReal)
-                .values(product)
-                .returning({ id: productReal.id });
+            if (prod.start_date == "") {
+                p.start_date = null
+            } 
+            if (prod.end_date == "") {
+                p.end_date = null
+            }
+            //add product
+            const insertedProduct = await tx.insert(product)
+                .values(p)
+                .returning({ id: product.id });
 
             const productId = insertedProduct[0]?.id;
 
             if (!productId) {
                 throw new Error("Failed to insert product.");
             }
-
+            //add category join
             const category: CategoryTS = {
-                category_name: prod.category,
+                category_name_slug: prod.category,
                 product_id: productId,
             };
 
             await tx.insert(category_join)
                 .values(category);
+            //add address join
+            const ad: AddressTS = {
+                full_address: prod.address.properties.full_address,
+                location: {
+                    x: prod.address.geometry.coordinates[0],
+                    y: prod.address.geometry.coordinates[1],
+                },
+                postal_code: prod.address.properties.context.postcode.name,
+                address_number: prod.address.properties.context.address.address_number,
+                region: prod.address.properties.context.region.name,
+                country_code: prod.address.properties.context.country.country_code,
+                country_name: prod.address.properties.context.country.name,
+            }
+
+            await tx.insert(address).values(ad)
         });
 
         return {
@@ -163,6 +190,7 @@ export const addProduct = async (prod: TProductServer) => {
             error: undefined,
         };
     } catch (error) {
+        console.log("ERR", error)
         return {
             data: undefined,
             error: "Server error",
