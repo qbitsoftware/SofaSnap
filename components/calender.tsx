@@ -54,6 +54,11 @@ export const Calender: React.FC<CalenderProps> = ({ changeValueFunc }: CalenderP
                                 setDateRange(item)
                                 changeValueFunc(item)
                             }}
+                            disabled={(date) => {
+                                const today = new Date();
+                                today.setHours(0, 0, 0, 0)
+                                return date < today || date < new Date("1900-01-01");
+                            }}
                             numberOfMonths={2}
                         />
                     </PopoverContent>

@@ -11,10 +11,11 @@ export const ProductImage: React.FC<ProductImageProps> = ({ product }) => {
   return (
     <div className='w-full bg-[#000000]/10 flex justify-center'>
       <Image 
-        src={product.preview_image} 
+        // placeholder
+        src={"/images/tool2.png"} 
         alt={product.name} 
         layout='intrinsic' 
-        width={700}
+        width={531}
         height={500}
         objectFit='contain'
       />

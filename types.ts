@@ -17,13 +17,3 @@ export type Review = {
 }
 
 
-export type Product = {
-    id: string,
-    name: string,
-    description: string
-    price: number
-    rating: number
-    preview_image: string
-}
-
-

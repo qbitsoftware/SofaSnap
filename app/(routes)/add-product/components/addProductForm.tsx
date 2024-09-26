@@ -63,8 +63,7 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
             }, 200)
         }
         document.addEventListener('mousedown', suggestion);
-        return () => {
-            document.removeEventListener('mousedown', suggestion);
+        return () => {            document.removeEventListener('mousedown', suggestion);
         };
     }, []);
 

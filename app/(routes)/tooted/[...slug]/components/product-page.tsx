@@ -7,12 +7,13 @@ import { CategoryNavigation } from './category-navigation'
 import { MapButton } from '@/components/map-button'
 import { ChevronLeft } from 'lucide-react'
 import { capitalize } from '@/utils/utils'
-import { product } from '@/utils/supabase/schema'
+import { product, user } from '@/utils/supabase/schema'
 import Image from 'next/image'
 import { ProductImage } from './product-image'
 import { OwnerRating } from './owner-rating'
 import { Reviews } from './reviews'
 import { DateForm } from './rent-form'
+import db from '@/utils/supabase/db'
 
 interface ProductPageProps {
   product_id: number
@@ -21,6 +22,8 @@ interface ProductPageProps {
 
 const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id }) => {
   const { data, error } = await fetchProduct(product_id)
+  const result = await db.select().from(user)
+  console.log(result)
   console.log()
   if (error == "Server error") {
     return (
@@ -77,8 +80,8 @@ const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id }) =>
         </div>
       </div>
       <Reviews reviews={sampleReviews} className='md:my-[150px] mx-auto md:w-[80%] max-w-[1280px]'/>
-      <div>
-        <DateForm/>
+      <div className='w-full mx-auto'>
+        <DateForm product={data[0]}/>
       </div>
     </div >
   )
