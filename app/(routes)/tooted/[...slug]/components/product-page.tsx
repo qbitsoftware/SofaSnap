@@ -4,17 +4,14 @@ import { redirect } from 'next/navigation'
 import React from 'react'
 import { ProductComponent } from './product'
 import { CategoryNavigation } from './category-navigation'
-import { MapButton } from '@/components/map-button'
 import { ChevronLeft } from 'lucide-react'
-import { capitalize } from '@/utils/utils'
-import { product, user } from '@/utils/supabase/schema'
-import Image from 'next/image'
+import {  user } from '@/utils/supabase/schema'
 import { ProductImage } from './product-image'
-import { OwnerRating } from './owner-rating'
 import { Reviews } from './reviews'
 import { DateForm } from './rent-form'
 import db from '@/utils/supabase/db'
-import { FetchCategories } from '@/utils/supabase/queries/categories'
+import GoogleMapComponent from '@/components/map'
+import { OwnerRating } from './owner-rating'
 
 interface ProductPageProps {
   product_id: number
@@ -36,8 +33,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id, cate
   }
 
   if (error || !data) {
-    redirect("/404")
-  }
+    redirect("/404")  }
 
   // Reviews placeholder
   const sampleReviews = [
@@ -80,12 +76,18 @@ const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id, cate
       </div>
       <div className='bg-[#CBD3CB]/35 '>
         <div className='md:px-16 max-w-[1440px] mx-auto md:min-h-[190px] flex items-center'>
-          {/* <OwnerRating  /> */}
+          {/* <OwnerRating  owner={}/> */}
         </div>
       </div>
       <Reviews reviews={sampleReviews} className='md:my-[150px] mx-auto md:w-[80%] max-w-[1280px]'/>
       <div className='w-full mx-auto'>
         <DateForm product={data[0]}/>
+      </div>
+      <div className='px-[64px] max-w-[1440px] mx-auto md:my-[200px]'>
+        <GoogleMapComponent className={""} api={process.env.GOOGLE_MAPS_KEY!} markers={[{lat:59.346962, lng:24.753574}]} />
+      </div>
+      <div>
+        
       </div>
     </div >
   )

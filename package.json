@@ -24,6 +24,7 @@
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
+    "@react-google-maps/api": "^2.19.3",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
     "@types/lodash": "^4.17.7",
