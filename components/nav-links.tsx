@@ -74,7 +74,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ categories }) => {
           <div className='grid grid-cols-2 gap-y-[4px] gap-x-[300px]'>
             {
               categories && categories.map((category) => (
-                <Link key={category.name} href={"/" + category.name}>
+                <Link key={category.name_slug} href={"/" + category.name}>
                   <h1 className='p-[10px] cursor-pointer text-lg leading-5'>{capitalize(category.name)}</h1>
                 </Link>
               ))}

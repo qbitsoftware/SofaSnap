@@ -80,7 +80,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id, cate
       </div>
       <div className='bg-[#CBD3CB]/35 '>
         <div className='md:px-16 max-w-[1440px] mx-auto md:min-h-[190px] flex items-center'>
-          <OwnerRating  />
+          {/* <OwnerRating  /> */}
         </div>
       </div>
       <Reviews reviews={sampleReviews} className='md:my-[150px] mx-auto md:w-[80%] max-w-[1280px]'/>

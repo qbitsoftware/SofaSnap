@@ -1,8 +1,8 @@
-import { NavBar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import "./globals.css";
 import { inter } from "@/fonts";
 import { Toaster } from "@/components/ui/toaster";
+import NavBar from "@/components/navbar";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -21,12 +21,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
+    <html lang="en" className={inter.className}>
       <body className="no-scrollbar min-w-[300px]">
-        <div className="px-[24px] md:px-[56px]">
-          <NavBar />
-        </div>
-        <div >
+        <div className="min-h-screen" >
           {children}
         </div>
         <div>

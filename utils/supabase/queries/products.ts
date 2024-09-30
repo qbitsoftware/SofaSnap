@@ -1,4 +1,4 @@
-"use server"
+"server only"
 
 import db from '@/utils/supabase/db'
 import { category, category_join, product, address } from '@/utils/supabase/schema'
@@ -8,14 +8,16 @@ import { Address, AddressTS, CategoryTS, Product, ProductRealTS } from '../supab
 import { TProductServer } from '@/lib/product-validation'
 
 interface FetchProductsResponse {
-    success: boolean;
-    products: Product[];
-    totalPages: number;
-    message?: string;
+    data: {
+        products: Product[]
+        totalPages: number
+    } | undefined
+    error: string | undefined
 }
 
 export const fetchProductsByCategories = async (categories: string[], page: number): Promise<FetchProductsResponse> => {
     const categoryJoinAlias = alias(category_join, 'cj2');
+    console.log(categories)
 
     try {
         let query = db
@@ -38,7 +40,7 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
                 all_img: product.all_img,
             })
             .from(category_join)
-            .innerJoin(category, eq(category.name, category_join.category_name_slug))
+            .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
             .innerJoin(product, eq(product.id, category_join.product_id));
 
         if (categories.length > 1) {
@@ -87,18 +89,17 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
         const totalPages = Math.ceil(totalCount / 12);
 
         return {
-            success: true,
-            products: result,
-            totalPages,
-            message: "",
+            data: {
+                products: result,
+                totalPages: totalPages
+            },
+            error: undefined
         };
     } catch (error) {
         console.error("Error fetching products:", error);
         return {
-            products: [],
-            totalPages: 0,
-            success: false,
-            message: "Failed to fetch products.",
+            data: undefined,
+            error: "Failed to fetch products.",
         };
     }
 };
@@ -146,7 +147,7 @@ export const addProduct = async (prod: TProductServer) => {
         await db.transaction(async (tx) => {
             if (prod.start_date == "") {
                 p.start_date = null
-            } 
+            }
             if (prod.end_date == "") {
                 p.end_date = null
             }

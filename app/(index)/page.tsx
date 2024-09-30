@@ -9,21 +9,25 @@ import { RecentProducts } from "./components/recent-products";
 import { fetchAllProducts } from "@/utils/supabase/queries/products";
 import { FetchCategories } from "@/utils/supabase/queries/categories";
 import { ServerError } from "@/components/server-error";
+import NavBar from "@/components/navbar";
 
 export default async function Index() {
-  const { data:products, error:productError } = await fetchAllProducts()
-  const {data:categories, error:categoryError} = await FetchCategories()
+  const { data: products, error: productError } = await fetchAllProducts()
+  const { data: categories, error: categoryError } = await FetchCategories()
   console.log(productError)
 
   if (productError || categoryError && (productError == "Server error" || categoryError == "Server error")) {
     return (
-      <ServerError/>
+      <ServerError />
     )
   }
 
   return (
     <>
       <main className="w-full">
+        <div className="px-[24px] md:px-[56px]">
+          <NavBar categories={categories!} />
+        </div>
         <LandingPage />
         <Categories data={categories} error={categoryError} />
         <Reviews />
