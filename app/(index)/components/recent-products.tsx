@@ -12,7 +12,7 @@ export const RecentProducts:React.FC<ProductProps> = ({error,data}) => {
         <div className='relative md:h-[645px] bg-background w-full flex gap-10 md:flex-col items-center justify-center'>
             <h2 className='md:text-5xl font-medium max-w-[1360px] mx-auto w-[80%] xl:w-[83%] 2xl:w-[80%] text-left'>Viimati vaadatud</h2>
             {!error && data
-                ? <ProductCarousel className='' products={data} />
+                ? <ProductCarousel className='' products={data} value='1'/>
                 : <div></div>
             }
         </div>

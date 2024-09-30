@@ -6,6 +6,7 @@ import { Search } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import { SearchButton } from './search-button'
+import Link from 'next/link'
 
 // image 46kb
 
@@ -17,12 +18,14 @@ export const LandingPage = () => {
                     <div className='md:relative md:h-[150px] lg:h-[250px]'>
                         <h1 className={cn('md:text-4xl lg:text-6xl md:w-[48vw] md:max-w-[553px] h-full font-semibold absolute z-10 text-start', MontserratAlternates.className)}>Rent furniture from <br className='lg:hidden' />people in your<br className='lg:hidden' /> area</h1>
                     </div>
-                    <Button className='bg-accent text-foreground rounded-3xl hover:bg-accent w-[180px] h-[60px]'>
-                        Lisa oma tooted
-                    </Button>
+                    <Link href={"/add-product"}>
+                        <Button className='bg-accent text-foreground rounded-3xl hover:bg-accent w-[180px] h-[60px]'>
+                            Lisa oma tooted
+                        </Button>
+                    </Link>
                 </div>
                 <div className='relative aspect-[1.47/1] w-0 md:w-[48vw] lg:w-[54vw] xl:w-[60vw] xl:mr-20 md:flex justify-self-end max-w-[821px]'>
-                    <Image className='absolute w-full h-full' src={"/images/landing.png"} alt="furniture" fill sizes='(max-width: 1024) 48vw, (max-width: 1280px) 54vw, 60vw'  priority />
+                    <Image className='absolute w-full h-full' src={"/images/landing.png"} alt="furniture" fill sizes='(max-width: 1024) 48vw, (max-width: 1280px) 54vw, 60vw' priority />
                 </div>
             </div>
             <div className='md:w-[523px] md:ml-16 relative mt-[26px]'>

@@ -1,5 +1,3 @@
-"use server"
-
 import React from 'react'
 import ProductPage from './components/product-page'
 import { CategoryNavigation } from './components/category-navigation'
@@ -11,7 +9,7 @@ import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, Pagi
 import { Products } from './components/products'
 import { fetchProductsByCategories } from '@/utils/supabase/queries/products'
 // import { CheckCategories } from '@/utils/supabase/queries/categories'
-import { redirect, useRouter } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import { CheckCategories, FetchCategories } from '@/utils/supabase/queries/categories'
 
 const CategoryPage = async ({
@@ -52,7 +50,7 @@ const CategoryPage = async ({
   });
   
 
-  if (isProductPage && params.slug.length > 1) {
+  if (isProductPage && params.slug.length >= 1) {
     return (
       <ProductPage product_id={Number(params.slug[params.slug.length - 1])} slugs={params.slug} categories={category_objects}/>
     )
@@ -64,12 +62,12 @@ const CategoryPage = async ({
     } 
     
     
-    const {success, products, totalPages, message} = await fetchProductsByCategories(categories, page)
-
-    if (!success) {
-      return
-     // todo: motle mingi error lahendus valja 
+    const {data, error: productError} = await fetchProductsByCategories(categories, page)
+    if (!data || productError) {
+      redirect('404')
     }
+
+ 
 
     return (
       <div className='md:mx-auto md:px-[64px] max-w-[1440px]'>
@@ -82,7 +80,7 @@ const CategoryPage = async ({
         <div className='md:px-10 md:mt-12'>
           <Filter />
           <div className='mt-10 '>
-            <Products products={products} />
+            <Products products={data.products} />
           </div>
           <div className='my-[100px]'>
             <Pagination>
@@ -92,7 +90,7 @@ const CategoryPage = async ({
                     <PaginationPrevious className='hover:text-white' href={`?page=${page - 1}`} />
                   )}
                 </PaginationItem>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((p) => (
                   <PaginationItem key={p}>
                     <PaginationLink
                       href={`?page=${p}`}
@@ -102,13 +100,13 @@ const CategoryPage = async ({
                     </PaginationLink>
                   </PaginationItem>
                 ))}
-                {totalPages > 5 && page < totalPages - 2 && (
+                {data.totalPages > 5 && page < data.totalPages - 2 && (
                   <PaginationItem>
                     <PaginationEllipsis />
                   </PaginationItem>
                 )}
                 <PaginationItem>
-                  {page < totalPages && (
+                  {page < data.totalPages && (
                     <PaginationNext className='hover:text-white' href={`?page=${page + 1}`} />
                   )}
                 </PaginationItem>

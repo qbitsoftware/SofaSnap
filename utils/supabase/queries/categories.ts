@@ -1,3 +1,5 @@
+"server-only"
+
 import { inArray } from "drizzle-orm"
 import db from "../db"
 import { category } from "../schema"
@@ -29,7 +31,7 @@ export const CheckCategories = async (categories: string[]) => {
 
 export const FetchCategories = async () => {
     try {
-        // console.log(db)
+
         const result = await db.select().from(category)
 
         if (result.length == 0) {
@@ -39,7 +41,6 @@ export const FetchCategories = async () => {
             }
         }
 
-        // console.log(result)
         return {
             data: result,
             error: undefined
@@ -50,4 +51,9 @@ export const FetchCategories = async () => {
             error: "Server error"
         }
     }
+}
+
+export const fetchCategories = async () => {
+    const result = await db.select().from(category)
+    return result
 }

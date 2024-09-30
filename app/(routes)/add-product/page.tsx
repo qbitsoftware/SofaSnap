@@ -14,23 +14,27 @@ const Page = async () => {
         return <ServerError />
     } else if (error || !data) {
         redirect("/404")
-    } 
-    if (!user.data.user){
+    }
+    if (!user.data.user) {
         redirect("/sign-in")
     }
 
-    return (
-        <div className='flex flex-col justify-center xl:max-w-[1440px] w-full px-[56px] pt-[30px] mx-auto'>
-            <div className='mb-[38px]'>
-                <AddProduct />
-            </div>
-            <div className='ml-[135px] mb-[179px]'>
-                <AddProductForm id={user.data.user?.id!} categories={data} />
-            </div>
 
-            {/* <div className='w-[326px] h-[130px] mb-[200px] mx-auto'>
-              <Image alt='logo' width={326} height={130} src={"/branding/logo-meist.svg"}/>
-          </div> */}
+    return (
+        <div className='flex flex-col justify-center xl:max-w-[1440px] w-full px-[56px] pt-[30px] mx-auto '>
+            <div>
+                <div className='mb-[38px]'>
+                    <AddProduct />
+                </div>
+                <div className='ml-[135px] mb-[179px]'>
+                    <AddProductForm id={user.data.user?.id!} categories={data} />
+                </div>
+
+                {/* <div className='w-[326px] h-[130px] mb-[200px] mx-auto'>
+                      <Image alt='logo' width={326} height={130} src={"/branding/logo-meist.svg"}/>
+                  </div> */}
+
+            </div>
         </div>
     )
 }
