@@ -79,7 +79,7 @@ const ChangePassword = () => {
                 <div className="mb-[27px]">
                     <h2 className="font-medium text-lg">Uuenda oma parooli</h2>
                 </div>
-                <div className="flex flex-col gap-[11px] leading-4 w-[424px]">
+                <div className="flex flex-col gap-[11px] leading-4 w-[200px]">
                     <Input {...register("password")} placeholder="Uus parool" type="password" />
                     {errors.password && <p className="text-red-500">{errors.password.message}</p>}
                     <Input {...register("confirm_password")} placeholder="Uus parool uuesti" type="password" />

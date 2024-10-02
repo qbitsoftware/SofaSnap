@@ -19,7 +19,7 @@ const client = global._db || postgres(process.env.DATABASE_URL as string, {
     connect_timeout: 10,
 })
 
-console.log("DSKALDKSALDAS THIS ISTH EENVRIONEMNT", process.env.NODE_ENV)
+// console.log("DSKALDKSALDAS THIS ISTH EENVRIONEMNT", process.env.NODE_ENV)
 if (process.env.NODE_ENV !== 'production') {
     global._db = client;
 }
