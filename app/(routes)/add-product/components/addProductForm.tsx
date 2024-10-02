@@ -10,7 +10,7 @@ import { IImage, productSchema, productSchemaServer, TProductClient, TProductSer
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Map } from 'lucide-react';
-import { Button, DateRange } from 'react-day-picker';
+import { DateRange } from 'react-day-picker';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Address, TAddressSearchSchema } from '@/lib/search-validation';
 import { Feature } from '@/lib/coordinates-validation';
@@ -24,6 +24,7 @@ import { Calender } from '@/components/calender';
 import { createProductAction } from '@/app/actions';
 import { AddProduct } from './breadcrumb';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
 
 const AddProductForm = ({ id, categories }: { id: string, categories: Category[] }) => {
@@ -538,7 +539,14 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                     </div>
                     <div>
                         <AdvancedImageInput images={images} setImages={setImages} baseValue={setImagesBase} />
+                        {images.length > 1 &&
+                            <div>
+                                <p className='italic text-slate-700'>
+                                    Samas jarjekorras kuvatakse ka pildid Teie kuulutusel. Jarjekorra muutmiseks lohistage pilte.
+                                </p>
+                            </div>}
                         {errors.all_img && <p className="text-red-500">{errors.all_img.message}</p>}
+
                     </div>
                 </div>
             </div>
@@ -559,13 +567,6 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                     <h1 className={cn(isSubmitting ? " hidden " : "block")}>
                         Tühista
                     </h1>
-                    <ClipLoader
-                        color={"#ffffff"}
-                        loading={isSubmitting}
-                        size={40}
-                        aria-label="Loading Spinner"
-                        data-testid="loader"
-                    />
                 </Button>
             </div>
         </form>

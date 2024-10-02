@@ -150,8 +150,8 @@ function AdvancedImageInput({ images, setImages, baseValue }: { images: IImage[]
                 />
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 pt-[20px]">
-                {images.map((image) => (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-[20px]">
+                {images.map((image, key) => (
                     <div
                         key={image.id}
                         className={`relative group transition-transform duration-200 ease-in-out ${dragOverItem && dragOverItem.id === image.id ? 'scale-105' : ''
@@ -168,15 +168,24 @@ function AdvancedImageInput({ images, setImages, baseValue }: { images: IImage[]
                             alt={`Preview ${image.id}`}
                             className="w-full aspect-square object-cover rounded-md"
                         />
-                        <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex justify-end">
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="text-white"
-                                onClick={() => removeImage(image.id)}
-                            >
-                                <XIcon className="h-6 w-6" />
-                            </Button>
+
+                        <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-between">
+                            <div className='flex justify-end w-full mt-2 pr-2'>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="text-white"
+                                    onClick={() => removeImage(image.id)}
+                                >
+                                    <XIcon className="h-6 w-6" />
+                                </Button>
+                            </div>
+
+                            <div className="flex justify-center h-full">
+                                <div className="text-4xl text-white">
+                                    {key + 1}
+                                </div>
+                            </div>
                         </div>
                         {dragOverItem && dragOverItem.id === image.id && (
                             <div className="absolute inset-0 border-2 border-primary rounded-md pointer-events-none"></div>
