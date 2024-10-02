@@ -32,9 +32,9 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, clas
     >
       <CarouselContent className="items-center">
         {products && products.map((product, idx) => (
-          <CarouselItem key={value + product.name} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/3 ">
+          <CarouselItem key={value + product.name} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/3 drop-shadow-sm">
             <div onClick={() => router.push(`/tooted/${product.id}`)} className="p-1 flex justify-center">
-            <ProductCard product={product}  className="xl:w-[312px] md:w-[265px] md:h-[410px] drop-shadow-sm" />
+            <ProductCard product={product}  className="xl:w-[312px] md:w-[265px] md:h-[410px]" />
             </div>
           </CarouselItem>
         ))}

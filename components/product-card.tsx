@@ -17,7 +17,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
     return (
         <Card className={cn("border-0 p-0 bg-transparent rounded-tr-[76px] md:rounded-tr-[155px] hover:cursor-pointer", className)}>
             <CardContent className="relative p-0 flex w-full h-full aspect-square md:w-full md:h-full items-center justify-center flex-col">
-                <div className='relative w-full md:h-[265px] h-[153px]'>
+                <div className='relative w-full md:h-[290px] lg:h-[275px] h-[62%] sm:h-[250px]'>
                     <Image
                         className="absolute rounded-tr-[76px] md:rounded-tr-[155px] w-full h-full"
                         src={product.preview_image} alt={product.name}
