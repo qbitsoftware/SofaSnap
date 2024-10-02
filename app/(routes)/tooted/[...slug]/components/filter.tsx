@@ -4,7 +4,7 @@ import React from 'react'
 export const Filter = () => {
   return (
     <div>
-        <AlignLeft color='#555555' size={44}/>
+        <AlignLeft color='#000000' size={44}/>
     </div>
   )
 }

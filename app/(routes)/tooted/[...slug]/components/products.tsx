@@ -16,10 +16,10 @@ export const Products:React.FC<ProductsProps> = ({products}) => {
 
 
   return (
-    <div className='grid grid-cols-2 lg:gap-x-20 xl:gap-x-[100px] lg:grid-cols-2 xl:grid-cols-3 md:gap-y-[100px]'>
+    <div className='grid grid-cols-2 lg:gap-x-20 justify-between xl:gap-x-[100px] lg:grid-cols-2 xl:grid-cols-3  md:gap-y-[100px] gap-y-[35px] gap-x-[10px]'>
         {products?.map((product) => (
-          <div className='' key={product.id} onClick={() => router.push(`${path}/${product.id}`)}>
-            <ProductCard className='w-[162px] h-[268px] lg:w-[312px] md:w-[265px] md:h-[410px]' product={product} />
+          <div className='w-full h-full' key={product.id} onClick={() => router.push(`${path}/${product.id}`)}>
+            <ProductCard className='w-full h-[268px]  md:h-[410px]' product={product} />
           </div>
         ))}
     </div>

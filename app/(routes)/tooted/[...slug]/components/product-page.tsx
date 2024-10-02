@@ -63,8 +63,8 @@ const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id, cate
 
   return (
     <div className='md:min-h-screen w-full'>
-      <div className='max-w-[1440px] md:px-16 mx-auto'>
-        <CategoryNavigation categories={categories.slice(0, -1)} product={data[0]} />
+      <div className='max-w-[1440px] md:px-16 px-6 mx-auto'>
+        <CategoryNavigation className='hidden md:block' categories={categories.slice(0, -1)} product={data[0]} />
         <div className='md:mt-16 md:flex md:items-center md:justify-between'>
           <ChevronLeft color='#555555' size={44} />
         </div>

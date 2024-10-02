@@ -16,7 +16,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
 
     return (
         <Card className={cn("border-0 p-0 bg-transparent rounded-tr-[76px] md:rounded-tr-[155px] hover:cursor-pointer", className)}>
-            <CardContent className="relative p-0 flex aspect-square md:w-full md:h-full items-center justify-center flex-col">
+            <CardContent className="relative p-0 flex w-full h-full aspect-square md:w-full md:h-full items-center justify-center flex-col">
                 <div className='relative w-full md:h-[265px] h-[153px]'>
                     <Image
                         className="absolute rounded-tr-[76px] md:rounded-tr-[155px] w-full h-full"
@@ -28,13 +28,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                 </div>
                 <div className="flex lg:h-[140px] h-[115px] overflow-clip z-10 w-full bottom-0 flex-col bg-background p-[10px] justify-between">
                     <div className="flex flex-col gap-1">
-                        <div className="flex justify-between items-center text-lg font-semibold">
-                            <p>{product.name}</p>
+                        <div className="flex justify-between items-center text-base md:text-lg font-semibold">
+                            <p className='leading-5'>{product.name}</p>
                             <span className="flex">5<Star className="w-8" color="" fill="#FE9F73" /></span>
                         </div>
-                        <p className="text-lg font-normal">{product.description}</p>
+                        <p className="text-base md:text-lg font-normal">{product.description}</p>
                     </div>
-                    <span className="text-lg font-semibold ">{product.price}€ päev</span>
+                    <span className="text-base md:text-lg font-semibold ">{product.price}€ päev</span>
                 </div>
             </CardContent>
         </Card>

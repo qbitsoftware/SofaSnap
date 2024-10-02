@@ -72,13 +72,13 @@ const CategoryPage = async ({
       <div className='md:mx-auto px-6 md:px-[64px] max-w-[1440px]'>
         <CategoryNavigation categories={category_objects} className='hidden md:block'/>
         <div className='md:mt-16 flex md:flex md:items-center md:justify-between'>
-          <ChevronLeft className='ml-[-16px]' color='#555555' size={56} />
+          <ChevronLeft className='ml-[-16px] ' color='#000000' size={56} />
           <h2 className='md:text-5xl hidden md:block'>{capitalize(category_objects[category_objects.length - 1].name)}</h2>
-          <MapButton className='hidden md:flex' />
+          <MapButton className='hidden md:flex'/>
         </div>
-        <div className='md:px-10 md:mt-12'>
+        <div className='md:px-10 mt-4 md:mt-10 mb-[100px] md:mb-0'>
           <Filter />
-          <div className='mt-10 '>
+          <div className='mt-10 mb-'>
             <Products products={data.products} />
           </div>
           <div className='my-[100px] hidden md:block'>
