@@ -22,11 +22,11 @@ const Page = async () => {
 
     return (
         <div className='flex flex-col justify-center xl:max-w-[1440px] w-full px-[56px] pt-[30px] mx-auto '>
-            <div>
-                <div className='mb-[38px]'>
+            <div className='flex flex-col justify-center items-center md:items-start md:justify-start'>
+                <div className='mb-[38px] hidden md:inline'>
                     <AddProduct />
                 </div>
-                <div className='ml-[135px] mb-[179px]'>
+                <div className='md:ml-[135px] mb-[179px]'>
                     <AddProductForm id={user.data.user?.id!} categories={data} />
                 </div>
 

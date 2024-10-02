@@ -4,6 +4,9 @@ import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
+import { productSchemaServer, TProductServer } from "@/lib/product-validation";
+import { addProduct } from "@/utils/supabase/queries/products";
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -130,7 +133,36 @@ export const signOutAction = async () => {
 };
 
 export const GetUserInfo = async () => {
+  console.log("fetching users")
   const supabase = createClient();
   const user = await supabase.auth.getUser()
+  console.log("completed user", user)
   return user
+}
+
+export async function createProductAction(body: TProductServer) {
+  try {
+    const result = productSchemaServer.safeParse(body);
+    let zodErrors: Record<string, string> = {};
+
+    if (!result.success) {
+      result.error.issues.forEach((issue) => {
+        zodErrors[issue.path[0]] = issue.message;
+      });
+      console.log("Zod validation errors:", zodErrors);
+      return { errors: zodErrors, status: 400 };
+    }
+
+    const { error } = await addProduct(result.data);
+    if (error) {
+      console.error("Error adding product:", error);
+      return { error: 'Unexpected error occurred', status: 500 };
+    }
+
+    console.log("Product added successfully:", result.data);
+    return { data: "Product successfully added", status: 200 };
+  } catch (error) {
+    console.error("Server action error:", error);
+    return { error: 'Unexpected error occurred', status: 500 };
+  }
 }

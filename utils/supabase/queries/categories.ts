@@ -30,9 +30,11 @@ export const CheckCategories = async (categories: string[]) => {
 
 
 export const FetchCategories = async () => {
+    console.log("fetching caregories bla")
     try {
 
         const result = await db.select().from(category)
+        console.log("Completed Majandus")
 
         if (result.length == 0) {
             return {
@@ -46,6 +48,7 @@ export const FetchCategories = async () => {
             error: undefined
         }
     } catch (error) {
+        console.log("fetching returned error", error)
         return {
             data: undefined,
             error: "Server error"

@@ -6,11 +6,8 @@ import { NavIcons } from "./nav-icons"
 import Link from 'next/link'
 import { CircleUser } from 'lucide-react';
 import { MobileNav } from "./mobile-nav"
-// import { GetUserInfo } from "@/app/actions"
 import { LogOut } from "./logout"
 import { FetchCategories, fetchCategories } from "@/utils/supabase/queries/categories"
-import { ServerError } from "./server-error"
-import { createClient } from "@/utils/supabase/server"
 import { Category } from "@/utils/supabase/supabase.types"
 import { GetUserInfo } from "@/app/actions"
 
@@ -19,13 +16,14 @@ interface NavBarProps {
 }
 
 
-const NavBar:React.FC<NavBarProps> = async ({categories}) => {
-  
+const NavBar = async () => {
+
     const user = await GetUserInfo()
-  
-  
+    const cateogries = await FetchCategories()
+
+
     return (
-      <div className="flex w-full lg:max-w-[1152px] xl:max-w-[1310px] h-[68px] md:h-[50px] mt-[14px] mb-[35px] md:my-[35px] items-center justify-between mx-auto">
+        <div className="flex max-w-[350px] md:max-w-[1152px] w-full lg:max-w-[1152px] xl:max-w-[1310px] h-[68px] md:h-[50px] mt-[14px] mb-[35px] md:my-[35px] items-center justify-between mx-auto">
             <div className="md:hidden">
                 <MobileNav />
             </div>
@@ -40,7 +38,7 @@ const NavBar:React.FC<NavBarProps> = async ({categories}) => {
                 <div className="hidden md:flex lg:w-[540px] xl:w-[530px] items-center py-[4px] justify-between">
 
                     <div className="md:gap-[50px]">
-                        <NavLinks categories={categories} />
+                        <NavLinks categories={cateogries.data} />
                     </div>
                     <div className="">
                         {user.data.user ? (
@@ -66,8 +64,7 @@ const NavBar:React.FC<NavBarProps> = async ({categories}) => {
                 </div>
             </div>
         </div>
-    );
-  };
-  
-  export default NavBar;
-  
+    )
+};
+
+export default NavBar;

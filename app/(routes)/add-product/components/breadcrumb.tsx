@@ -6,13 +6,13 @@ import Link from 'next/link'
 const AddProduct = () => {
     return (
         <div className='flex max-w-[1440px] w-full items-center'>
-            <div className='flex gap-[85px] items-center '>
-                <div className='cursor-pointer'>
+            <div className='flex flex-col md:flex-row  md:gap-[85px] md:items-center '>
+                <div className='cursor-pointer w-[35px] h-[35px] md:w-[50px] md:h-[50px] mb-[10px] md:mb-[0px]'>
                     <Link href={"/"}>
-                        <ChevronLeft width={50} height={50} />
+                        <ChevronLeft className='w-[35px] h-[35px] md:w-[50px] md:h-[50px]' />
                     </Link>
                 </div>
-                <h2 className='font-medium text-[44px]'>Lisa toode</h2>
+                <h2 className='font-medium text-lg md:text-[44px]'>Lisa toode</h2>
             </div>
         </div>
     )

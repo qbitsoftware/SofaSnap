@@ -15,7 +15,7 @@ import { Suggestions } from "../../account/components/suggestions"
 import { Address, TAddressSearchSchema } from "@/lib/search-validation"
 import { useCallback, useEffect, useState } from "react"
 import { debounce } from "lodash"
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 import { Feature } from "@/lib/coordinates-validation"
 
 const RegisterForm = () => {
@@ -198,11 +198,11 @@ const RegisterForm = () => {
 
     return (
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-            <div className="mb-[52px]">
-                <div className="mb-[22px]">
+            <div className="mb-[26px] md:mb-[52px]">
+                <div className="mb-[29px] pl-[4px] md:pl-[0px] md:mb-[22px]">
                     <h2 className="font-medium text-lg">Isikuandmed</h2>
                 </div>
-                <div className="flex flex-col gap-[11px] pl-[75px] w-[424px] leading-4">
+                <div className="flex flex-col w-[280px] gap-[5px] md:gap-[11px] md:pl-[75px] md:w-[424px] leading-4">
                     <Input {...register("first_name")} placeholder="Nimi" autoComplete="off" />
                     {errors.first_name && <p className="text-red-500">{errors.first_name.message}</p>}
                     <Input {...register("last_name")} placeholder="Perekonnanimi" autoComplete="off" />
@@ -232,10 +232,10 @@ const RegisterForm = () => {
                 </div>
             </div>
             <div className="mb-[46px]">
-                <div className="mb-[27px]">
+                <div className="pl-[4px] md:pl-[0px] mb-[26px]">
                     <h2 className="font-medium text-lg">Kasutaja info</h2>
                 </div>
-                <div className="flex flex-col gap-[11px] pl-[75px] leading-4 w-[424px]">
+                <div className="flex flex-col w-[280px] gap-[5px] md:gap-[11px] md:pl-[75px] leading-4 md:w-[424px]">
                     <Input {...register("email")} placeholder="Meiliaadress" autoComplete="off" />
                     {errors.email && <p className="text-red-500">{errors.email.message}</p>}
                     <Input {...register("password")} placeholder="Parool" type="password" autoComplete="off" />
@@ -244,32 +244,35 @@ const RegisterForm = () => {
                     {errors.confirm_password && <p className="text-red-500">{errors.confirm_password.message}</p>}
                 </div>
             </div>
-            <div className={cn("w-full mb-[54px]")}>
-                <div className="mb-[32px]">
-                    <h2 className="font-medium text-lg">Leping</h2>
+            <div className="w-full md:mb-[54px]">
+                <div className="mb-[10px] md:mb-[32px]">
+                    <h2 className="font-medium text-lg pl-[10px]">Leping</h2>
                 </div>
                 <div className="w-full">
                     <Contract />
                 </div>
             </div>
-            <div className={cn("flex flex-col items-start pl-[10px] mb-[188px]")}>
+            <div className={cn("flex flex-col items-start w-full pl-[10px] mb-[35px] md:mb-[188px]")}>
                 {!errors.agreement && <p className="pb-2 h-[32px]"></p>}
                 {errors.agreement && <p className="text-red-500 pb-2">* {errors.agreement.message}</p>}
-                <label className="flex items-center gap-[10px] cursor-pointer">
+                <label className="flex items-center gap-[10px] cursor-pointer w-full">
                     <Input {...register("agreement")} type="checkbox" id="custom-checkbox" className="hidden peer" />
                     <div className="w-[26px] h-[26px] bg-[#FCC9B9] hidden peer-checked:flex shadow-inner-light items-center justify-center">
                         <Check width={24} height={24} className="text-black peer-checked:text-white" />
                     </div>
                     <div className="w-[26px] h-[26px] bg-[#FCC9B9] peer-checked:hidden shadow-inner-light flex items-center justify-center">
                     </div>
-                    <h2 className="font-medium text-base">Olen tutvunud lepingu tingimustega ja nõustun käesoleva lepinguga.</h2>
+                    <h2 className="font-medium text-base w-[90%]">Olen tutvunud lepingu tingimustega ja nõustun käesoleva lepinguga.</h2>
                 </label>
             </div>
-            <div className="relative z-10 flex items-center justify-end gap-[20px] mr-[70px] mb-[51px]">
-                <Button className="md:w-[202px] md:h-[75px] bg-[#D9D9D9] hover:text-white text-black">
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-end gap-[20px] md:mr-[70px] md:mb-[51px]">
+                <Button onClick={(e) => {
+                    e.preventDefault()
+                    router.push("/")
+                }} className="order-2 md:order-1 w-[226px] h-[42px] rounded-full md:rounded-lg md:w-[202px] md:h-[75px] bg-[#D9D9D9] hover:text-white text-black">
                     Tühista
                 </Button>
-                <SubmitButton disabled={isSubmitting} className="bg-accent hover:bg-accent md:w-[202px] md:h-[75px] text-black cursor">
+                <SubmitButton disabled={isSubmitting} className="bg-accent w-[226px] h-[42px] rounded-full md:rounded-lg hover:bg-accent md:w-[202px] md:h-[75px] text-black cursor">
                     <h1 className={cn(isSubmitting ? " hidden " : "block")}>
                         Kinnita
                     </h1>

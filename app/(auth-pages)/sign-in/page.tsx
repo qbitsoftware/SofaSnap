@@ -19,7 +19,7 @@ export default async function Login({ searchParams }: { searchParams: Message })
   return (
     <div className="flex justify-center items-center w-full flex-col md:min-h-[80vh] pb-20">
       <Image src={"/images/profile.svg"} width={185} height={185} alt="profile" priority />
-      <Auth className="mt-10" />
+      <Auth />
       <div className="relative md:w-[406px]">
         <Separator color="[#FBFBFB]" className="w-full mt-5" />
         <p className="text-[#CFCFCF] text-center font-semibold absolute top-2/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background w-8">OR</p>
@@ -40,18 +40,6 @@ export default async function Login({ searchParams }: { searchParams: Message })
               required
             />
           </div>
-          <div className="flex flex-row-reverse justify-end gap-[10px] items-center font-medium mt-[2px]">
-            <Label
-              htmlFor="remember"
-            >
-              Remember me
-            </Label>
-            <Input
-              className="w-4 h-4"
-              type="checkbox"
-              name="remember"
-            />
-          </div>
           <div className="flex justify-between items-center">
             <Link
               className="text-base text-accent-foreground font-normal underline"
@@ -60,11 +48,11 @@ export default async function Login({ searchParams }: { searchParams: Message })
               Forgot Password?
             </Link>
           </div>
-          <SubmitButton className="bg-accent hover:bg-accent md:w-[376px] md:h-[65px] mx-auto mt-10" pendingText="Signing In..." formAction={signInAction}>
+          <SubmitButton className="bg-accent hover:bg-accent w-[256px] h-[48px] md:w-[376px] md:h-[65px] mx-auto mt-10" pendingText="Signing In..." formAction={signInAction}>
             Logi sisse
           </SubmitButton>
           <Link href={"/register"} className="md:w-[376px] md:h-[65px] bg-[#D9D9D9] mx-auto rounded-lg">
-            <Button className="md:w-[376px] md:h-[65px] bg-[#D9D9D9] mx-auto">
+            <Button className="w-[256px] h-[48px] md:w-[376px] md:h-[65px] bg-[#D9D9D9] mx-auto">
               Registreeri
             </Button>
           </Link>

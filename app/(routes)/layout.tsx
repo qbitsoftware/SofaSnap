@@ -29,7 +29,7 @@ export default async function Layout({
     return (
         <>
             <div className="px-[24px] md:px-[56px]">
-                <Navbar categories={categories} />
+                {/* <Navbar categories={categories} /> */}
             </div>
             {children}
         </>

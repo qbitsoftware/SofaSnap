@@ -68,7 +68,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ categories }) => {
         </div>
       </div>
 
-      <div ref={dialogRef} className={`fixed top-[120px] left-0 w-full h-full z-50 bg-accent-foreground flex justify-center transition-all duration-300 ease-in-out transform ${isDialogOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10 pointer-events-none'}`}>
+      <div ref={dialogRef} className={`fixed top-[120px] left-0 w-full h-full z-50 bg-accent-foreground flex justify-center transition-all duration-300  ease-in-out transform ${isDialogOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10 pointer-events-none'}`}>
         <div className="relative mt-[70px] px-[39px] pb-[143px] max-w-[937px] w-full max-h-[533px] h-full before:absolute before:inset-0 before:bg-cover before:bg-center before:bg-[url('/images/navbar-background.png')] before:mix-blend-overlay before:content-[''] ">
           <h1 className="text-xl pt-[46px] pb-[24px]">Koik kategooriad</h1>
           <div className='grid grid-cols-2 gap-y-[4px] gap-x-[300px]'>
