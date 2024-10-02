@@ -26,7 +26,6 @@ import { AddProduct } from './breadcrumb';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 
-
 const AddProductForm = ({ id, categories }: { id: string, categories: Category[] }) => {
     const toast = useToast()
     const router = useRouter()
