@@ -23,7 +23,7 @@ const NavBar = async () => {
 
 
     return (
-        <div className="flex max-w-[420px] md:max-w-[1152px] w-full lg:max-w-[1152px] xl:max-w-[1310px] h-[68px] md:h-[50px] mt-[14px] mb-[35px] md:my-[35px] items-center justify-between mx-auto">
+        <div className="flex max-w-[768px] px-6 md:max-w-[1152px] w-full lg:max-w-[1152px] xl:max-w-[1310px] h-[68px] md:h-[50px] mt-[14px] mb-[35px] md:my-[35px] items-center justify-between mx-auto">
             <div className="md:hidden">
                 <MobileNav categories={cateogries.data}/>
             </div>
