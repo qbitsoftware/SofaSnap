@@ -22,7 +22,6 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Product } from "@/utils/supabase/supabase.types";
 import Image from "next/image";
-import { CalendarIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 const FormSchema = z.object({
@@ -79,7 +78,7 @@ export const DateForm: React.FC<DateFormProps> = ({ product }) => {
     });
   }
 
-  const updateTotalPrice = (from: Date, to:Date) => {
+  const updateTotalPrice = (from: Date, to: Date) => {
     const days = differenceInCalendarDays(to, from) + 1
     const total = days * product.price
     console.log(total)
@@ -223,8 +222,8 @@ export const DateForm: React.FC<DateFormProps> = ({ product }) => {
               <div className="md:flex justify-between">
                 <div>SofaSnapi teenustasu</div>
                 <div>{totalPrice * 0.05}€</div>
-              </div> 
-              <Separator className="bg-black/25"/>
+              </div>
+              <Separator className="bg-black/25" />
               <div className="md:flex md:justify-between">
                 <div>
                   Kokku

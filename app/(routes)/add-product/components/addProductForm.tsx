@@ -6,11 +6,11 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { ClipLoader } from 'react-spinners';
 import { useToast } from '@/components/hooks/use-toast';
-import { IImage, productSchema, productSchemaServer, TProductClient } from '@/lib/product-validation';
+import { IImage, productSchema, productSchemaServer, TProductClient, TProductServer } from '@/lib/product-validation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Map } from 'lucide-react';
-import { DateRange } from 'react-day-picker';
+import { Button, DateRange } from 'react-day-picker';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Address, TAddressSearchSchema } from '@/lib/search-validation';
 import { Feature } from '@/lib/coordinates-validation';
@@ -21,10 +21,14 @@ import { Category } from '@/utils/supabase/supabase.types';
 import { capitalize } from '@/utils/utils';
 import { SubmitButton } from '@/components/submit-button';
 import { Calender } from '@/components/calender';
+import { createProductAction } from '@/app/actions';
+import { AddProduct } from './breadcrumb';
+import { useRouter } from 'next/navigation';
 
 
 const AddProductForm = ({ id, categories }: { id: string, categories: Category[] }) => {
     const toast = useToast()
+    const router = useRouter()
     const [category, setCategory] = useState<string>('')
     const [width, setW] = useState<number>(0)
     const [heigth, setH] = useState<number>(0)
@@ -71,10 +75,11 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
     }, []);
 
     const onSubmit = async (data: TProductClient) => {
-        let formData = {
+
+        let formData: TProductServer = {
             ...data,
             user_id: id,
-            address: chosenSuggestion,
+            address: chosenSuggestion!,
             start_date: data.start_date instanceof Date ? data.start_date.toISOString() : "",
             end_date: data.end_date instanceof Date ? data.end_date.toISOString() : "",
             all_img: ["test", "test"],
@@ -112,124 +117,125 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
         }
         //update all_img with correct img data
         formData.all_img = uploadData.data
-        //after validation if everythign is okay send the correct data
-        const response = await fetch("/api/product", {
-            method: "POST",
-            body: JSON.stringify(formData),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
 
-        const responseData = await response.json()
-
-        if (!response.ok) {
-            toast.toast({
-                title: "Something went wrong. Try again later!",
-            })
-            return;
-        }
-        if (responseData.error) {
-            toast.toast({
-                title: responseData.error
-            })
-            return;
-        }
-
-        if (responseData.errors) {
-            const errors = responseData.errors;
-            if (errors.address) {
-                setError("address", {
-                    type: "server",
-                    message: errors.address,
-                })
-            }
-            if (errors.name) {
-                setError("name", {
-                    type: "server",
-                    message: errors.name,
-                })
-            }
-            if (errors.category) {
-                setError("category", {
-                    type: "server",
-                    message: errors.category,
-                })
-            }
-            if (errors.description) {
-                setError("description", {
-                    type: "server",
-                    message: errors.description,
-                })
-            }
-            if (errors.width) {
-                setError("width", {
-                    type: "server",
-                    message: errors.width,
-                })
-            }
-            if (errors.heigth) {
-                setError("heigth", {
-                    type: "server",
-                    message: errors.heigth,
-                })
-            }
-            if (errors.length) {
-                setError("length", {
-                    type: "server",
-                    message: errors.length,
-                })
-            }
-            if (errors.material) {
-                setError("material", {
-                    type: "server",
-                    message: errors.material,
-                })
-            }
-            if (errors.details) {
-                setError("sub_category", {
-                    type: "server",
-                    message: errors.sub_category,
-                })
-            }
-            if (errors.start_date) {
-                setError("start_date", {
-                    type: "server",
-                    message: errors.start_date,
-                })
-            }
-            if (errors.end_date) {
-                setError("end_date", {
-                    type: "server",
-                    message: errors.end_date,
-                })
-            }
-            if (errors.type) {
-                setError("type", {
-                    type: "server",
-                    message: errors.type,
-                })
-            }
-            if (errors.price) {
-                setError("price", {
-                    type: "server",
-                    message: errors.price,
-                })
-            }
-            if (errors.all_img) {
-                setError("all_img", {
-                    type: "server",
-                    message: errors.all_img,
-                })
-            }
+        const response = await createProductAction(formData)
+        if (response.status === 400) {
+            console.log("400 error")
             return
+        } else if (response.status === 500) {
+            console.log('500 error')
+            return
+        } else if (response.status === 200) {
+            console.log("Everything is okay")
         }
 
-        if (responseData.success) {
-            toast.toast({
-                title: "Successfully changed password",
-            })
-        }
+        // if (!response.ok) {
+        //     toast.toast({
+        //         title: "Something went wrong. Try again later!",
+        //     })
+        //     return;
+        // }
+        // if (responseData.error) {
+        //     toast.toast({
+        //         title: responseData.error
+        //     })
+        //     return;
+        // }
+
+        // if (responseData.errors) {
+        //     const errors = responseData.errors;
+        //     if (errors.address) {
+        //         setError("address", {
+        //             type: "server",
+        //             message: errors.address,
+        //         })
+        //     }
+        //     if (errors.name) {
+        //         setError("name", {
+        //             type: "server",
+        //             message: errors.name,
+        //         })
+        //     }
+        //     if (errors.category) {
+        //         setError("category", {
+        //             type: "server",
+        //             message: errors.category,
+        //         })
+        //     }
+        //     if (errors.description) {
+        //         setError("description", {
+        //             type: "server",
+        //             message: errors.description,
+        //         })
+        //     }
+        //     if (errors.width) {
+        //         setError("width", {
+        //             type: "server",
+        //             message: errors.width,
+        //         })
+        //     }
+        //     if (errors.heigth) {
+        //         setError("heigth", {
+        //             type: "server",
+        //             message: errors.heigth,
+        //         })
+        //     }
+        //     if (errors.length) {
+        //         setError("length", {
+        //             type: "server",
+        //             message: errors.length,
+        //         })
+        //     }
+        //     if (errors.material) {
+        //         setError("material", {
+        //             type: "server",
+        //             message: errors.material,
+        //         })
+        //     }
+        //     if (errors.details) {
+        //         setError("sub_category", {
+        //             type: "server",
+        //             message: errors.sub_category,
+        //         })
+        //     }
+        //     if (errors.start_date) {
+        //         setError("start_date", {
+        //             type: "server",
+        //             message: errors.start_date,
+        //         })
+        //     }
+        //     if (errors.end_date) {
+        //         setError("end_date", {
+        //             type: "server",
+        //             message: errors.end_date,
+        //         })
+        //     }
+        //     if (errors.type) {
+        //         setError("type", {
+        //             type: "server",
+        //             message: errors.type,
+        //         })
+        //     }
+        //     if (errors.price) {
+        //         setError("price", {
+        //             type: "server",
+        //             message: errors.price,
+        //         })
+        //     }
+        //     if (errors.all_img) {
+        //         setError("all_img", {
+        //             type: "server",
+        //             message: errors.all_img,
+        //         })
+        //     }
+        //     return
+        // }
+
+        // if (responseData.success) {
+        //     toast.toast({
+        //         title: "Successfully changed password",
+        //     })
+        // }
 
 
         //RESET ALL THE FORM VALUES FOR UX
@@ -321,15 +327,21 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
         await trigger("price");
     }
 
+
+
     return (
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-            <div className="mb-[46px]">
+            {/* // <form className='w-full' action={handleSubmit(submitAddItemForm)} > */}
+            <div className='mb-[36px] md:hidden'>
+                <AddProduct />
+            </div>
+            <div className="flex flex-col mb-[46px]">
                 <div className="mb-[27px]">
-                    <h2 className="font-medium text-lg">Kategooriad</h2>
+                    <h2 className="font-medium text-sm md:text-lg">Vali kategooria</h2>
                 </div>
-                <div className="flex flex-col gap-[11px] leading-4 min-w-[424px] lg:w-[500px] max-w-[1440px]">
+                <div className="flex flex-col gap-[11px] leading-4 w-[325px] md:w-[425px] lg:w-[500px] max-w-[1440px]">
                     <Select value={category} onValueChange={handleCategoryChange}>
-                        <SelectTrigger className='bg-white'>
+                        <SelectTrigger className='bg-white md:w-full'>
                             <SelectValue placeholder="Vali kategooria" />
                         </SelectTrigger>
                         <SelectContent>
@@ -364,9 +376,10 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                         {errors.name && <p className="text-red-500">{errors.name.message}</p>}
                         {/* Size input */}
                         <div className=''>
-                            <div className='flex items-center gap-2'>
+                            <div className='flex pt-2 items-center gap-2'>
 
                                 <div>
+                                    <Label htmlFor='heigth' className='flex pb-1 justify-center'>Laius</Label>
                                     <Input
                                         {...register("width", { valueAsNumber: true })}
                                         value={width}
@@ -381,9 +394,9 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                                         }}
                                     />
                                 </div>
-                                <span className="text-gray-500">x</span>
+                                <span className="pt-3 text-gray-500">x</span>
                                 <div>
-                                    <Label htmlFor='heigth'>Korgus</Label>
+                                    <Label htmlFor='heigth' className='flex pb-1 justify-center'>Korgus</Label>
                                     <Input
                                         {...register("heigth", { valueAsNumber: true })}
                                         id='heigth'
@@ -400,8 +413,9 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                                         }}
                                     />
                                 </div>
-                                <span className="text-gray-500">x</span>
+                                <span className=" pt-3 text-gray-500">x</span>
                                 <div>
+                                    <Label htmlFor='length' className='flex pb-1 justify-center'>Pikkus</Label>
                                     <Input
                                         {...register("length", { valueAsNumber: true })}
                                         value={length}
@@ -416,11 +430,11 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                                         }}
                                     />
                                 </div>
-                                <p className="text-sm text-gray-500">
+                                {/* <p className="text-sm pt-3 text-gray-500">
                                     {width || '0'} cm x {heigth || '0'} cm x {length || '0'} cm
-                                </p>
+                                </p> */}
                             </div>
-                            <div className='flex flex-col gap-1'>
+                            <div className='flex flex-col gap-1 pt-2'>
                                 {(() => {
                                     const dimensionErrors = [
                                         errors.width,
@@ -501,7 +515,7 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                     </div>}
 
                     <p className='flex items-center gap-1'>Aadress <span><Map /></span></p>
-                    <div className="relative mb-[167px]">
+                    <div className="relative mb-[24px] md:mb-[167px]">
                         <Input
                             {...register("address")}
                             placeholder="Sisesta aadress"
@@ -528,10 +542,10 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                     </div>
                 </div>
             </div>
-            <div className="flex items-center justify-center">
-                <SubmitButton onClick={() => { console.log(getValues()) }} disabled={isSubmitting} className="bg-accent hover:bg-accent md:w-[202px] md:h-[55px] text-black cursor" type="submit">
+            <div className="flex flex-col gap-[10px] items-center justify-center">
+                <SubmitButton onClick={() => { console.log(getValues()) }} disabled={isSubmitting} className="bg-accent hover:bg-accent w-[220px] rounded-full md:w-[202px] md:h-[55px] text-black cursor" type="submit">
                     <h1 className={cn(isSubmitting ? " hidden " : "block")}>
-                        Lisa toode
+                        Kinnita
                     </h1>
                     <ClipLoader
                         color={"#ffffff"}
@@ -541,6 +555,18 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                         data-testid="loader"
                     />
                 </SubmitButton>
+                <Button onClick={() => { router.push("/") }} disabled={isSubmitting} className="bg-card hover:bg-accent w-[220px] rounded-full md:w-[202px] md:h-[55px] text-black cursor" type="submit">
+                    <h1 className={cn(isSubmitting ? " hidden " : "block")}>
+                        Tühista
+                    </h1>
+                    <ClipLoader
+                        color={"#ffffff"}
+                        loading={isSubmitting}
+                        size={40}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                    />
+                </Button>
             </div>
         </form>
     )

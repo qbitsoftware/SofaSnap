@@ -130,12 +130,12 @@ function AdvancedImageInput({ images, setImages, baseValue }: { images: IImage[]
     }
 
     return (
-        <div className="w-full max-w-3xl mx-auto space-y-4 p-4">
+        <div className="flex flex-col justify-center items-center w-full max-w-3xl mx-auto p-4">
             <div>
                 <Button
                     type="button"
                     onClick={handleButtonClick}
-                    className="p-7 w-[206px] bg-accent text-black rounded-3xl"
+                    className="p-4 md:p-7 w-[150px] md:w-[206px] bg-accent text-black rounded-3xl"
                 >
                     Lisa pildid
                 </Button>
@@ -150,7 +150,7 @@ function AdvancedImageInput({ images, setImages, baseValue }: { images: IImage[]
                 />
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 pt-[20px]">
                 {images.map((image) => (
                     <div
                         key={image.id}

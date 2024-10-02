@@ -9,7 +9,6 @@ import { RecentProducts } from "./components/recent-products";
 import { fetchAllProducts } from "@/utils/supabase/queries/products";
 import { FetchCategories } from "@/utils/supabase/queries/categories";
 import { ServerError } from "@/components/server-error";
-import NavBar from "@/components/navbar";
 
 export default async function Index() {
   const { data: products, error: productError } = await fetchAllProducts()
@@ -23,11 +22,11 @@ export default async function Index() {
   }
 
   return (
-    <>
+    <div>
       <main className="w-full">
-        <div className="px-[24px] md:px-[56px]">
+        {/* <div className="px-[24px] md:px-[56px]">
           <NavBar categories={categories!} />
-        </div>
+        </div> */}
         <LandingPage />
         <Categories data={categories} error={categoryError} />
         <Reviews />
@@ -37,6 +36,6 @@ export default async function Index() {
         <PopularProducts data={products} error={productError} />
         <Globe />
       </main>
-    </>
+    </div>
   );
 }

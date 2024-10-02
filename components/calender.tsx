@@ -18,7 +18,7 @@ export const Calender: React.FC<CalenderProps> = ({ changeValueFunc }: CalenderP
     const [dateRange, setDateRange] = useState<DateRange | undefined>()
 
     return (
-        <div className="py-[108px]">
+        <div className="py-[24px] md:py-[108px]">
             <div className="">
                 <Popover>
                     <PopoverTrigger asChild className='py-8 px-2'>

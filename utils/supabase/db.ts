@@ -8,9 +8,10 @@ import { migrate } from 'drizzle-orm/postgres-js/migrator'
 if (!process.env.DATABASE_URL) {
     console.log('No database URL')
 }
+// console.log("DATABASE URL", process.env.DATABASE_URL)
 
 const client = postgres(process.env.DATABASE_URL as string, { max: 1 })
-const db = drizzle(client, schema)
+const db = drizzle(client, { logger: true })
 const migrateDb = async () => {
     try {
         console.log('Migrating client')

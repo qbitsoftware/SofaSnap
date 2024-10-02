@@ -17,7 +17,6 @@ interface FetchProductsResponse {
 
 export const fetchProductsByCategories = async (categories: string[], page: number): Promise<FetchProductsResponse> => {
     const categoryJoinAlias = alias(category_join, 'cj2');
-    console.log(categories)
 
     try {
         let query = db
@@ -88,6 +87,8 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
         const totalCount = countResult[0]?.count || 0;
         const totalPages = Math.ceil(totalCount / 12);
 
+        // console.log("Arrived productss", result)
+
         return {
             data: {
                 products: result,
@@ -105,8 +106,11 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
 };
 
 export const fetchAllProducts = async () => {
+    console.log("fetching products")
+
     try {
         const result = await db.select().from(product)
+        console.log("completed products complete")
         if (result.length == 0) {
             return {
                 data: undefined,
@@ -119,6 +123,7 @@ export const fetchAllProducts = async () => {
             error: undefined
         }
     } catch (error) {
+        console.log("fetchi products went to shit", error)
         return {
             data: undefined,
             error: "Server error"
@@ -214,6 +219,7 @@ export const fetchProduct = async (id: number) => {
             error: undefined
         }
     } catch (error) {
+        console.log("Error fetching product", error)
         return {
             data: undefined,
             error: "Server error"
