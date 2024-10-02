@@ -20,10 +20,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Product } from "@/utils/supabase/supabase.types";
+import {  Product } from "@/utils/supabase/supabase.types";
 import Image from "next/image";
-import { CalendarIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { round } from "@/utils/utils";
 
 const FormSchema = z.object({
   dateRange: z.object({
@@ -54,10 +54,13 @@ export const DateForm: React.FC<DateFormProps> = ({ product }) => {
     },
   });
 
+
   const [isOpen, setIsOpen] = useState(false);
   const [activeDate, setActiveDate] = useState<'start' | 'end' | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
-  const [totalPrice, setTotalPrice] = useState(0)
+  const [isMobile, setIsMobile] = useState<Boolean>(false);
+  const [totalPrice, setTotalPrice] = useState<number>(0.0)
+  const [serviceFee, setSerivceFee] = useState<number>(0.0)
+  const [totalWithFee, setTotalWithFee] = useState<number>(0.0)
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -65,6 +68,12 @@ export const DateForm: React.FC<DateFormProps> = ({ product }) => {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  useEffect(() => {
+    const { from, to } = form.getValues("dateRange");
+    updateValues(from, to);
+  }, [form]);
+
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     toast({
@@ -79,12 +88,17 @@ export const DateForm: React.FC<DateFormProps> = ({ product }) => {
     });
   }
 
-  const updateTotalPrice = (from: Date, to:Date) => {
+  const updateValues= (from: Date, to:Date) => {
     const days = differenceInCalendarDays(to, from) + 1
-    const total = days * product.price
-    console.log(total)
+    const total = round(days * product.price) 
+    const fee = round(total * 0.05)
+    const totalWithFee = fee + total
+    setSerivceFee(fee)
     setTotalPrice(total)
+    setTotalWithFee(fee + total)
   }
+
+
 
   const formatDateButton = (date: Date | undefined) => {
     return date ? format(date, "dd.MM.yyyy") : "Select date";
@@ -94,7 +108,7 @@ export const DateForm: React.FC<DateFormProps> = ({ product }) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="md:space-y-[200px]">
         <div className="bg-[#ebeeeb] w-full md:w-[90%] rounded-xl mx-auto max-w-[1160px] md:flex flex-col md:flex-row">
-          <div className="w-full md:w-auto">
+          <div className="w-full md:w-auto drop-shadow-md">
             <Image
               src={"/images/tool2.png"}
               alt={product.name}
@@ -166,7 +180,7 @@ export const DateForm: React.FC<DateFormProps> = ({ product }) => {
                               from: item.selection.startDate,
                               to: item.selection.endDate,
                             });
-                            updateTotalPrice(item.selection.startDate!, item.selection.endDate!)
+                            updateValues(item.selection.startDate!, item.selection.endDate!)
                             if (activeDate === 'start') {
                               setActiveDate('end');
                             } else {
@@ -222,7 +236,7 @@ export const DateForm: React.FC<DateFormProps> = ({ product }) => {
               </div>
               <div className="md:flex justify-between">
                 <div>SofaSnapi teenustasu</div>
-                <div>{totalPrice * 0.05}€</div>
+                <div>{serviceFee}€</div>
               </div> 
               <Separator className="bg-black/25"/>
               <div className="md:flex md:justify-between">
@@ -230,11 +244,11 @@ export const DateForm: React.FC<DateFormProps> = ({ product }) => {
                   Kokku
                 </div>
                 <div>
-                  {totalPrice + totalPrice * 0.05}€
+                  {totalWithFee}€
                 </div>
               </div>
             </div>
-            <Button type="submit" className="mt-8 w-full rounded-full bg-accent text-black">Submit</Button>
+            <Button type="submit" className="mt-8 w-full rounded-full bg-accent text-black">Broneeri</Button>
           </div>
         </div>
       </form>

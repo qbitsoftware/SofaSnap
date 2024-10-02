@@ -19,6 +19,7 @@ interface GoogleMapComponentProps {
 }
 
 const GoogleMapComponent:React.FC<GoogleMapComponentProps> = ({ api, markers, className }) => {
+    console.log(markers)
 
     if (api && markers) {
         return (

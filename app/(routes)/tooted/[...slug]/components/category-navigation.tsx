@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { FetchCategories } from '@/utils/supabase/queries/categories';
 import { product } from '@/utils/supabase/schema';
 import { Product } from '@/utils/supabase/supabase.types';
@@ -12,11 +13,12 @@ interface CategoryNavigationProps {
     name_slug: string;
   }[];
   product?: Product // Make sure product is a string or undefined
+  className: string
 }
 
-export const CategoryNavigation: React.FC<CategoryNavigationProps> = async ({ categories, product }) => {
+export const CategoryNavigation: React.FC<CategoryNavigationProps> = async ({ categories, product, className }) => {
   return (
-    <div className='flex mt-[32px]'>
+    <div className={cn('flex mt-[32px]',className)}>
       {categories.map((category, idx) => {
         // Construct the path for each category separately
         let currentPath = `/tooted/${category.name_slug}`;

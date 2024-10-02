@@ -1,7 +1,6 @@
 
 import { CategoryCarousel } from './category-carousel'
 import { MapButton } from '@/components/map-button';
-import { FetchCategories } from '@/utils/supabase/queries/categories';
 import { Category } from '@/utils/supabase/supabase.types';
 
 interface CategoryProps {

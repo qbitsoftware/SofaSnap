@@ -4,14 +4,16 @@ import { redirect } from 'next/navigation'
 import React from 'react'
 import { ProductComponent } from './product'
 import { CategoryNavigation } from './category-navigation'
-import { ChevronLeft } from 'lucide-react'
-import {  user } from '@/utils/supabase/schema'
+import { ChevronLeft, MapPin, Pointer } from 'lucide-react'
+import { address, user } from '@/utils/supabase/schema'
 import { ProductImage } from './product-image'
 import { Reviews } from './reviews'
 import { DateForm } from './rent-form'
 import db from '@/utils/supabase/db'
 import GoogleMapComponent from '@/components/map'
 import { OwnerRating } from './owner-rating'
+import AddressComponent from './address'
+import { eq } from 'drizzle-orm'
 
 interface ProductPageProps {
   product_id: number
@@ -25,17 +27,16 @@ interface ProductPageProps {
 const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id, categories }) => {
   const { data, error } = await fetchProduct(product_id)
 
-  const result = await db.select().from(user)
-  if (error == "Server error") {
-    return (
-      <ServerError />
-    )
-  }
 
   if (error || !data) {
-    redirect("/404")  }
+    redirect("/404")
+  }
 
-  // Reviews placeholder
+  const result = await db.select().from(address)
+    .where(eq(address.id, 1))
+
+  console.log("RESS", result)
+
   const sampleReviews = [
     {
       name: "John Doe",
@@ -58,12 +59,12 @@ const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id, cate
       feedback: "Not really what I was expecting, had some issues with the product."
     }
   ];
-  
+
 
   return (
     <div className='md:min-h-screen w-full'>
       <div className='max-w-[1440px] md:px-16 mx-auto'>
-        <CategoryNavigation categories={categories.slice(0, -1)} product={data[0]}/>
+        <CategoryNavigation categories={categories.slice(0, -1)} product={data[0]} />
         <div className='md:mt-16 md:flex md:items-center md:justify-between'>
           <ChevronLeft color='#555555' size={44} />
         </div>
@@ -72,22 +73,19 @@ const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id, cate
         </div>
       </div>
       <div className='md:mt-[100px]'>
-        <ProductImage product={data[0]}/>
+        <ProductImage product={data[0]} />
       </div>
       <div className='bg-[#CBD3CB]/35 '>
         <div className='md:px-16 max-w-[1440px] mx-auto md:min-h-[190px] flex items-center'>
           {/* <OwnerRating  owner={}/> */}
         </div>
       </div>
-      <Reviews reviews={sampleReviews} className='md:my-[150px] mx-auto md:w-[80%] max-w-[1280px]'/>
+      <Reviews reviews={sampleReviews} className='md:my-[150px] mx-auto md:w-[80%] max-w-[1280px]' />
       <div className='w-full mx-auto'>
-        <DateForm product={data[0]}/>
+        <DateForm product={data[0]} />
       </div>
-      <div className='px-[64px] max-w-[1440px] mx-auto md:my-[200px]'>
-        <GoogleMapComponent className={""} api={process.env.GOOGLE_MAPS_KEY!} markers={[{lat:59.346962, lng:24.753574}]} />
-      </div>
-      <div>
-        
+      <div className='md:mb-[200px]'>
+        <AddressComponent address={result[0]} className=""/>
       </div>
     </div >
   )

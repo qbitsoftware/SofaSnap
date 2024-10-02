@@ -8,7 +8,6 @@ import { Filter } from './components/filter'
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import { Products } from './components/products'
 import { fetchProductsByCategories } from '@/utils/supabase/queries/products'
-// import { CheckCategories } from '@/utils/supabase/queries/categories'
 import { redirect } from 'next/navigation'
 import { CheckCategories, FetchCategories } from '@/utils/supabase/queries/categories'
 
@@ -64,25 +63,25 @@ const CategoryPage = async ({
     
     const {data, error: productError} = await fetchProductsByCategories(categories, page)
     if (!data || productError) {
-      redirect('404')
+      redirect('/404')
     }
 
  
 
     return (
-      <div className='md:mx-auto md:px-[64px] max-w-[1440px]'>
-        <CategoryNavigation categories={category_objects} />
-        <div className='md:mt-16 md:flex md:items-center md:justify-between'>
-          <ChevronLeft color='#555555' size={44} />
-          <h2 className='md:text-5xl'>{capitalize(category_objects[category_objects.length - 1].name)}</h2>
-          <MapButton className='' />
+      <div className='md:mx-auto px-6 md:px-[64px] max-w-[1440px]'>
+        <CategoryNavigation categories={category_objects} className='hidden md:block'/>
+        <div className='md:mt-16 flex md:flex md:items-center md:justify-between'>
+          <ChevronLeft className='ml-[-16px]' color='#555555' size={56} />
+          <h2 className='md:text-5xl hidden md:block'>{capitalize(category_objects[category_objects.length - 1].name)}</h2>
+          <MapButton className='hidden md:flex' />
         </div>
         <div className='md:px-10 md:mt-12'>
           <Filter />
           <div className='mt-10 '>
             <Products products={data.products} />
           </div>
-          <div className='my-[100px]'>
+          <div className='my-[100px] hidden md:block'>
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
