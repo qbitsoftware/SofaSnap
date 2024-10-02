@@ -16,6 +16,7 @@ import { Address, TAddressSearchSchema } from "@/lib/search-validation"
 import { debounce } from "lodash"
 import { Suggestions } from "./suggestions"
 import { Feature } from "@/lib/coordinates-validation"
+import Link from "next/link"
 
 const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient, email: string, id: string }) => {
 
@@ -210,27 +211,24 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
                             <Contract />
                         </div>
                     </div>
-                    <div className="flex flex-col items-start pl-[10px] w-full mb-[78px]">
+                    <div className="flex flex-col items-start pt-2 w-full mb-[78px]">
                         {!errors.agreement && <p className="pb-2 h-[32px]"></p>}
                         {errors.agreement && <p className="text-red-500 pb-2">* {errors.agreement.message}</p>}
                         <label className="flex items-center gap-[10px] w-full cursor-pointer">
                             <Input {...register("agreement")} type="checkbox" id="custom-checkbox" className="hidden peer" />
-                            <div className="w-[26px] h-[26px] bg-[#FCC9B9] hidden peer-checked:flex shadow-inner-light items-center justify-center">
+                            <div className="min-w-[26px] min-h-[26px] bg-[#FCC9B9] hidden peer-checked:flex shadow-inner-light items-center justify-center">
                                 <Check width={24} height={24} className="text-black peer-checked:text-white" />
                             </div>
-                            <div className="w-[26px] h-[26px] bg-[#FCC9B9] peer-checked:hidden shadow-inner-light flex items-center justify-center">
-                                
+                            <div className="min-w-[26px] min-h-[26px] bg-[#FCC9B9] peer-checked:hidden shadow-inner-light flex items-center justify-center">
+
                             </div>
                             <h2 className="font-medium text-base">Olen tutvunud lepingu tingimustega ja nõustun käesoleva lepinguga.</h2>
                         </label>
                     </div>
                 </div>
             }
-            <div className="relative z-10 flex items-center justify-end gap-[20px] mr-[70px] mb-[51px]">
-                <Button className="md:w-[100px] md:h-[75px] bg-[#D9D9D9] hover:text-white text-black">
-                    Tühista
-                </Button>
-                <SubmitButton disabled={isSubmitting} className="bg-accent hover:bg-accent md:w-[100px] md:h-[75px] text-black cursor">
+            <div className="z-10 flex flex-col md:flex-row items-center gap-[20px] mb-[51px]">
+                <SubmitButton disabled={isSubmitting} className="bg-accent hover:bg-accent w-[150px] rounded-full lg:w-[150px] md:h-[45px] text-black cursor">
                     <h1 className={cn(isSubmitting ? " hidden " : "block")}>
                         Uuenda
                     </h1>
@@ -242,6 +240,11 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
                         data-testid="loader"
                     />
                 </SubmitButton>
+                <Button className="w-[150px] lg:w-[100px] md:h-[45px] bg-[#D9D9D9] rounded-full hover:text-white text-black">
+                    <Link href={"/"}>
+                        Tühista
+                    </Link>
+                </Button>
             </div>
         </form >
     )

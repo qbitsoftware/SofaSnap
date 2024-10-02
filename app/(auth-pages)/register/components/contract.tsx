@@ -56,7 +56,7 @@ const Contract = () => {
     ]
     return (
         <div className="flex w-full bg-background overflow-y-auto py-[18px] px-[25px] shadow-inner-heavy no-scrollbar">
-            <div className="w-full h-[550px] text-base leading-[50px]">
+            <div className="w-full h-[550px] text-base leading-[35px] md:leading-[50px]">
                 <h1>
                     Vahendusplatvormi Teenusleping
                 </h1>

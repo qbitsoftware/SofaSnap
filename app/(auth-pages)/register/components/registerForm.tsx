@@ -202,7 +202,7 @@ const RegisterForm = () => {
                 <div className="mb-[29px] pl-[4px] md:pl-[0px] md:mb-[22px]">
                     <h2 className="font-medium text-lg">Isikuandmed</h2>
                 </div>
-                <div className="flex flex-col w-[280px] gap-[5px] md:gap-[11px] md:pl-[75px] md:w-[424px] leading-4">
+                <div className="flex flex-col w-full gap-[5px] md:gap-[11px] md:w-[500px] md:pl-[75px] leading-4">
                     <Input {...register("first_name")} placeholder="Nimi" autoComplete="off" />
                     {errors.first_name && <p className="text-red-500">{errors.first_name.message}</p>}
                     <Input {...register("last_name")} placeholder="Perekonnanimi" autoComplete="off" />
@@ -235,7 +235,7 @@ const RegisterForm = () => {
                 <div className="pl-[4px] md:pl-[0px] mb-[26px]">
                     <h2 className="font-medium text-lg">Kasutaja info</h2>
                 </div>
-                <div className="flex flex-col w-[280px] gap-[5px] md:gap-[11px] md:pl-[75px] leading-4 md:w-[424px]">
+                <div className="flex flex-col w-full gap-[5px] md:gap-[11px] md:w-[500px] md:pl-[75px] leading-4">
                     <Input {...register("email")} placeholder="Meiliaadress" autoComplete="off" />
                     {errors.email && <p className="text-red-500">{errors.email.message}</p>}
                     <Input {...register("password")} placeholder="Parool" type="password" autoComplete="off" />

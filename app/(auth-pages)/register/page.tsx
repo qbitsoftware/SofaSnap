@@ -20,7 +20,7 @@ const Page = async () => {
                     </Link>
                 </div>
             </div>
-            <div className="mb-[64px] px-[30px] md:px-[64px] max-w-[1440px]">
+            <div className="mb-[64px] lg:px-[64px] w-[300px] sm:w-[450px] md:w-[700px] lg:w-[1000px] xl:w-[1400px] max-w-[1440px]">
                 <RegisterForm />
             </div>
             <div className="hidden md:flex w-full h-[532px] mb-[324px] ml-[-350px] lg:ml-[-200px] lg:scale-125 xl:ml-[0px] xl:scale-150 2xl:scale-175 2xl:ml-[250px] overflow-hidden">
