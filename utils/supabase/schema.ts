@@ -96,3 +96,13 @@ export const address_join = pgTable("address_join", {
     user_id: uuid('user_id').references(() => user.id).notNull(),
     address_id: integer("address_id").references(() => address.id).notNull(),
 })
+
+export const address_join_product = pgTable("address_join_products", {
+    id: serial("id").primaryKey().notNull(),
+    created_at: timestamp('created_at', {
+        withTimezone: true,
+        mode: 'string',
+    }).defaultNow().notNull(),
+    product_id: integer('product_id').references(() => product.id).notNull(),
+    address_id: integer("address_id").references(() => address.id).notNull(),
+})
