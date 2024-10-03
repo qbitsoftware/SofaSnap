@@ -1,19 +1,14 @@
-import { ServerError } from '@/components/server-error'
 import { fetchProduct } from '@/utils/supabase/queries/products'
 import { redirect } from 'next/navigation'
 import React from 'react'
 import { ProductComponent } from './product'
 import { CategoryNavigation } from './category-navigation'
-import { ChevronLeft, MapPin, Pointer } from 'lucide-react'
-import { address, user } from '@/utils/supabase/schema'
+import { ChevronLeft } from 'lucide-react'
 import { ProductImage } from './product-image'
 import { Reviews } from './reviews'
 import { DateForm } from './rent-form'
-import db from '@/utils/supabase/db'
-import GoogleMapComponent from '@/components/map'
-import { OwnerRating } from './owner-rating'
 import AddressComponent from './address'
-import { eq } from 'drizzle-orm'
+import { fetchProductAddress } from '@/utils/supabase/queries/address'
 
 interface ProductPageProps {
   product_id: number
@@ -26,16 +21,21 @@ interface ProductPageProps {
 
 const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id, categories }) => {
   const { data, error } = await fetchProduct(product_id)
+  const address = await fetchProductAddress(product_id)
 
+
+  if (!address.data || address.error) {
+    redirect("/404")
+  }
 
   if (error || !data) {
     redirect("/404")
   }
 
-  const result = await db.select().from(address)
-    .where(eq(address.id, 1))
+  // const result = await db.select().from(address)
+  //   .where(eq(address.id, 1))
 
-  console.log("RESS", result)
+  // console.log("RESS", result)
 
   const sampleReviews = [
     {
@@ -85,7 +85,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id, cate
         <DateForm product={data[0]} />
       </div>
       <div className='md:mb-[200px]'>
-        <AddressComponent address={result[0]} className=""/>
+        <AddressComponent address={address.data[0].addresses} className="" />
       </div>
     </div >
   )

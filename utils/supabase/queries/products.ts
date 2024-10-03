@@ -1,10 +1,10 @@
 "server only"
 
 import db from '@/utils/supabase/db'
-import { category, category_join, product, address } from '@/utils/supabase/schema'
+import { category, category_join, product, address, address_join_product } from '@/utils/supabase/schema'
 import { eq, and, sql } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
-import { Address, AddressTS, CategoryTS, Product, ProductRealTS } from '../supabase.types'
+import { Address, AddressJoinProductTS, AddressTS, CategoryTS, Product, ProductRealTS } from '../supabase.types'
 import { TProductServer } from '@/lib/product-validation'
 
 interface FetchProductsResponse {
@@ -174,7 +174,7 @@ export const addProduct = async (prod: TProductServer) => {
 
             await tx.insert(category_join)
                 .values(category);
-            //add address join
+            //add address
             const ad: AddressTS = {
                 full_address: prod.address.properties.full_address,
                 location: {
@@ -188,7 +188,17 @@ export const addProduct = async (prod: TProductServer) => {
                 country_name: prod.address.properties.context.country.name,
             }
 
-            await tx.insert(address).values(ad)
+            const insertedAddress = await tx.insert(address).values(ad).returning({ id: address.id })
+            const addressId = insertedAddress[0].id
+            if (!addressId) {
+                throw new Error("Failed to insert product -> invalid address id")
+            }
+            //add address join
+            const adJoin: AddressJoinProductTS = {
+                product_id: productId,
+                address_id: addressId,
+            }
+            await tx.insert(address_join_product).values(adJoin)
         });
 
         return {
