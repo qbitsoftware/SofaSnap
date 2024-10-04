@@ -248,6 +248,8 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
         setImages([])
         setListingType(null)
         reset()
+        //we still need the user id
+        setValue("user_id", id)
     }
 
     const fetchSuggestions = useCallback(

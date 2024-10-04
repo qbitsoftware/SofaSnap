@@ -43,7 +43,7 @@ function AdvancedImageInput({ images, setImages, baseValue }: { images: IImage[]
                     const updated = [...prevImages, ...newImages]
                     let lenImages = updated.length
                     let baseValueInput: string[] = []
-                    for (let i = 0; i <= lenImages; i++) {
+                    for (let i = 0; i < lenImages; i++) {
                         baseValueInput.push(String(i))
                     }
                     baseValue(baseValueInput)
@@ -64,7 +64,7 @@ function AdvancedImageInput({ images, setImages, baseValue }: { images: IImage[]
             const updatedImages = prevImages.filter(img => img.id !== id)
             let lenImages = updatedImages.length
             let baseValueInput: string[] = []
-            for (let i = 0; i <= lenImages; i++) {
+            for (let i = 0; i < lenImages; i++) {
                 baseValueInput.push(String(i))
             }
             baseValue(baseValueInput)
@@ -115,7 +115,7 @@ function AdvancedImageInput({ images, setImages, baseValue }: { images: IImage[]
         setImages(newImages)
         let lenImages = newImages.length
         let baseValueInput: string[] = []
-        for (let i = 0; i <= lenImages; i++) {
+        for (let i = 0; i < lenImages; i++) {
             baseValueInput.push(String(i))
         }
         baseValue(baseValueInput)
