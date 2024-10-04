@@ -4,20 +4,20 @@ import { FeatureSchema } from "./coordinates-validation";
 export const productSchema = z
     .object({
         user_id: z.string(),
-        name: z.string().min(4, "Nimi peab olema vahemalt 4 tahe pikkune"),
+        name: z.string().min(4, "Nimi peab olema vahemalt 4 tahe pikkune").max(25, "Nimi ei saa olla pikem kui 25 tahemarki"),
         category: z.string({ message: "Valige kategooria" }).min(1),
         sub_category: z.string({ message: "Valige toote kategooria" }).min(1),
-        width: z.number().min(1, "Sisesta laius"),
-        heigth: z.number().min(1, "Sisesta kõrgus"),
-        length: z.number().min(1, "Sisesta pikkus"),
-        material: z.string().min(1, "Sisesta materjal"),
-        description: z.string().optional(),
+        width: z.number().min(1, "Sisesta laius").max(10000, "Laius ei saa olla suurem kui 100m"),
+        heigth: z.number().min(1, "Sisesta kõrgus").max(10000, "Kõrgus ei saa olla suurem kui 100m"),
+        length: z.number().min(1, "Sisesta pikkus").max(10000, "Pikkus ei saa olla suurem kui 100m"),
+        material: z.string().min(1, "Sisesta materjal").max(25, "Materjal ei saa olla pikem kui 25 tahemarki"),
+        description: z.string().max(300, "Kirjeldus ei saa olla pikem kui 300 tahemarki").optional(),
         start_date: z.date().optional(),
         end_date: z.date().optional(),
         type: z.string({ message: "Valige kuulutuse tüüp" }).min(1),
-        price: z.number({ message: "Sisestage sobiv hind" }).min(1, "Madalaim hind on 1 euro"),
+        price: z.number({ message: "Sisestage sobiv hind" }).min(1, "Madalaim hind on 1 euro").max(1000000, "Hind ei saa olla suurem kui 1 miljon"),
         address: z.string().min(1, "Aadress on nõutud"),
-        all_img: z.array(z.string(), { message: "Lisa vähemalt 1 pilt tootest" }).min(1),
+        all_img: z.array(z.string(), { message: "Lisa vähemalt 1 pilt tootest" }).min(1).max(10, "10 pilti on maksimaalne kogus"),
     }).superRefine((value, ctx) => {
 
         const today = new Date();
@@ -57,20 +57,20 @@ export const productSchema = z
 
 export const productSchemaServer = z.object({
     user_id: z.string(),
-    name: z.string().min(4, "Nimi peab olema vahemalt 4 tahe pikkune"),
+    name: z.string().min(4, "Nimi peab olema vahemalt 4 tahe pikkune").max(25, "Nimi ei saa olle pikem kui 25 tahemarki"),
     category: z.string({ message: "Valige kategooria" }).min(1),
     sub_category: z.string({ message: "Valige toote kategooria" }).min(1),
-    width: z.number().min(1, "Sisesta laius"),
-    heigth: z.number().min(1, "Sisesta kõrgus"),
-    length: z.number().min(1, "Sisesta pikkus"),
-    material: z.string().min(1, "Sisesta materjal"),
-    description: z.string().optional(),
+    width: z.number().min(1, "Sisesta laius").max(10000, "Laius ei saa olla suurem kui 100m"),
+    heigth: z.number().min(1, "Sisesta kõrgus").max(10000, "Korgus ei saa olla suurem kui 100m"),
+    length: z.number().min(1, "Sisesta pikkus").max(10000, "Pikkus ei saa olla suurem kui 100m"),
+    material: z.string().min(1, "Sisesta materjal").max(25, "Materjal ei saa olla pikem kui 25 tahemarki"),
+    description: z.string().max(300, "Kirjeldus ei saa olla pikem kui 300 tahemarki").optional(),
     start_date: z.string().optional(),
     end_date: z.string().optional(),
     type: z.string({ message: "Valige kuulutuse tüüp" }).min(1),
-    price: z.number({ message: "Sisestage sobiv hind" }).min(1, "Madalaim hind on 1 euro"),
+    price: z.number({ message: "Sisestage sobiv hind" }).min(1, "Madalaim hind on 1 euro").max(1000000, "Hind ei saa olla suurem kui 1 miljon"),
     address: FeatureSchema,
-    all_img: z.array(z.string(), { message: "Lisa vähemalt 1 pilt tootest" }).min(1),
+    all_img: z.array(z.string(), { message: "Lisa vähemalt 1 pilt tootest" }).min(1).max(10, "9 pilti on maksimaalne kogus"),
 }).superRefine((value, ctx) => {
     const today = new Date();
     if (value.type === "rent") {
