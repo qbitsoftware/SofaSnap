@@ -1,5 +1,5 @@
 import { productSchemaServer } from "@/lib/product-validation";
-import { addProduct } from "@/utils/supabase/queries/products";
+import { addProduct, fetchAllProducts } from "@/utils/supabase/queries/products";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -32,3 +32,12 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Unexpected error occurred' }, { status: 500 });
     }
 }
+
+export async function GET(req: Request, res:Response) {
+    const page = req.query.page || 1;
+    try {
+      const products = await fetchAllProducts(Number(page)); // Add pagination logic in your query if needed
+      return NextResponse.json({data: products},{status:200});
+    } catch (error) {
+        return NextResponse.json({"Server error"},{status:500});    }
+  }

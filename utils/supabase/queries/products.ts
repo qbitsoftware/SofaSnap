@@ -1,4 +1,4 @@
-"server only"
+
 
 import db from '@/utils/supabase/db'
 import { category, category_join, product, address } from '@/utils/supabase/schema'

@@ -69,7 +69,7 @@ const CategoryPage = async ({
  
 
     return (
-      <div className='md:mx-auto px-6 md:px-[24px] max-w-[768px] md:max-w-[1152px] lg:max-w-[1152px] xl:max-w-[1310px]'>
+      <div className='md:mx-auto px-6 md:px-[64px] max-w-[1440px]'>
         <CategoryNavigation categories={category_objects} className='hidden md:block'/>
         <div className='md:mt-16 flex md:flex md:items-center md:justify-between'>
           <ChevronLeft className='ml-[-16px]' color='#000000' size={56} />

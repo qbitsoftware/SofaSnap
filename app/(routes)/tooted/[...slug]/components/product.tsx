@@ -29,7 +29,7 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
     return (
         <div className='flex flex-col md:flex-row lg:gap-[130px] md:gap-[80px] 2xl:gap-[260px]'>
             <div className='relative'>
-                <div className='mx-auto relative h-[194px] w-[200px] lg:w-[510px] lg:h-[450px] md:w-[350px] md:h-[309px] rounded-xl overflow-hidden'>
+                <div className='mx-auto relative h-[194px] w-[200px] sm:h-[250px] sm:w-[260px] lg:w-[510px] lg:h-[450px] md:w-[350px] md:h-[309px] rounded-xl overflow-hidden'>
                     {product.all_img!.map((image, index) => (
                         <div
                             key={index}
@@ -38,7 +38,7 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
                         >
                             <Image
                                 className='absolute w-full h-full rounded-xl object-cover'
-                                src={image} 
+                                src={image}
                                 alt={product.name}
                                 fill
                                 objectFit='cover'
@@ -46,7 +46,7 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
                         </div>
                     ))}
                 </div>
-                <div className="flex justify-between items-center mt-4">
+                <div className="flex justify-between items-center mt-4 md:max-w-[100%] max-w-[70%] mx-auto">
                     <button
                         onClick={handlePrev}
                         className="p-2 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
@@ -74,14 +74,16 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
                     </button>
                 </div>
             </div>
-            <div className='md:flex-col md:gap-[28px] flex'>
-                <h1 className='md:text-4xl font-semibold'>{product.name}</h1>
-                <div className='bg-accent py-2 inline-block px-3 rounded-full w-max'>
-                    <p className='font-semibold text-lg'>
-                        {product.price}
-                        <span>€</span>
-                        <span className='font-normal pl-4'>Päev</span>
-                    </p>
+            <div className='flex-col justify-center md:justify-start md:gap-[28px] gap-6 mt-12 flex'>
+                <div className='flex md:flex-col md:gap-[28px] md:items-start items-center gap-4'>
+                    <h1 className='md:text-4xl text-[20px] font-medium md:font-semibold'>{product.name}</h1>
+                    <div className='bg-accent py-2 inline-block px-3 rounded-full w-max'>
+                        <p className='text-[14px] font-semibold md:text-lg'>
+                            {product.price}
+                            <span className=''>€</span>
+                            <span className='font-normal pl-2 md:pl-4'>Päev</span>
+                        </p>
+                    </div>
                 </div>
                 <div>
                     <p>{product.description}</p>
