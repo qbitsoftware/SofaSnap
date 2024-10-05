@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { User } from '@/utils/supabase/supabase.types'
-import { Star } from 'lucide-react'
+import { Star, StarIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -19,9 +19,9 @@ export const OwnerRating: React.FC<OwnerRatingProps> = ({ owner }) => {
                 <p className='font-bold'>{"Marje"}</p>
                 <div className="flex ">
                     {[...Array(5)].map((_, i) => (
-                        <Star
+                        <StarIcon
                             key={i}
-                            className={`w-5 h-5 ${i < 4 ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
+                            className={`w-6 h-6 ${i < 4 ? 'text-transparent fill-[#FE9F73]' : 'text-gray-300'
                                 }`}
                         />
                     ))}

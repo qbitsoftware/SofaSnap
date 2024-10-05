@@ -35,7 +35,7 @@ export async function POST(req: Request, res: NextApiResponse) {
 
         let filePaths: string[] = [];
 
-        console.log("Starting to upload files to bucket")
+        // console.log("Starting to upload files to bucket")
         const supabase = createClient()
         const uploadPromises = files.map(async (file) => {
             const filename = `${uuidv4()}-${file.name}`;

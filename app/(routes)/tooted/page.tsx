@@ -1,18 +1,43 @@
 import React from 'react'
-import { Products } from './[...slug]/components/products'
-import { fetchAllProducts } from '@/utils/supabase/queries/products'
 import { ProductList } from './[...slug]/components/product-list'
+import { fetchProducts } from '@/app/actions'
+import { ChevronLeft } from 'lucide-react'
+import { MapButton } from '@/components/map-button'
+import { capitalize } from '@/utils/utils'
+import { Filter } from './[...slug]/components/filter'
 
+const PRODUCTS_PER_PAGE = 30
 
-const Page = async () => {
+const Page = async ({ searchParams }: { searchParams: { page?: string } }) => {
+  const currentPage = searchParams.page ? parseInt(searchParams.page, 10) : 1
 
-  const {data,error} = await fetchAllProducts()
+  const { data, error, totalCount } = await fetchProducts(currentPage)
 
+  if (error) {
+    console.error("Error fetching products:", error)
+    return <div>Error loading products. Please try again later.</div>
+  }
 
+  const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE)
 
   return (
-    <div>
-       <ProductList initialProducts={data!}/> 
+    <div className="md:mx-auto px-6 md:px-[64px] max-w-[1440px]">
+      <div className='md:mt-16 flex md:flex md:items-center md:justify-between'>
+        <ChevronLeft className='ml-[-16px]' color='#000000' size={56} />
+        <MapButton className='hidden md:flex' />
+      </div>
+      <div className='md:px-10 mt-4 md:mt-10 mb-[100px] md:mb-0 md:max-w-[860px] lg:max-w-[1152px] xl:max-w-[1310px] sm:max-w-[540px] mx-auto'>
+        <Filter/>
+    <div className='mt-4 md:mt-10'>
+        <ProductList
+          initialProducts={data || []}
+          totalPages={totalPages}
+          currentPage={currentPage}
+          type={"product"}
+          categories={undefined}
+        />
+    </div>
+      </div>
     </div>
   )
 }

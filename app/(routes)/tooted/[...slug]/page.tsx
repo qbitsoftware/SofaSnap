@@ -5,11 +5,12 @@ import { ChevronLeft } from 'lucide-react'
 import { MapButton } from '@/components/map-button'
 import { capitalize } from '@/utils/utils'
 import { Filter } from './components/filter'
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
-import { Products } from './components/products'
-import { fetchProductsByCategories } from '@/utils/supabase/queries/products'
+import { ProductList } from './components/product-list'
+import { FetchProductsByCategories } from '@/app/actions'
 import { redirect } from 'next/navigation'
 import { CheckCategories, FetchCategories } from '@/utils/supabase/queries/categories'
+
+const PRODUCTS_PER_PAGE = 30 
 
 const CategoryPage = async ({
   params,
@@ -60,13 +61,12 @@ const CategoryPage = async ({
       redirect('/404')
     } 
     
-    
-    const {data, error: productError} = await fetchProductsByCategories(categories, page)
-    if (!data || productError) {
+    const {data: productData, error: productError, totalCount} = await FetchProductsByCategories(categories, page)
+    if (!productData || productError) {
       redirect('/404')
     }
 
- 
+    const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE)
 
     return (
       <div className='md:mx-auto px-6 md:px-[64px] max-w-[1440px]'>
@@ -78,43 +78,19 @@ const CategoryPage = async ({
         </div>
         <div className='md:px-10 mt-4 md:mt-10 mb-[100px] md:mb-0 md:max-w-[860px] lg:max-w-[1152px] xl:max-w-[1310px] sm:max-w-[540px] mx-auto'>
           <Filter  />
-          <div className='mt-10 '>
-            <Products products={data.products} />
-          </div>
-          <div className='my-[100px] hidden md:block'>
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  {page > 1 && (
-                    <PaginationPrevious className='hover:text-white' href={`?page=${page - 1}`} />
-                  )}
-                </PaginationItem>
-                {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((p) => (
-                  <PaginationItem key={p}>
-                    <PaginationLink
-                      href={`?page=${p}`}
-                      isActive={p === page}
-                    >
-                      {p}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-                {data.totalPages > 5 && page < data.totalPages - 2 && (
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                )}
-                <PaginationItem>
-                  {page < data.totalPages && (
-                    <PaginationNext className='hover:text-white' href={`?page=${page + 1}`} />
-                  )}
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+          <div className='md:mt-10 mt-4'>
+            <ProductList 
+              initialProducts={productData} 
+              totalPages={totalPages}
+              currentPage={page}
+              type='category'
+              categories={categories}
+            />
           </div>
         </div>
       </div>
     )
   }
 }
+
 export default CategoryPage

@@ -9,7 +9,7 @@ import { Reviews } from './reviews'
 import { DateForm } from './rent-form'
 import AddressComponent from './address'
 import { fetchProductAddress } from '@/utils/supabase/queries/address'
-import { OwnerRating } from './owner-rating'
+// import { OwnerRating } from './owner-rating'
 import { ServerError } from '@/components/server-error'
 
 interface ProductPageProps {
@@ -79,7 +79,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ slugs, product_id, cate
       </div>
       <div className='bg-[#CBD3CB]/35 '>
         <div className='md:px-16 px-6 max-w-[1440px] mt-2 mx-auto h-[86px] md:min-h-[190px] flex items-center'>
-          <OwnerRating />
+          {/* <OwnerRating /> */}
         </div>
       </div>
       <Reviews reviews={sampleReviews} className='hidden md:my-[150px] mx-auto md:w-[80%] max-w-[1280px]' />

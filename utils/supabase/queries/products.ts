@@ -2,20 +2,14 @@
 
 import db from '@/utils/supabase/db'
 import { category, category_join, product, address, address_join_product } from '@/utils/supabase/schema'
-import { eq, and, sql } from 'drizzle-orm'
+import { eq, and, sql, desc } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
 import { Address, AddressJoinProductTS, AddressTS, CategoryTS, Product, ProductRealTS } from '../supabase.types'
 import { TProductServer } from '@/lib/product-validation'
 
-interface FetchProductsResponse {
-    data: {
-        products: Product[]
-        totalPages: number
-    } | undefined
-    error: string | undefined
-}
 
-export const fetchProductsByCategories = async (categories: string[], page: number): Promise<FetchProductsResponse> => {
+export const fetchProductsByCategories = async (categories: string[], page: number, limit = 30) => {
+    const offset = (page - 1) * limit
     const categoryJoinAlias = alias(category_join, 'cj2');
 
     try {
@@ -59,8 +53,8 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
         }
 
         const result = await query
-            .limit(12)
-            .offset((page - 1) * 12);
+            .limit(limit)
+            .offset(offset);
         let countQuery = db
             .select({ count: sql`count(*)`.mapWith(Number) })
             .from(category_join)
@@ -85,51 +79,83 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
 
         const countResult = await countQuery;
         const totalCount = countResult[0]?.count || 0;
-        const totalPages = Math.ceil(totalCount / 12);
 
-        // console.log("Arrived productss", result)
 
         return {
-            data: {
-                products: result,
-                totalPages: totalPages
-            },
-            error: undefined
+            data: result,
+            error: undefined,
+            totalCount: totalCount
         };
     } catch (error) {
         console.error("Error fetching products:", error);
         return {
             data: undefined,
             error: "Failed to fetch products.",
+            totalCount: 0
         };
     }
 };
 
-export const fetchAllProducts = async () => {
-    console.log("fetching products")
+export const fetchAllProducts = async (page = 1, limit = 30) => {
+    const offset = (page - 1) * limit
 
     try {
-        const result = await db.select().from(product)
-        console.log("completed products complete")
-        if (result.length == 0) {
-            return {
-                data: undefined,
-                error: "No results found"
-            }
-        }
+        const result = await db.select()
+            .from(product)
+            .orderBy(desc(product.created_at))
+            .limit(limit)
+            .offset(offset)
+
+        const [{ count }] = await db.select({
+            count: sql<number>`count(*)`
+        }).from(product)
 
         return {
-            data: result,
-            error: undefined
+            data: result as Product[],
+            error: undefined,
+            totalCount: count
         }
     } catch (error) {
-        console.log("fetchi products went to shit", error)
+        console.error("Error fetching products:", error)
         return {
             data: undefined,
-            error: "Server error"
+            error: "Failed to fetch products",
+            totalCount: 0
         }
     }
 }
+// export const fetchByOffset = async (page: number, limit = 2) => {
+//     // console.log("Fetching products for page:", page)
+//     const offset = (page - 1) * limit
+
+//     try {
+//         const result = await db.select()
+//             .from(product)
+//             .orderBy(desc(product.created_at))
+//             .limit(limit)
+//             .offset(offset) as Product[]
+
+//         console.log("Fetched products count:", result.length)
+
+//         if (result.length === 0) {
+//             return {
+//                 data: undefined,
+//                 error: "No results found"
+//             }
+//         }
+
+//         return {
+//             data: result,
+//             error: undefined
+//         }
+//     } catch (error) {
+//         console.error("Error fetching products:", error)
+//         return {
+//             data: undefined,
+//             error: "Server error"
+//         }
+//     }
+// }
 
 export const addProduct = async (prod: TProductServer) => {
     const p: ProductRealTS = {

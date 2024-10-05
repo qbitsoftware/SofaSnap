@@ -4,9 +4,9 @@ import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
 import { productSchemaServer, TProductServer } from "@/lib/product-validation";
-import { addProduct } from "@/utils/supabase/queries/products";
+import { addProduct, fetchAllProducts, fetchProductsByCategories } from "@/utils/supabase/queries/products";
+import { Product } from "@/utils/supabase/supabase.types";
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -133,10 +133,10 @@ export const signOutAction = async () => {
 };
 
 export const GetUserInfo = async () => {
-  console.log("fetching users")
+  // console.log("fetching users")
   const supabase = createClient();
   const user = await supabase.auth.getUser()
-  console.log("completed user", user)
+  // console.log("completed user", user)
   return user
 }
 
@@ -159,10 +159,18 @@ export async function createProductAction(body: TProductServer) {
       return { error: 'Unexpected error occurred', status: 500 };
     }
 
-    console.log("Product added successfully:", result.data);
+    // console.log("Product added successfully:", result.data);
     return { data: "Product successfully added", status: 200 };
   } catch (error) {
-    console.error("Server action error:", error);
+    // console.error("Server action error:", error);
     return { error: 'Unexpected error occurred', status: 500 };
   }
+}
+
+export async function fetchProducts(page: number): Promise<{ data: Product[] | undefined, error: string | undefined, totalCount: number }> {
+  return await fetchAllProducts(page)
+}
+
+export async function FetchProductsByCategories(categories: string[], page: number): Promise<{ data: Product[] | undefined, error: string | undefined, totalCount: number }> {
+  return await fetchProductsByCategories(categories, page)
 }

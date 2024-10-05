@@ -45,7 +45,7 @@ export const Reviews: React.FC<ReviewsProps> = ({ reviews, className }) => {
                         {[...Array(5)].map((_, i) => (
                             <Star
                                 key={i}
-                                className={`w-5 h-5 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
+                                className={`w-6 h-6 ${i < review.rating ? 'text-transparent fill-[#FE9F73]' : 'text-gray-300'
                                     }`}
                             />
                         ))}
