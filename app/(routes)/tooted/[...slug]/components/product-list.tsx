@@ -37,7 +37,7 @@ export const ProductList: React.FC<ProductListProps> = ({ initialProducts, total
 
     const nextPage = page + 1
 
-    let data, error;
+    let data:Product[] | undefined, error:string | undefined;
 
     if (type === "category" && categories) {
         ({ data, error } = await FetchProductsByCategories(categories, nextPage));
