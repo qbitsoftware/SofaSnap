@@ -62,10 +62,10 @@ export const ProductList: React.FC<ProductListProps> = ({ initialProducts, total
     }
 
     setProducts(prevProducts => {
-      const newProducts = data.filter((newProduct:Product)=> 
+      const newProducts = data && data.filter((newProduct:Product)=> 
         !prevProducts.some(existingProduct => existingProduct.id === newProduct.id)
       )
-      return [...prevProducts, ...newProducts]
+      return [...prevProducts, ...newProducts!]
     })
 
     if (data.length < PRODUCTS_PER_PAGE) {
