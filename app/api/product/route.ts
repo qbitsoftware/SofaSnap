@@ -1,5 +1,5 @@
 import { productSchemaServer } from "@/lib/product-validation";
-import { addProduct, fetchAllProducts } from "@/utils/supabase/queries/products";
+import { addProduct } from "@/utils/supabase/queries/products";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -7,7 +7,7 @@ export async function POST(request: Request) {
         const body = await request.json();
 
         const result = productSchemaServer.safeParse(body);
-        let zodErrors: Record<string, string> = {};
+        const zodErrors: Record<string, string> = {};
 
 
         if (result.error) {

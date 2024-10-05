@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState, useEffect } from "react";
 import { addDays, differenceInCalendarDays, format } from "date-fns";
-import { CalendarDays, Calendar as CalendarIcon } from "lucide-react"
+import { CalendarDays } from "lucide-react"
 
 import { cn } from "@/lib/utils";
 import { toast } from "@/components/hooks/use-toast";
@@ -54,7 +54,7 @@ export const DateForm: React.FC<DateFormProps> = ({ product }) => {
   });
 
   const [isOpen, setIsOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState<Boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
   const [totalPrice, setTotalPrice] = useState<number>(0.0)
   const [serviceFee, setServiceFee] = useState<number>(0.0)
   const [totalWithFee, setTotalWithFee] = useState<number>(0.0)

@@ -1,4 +1,4 @@
-import { Address, coordinateSearch } from "@/lib/search-validation";
+import { coordinateSearch } from "@/lib/search-validation";
 import { fetchCoordinates } from "@/lib/utils";
 import { NextResponse } from "next/server";
 
@@ -7,7 +7,7 @@ export async function POST(request: Request) {
         const body = await request.json();
 
         const result = coordinateSearch.safeParse(body);
-        let zodErrors: Record<string, string> = {};
+        const zodErrors: Record<string, string> = {};
 
         if (result.error) {
             result.error.issues.forEach((issue) => {
@@ -23,6 +23,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ data: fetchedCoordinates }, { status: 200 });
     } catch (error) {
+        console.log(error)
         return NextResponse.json({ error: 'Unexpected error occurred' }, { status: 500 });
     }
 }

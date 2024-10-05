@@ -10,7 +10,7 @@ export async function POST(request: Request) {
 
 
         const result = registerValidatorServer.safeParse(body);
-        let zodErrors: Record<string, string> = {};
+        const zodErrors: Record<string, string> = {};
 
 
         if (result.error) {

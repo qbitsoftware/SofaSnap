@@ -41,8 +41,8 @@ function AdvancedImageInput({ images, setImages, baseValue }: { images: IImage[]
 
                 setImages((prevImages) => {
                     const updated = [...prevImages, ...newImages]
-                    let lenImages = updated.length
-                    let baseValueInput: string[] = []
+                    const lenImages = updated.length
+                    const baseValueInput: string[] = []
                     for (let i = 0; i < lenImages; i++) {
                         baseValueInput.push(String(i))
                     }
@@ -62,8 +62,8 @@ function AdvancedImageInput({ images, setImages, baseValue }: { images: IImage[]
     const removeImage = (id: string) => {
         setImages((prevImages) => {
             const updatedImages = prevImages.filter(img => img.id !== id)
-            let lenImages = updatedImages.length
-            let baseValueInput: string[] = []
+            const lenImages = updatedImages.length
+            const baseValueInput: string[] = []
             for (let i = 0; i < lenImages; i++) {
                 baseValueInput.push(String(i))
             }
@@ -113,8 +113,8 @@ function AdvancedImageInput({ images, setImages, baseValue }: { images: IImage[]
         newImages.splice(targetIndex, 0, draggedItem)
 
         setImages(newImages)
-        let lenImages = newImages.length
-        let baseValueInput: string[] = []
+        const lenImages = newImages.length
+        const baseValueInput: string[] = []
         for (let i = 0; i < lenImages; i++) {
             baseValueInput.push(String(i))
         }

@@ -7,13 +7,8 @@ import Link from 'next/link'
 import { CircleUser } from 'lucide-react';
 import { MobileNav } from "./mobile-nav"
 import { LogOut } from "./logout"
-import { FetchCategories, fetchCategories } from "@/utils/supabase/queries/categories"
-import { Category } from "@/utils/supabase/supabase.types"
+import { FetchCategories } from "@/utils/supabase/queries/categories"
 import { GetUserInfo } from "@/app/actions"
-
-interface NavBarProps {
-    categories: Category[]
-}
 
 
 const NavBar = async () => {

@@ -1,4 +1,3 @@
-import Navbar from "@/components/navbar";
 import { fetchCategories } from "@/utils/supabase/queries/categories";
 import { Category } from "@/utils/supabase/supabase.types";
 import React from "react";
@@ -8,7 +7,6 @@ import React from "react";
 
 export default async function Layout({
     children,
-    params
 }: {
     children: React.ReactNode;
     params: { storeid: string }

@@ -3,7 +3,6 @@ import "./globals.css";
 import { inter } from "@/fonts";
 import { Toaster } from "@/components/ui/toaster";
 import NavBar from "@/components/navbar";
-import Layout from "./(auth-pages)/layout";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`

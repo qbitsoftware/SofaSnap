@@ -19,7 +19,9 @@ const LoginFacebook = () => {
                 },
             },
         })
+        console.log(data, error)
     }
+
 
     return (
         <div>

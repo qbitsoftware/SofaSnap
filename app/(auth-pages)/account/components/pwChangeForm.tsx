@@ -17,7 +17,6 @@ const ChangePassword = () => {
         handleSubmit,
         formState: { errors, isSubmitting },
         reset,
-        getValues,
         setError,
     } = useForm<TPasswordChangeSchema>({
         resolver: zodResolver(passwordChangeValidator),

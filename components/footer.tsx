@@ -2,10 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import { FooterMenu } from './footer-menu'
 import { FooterMenuProps } from './footer-menu'
-import { LanguageSelector } from './language-selector'
 import { FooterBottom } from './footer-bottom'
-import { MontserratAlternates } from '@/fonts'
-import { cn } from '@/lib/utils'
 import Link from 'next/link'
 
 const Footer = () => {

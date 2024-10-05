@@ -3,7 +3,6 @@ import { ProductList } from './[...slug]/components/product-list'
 import { fetchProducts } from '@/app/actions'
 import { ChevronLeft } from 'lucide-react'
 import { MapButton } from '@/components/map-button'
-import { capitalize } from '@/utils/utils'
 import { Filter } from './[...slug]/components/filter'
 
 const PRODUCTS_PER_PAGE = 30

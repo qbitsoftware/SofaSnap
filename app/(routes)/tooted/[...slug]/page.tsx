@@ -33,7 +33,7 @@ const CategoryPage = async ({
     redirect("/404")
   }
 
-  let category_objects = categories.map((c) => {
+  const category_objects = categories.map((c) => {
     const matchedCategory = data?.find((category) => category.name_slug === c);
     
     if (matchedCategory) {
@@ -70,7 +70,7 @@ const CategoryPage = async ({
 
     return (
       <div className='md:mx-auto px-6 md:px-[64px] max-w-[1440px]'>
-        <CategoryNavigation categories={category_objects} className='hidden md:block'/>
+        <CategoryNavigation categories={category_objects} className='hidden md:flex'/>
         <div className='md:mt-16 flex md:flex md:items-center md:justify-between'>
           <ChevronLeft className='ml-[-16px]' color='#000000' size={56} />
           <h2 className='md:text-5xl hidden md:block'>{capitalize(category_objects[category_objects.length - 1].name)}</h2>

@@ -1,5 +1,4 @@
 import { createClient } from "@/utils/supabase/server";
-import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
@@ -10,12 +9,12 @@ import { v4 as uuidv4 } from "uuid";
 //     },
 // };
 
-export async function POST(req: Request, res: NextApiResponse) {
+export async function POST(req: Request) {
     try {
         const formData = await req.formData()
         const files: File[] = [];
 
-        for (const [_, value] of formData.entries()) {
+        for (const value of formData.entries()) {
             if (value instanceof File) {
                 // Validate the file size (limit to 10MB)
                 if (value.size > 10 * 1024 * 1024) {
@@ -33,7 +32,7 @@ export async function POST(req: Request, res: NextApiResponse) {
             }
         }
 
-        let filePaths: string[] = [];
+        const filePaths: string[] = [];
 
         // console.log("Starting to upload files to bucket")
         const supabase = createClient()

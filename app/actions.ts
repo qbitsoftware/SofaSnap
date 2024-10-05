@@ -143,7 +143,7 @@ export const GetUserInfo = async () => {
 export async function createProductAction(body: TProductServer) {
   try {
     const result = productSchemaServer.safeParse(body);
-    let zodErrors: Record<string, string> = {};
+    const zodErrors: Record<string, string> = {};
 
     if (!result.success) {
       result.error.issues.forEach((issue) => {
@@ -162,7 +162,7 @@ export async function createProductAction(body: TProductServer) {
     // console.log("Product added successfully:", result.data);
     return { data: "Product successfully added", status: 200 };
   } catch (error) {
-    // console.error("Server action error:", error);
+    console.error("Server action error:", error);
     return { error: 'Unexpected error occurred', status: 500 };
   }
 }

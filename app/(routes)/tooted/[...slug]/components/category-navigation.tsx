@@ -1,6 +1,4 @@
 import { cn } from '@/lib/utils';
-import { FetchCategories } from '@/utils/supabase/queries/categories';
-import { product } from '@/utils/supabase/schema';
 import { Product } from '@/utils/supabase/supabase.types';
 import { capitalize } from '@/utils/utils';
 import { ChevronRight } from 'lucide-react';
@@ -12,18 +10,16 @@ interface CategoryNavigationProps {
     name: string;
     name_slug: string;
   }[];
-  product?: Product // Make sure product is a string or undefined
+  product?: Product
   className: string
 }
 
 export const CategoryNavigation: React.FC<CategoryNavigationProps> = async ({ categories, product, className }) => {
+  let currentPath = `/tooted`;
   return (
     <div className={cn('flex mt-[32px]',className)}>
       {categories.map((category, idx) => {
-        // Construct the path for each category separately
-        let currentPath = `/tooted/${category.name_slug}`;
-        
-        // Append product to the path if it exists and is a string
+        currentPath += "/" + category.name_slug
 
         return (
           <div className='flex items-center' key={idx}>

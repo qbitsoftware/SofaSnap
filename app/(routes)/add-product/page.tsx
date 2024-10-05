@@ -27,7 +27,7 @@ const Page = async () => {
                     <AddProduct />
                 </div>
                 <div className='md:ml-[135px] mb-[179px]'>
-                    <AddProductForm id={user.data.user?.id!} categories={data} />
+                    <AddProductForm id={user.data.user.id} categories={data} />
                 </div>
 
                 {/* <div className='w-[326px] h-[130px] mb-[200px] mx-auto'>

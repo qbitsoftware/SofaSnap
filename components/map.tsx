@@ -15,12 +15,10 @@ interface GoogleMapComponentProps {
         lng: number
     }[] | undefined
     api: string
-    className: string
 }
 
-const GoogleMapComponent:React.FC<GoogleMapComponentProps> = ({ api, markers, className }) => {
+const GoogleMapComponent:React.FC<GoogleMapComponentProps> = ({ api, markers}) => {
     console.log(markers)
-
     if (api && markers) {
         return (
             <LoadScript googleMapsApiKey={api} loadingElement={<Loader/>}>

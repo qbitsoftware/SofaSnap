@@ -53,7 +53,6 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
         formState: { errors, isSubmitting },
         reset,
         trigger,
-        setError,
         setValue,
         getValues,
     } = useForm<TProductClient>({
@@ -76,7 +75,7 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
 
     const onSubmit = async (data: TProductClient) => {
 
-        let formData: TProductServer = {
+        const formData: TProductServer = {
             ...data,
             user_id: id,
             address: chosenSuggestion!,

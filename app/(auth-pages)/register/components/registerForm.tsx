@@ -15,7 +15,7 @@ import { Suggestions } from "../../account/components/suggestions"
 import { Address, TAddressSearchSchema } from "@/lib/search-validation"
 import { useCallback, useEffect, useState } from "react"
 import { debounce } from "lodash"
-import { redirect, useRouter } from "next/navigation"
+import {  useRouter } from "next/navigation"
 import { Feature } from "@/lib/coordinates-validation"
 
 const RegisterForm = () => {
@@ -34,8 +34,6 @@ const RegisterForm = () => {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-        reset,
-        getValues,
         setError,
     } = useForm<TSignUpSchema>({
         resolver: zodResolver(registerValidator),

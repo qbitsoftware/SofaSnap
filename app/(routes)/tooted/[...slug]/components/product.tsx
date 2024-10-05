@@ -2,7 +2,7 @@
 
 import { Product } from '@/utils/supabase/supabase.types'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import {  useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface ProductProps {

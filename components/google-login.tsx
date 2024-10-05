@@ -19,6 +19,7 @@ const LoginGoogle = () => {
                 },
             },
         })
+        console.log(data, error)
     }
 
     return (
