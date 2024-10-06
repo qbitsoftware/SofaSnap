@@ -1,4 +1,5 @@
 "use client"
+import { changePasswordAction } from "@/app/actions";
 import { useToast } from "@/components/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,58 +18,32 @@ const ChangePassword = () => {
         handleSubmit,
         formState: { errors, isSubmitting },
         reset,
-        setError,
     } = useForm<TPasswordChangeSchema>({
         resolver: zodResolver(passwordChangeValidator),
     });
 
     const onSubmit = async (data: TPasswordChangeSchema) => {
-        const response = await fetch("/api/account", {
-            method: "PUT",
-            body: JSON.stringify(data),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-
-        const responseData = await response.json()
-
-        if (!response.ok) {
-            toast.toast({
-                title: "Something went wrong. Try again later!",
-            })
-            return;
-        }
-        if (responseData.error) {
-            toast.toast({
-                title: responseData.error
-            })
-            return;
-        }
-
-        if (responseData.errors) {
-            const errors = responseData.errors;
-            if (errors.password) {
-                setError("password", {
-                    type: "server",
-                    message: errors.password,
+        const { error } = await changePasswordAction(data)
+        console.log("Error", error)
+        if (error) {
+            if (typeof error == 'string') {
+                toast.toast({
+                    title: "Midagi laks valesti!",
+                    description: error,
+                })
+            } else {
+                toast.toast({
+                    title: "Midagi laks valesti!",
+                    description: "Proovige hiljem uuesti!",
                 })
             }
-            if (errors.confirm_password) {
-                setError("confirm_password", {
-                    type: "server",
-                    message: errors.confirm_password,
-                })
-            }
+            reset()
             return
         }
 
-        if (responseData.success) {
-            toast.toast({
-                title: "Successfully changed password",
-            })
-        }
-
+        toast.toast({
+            title: "Parool on edukalt vahetatud!"
+        })
         reset()
     }
 

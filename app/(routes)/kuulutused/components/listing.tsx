@@ -59,7 +59,7 @@ export default function ListingCard({ listing }: { listing: ProductAndCategory }
                             <div className="flex justify-between items-center mb-4">
                                 <span className="text-2xl font-bold">${listing.products.price.toFixed(2)}</span>
                                 <div className="flex space-x-2">
-                                    <Link href={`/edit-listing/${listing.products.id}`} onClick={(e) => e.stopPropagation()}>
+                                    <Link href={`/kuulutused/${listing.products.id}`} onClick={(e) => e.stopPropagation()}>
                                         <Button variant="outline" size="sm">
                                             <Edit className="h-4 w-4 mr-2" />
                                             Muuda

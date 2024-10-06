@@ -5,8 +5,6 @@ import { alias } from 'drizzle-orm/pg-core'
 import { AddressJoinProductTS, AddressTS, CategoryJoin, CategoryTS, Product, ProductRealTS } from '../supabase.types'
 import { TProductServer } from '@/lib/product-validation'
 import { GetUserInfo } from '@/app/actions'
-import { error } from 'console'
-import { data } from 'autoprefixer'
 
 
 export const fetchProductsByCategories = async (categories: string[], page: number, limit = 30) => {
@@ -259,6 +257,45 @@ export const fetchUserProducts = async () => {
             error: undefined
         }
 
+    } catch (error) {
+        return {
+            data: undefined,
+            error,
+        }
+    }
+}
+
+
+export const fetchUserProduct = async (product_id: number) => {
+    try {
+        const user = await GetUserInfo()
+        if (user.error) {
+            return {
+                data: undefined,
+                error: "Unauthorized",
+            }
+        }
+
+        const result = await db.select().from(category_join).innerJoin(product, eq(category_join.product_id, product.id)).where(eq(product.id, product_id)) as ProductAndCategory[]
+
+        if (result.length == 0) {
+            return {
+                data: undefined,
+                error: "No row found",
+            }
+        }
+
+        if (result[0].products.user_id != user.data.user.id) {
+            return {
+                data: undefined,
+                error: "Unauthorized",
+            }
+        }
+
+        return {
+            data: result,
+            error: undefined,
+        }
     } catch (error) {
         return {
             data: undefined,
