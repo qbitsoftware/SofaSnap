@@ -49,7 +49,7 @@ export const signInAction = async (formData: FormData) => {
   });
 
   if (error) {
-    return encodedRedirect("error", "/sign-in", error.message);
+    return encodedRedirect("error", "/login", error.message);
   }
 
   return redirect("/protected");
@@ -129,14 +129,12 @@ export const resetPasswordAction = async (formData: FormData) => {
 export const signOutAction = async () => {
   const supabase = createClient();
   await supabase.auth.signOut();
-  return redirect("/sign-in");
+  return redirect("/login");
 };
 
 export const GetUserInfo = async () => {
-  // console.log("fetching users")
   const supabase = createClient();
   const user = await supabase.auth.getUser()
-  // console.log("completed user", user)
   return user
 }
 
@@ -151,6 +149,13 @@ export async function createProductAction(body: TProductServer) {
       });
       console.log("Zod validation errors:", zodErrors);
       return { errors: zodErrors, status: 400 };
+    }
+
+    //check if user has accepted terms and service
+    const user = await GetUserInfo()
+    if (user.error) {
+      console.log("Error adding product: ", user.error)
+      return { error: "Unexpected error occured", status: 500 }
     }
 
     const { error } = await addProduct(result.data);

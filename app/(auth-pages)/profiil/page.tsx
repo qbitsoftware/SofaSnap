@@ -7,7 +7,7 @@ import { ChangePassword } from "./components/pwChangeForm"
 const Page = async () => {
     const user = await GetUserInfo()
     if (!user.data.user) {
-        redirect("/sign-in")
+        redirect("/login")
     }
     const userInfo = user.data.user.user_metadata as TSignUpSchema
     return (

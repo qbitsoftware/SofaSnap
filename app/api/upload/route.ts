@@ -2,19 +2,12 @@ import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
-
-// export const config = {
-//     api: {
-//         bodyParser: false,
-//     },
-// };
-
 export async function POST(req: Request) {
     try {
         const formData = await req.formData()
         const files: File[] = [];
 
-        for (const value of formData.entries()) {
+        for (const [, value] of formData.entries()) {
             if (value instanceof File) {
                 // Validate the file size (limit to 10MB)
                 if (value.size > 10 * 1024 * 1024) {
@@ -32,11 +25,11 @@ export async function POST(req: Request) {
             }
         }
 
-        const filePaths: string[] = [];
+        const filePaths: string[] = new Array(files.length);
 
         // console.log("Starting to upload files to bucket")
         const supabase = createClient()
-        const uploadPromises = files.map(async (file) => {
+        const uploadPromises = files.map(async (file, index) => {
             const filename = `${uuidv4()}-${file.name}`;
 
             const { data, error } = await supabase.storage
@@ -50,7 +43,8 @@ export async function POST(req: Request) {
             if (data) {
                 const filepath = data.path;
                 if (process.env.BUCKET_URL) {
-                    filePaths.push(process.env.BUCKET_URL! + "/" + filepath);
+                    // filePaths.push(process.env.BUCKET_URL! + "/" + filepath);
+                    filePaths[index] = process.env.BUCKET_URL! + "/" + filepath
                 } else {
                     console.error("Missing bucket url")
                 }
@@ -63,7 +57,6 @@ export async function POST(req: Request) {
         });
 
         await Promise.all(uploadPromises);
-        console.log("Successfully uploaded all the files!", filePaths)
         return NextResponse.json({ data: filePaths }, { status: 200 });
     } catch (error) {
         console.log(error)

@@ -10,16 +10,16 @@ interface ReviewProps {
   Reviews: Review[]
 }
 
-export const ReviewCarousel:React.FC<ReviewProps> = ({Reviews}) => {
+export const ReviewCarousel: React.FC<ReviewProps> = ({ Reviews }) => {
   const [currentReview, setCurrentReview] = useState(0)
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentReview((prev) => (prev + 1) % Reviews.length)
-    }, 5000) 
+    }, 5000)
 
     return () => clearInterval(timer)
-  }, [])
+  }, [Reviews.length])
 
   const handleDotClick = (index: number) => {
     setCurrentReview(index)
@@ -41,9 +41,8 @@ export const ReviewCarousel:React.FC<ReviewProps> = ({Reviews}) => {
             {Reviews.map((review, index) => (
               <div
                 key={review.id}
-                className={`absolute top-0 left-0 w-full h-full transition-opacity duration-500 ease-in-out ${
-                  index === currentReview ? 'opacity-100 z-10' : 'opacity-0 z-0'
-                }`}
+                className={`absolute top-0 left-0 w-full h-full transition-opacity duration-500 ease-in-out ${index === currentReview ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                  }`}
               >
                 <div className="flex flex-col items-center text-center">
                   <Image
@@ -59,9 +58,8 @@ export const ReviewCarousel:React.FC<ReviewProps> = ({Reviews}) => {
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`w-5 h-5 ${
-                          i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
-                        }`}
+                        className={`w-5 h-5 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
+                          }`}
                       />
                     ))}
                   </div>
@@ -85,9 +83,8 @@ export const ReviewCarousel:React.FC<ReviewProps> = ({Reviews}) => {
             <button
               key={index}
               onClick={() => handleDotClick(index)}
-              className={`w-3 h-3 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300 ${
-                index === currentReview ? 'bg-primary' : 'bg-gray-300'
-              }`}
+              className={`w-3 h-3 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300 ${index === currentReview ? 'bg-primary' : 'bg-gray-300'
+                }`}
               aria-label={`Go to review ${index + 1}`}
             />
           ))}

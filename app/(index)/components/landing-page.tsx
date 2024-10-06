@@ -18,7 +18,7 @@ export const LandingPage = () => {
                     <div className='md:relative md:h-[150px] lg:h-[250px]'>
                         <h1 className={cn('md:text-4xl lg:text-6xl md:w-[48vw] md:max-w-[553px] h-full font-semibold absolute z-10 text-start', MontserratAlternates.className)}>Rent furniture from <br className='lg:hidden' />people in your<br className='lg:hidden' /> area</h1>
                     </div>
-                    <Link href={"/add-product"}>
+                    <Link href={"/lisa-toode"}>
                         <Button className='bg-accent text-foreground rounded-3xl hover:bg-accent w-[180px] h-[60px]'>
                             Lisa oma tooted
                         </Button>

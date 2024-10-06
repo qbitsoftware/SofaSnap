@@ -14,7 +14,7 @@ import { DateRange } from 'react-day-picker';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Address, TAddressSearchSchema } from '@/lib/search-validation';
 import { Feature } from '@/lib/coordinates-validation';
-import { Suggestions } from '@/app/(auth-pages)/account/components/suggestions';
+import { Suggestions } from '@/app/(auth-pages)/profiil/components/suggestions';
 import { debounce } from 'lodash';
 import { AdvancedImageInput } from './uploadForm';
 import { Category } from '@/utils/supabase/supabase.types';
@@ -25,8 +25,10 @@ import { createProductAction } from '@/app/actions';
 import { AddProduct } from './breadcrumb';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { TSignUpSchema } from '@/lib/register-validation';
 
-const AddProductForm = ({ id, categories }: { id: string, categories: Category[] }) => {
+const AddProductForm = ({ id, categories, user_metadata }: { id: string, categories: Category[], user_metadata: TSignUpSchema }) => {
     const toast = useToast()
     const router = useRouter()
     const [category, setCategory] = useState<string>('')
@@ -71,7 +73,7 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
         return () => {
             document.removeEventListener('mousedown', suggestion);
         };
-    }, []);
+    }, [id, setValue]);
 
     const onSubmit = async (data: TProductClient) => {
 
@@ -93,7 +95,26 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
             console.log(validationResult.error)
             return
         }
+
+        if (user_metadata.agreement == undefined || !user_metadata.agreement) {
+            toast.toast({
+                title: "Kuulutuse lisamiseks peate noustuma meie teenuse tingimustega!",
+                description: (
+                    <>
+                        Noustuge meie tingimustega {' '}
+                        <Link href="/profiil" className="underline font-medium">
+                            siin
+                        </Link>
+                        .
+                    </>
+                ),
+            })
+            return
+        }
+
         const imgData = new FormData();
+
+        console.log("Images", images)
 
         images.forEach((img) => {
             imgData.append('images', img.file)
@@ -119,123 +140,32 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
 
         const response = await createProductAction(formData)
         if (response.status === 400) {
-            console.log("400 error")
+            toast.toast({
+                title: "Midagi laks valesti :(",
+                description: "Proovige hiljem uuesti!"
+            })
             return
         } else if (response.status === 500) {
-            console.log('500 error')
+            toast.toast({
+                title: "Midagi laks valesti :(",
+                description: "Proovige hiljem uuesti!"
+            })
             return
         } else if (response.status === 200) {
             console.log("Everything is okay")
+            toast.toast({
+                title: "Kuulutus edukalt lisatud",
+                description: (
+                    <>
+                        Saad enda kuulutusi hallata{' '}
+                        <Link href="/kuulutused" className="underline font-medium">
+                            siit
+                        </Link>
+                        .
+                    </>
+                ),
+            })
         }
-
-        // if (!response.ok) {
-        //     toast.toast({
-        //         title: "Something went wrong. Try again later!",
-        //     })
-        //     return;
-        // }
-        // if (responseData.error) {
-        //     toast.toast({
-        //         title: responseData.error
-        //     })
-        //     return;
-        // }
-
-        // if (responseData.errors) {
-        //     const errors = responseData.errors;
-        //     if (errors.address) {
-        //         setError("address", {
-        //             type: "server",
-        //             message: errors.address,
-        //         })
-        //     }
-        //     if (errors.name) {
-        //         setError("name", {
-        //             type: "server",
-        //             message: errors.name,
-        //         })
-        //     }
-        //     if (errors.category) {
-        //         setError("category", {
-        //             type: "server",
-        //             message: errors.category,
-        //         })
-        //     }
-        //     if (errors.description) {
-        //         setError("description", {
-        //             type: "server",
-        //             message: errors.description,
-        //         })
-        //     }
-        //     if (errors.width) {
-        //         setError("width", {
-        //             type: "server",
-        //             message: errors.width,
-        //         })
-        //     }
-        //     if (errors.heigth) {
-        //         setError("heigth", {
-        //             type: "server",
-        //             message: errors.heigth,
-        //         })
-        //     }
-        //     if (errors.length) {
-        //         setError("length", {
-        //             type: "server",
-        //             message: errors.length,
-        //         })
-        //     }
-        //     if (errors.material) {
-        //         setError("material", {
-        //             type: "server",
-        //             message: errors.material,
-        //         })
-        //     }
-        //     if (errors.details) {
-        //         setError("sub_category", {
-        //             type: "server",
-        //             message: errors.sub_category,
-        //         })
-        //     }
-        //     if (errors.start_date) {
-        //         setError("start_date", {
-        //             type: "server",
-        //             message: errors.start_date,
-        //         })
-        //     }
-        //     if (errors.end_date) {
-        //         setError("end_date", {
-        //             type: "server",
-        //             message: errors.end_date,
-        //         })
-        //     }
-        //     if (errors.type) {
-        //         setError("type", {
-        //             type: "server",
-        //             message: errors.type,
-        //         })
-        //     }
-        //     if (errors.price) {
-        //         setError("price", {
-        //             type: "server",
-        //             message: errors.price,
-        //         })
-        //     }
-        //     if (errors.all_img) {
-        //         setError("all_img", {
-        //             type: "server",
-        //             message: errors.all_img,
-        //         })
-        //     }
-        //     return
-        // }
-
-        // if (responseData.success) {
-        //     toast.toast({
-        //         title: "Successfully changed password",
-        //     })
-        // }
-
 
         //RESET ALL THE FORM VALUES FOR UX
         setCategory('')
@@ -249,6 +179,8 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
         reset()
         //we still need the user id
         setValue("user_id", id)
+
+
     }
 
     const fetchSuggestions = useCallback(
@@ -283,7 +215,7 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
                 console.error('Error fetching suggestions:', error);
             }
         }, 300),
-        []
+        [id, setShowSuggestions, setSuggestions, setIsLoading]
     );
 
     const handleDates = async (item: DateRange | undefined) => {
@@ -332,7 +264,6 @@ const AddProductForm = ({ id, categories }: { id: string, categories: Category[]
 
     return (
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-            {/* // <form className='w-full' action={handleSubmit(submitAddItemForm)} > */}
             <div className='mb-[36px] md:hidden'>
                 <AddProduct />
             </div>

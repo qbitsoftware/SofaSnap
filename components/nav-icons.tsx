@@ -6,12 +6,12 @@ const NavIcons = () => {
     return (
         <div className="w-[132px] flex justify-center  gap-[19px] py-[6px]">
             <div className=''>
-                <Link href={"/add-product"}>
+                <Link href={"/lisa-toode"}>
                     <Globe width={31} height={31} />
                 </Link>
             </div>
             <div className=''>
-                <Link href={"/sign-in"}>
+                <Link href={"/login"}>
                     <CircleUser width={31} height={31} />
                 </Link>
             </div>

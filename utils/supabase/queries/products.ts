@@ -1,11 +1,12 @@
-
-
 import db from '@/utils/supabase/db'
 import { category, category_join, product, address, address_join_product } from '@/utils/supabase/schema'
 import { eq, and, sql, desc } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
-import { Address, AddressJoinProductTS, AddressTS, CategoryTS, Product, ProductRealTS } from '../supabase.types'
+import { AddressJoinProductTS, AddressTS, CategoryJoin, CategoryTS, Product, ProductRealTS } from '../supabase.types'
 import { TProductServer } from '@/lib/product-validation'
+import { GetUserInfo } from '@/app/actions'
+import { error } from 'console'
+import { data } from 'autoprefixer'
 
 
 export const fetchProductsByCategories = async (categories: string[], page: number, limit = 30) => {
@@ -124,38 +125,6 @@ export const fetchAllProducts = async (page = 1, limit = 30) => {
         }
     }
 }
-// export const fetchByOffset = async (page: number, limit = 2) => {
-//     // console.log("Fetching products for page:", page)
-//     const offset = (page - 1) * limit
-
-//     try {
-//         const result = await db.select()
-//             .from(product)
-//             .orderBy(desc(product.created_at))
-//             .limit(limit)
-//             .offset(offset) as Product[]
-
-//         console.log("Fetched products count:", result.length)
-
-//         if (result.length === 0) {
-//             return {
-//                 data: undefined,
-//                 error: "No results found"
-//             }
-//         }
-
-//         return {
-//             data: result,
-//             error: undefined
-//         }
-//     } catch (error) {
-//         console.error("Error fetching products:", error)
-//         return {
-//             data: undefined,
-//             error: "Server error"
-//         }
-//     }
-// }
 
 export const addProduct = async (prod: TProductServer) => {
     const p: ProductRealTS = {
@@ -261,5 +230,39 @@ export const fetchProduct = async (id: number) => {
             error: "Server error"
         }
     }
+}
 
+export type ProductAndCategory = {
+    category_join: CategoryJoin,
+    products: Product,
+}
+export const fetchUserProducts = async () => {
+    try {
+        //get user identity
+        const user = await GetUserInfo()
+        if (user.error) {
+            return {
+                data: undefined,
+                error: "User unauthorized"
+            }
+        }
+        const result = await db.select().from(category_join).innerJoin(product, eq(category_join.product_id, product.id)).where(eq(product.user_id, user.data.user.id)) as ProductAndCategory[]
+        if (result.length == 0) {
+            return {
+                data: undefined,
+                error: "No results found"
+            }
+        }
+
+        return {
+            data: result,
+            error: undefined
+        }
+
+    } catch (error) {
+        return {
+            data: undefined,
+            error,
+        }
+    }
 }
