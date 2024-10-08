@@ -14,7 +14,7 @@ import { redirect } from "next/navigation";
 export default async function Login({ searchParams }: { searchParams: Message }) {
   const user = await GetUserInfo()
   if (user.data.user) {
-    redirect("/account")
+    redirect("/profiil")
   }
   return (
     <div className="flex justify-center items-center w-full flex-col md:min-h-[80vh] pb-20">
@@ -51,7 +51,7 @@ export default async function Login({ searchParams }: { searchParams: Message })
           <SubmitButton className="bg-accent hover:bg-accent w-[256px] h-[48px] md:w-[376px] md:h-[65px] mx-auto mt-10" pendingText="Signing In..." formAction={signInAction}>
             Logi sisse
           </SubmitButton>
-          <Link href={"/register"} className="md:w-[376px] md:h-[65px] bg-[#D9D9D9] mx-auto rounded-lg">
+          <Link href={"/registreeri"} className="md:w-[376px] md:h-[65px] bg-[#D9D9D9] mx-auto rounded-lg">
             <Button className="w-[256px] h-[48px] md:w-[376px] md:h-[65px] bg-[#D9D9D9] mx-auto">
               Registreeri
             </Button>

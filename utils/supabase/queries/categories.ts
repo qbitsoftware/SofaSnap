@@ -30,19 +30,15 @@ export const CheckCategories = async (categories: string[]) => {
 
 
 export const FetchCategories = async () => {
-    console.log("fetching caregories bla")
     try {
 
         const result = await db.select().from(category)
-        console.log("Completed Majandus")
-
         if (result.length == 0) {
             return {
                 data: [],
                 error: "No categories found",
             }
         }
-
         return {
             data: result,
             error: undefined

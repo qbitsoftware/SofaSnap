@@ -20,7 +20,7 @@ const NavBar = async () => {
     return (
         <div className="flex px-6 md:px-[64px] w-full max-w-[1440px] h-[68px] md:h-[50px] mt-[14px] mb-[35px] md:my-[35px] items-center justify-between mx-auto">
             <div className="md:hidden">
-                <MobileNav categories={cateogries.data}/>
+                <MobileNav categories={cateogries.data} />
             </div>
             <div className="cursor-pointer w-[68px] h-[68px] md:w-[200px] lg:min-w-[250px] xl:w-[545px] flex items-center">
                 <Link href={"/"}>
@@ -40,7 +40,7 @@ const NavBar = async () => {
                             <LogOut />
                         ) :
                             <div>
-                                <Link href={"/sign-in"}>
+                                <Link href={"/login"}>
                                     <Button className="rounded-full bg-accent text-bg-foreground px-[25px] lg:py-[11px] lg:px-[25px] xl:p-[11px] xl:px-[40px] shadow-xl">
                                         Log in
                                     </Button>
@@ -53,7 +53,7 @@ const NavBar = async () => {
                     <NavIcons />
                 </div>
                 <div className="md:hidden">
-                    <Link href={"/sign-in"}>
+                    <Link href={"/login"}>
                         <CircleUser width={32} height={32} />
                     </Link>
                 </div>

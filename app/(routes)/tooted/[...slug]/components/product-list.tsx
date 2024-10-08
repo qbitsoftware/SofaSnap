@@ -16,7 +16,7 @@ interface ProductListProps {
   totalPages: number
   currentPage: number
   type: string
-  categories: string[] | undefined 
+  categories: string[] | undefined
 }
 
 export const ProductList: React.FC<ProductListProps> = ({ initialProducts, totalPages, currentPage, type, categories }) => {
@@ -37,15 +37,15 @@ export const ProductList: React.FC<ProductListProps> = ({ initialProducts, total
 
     const nextPage = page + 1
 
-    let data:Product[] | undefined, error:string | undefined;
+    let data: Product[] | undefined, error: string | undefined;
 
     if (type === "category" && categories) {
-        ({ data, error } = await FetchProductsByCategories(categories, nextPage));
+      ({ data, error } = await FetchProductsByCategories(categories, nextPage));
     } else {
-        ({ data, error } = await fetchProducts(nextPage));
+      ({ data, error } = await fetchProducts(nextPage));
     }
-    
-    
+
+
 
     if (error) {
       console.error("Error fetching products:", error)
@@ -62,7 +62,7 @@ export const ProductList: React.FC<ProductListProps> = ({ initialProducts, total
     }
 
     setProducts(prevProducts => {
-      const newProducts = data && data.filter((newProduct:Product)=> 
+      const newProducts = data && data.filter((newProduct: Product) =>
         !prevProducts.some(existingProduct => existingProduct.id === newProduct.id)
       )
       return [...prevProducts, ...newProducts!]
@@ -75,7 +75,7 @@ export const ProductList: React.FC<ProductListProps> = ({ initialProducts, total
     setPage(nextPage)
     setLoading(false)
     loadingRef.current = false
-  }, [hasMore, page, fetchProducts])
+  }, [hasMore, page, categories, type])
 
   useEffect(() => {
     if (!isMobile) return
@@ -105,18 +105,18 @@ export const ProductList: React.FC<ProductListProps> = ({ initialProducts, total
     <div>
       <Products products={products} />
       {isMobile ? (
-        <div 
-          ref={observerTarget} 
+        <div
+          ref={observerTarget}
           className="h-10 w-full flex items-center justify-center"
         >
-          {loading &&  <ClipLoader
-                        className='mt-4'
-                        color={"#000000"}
-                        loading={loading}
-                        size={40}
-                        aria-label="Loading Spinner"
-                        data-testid="loader"
-                    />}
+          {loading && <ClipLoader
+            className='mt-4'
+            color={"#000000"}
+            loading={loading}
+            size={40}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />}
         </div>
       ) : (
         <div className='my-[100px] hidden md:block'>

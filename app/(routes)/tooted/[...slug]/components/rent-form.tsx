@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { addDays, differenceInCalendarDays, format } from "date-fns";
 import { CalendarDays} from "lucide-react"
 
@@ -75,10 +75,33 @@ export const RentForm: React.FC<DateFormProps> = ({ product }) => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+
+  const updateValues = useCallback((from: Date, to: Date) => {
+    let days;
+    if (!from || !to) {
+      // Temp case: if no valid dates, default to 7 days
+      days = 7 + 1;
+      setDateRange(7 + 1);
+    } else {
+      // Calculate the difference in days between "from" and "to"
+      const dayDifference = differenceInCalendarDays(to, from) + 1;
+      setDateRange(dayDifference);
+      days = dayDifference;
+    }
+
+    // Calculate total, service fee, and final price
+    const total = round(days * product.price);
+    const fee = round(total * 0.05);
+
+    setServiceFee(fee);
+    setTotalPrice(total);
+    setTotalWithFee(fee + total);
+  }, [product.price, setDateRange, setServiceFee, setTotalPrice, setTotalWithFee]);
+
   useEffect(() => {
     const { from, to } = form.getValues("dateRange");
     updateValues(from, to);
-  }, [form]);
+  }, [form, updateValues]);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     toast({

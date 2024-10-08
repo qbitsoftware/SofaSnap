@@ -11,11 +11,11 @@ import { Check } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { ClipLoader } from "react-spinners"
 import { Contract } from "./contract"
-import { Suggestions } from "../../account/components/suggestions"
+import { Suggestions } from "../../profiil/components/suggestions"
 import { Address, TAddressSearchSchema } from "@/lib/search-validation"
 import { useCallback, useEffect, useState } from "react"
 import { debounce } from "lodash"
-import {  useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Feature } from "@/lib/coordinates-validation"
 
 const RegisterForm = () => {
@@ -183,7 +183,7 @@ const RegisterForm = () => {
                 console.error('Error fetching suggestions:', error);
             }
         }, 300),
-        []
+        [id, setShowSuggestions, setSuggestions, setIsLoading]
     );
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

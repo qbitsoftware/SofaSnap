@@ -9,7 +9,7 @@ import { ChevronLeft } from "lucide-react"
 const Page = async () => {
     const user = await GetUserInfo()
     if (user.data.user) {
-        redirect("/account")
+        redirect("/profiil")
     }
     return (
         <div className="bg-card md:bg-background flex flex-col items-center md:mt-[68px] mx-auto">

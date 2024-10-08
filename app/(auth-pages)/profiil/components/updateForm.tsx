@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Check } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { ClipLoader } from "react-spinners"
-import { Contract } from "../../register/components/contract"
+import { Contract } from "../../registreeri/components/contract"
 import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
 import { Address, TAddressSearchSchema } from "@/lib/search-validation"
@@ -152,7 +152,7 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
                 console.error('Error fetching suggestions:', error);
             }
         }, 300),
-        []
+        [id, setShowSuggestions, setSuggestions, setIsLoading]
     );
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
