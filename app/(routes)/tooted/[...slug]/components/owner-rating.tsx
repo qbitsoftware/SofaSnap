@@ -11,7 +11,7 @@ interface OwnerRatingProps {
 }
 
 export const OwnerRating: React.FC<OwnerRatingProps> = ({ owner }) => {
-    console.log(owner) // For linter
+    console.log(owner)
     // Replace hard coded stuff
     return (
         <div className='md:flex md:flex-col'>

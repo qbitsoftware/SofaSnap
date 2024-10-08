@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+import { et } from "date-fns/locale";
 import { redirect } from "next/navigation";
 
 /**
@@ -26,4 +28,8 @@ export function formatDate(date: Date | undefined) {
 
 export function round(x: number):number {
   return Math.round(x * 10) / 10
+}
+
+export const formatEstonianDate = (date: Date) => {
+  return format(date, "d.MMM", { locale: et }).toLowerCase()
 }

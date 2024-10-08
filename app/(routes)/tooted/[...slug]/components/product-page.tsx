@@ -6,11 +6,12 @@ import { CategoryNavigation } from './category-navigation'
 import { ChevronLeft } from 'lucide-react'
 import { ProductImage } from './product-image'
 import { Reviews } from './reviews'
-import { DateForm } from './rent-form'
+import { RentForm } from './rent-form'
 import AddressComponent from './address'
 import { fetchProductAddress } from '@/utils/supabase/queries/address'
 // import { OwnerRating } from './owner-rating'
 import { ServerError } from '@/components/server-error'
+import { SellForm } from './sell-form'
 
 interface ProductPageProps {
   product_id: number
@@ -62,7 +63,6 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
     }
   ];
 
-
   return (
     <div className='md:min-h-screen w-full'>
       <div className='max-w-[1440px] md:px-16 px-6 mx-auto'>
@@ -77,14 +77,17 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
       <div className='md:mt-[100px] mt-[50px]'>
         <ProductImage product={data[0]} />
       </div>
-      <div className='bg-[#CBD3CB]/35 '>
+      {/* <div className='bg-[#CBD3CB]/35 '>
         <div className='md:px-16 px-6 max-w-[1440px] mt-2 mx-auto h-[86px] md:min-h-[190px] flex items-center'>
-          {/* <OwnerRating /> */}
+          <OwnerRating owner={user}/>
         </div>
-      </div>
+      </div> */}
       <Reviews reviews={sampleReviews} className='hidden md:my-[150px] mx-auto md:w-[80%] max-w-[1280px]' />
       <div className='w-full mx-auto'>
-        <DateForm product={data[0]} />
+        {data[0].type == "rent"
+        ? <RentForm product={data[0]} />
+        : <SellForm product={data[0]} />
+        }
       </div>
       <div className='md:mb-[200px]'>
         <AddressComponent address={address.data[0].addresses} className="" />

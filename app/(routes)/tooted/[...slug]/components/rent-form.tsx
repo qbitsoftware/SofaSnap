@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState, useEffect } from "react";
 import { addDays, differenceInCalendarDays, format } from "date-fns";
-import { CalendarDays } from "lucide-react"
+import { CalendarDays, ShoppingCart } from "lucide-react"
 
 import { cn } from "@/lib/utils";
 import { toast } from "@/components/hooks/use-toast";
@@ -21,7 +21,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Product } from "@/utils/supabase/supabase.types";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import { round } from "@/utils/utils";
+import { formatEstonianDate, round } from "@/utils/utils";
 import { Calendar } from "@/components/ui/calendar"
 
 const FormSchema = z.object({
@@ -42,16 +42,24 @@ interface DateFormProps {
   product: Product;
 }
 
-export const DateForm: React.FC<DateFormProps> = ({ product }) => {
+export const RentForm: React.FC<DateFormProps> = ({ product }) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       dateRange: {
-        from:undefined,
+        from: undefined,
         to: undefined,
       },
     },
   });
+
+  const getDateRangeString = () => {
+    const { from, to } = form.getValues("dateRange")
+    if (from && to) {
+      return `${formatEstonianDate(from)} – ${formatEstonianDate(to)}`
+    }
+    return "Vali kuupäevad"
+  }
 
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
@@ -90,9 +98,9 @@ export const DateForm: React.FC<DateFormProps> = ({ product }) => {
     if (!from || !to) {
       //temp
       days = 7 + 1
-      setDateRange(7+1)
+      setDateRange(7 + 1)
     } else {
-      setDateRange(differenceInCalendarDays(to, from) + 1) 
+      setDateRange(differenceInCalendarDays(to, from) + 1)
       days = differenceInCalendarDays(to, from) + 1
     }
     const total = round(days * product.price)
@@ -207,6 +215,26 @@ export const DateForm: React.FC<DateFormProps> = ({ product }) => {
           </div>
         </div>
       </form>
+      {isMobile && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-gray-200 p-4 flex justify-between items-center">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-semibold">{product.price}€</span>
+              <span className="text-sm text-gray-500">Päev</span>
+            </div>
+            <div>
+              {getDateRangeString()}
+            </div>
+          </div>
+          <Button
+            type="submit"
+            className="rounded-2xl bg-accent text-black px-6 py-6 flex items-center"
+            onClick={form.handleSubmit(onSubmit)}
+          >
+            Broneeri
+          </Button>
+        </div>
+      )}
     </Form>
   );
 };

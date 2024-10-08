@@ -24,9 +24,6 @@ export default async function Index() {
   return (
     <div>
       <main className="w-full">
-        {/* <div className="px-[24px] md:px-[56px]">
-          <NavBar categories={categories!} />
-        </div> */}
         <LandingPage />
         <Categories data={categories} error={categoryError} />
         <Reviews />

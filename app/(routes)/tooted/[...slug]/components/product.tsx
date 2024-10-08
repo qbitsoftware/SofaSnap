@@ -29,7 +29,7 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
     return (
         <div className='flex flex-col md:flex-row lg:gap-[130px] md:gap-[80px] 2xl:gap-[260px]'>
             <div className='relative'>
-                <div className='mx-auto relative h-[194px] w-[200px] sm:h-[250px] sm:w-[260px] lg:w-[510px] lg:h-[450px] md:w-[350px] md:h-[309px] rounded-xl overflow-hidden'>
+                <div className='mx-auto relative h-[250px] w-[260px] sm:h-[320px] sm:w-[330px] lg:w-[510px] lg:h-[450px] md:w-[350px] md:h-[309px] rounded-xl overflow-hidden'>
                     {product.all_img!.map((image, index) => (
                         <div
                             key={index}
