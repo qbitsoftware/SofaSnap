@@ -131,7 +131,7 @@ function AdvancedImageInput({ images, setImages, baseValue }: { images: IImage[]
     }
 
 return (
-    <div className="flex flex-col justify-center items-center w-full max-w-3xl mx-auto p-4">
+    <div className="flex flex-col justify-center items-center w-full max-w-[300px] mx-auto p-4">
       <div>
         <Button
           type="button"
@@ -146,12 +146,12 @@ return (
           accept=".jpg,.jpeg,.png,.svg"
           multiple
           onChange={handleFileChange}
-          className="sr-only"
+          className="sr-only w-1"
           ref={fileInputRef}
         />
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-[20px]">
+      <div className="grid w-full grid-cols-2 md:grid-cols-3 gap-4 pt-[20px]">
         {images.map((image, key) => (
           <div
             key={image.id}

@@ -8,11 +8,11 @@ interface ProductProps {
 
 export const RecentProducts: React.FC<ProductProps> = ({ error, data }) => {
     return (
-        <div className='relative md:h-[645px] bg-background w-full flex gap-10 md:flex-col items-center justify-center'>
-            <h2 className='md:text-5xl font-medium max-w-[1360px] mx-auto w-[80%] xl:w-[83%] 2xl:w-[80%] text-left'>Viimati vaadatud</h2>
+        <div className='relative min-h-[400px] md:h-[645px] bg-background w-full flex flex-col items-center justify-center py-8 md:py-0'>
+            <h2 className='text-3xl md:text-5xl font-medium w-[90%] max-w-[1360px] mx-auto text-left mb-6 md:mb-10'>Viimati vaadatud</h2>
             {!error && data
-                ? <ProductCarousel className='' products={data} value='1' />
-                : <div></div>
+                ? <ProductCarousel className='w-[90%]' products={data} value='1' />
+                : <div className="w-full text-center text-gray-500">No products available</div>
             }
         </div>
     )

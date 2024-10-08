@@ -21,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.className}>
-      <body className="no-scrollbar min-w-[300px]">
+    <html lang="en" className={inter.className} >
+      <body className="no-scrollbar min-w-[300px] w-full h-full">
         <div>
           <NavBar />
         </div>

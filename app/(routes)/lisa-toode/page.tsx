@@ -26,7 +26,7 @@ const Page = async () => {
     console.log("UserInfo", userInfo.agreement)
 
     return (
-        <div className='flex xl:max-w-[1440px] w-full px-[56px] pt-[30px] mx-auto '>
+        <div className='flex flex-col xl:max-w-[1440px] w-full px-[56px] pt-[30px] mx-auto '>
             <div className='flex flex-col justify-center items-center md:items-start md:justify-start'>
                 <div className='mb-[38px] hidden md:inline'>
                     <AddProduct />

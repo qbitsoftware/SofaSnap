@@ -271,9 +271,9 @@ const AddProductForm = ({ id, categories, user_metadata }: { id: string, categor
                 <div className="mb-[27px]">
                     <h2 className="font-medium text-sm md:text-lg">Vali kategooria</h2>
                 </div>
-                <div className="flex flex-col gap-[11px] leading-4 w-[325px] md:w-[425px] lg:w-[500px] max-w-[1440px]">
+                <div className="flex flex-col w-full gap-[11px] leading-4 max-w-[325px] md:max-w-[425px] lg:max-w-[500px] xl:max-w-[1440px]">
                     <Select value={category} onValueChange={handleCategoryChange}>
-                        <SelectTrigger className='bg-white md:w-full'>
+                        <SelectTrigger className='bg-white'>
                             <SelectValue placeholder="Vali kategooria" />
                         </SelectTrigger>
                         <SelectContent>
@@ -311,7 +311,7 @@ const AddProductForm = ({ id, categories, user_metadata }: { id: string, categor
                             <div className='flex pt-2 items-center gap-2'>
 
                                 <div>
-                                    <Label htmlFor='heigth' className='flex pb-1 justify-center'>Laius</Label>
+                                    <Label htmlFor='width' className='flex pb-1 justify-center'>Laius</Label>
                                     <Input
                                         {...register("width", { valueAsNumber: true })}
                                         value={width}
