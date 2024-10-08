@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState, useEffect } from "react";
 import { addDays, differenceInCalendarDays, format } from "date-fns";
-import { CalendarDays, ShoppingCart } from "lucide-react"
+import { CalendarDays} from "lucide-react"
 
 import { cn } from "@/lib/utils";
 import { toast } from "@/components/hooks/use-toast";
