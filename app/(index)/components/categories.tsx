@@ -84,7 +84,7 @@ export const Categories: React.FC<CategoryProps> = ({ data, error }) => {
             className='max-h-[calc(100vh-200px)] overflow-y-auto'>
             {data.map((category, index) => (
               <div
-                key={category.id}
+                key={index}
                 className='relative w-full'
                 onClick={() => router.push(`/tooted/${category.name_slug}`)}
               >
