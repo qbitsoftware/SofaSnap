@@ -34,7 +34,7 @@ export const ReviewCarousel: React.FC<ReviewProps> = ({ Reviews }) => {
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-4 py-8">
+    <div className="w-full max-w-3xl mx-auto px-4 py-8 ">
       <Card className="overflow-hidden bg-background drop-shadow-md">
         <CardContent className="p-6">
           <div className="relative h-[300px]">

@@ -27,8 +27,8 @@ export default async function Index() {
         <LandingPage />
         <Categories data={categories} error={categoryError} />
         <Reviews />
-        <Cta />
         <RecentProducts data={products} error={productError} />
+        <Cta />
         <Benefits />
         <PopularProducts data={products} error={productError} />
         <Globe />

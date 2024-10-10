@@ -29,7 +29,7 @@ const reviews: Review[] = [
 
 export const Reviews = () => {
     return (
-        <div className="md:min-h-[600px] flex items-center">
+        <div className="md:min-h-[600px] flex items-center relative">
             <ReviewCarousel Reviews={reviews}/>
         </div>
     )

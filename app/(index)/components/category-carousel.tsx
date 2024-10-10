@@ -33,8 +33,8 @@ export const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ Categories, 
       className={cn("md:max-w-[856px] w-[85%] lg:max-w-[1267px] xl:max-w-[1440px]", className)}
     >
       <CarouselContent className="items-center">
-        {Categories && Categories.map((category) => (
-          <CarouselItem key={category.name_slug} className="md:basis-1/3 xl:basis-1/4 ">
+        {Categories && Categories.map((category, idx) => (
+          <CarouselItem key={idx} className="md:basis-1/3 xl:basis-1/4 ">
             <div className="p-1 flex justify-center">
               <Card onClick={() => router.push(`/tooted/${category.name_slug}`)} className="border-0 rounded-3xl bg-transparent hover:cursor-pointer">
                 <CardContent className="relative flex lg:w-[255px] lg:h-[225px] md:w-[200px] md:h-[176px] aspect-square items-center justify-center p-6">

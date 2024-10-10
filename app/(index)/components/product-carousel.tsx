@@ -15,10 +15,9 @@ import { useRouter } from "next/navigation"
 interface ProductCarouselProps {
   products: Product[] | null
   className: string
-  value: string
 }
 
-export const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, className, value }) => {
+export const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, className  }) => {
   const router = useRouter()
 
 
@@ -30,8 +29,8 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, clas
       className={cn("w-full max-w-[90%] md:max-w-[856px] lg:max-w-[1267px] xl:max-w-[1440px]", className)}
     >
       <CarouselContent className="-ml-2 md:-ml-4">
-        {products && products.map((product) => (
-          <CarouselItem key={value + product.name} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/3 xl:basis-1/3">
+        {products && products.map((product, idx) => (
+          <CarouselItem key={idx} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/3 xl:basis-1/3">
             <div onClick={() => router.push(`/tooted/${product.id}`)} className="p-1 flex justify-center">
               <ProductCard product={product} className="w-full max-w-[312px] h-[350px] md:h-[410px]" />
             </div>
