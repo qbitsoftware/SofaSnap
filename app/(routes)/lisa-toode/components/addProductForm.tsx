@@ -271,7 +271,7 @@ const AddProductForm = ({ id, categories, user_metadata }: { id: string, categor
                 <div className="mb-[27px]">
                     <h2 className="font-medium text-sm md:text-lg">Vali kategooria</h2>
                 </div>
-                <div className="flex flex-col w-full gap-[11px] leading-4 max-w-[325px] md:max-w-[425px] lg:max-w-[500px] xl:max-w-[1440px]">
+                <div className="flex flex-col w-full gap-[11px] leading-4 max-w-[325px] md:max-w-[425px] lg:max-w-[500px]">
                     <Select value={category} onValueChange={handleCategoryChange}>
                         <SelectTrigger className='bg-white'>
                             <SelectValue placeholder="Vali kategooria" />

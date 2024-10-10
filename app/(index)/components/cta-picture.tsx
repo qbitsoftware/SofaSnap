@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { MontserratAlternates } from "@/fonts";
 import { cn } from "@/lib/utils";
 import Image from "next/image"
+import Link from "next/link";
 
 
 export const Cta = () => {
@@ -38,9 +39,11 @@ export const Cta = () => {
 
             {/* Button in the center on md and above */}
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden md:block">
-                <Button className="bg-accent rounded-2xl text-black px-6 py-6 transition">
-                    Lisa oma tooted
-                </Button>
+                <Link href={"/lisa-toode"} >
+                    <Button className="bg-accent rounded-2xl text-black px-6 py-6 transition">
+                        Lisa oma tooted
+                    </Button>
+                </Link>
             </div>
         </div>
     );

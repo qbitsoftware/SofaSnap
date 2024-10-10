@@ -15,7 +15,7 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
 
     return (
-        <Card className={cn("border-0 p-0 bg-transparent rounded-tr-[76px] md:rounded-tr-[155px] hover:cursor-pointer", className)}>
+        <Card className={cn("border-0 p-0 bg-transparent rounded-tr-[76px] md:rounded-tr-[155px] hover:cursor-pointer  drop-shadow-md", className)}>
             <CardContent className="relative p-0 flex w-full h-full aspect-square md:w-full md:h-full items-center justify-center flex-col">
                 <div className='relative w-full h-[62%]'>
                     <Image
@@ -26,7 +26,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                         style={{ objectFit: "cover" }}
                     />
                 </div>
-                <div className="flex h-[38%]  overflow-clip z-10 w-full bottom-0 border-r-2 border-b-2 border-l-2 flex-col bg-background p-[10px] justify-between">
+                <div className="flex h-[38%]  overflow-clip z-10 w-full bottom-0 flex-col bg-background p-[10px] justify-between">
                     <div className="flex flex-col gap-1">
                         <div className="flex justify-between items-center text-base md:text-lg font-semibold">
                             <p className='leading-5'>{product.name}</p>
