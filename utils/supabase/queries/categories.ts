@@ -51,8 +51,3 @@ export const FetchCategories = async () => {
         }
     }
 }
-
-export const fetchCategories = async () => {
-    const result = await db.select().from(category)
-    return result
-}

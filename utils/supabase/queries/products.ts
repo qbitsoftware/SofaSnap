@@ -2,7 +2,7 @@ import db from '@/utils/supabase/db'
 import { category, category_join, product, address, address_join_product } from '@/utils/supabase/schema'
 import { eq, and, sql, desc } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
-import { AddressJoinProductTS, AddressTS, CategoryJoin, CategoryTS, Product, ProductRealTS } from '../supabase.types'
+import { AddressJoinProductTS, AddressTS, CategoryJoin, CategoryTS, Product, ProductRealTS, ProductWithAddress } from '../supabase.types'
 import { TProductServer } from '@/lib/product-validation'
 import { GetUserInfo } from '@/app/actions'
 
@@ -124,6 +124,44 @@ export const fetchAllProducts = async (page = 1, limit = 30) => {
     }
 }
 
+export const fetchProductsWithAddresses = async () => {
+    try {
+        const result = await db
+            .select({
+                product: product,
+                address: address,
+            })
+            .from(address_join_product)
+            .innerJoin(product, eq(address_join_product.product_id, product.id))
+            .innerJoin(address, eq(address_join_product.address_id, address.id));
+
+        if (result.length === 0) {
+            return {
+                data: [],
+                error: "No products found",
+            };
+        }
+
+        const productsWithAddresses: ProductWithAddress[] = result.map((row) => ({
+            ...row.product, 
+            address: row.address, 
+        }));
+
+        return {
+            data: productsWithAddresses,
+            error: undefined,
+        };
+    } catch (error) {
+        console.error("Error fetching products with addresses:", error);
+        return {
+            data: undefined,
+            error: "Server error"
+        };
+    }
+};
+
+
+
 export const addProduct = async (prod: TProductServer) => {
     const p: ProductRealTS = {
         name: prod.name,
@@ -208,19 +246,31 @@ export const addProduct = async (prod: TProductServer) => {
 };
 
 export const fetchProduct = async (id: number) => {
+   
     try {
-        const result = await db.select().from(product)
-            .where(eq(product.id, id))
+        const result = await db.select({
+            product: product,
+            address: address,
+        })
+        .from(address_join_product)
+        .where(eq(product.id, id))
+        .innerJoin(product, eq(address_join_product.product_id, product.id))
+        .innerJoin(address, eq(address_join_product.address_id, address.id));
         if (result.length == 0) {
             return {
                 data: undefined,
                 error: "No results found"
             }
         }
+        const productWithAddress: ProductWithAddress = {
+            ...result[0].product, 
+            address: result[0].address,
+        };
+
         return {
-            data: result,
-            error: undefined
-        }
+            data: productWithAddress,
+            error: undefined,
+        };
     } catch (error) {
         console.log("Error fetching product", error)
         return {

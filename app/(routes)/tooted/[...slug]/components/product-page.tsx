@@ -8,7 +8,6 @@ import { ProductImage } from './product-image'
 import { Reviews } from './reviews'
 import { RentForm } from './rent-form'
 import AddressComponent from './address'
-import { fetchProductAddress } from '@/utils/supabase/queries/address'
 // import { OwnerRating } from './owner-rating'
 import { ServerError } from '@/components/server-error'
 import { SellForm } from './sell-form'
@@ -29,12 +28,6 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
     return (
       <ServerError/>
     )
-  }
-  const address = await fetchProductAddress(product_id)
-
-
-  if (!address.data || address.error) {
-    redirect("/404")
   }
 
   if (error || !data) {
@@ -66,16 +59,16 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
   return (
     <div className='md:min-h-screen w-full'>
       <div className='max-w-[1440px] md:px-16 px-6 mx-auto'>
-        <CategoryNavigation className='hidden md:block' categories={categories.slice(0, -1)} product={data[0]} />
+        <CategoryNavigation className='hidden md:block' categories={categories.slice(0, -1)} product={data} />
         <div className='md:mt-16 ml-[-16px] md:flex md:items-center md:justify-between'>
           <ChevronLeft color='#555555' size={44} />
         </div>
         <div className='mt-8'>
-          {<ProductComponent product={data[0]} />}
+          {<ProductComponent product={data} />}
         </div>
       </div>
       <div className='md:mt-[100px] mt-[50px]'>
-        <ProductImage product={data[0]} />
+        <ProductImage product={data} />
       </div>
       {/* <div className='bg-[#CBD3CB]/35 '>
         <div className='md:px-16 px-6 max-w-[1440px] mt-2 mx-auto h-[86px] md:min-h-[190px] flex items-center'>
@@ -84,13 +77,13 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
       </div> */}
       <Reviews reviews={sampleReviews} className='hidden md:my-[150px] mx-auto md:w-[80%] max-w-[1280px]' />
       <div className='w-full mx-auto'>
-        {data[0].type == "rent"
-        ? <RentForm product={data[0]} />
-        : <SellForm product={data[0]} />
+        {data.type == "rent"
+        ? <RentForm product={data} />
+        : <SellForm product={data} />
         }
       </div>
       <div className='md:mb-[200px]'>
-        <AddressComponent address={address.data[0].addresses} className="" />
+        <AddressComponent product={data} className="" />
       </div>
     </div >
   )

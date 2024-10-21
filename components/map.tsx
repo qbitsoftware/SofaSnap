@@ -2,6 +2,7 @@
 import React from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import Loader from './loader';
+import { ProductWithAddress } from '@/utils/supabase/supabase.types';
 
 const containerStyle = {
     width: '100%',
@@ -10,25 +11,23 @@ const containerStyle = {
 };
 
 interface GoogleMapComponentProps {
-    markers: {
-        lat: number
-        lng: number
-    }[] | undefined
+    products: ProductWithAddress[]
     api: string
 }
 
-const GoogleMapComponent:React.FC<GoogleMapComponentProps> = ({ api, markers}) => {
-    console.log(markers)
-    if (api && markers) {
+const GoogleMapComponent:React.FC<GoogleMapComponentProps> = ({ api, products}) => {
+
+    console.log("PRODUCTSSSS",products)
+    if (api && products) {
         return (
             <LoadScript googleMapsApiKey={api} loadingElement={<Loader/>}>
                 <GoogleMap
                     mapContainerStyle={containerStyle}
-                    center={markers[0]}
+                    center={{lat: products[0].address.location.y, lng: products[0].address.location.x}}
                     zoom={11}
                 >
-                    {markers.map((marker, idx) => (
-                        <Marker key={idx} position={marker} />
+                    {products.map((product, idx) => (
+                        <Marker key={idx} position={{lat: product.address.location.y, lng: product.address.location.x}} />
                     ))}
                 </GoogleMap>
             </LoadScript>

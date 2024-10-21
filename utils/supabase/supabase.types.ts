@@ -12,4 +12,7 @@ export type ProductRealTS = Omit<Product, 'id' | 'created_at' | 'updated_at' | '
 export type CategoryTS = Omit<CategoryJoin, 'id'>
 export type AddressTS = Omit<Address, 'id'>
 export type AddressJoinProductTS = Omit<AddressJoinProduct, 'id' | 'created_at'>
+export type ProductWithAddress = Product & {
+    address: Address;
+};
 
