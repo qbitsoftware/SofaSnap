@@ -2,6 +2,7 @@ import React from 'react'
 import { Button } from './ui/button'
 import { cn } from '@/utils/cn'
 import { Map } from 'lucide-react'
+import Link from 'next/link'
 
 interface MapButtonProps {
   className: string
@@ -9,9 +10,10 @@ interface MapButtonProps {
 
 export const MapButton:React.FC<MapButtonProps> = ({className}) => {
   return (
-    <Button className={cn('md:w-[190px] md:h-[60px] flex rounded-full bg-secondary', className)}>
-          Kuva Kaardil <span ><Map /></span>
-    </Button>
+    <Link href="/kaart">
+      <Button className={cn('md:w-[190px] md:h-[60px] flex rounded-full bg-secondary', className)}>
+            Kuva Kaardil <span ><Map /></span>
+      </Button>
+    </Link>
   )
 }
-// md:mr-16 lg:mr-[4%] 2xl:mr-0 gap-4

@@ -14,5 +14,6 @@ export type AddressTS = Omit<Address, 'id'>
 export type AddressJoinProductTS = Omit<AddressJoinProduct, 'id' | 'created_at'>
 export type ProductWithAddress = Product & {
     address: Address;
+    category:Category
 };
 

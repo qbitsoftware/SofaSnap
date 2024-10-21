@@ -13,6 +13,7 @@ export const ProductImage: React.FC<ProductImageProps> = ({ product }) => {
       <div className='w-[50%]'>
         <Image
           // placeholder
+          className='mx-auto'
           src={"/images/tool2.png"}
           alt={product.name}
           layout='intrinsic'

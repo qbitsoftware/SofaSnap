@@ -8,7 +8,7 @@ const Mission = () => {
     <div className='flex max-w-[1440px] w-full items-center'>
       <div className='flex pr-[40px] md:pr-[45px] lg:pr-[85px] items-center'>
         <Link className='cursor-pointer' href={"/"}>
-          <ChevronLeft width={50} height={50} />
+          <ChevronLeft strokeWidth={1} width={50} height={50} />
         </Link>
       </div>
       <div>

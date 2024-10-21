@@ -26,7 +26,7 @@ export const CategoryNavigation: React.FC<CategoryNavigationProps> = async ({ ca
             <Link className='font-sm text-md text-[#555555]' href={currentPath}>
               {capitalize(category.name)}
             </Link>
-            {<ChevronRight color='#555555' />}
+            {<ChevronRight strokeWidth={1} color='#555555' />}
             {product && idx == categories.length - 1 && <Link className='font-sm text-md text-[#555555]' href={`${currentPath}/${product.id}`}>{product.name}</Link>}
           </div>
         );

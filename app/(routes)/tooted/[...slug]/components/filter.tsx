@@ -1,10 +1,15 @@
+import { cn } from '@/lib/utils'
 import { AlignLeft } from 'lucide-react'
 import React from 'react'
 
-export const Filter = () => {
+interface FilterProps {
+  className?: string
+}
+
+export const Filter:React.FC<FilterProps> = ({className}) => {
   return (
-    <div className='xl:ml-4 lg:ml-2'>
-        <AlignLeft color='#000000' size={44}/>
+    <div className={cn('lg:ml-[2%] xl:ml-[1%]', className)}>
+        <AlignLeft strokeWidth={1.4} color='#000000' size={44}/>
     </div>
   )
 }

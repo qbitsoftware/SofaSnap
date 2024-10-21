@@ -2,7 +2,7 @@
 
 import { Product } from '@/utils/supabase/supabase.types'
 import Image from 'next/image'
-import {  useState } from 'react'
+import { useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface ProductProps {
@@ -27,7 +27,7 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
     }
 
     return (
-        <div className='flex flex-col md:flex-row lg:gap-[130px] md:gap-[80px] 2xl:gap-[260px]'>
+        <div className='flex flex-col md:flex-row gap-[40px] lg:gap-[100px] md:gap-[80px] '>
             <div className='relative'>
                 <div className='mx-auto relative h-[250px] w-[260px] sm:h-[320px] sm:w-[330px] lg:w-[510px] lg:h-[450px] md:w-[350px] md:h-[309px] rounded-xl overflow-hidden'>
                     {product.all_img!.map((image, index) => (
@@ -52,14 +52,14 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
                         className="p-2 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
                         aria-label="Previous review"
                     >
-                        <ChevronLeft size={40} className="" />
+                        <ChevronLeft strokeWidth={1} size={40} className="" />
                     </button>
                     <div className="flex space-x-2 mx-4">
                         {product.all_img!.map((_, index) => (
                             <button
                                 key={index}
                                 onClick={() => handleDotClick(index)}
-                                className={`w-3 h-3 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300 ${index === currentImage ? 'bg-primary' : 'bg-gray-300'
+                                className={`w-2 h-2 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300 ${index === currentImage ? 'bg-primary' : 'bg-gray-300'
                                     }`}
                                 aria-label={`Go to review ${index + 1}`}
                             />
@@ -70,23 +70,23 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
                         className="p-2 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
                         aria-label="Next review"
                     >
-                        <ChevronRight size={40} />
+                        <ChevronRight strokeWidth={1}  size={40} />
                     </button>
                 </div>
             </div>
-            <div className='flex-col justify-center md:justify-start md:gap-[28px] gap-6 mt-12 flex'>
-                <div className='flex md:flex-col md:gap-[28px] md:items-start items-center gap-4'>
-                    <h1 className='md:text-4xl text-[20px] font-medium md:font-semibold'>{product.name}</h1>
-                    <div className='bg-accent py-2 inline-block px-3 rounded-full w-max'>
-                        <p className='text-[14px] font-semibold md:text-lg'>
+            <div className='flex-col justify-center md:justify-start md:gap-[28px] md:w-[40%] gap-4 flex'>
+                <div className='flex md:items-start flex-wrap xl:flex-row gap-4 items-center'>
+                    <h1 className='md:text-4xl text-[20px] xl:max-w-[60%] font-medium md:font-semibold m-0 p-0'>{product.name}</h1>
+                    <div className='bg-accent py-2 flex items-center max-h-[40px] px-3 rounded-full'>
+                        <p className='text-[14px] font-semibold md:text-lg flex'>
                             {product.price}
                             <span className=''>€</span>
                             <span className='font-normal pl-2 md:pl-4'>Päev</span>
                         </p>
                     </div>
                 </div>
-                <div>
-                    <p>{product.description}</p>
+                <div className=''>
+                    <p className='break-words overflow-wrap break-word'>{product.description}</p>
                 </div>
             </div>
         </div>

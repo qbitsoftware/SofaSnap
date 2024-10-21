@@ -83,7 +83,7 @@ export const ReviewCarousel: React.FC<ReviewProps> = ({ Reviews }) => {
             <button
               key={index}
               onClick={() => handleDotClick(index)}
-              className={`w-3 h-3 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300 ${index === currentReview ? 'bg-primary' : 'bg-gray-300'
+              className={`w-2 h-2 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300 ${index === currentReview ? 'bg-primary' : 'bg-gray-300'
                 }`}
               aria-label={`Go to review ${index + 1}`}
             />

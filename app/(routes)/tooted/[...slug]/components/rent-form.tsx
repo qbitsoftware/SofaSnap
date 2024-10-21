@@ -115,7 +115,7 @@ export const RentForm: React.FC<DateFormProps> = ({ product }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="md:space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="md:space-y-[100px] lg:space-y-[150px] my-20">
         <FormField
           control={form.control}
           name="dateRange"

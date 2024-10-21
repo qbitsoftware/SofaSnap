@@ -130,8 +130,11 @@ export const fetchProductsWithAddresses = async () => {
             .select({
                 product: product,
                 address: address,
+                category: category
             })
             .from(address_join_product)
+            .innerJoin(category_join, eq(address_join_product.product_id, category_join.product_id))
+            .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
             .innerJoin(product, eq(address_join_product.product_id, product.id))
             .innerJoin(address, eq(address_join_product.address_id, address.id));
 
@@ -143,8 +146,9 @@ export const fetchProductsWithAddresses = async () => {
         }
 
         const productsWithAddresses: ProductWithAddress[] = result.map((row) => ({
-            ...row.product, 
-            address: row.address, 
+            ...row.product,
+            address: row.address,
+            category: row.category
         }));
 
         return {
@@ -246,16 +250,19 @@ export const addProduct = async (prod: TProductServer) => {
 };
 
 export const fetchProduct = async (id: number) => {
-   
+
     try {
-        const result = await db.select({
-            product: product,
-            address: address,
-        })
-        .from(address_join_product)
-        .where(eq(product.id, id))
-        .innerJoin(product, eq(address_join_product.product_id, product.id))
-        .innerJoin(address, eq(address_join_product.address_id, address.id));
+        const result = await db
+            .select({
+                product: product,
+                address: address,
+                category: category
+            })
+            .from(address_join_product)
+            .innerJoin(category_join, eq(address_join_product.product_id, category_join.product_id))
+            .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
+            .innerJoin(product, eq(address_join_product.product_id, product.id))
+            .innerJoin(address, eq(address_join_product.address_id, address.id));
         if (result.length == 0) {
             return {
                 data: undefined,
@@ -263,8 +270,9 @@ export const fetchProduct = async (id: number) => {
             }
         }
         const productWithAddress: ProductWithAddress = {
-            ...result[0].product, 
+            ...result[0].product,
             address: result[0].address,
+            category: result[0].category
         };
 
         return {
