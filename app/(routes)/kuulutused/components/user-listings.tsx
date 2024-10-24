@@ -1,11 +1,11 @@
 "use client"
 import { motion } from 'framer-motion'
 import ListingCard from './listing'
-import { ProductAndCategory } from '@/utils/supabase/queries/products'
+import { ProductAndCategories } from '@/utils/supabase/queries/products'
 
 
 interface UserListingsProps {
-    listings: ProductAndCategory[]
+    listings: ProductAndCategories[]
 }
 
 export default function UserListings({ listings }: UserListingsProps) {
@@ -22,7 +22,7 @@ export default function UserListings({ listings }: UserListingsProps) {
             <div className="space-y-6">
                 {listings.map((listing, index) => (
                     <motion.div
-                        key={listing.products.id}
+                        key={listing.product.id}
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: index * 0.1 }}

@@ -13,19 +13,19 @@ export interface FooterMenuProps {
     items: MenuItem[]
 }
 
-const FooterMenu:React.FC<FooterMenuProps> = ({title, items}) => {
-  return (
-    <div className={cn('flex flex-col', MontserratAlternates.className)}>
-        <h1 className='font-bold p-[10px]'>{title}</h1>
-        <div className='flex flex-col gap-[1px]'>
-            {items.map((item) => (
-                <Link key={item.title} href={item.url}>
-                    <h2 className='p-[10px]'>{item.title}</h2>
-                </Link>
-            ))}
+const FooterMenu: React.FC<FooterMenuProps> = ({ title, items }) => {
+    return (
+        <div className={cn('flex flex-col', MontserratAlternates.className)}>
+            <h1 className='font-bold p-[10px] text-base'>{title}</h1>
+            <div className='flex text-[15px] flex-col gap-[1px] leading-5'>
+                {items.map((item) => (
+                    <Link key={item.title} href={item.url}>
+                        <h2 className='p-[10px]'>{item.title}</h2>
+                    </Link>
+                ))}
+            </div>
         </div>
-    </div>
-  )
+    )
 }
 
 export { FooterMenu }

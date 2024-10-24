@@ -1,4 +1,5 @@
-import { updateInformationServer } from "@/lib/register-validation";
+// import { updateInformationServer } from "@/lib/register-validation";
+import { updateInformationClient } from "@/lib/register-validation";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
@@ -6,7 +7,7 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
 
-        const result = updateInformationServer.safeParse(body);
+        const result = updateInformationClient.safeParse(body);
         const zodErrors: Record<string, string> = {};
 
         if (!result.success) {
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
                 first_name: result.data.first_name,
                 last_name: result.data.last_name,
                 phone: result.data.phone,
-                address: result.data.address.properties.full_address,
+                address: result.data.address,
                 agreement: result.data.agreement,
             }
         });

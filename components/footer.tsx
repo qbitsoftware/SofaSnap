@@ -56,7 +56,7 @@ const Footer = () => {
             <div className='flex flex-col items-center md:items-stretch  md:h-[360px] justify-center  md:justify-between md:px-[50px] lg:px-[85px] w-full text-white max-w-[1440px]'>
                 <div className='flex justify-center md:justify-between items-end pt-[64px]'>
                     <div className='flex gap-[60px] flex-col text-center md:text-left md:flex-row lg:gap-[181px]'>
-                        <div className='lg:pt-[19px]'>
+                        <div className=''>
                             <FooterMenu {...menu_1} />
                         </div>
                         <div className=''>
@@ -74,7 +74,7 @@ const Footer = () => {
                         <Image alt='footer-logo' width={110} height={72} src={"/branding/logo-white.png"} />
                     </Link>
                 </div>
-                <div className='flex'>
+                <div className='flex '>
                     <FooterBottom />
                 </div>
             </div>

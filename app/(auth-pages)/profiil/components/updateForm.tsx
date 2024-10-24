@@ -52,11 +52,15 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
     }, []);
 
     const onSubmit = async (data: TAccountInformationSchemaClient) => {
-        console.log(chosenSuggestion)
         const formData = {
             ...data,
-            address: chosenSuggestion,
-        };
+        }
+
+        if (chosenSuggestion) {
+            formData.address = chosenSuggestion.properties.full_address
+        } else {
+            setInputValue(formData.address)
+        }
 
         const response = await fetch("/api/account", {
             method: "POST",
@@ -201,32 +205,32 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
                 </div>
             </div>
 
-            {user.agreement ? "" :
-                <div>
-                    <div className="w-full">
-                        <div className="mb-[32px]">
-                            <h2 className="font-medium text-lg">Leping</h2>
-                        </div>
-                        <div className="w-full">
-                            <Contract />
-                        </div>
+            {/* {user.agreement ? "" : */}
+            <div>
+                <div className="w-full">
+                    <div className="mb-[32px]">
+                        <h2 className="font-medium text-lg">Leping</h2>
                     </div>
-                    <div className="flex flex-col items-start pt-2 w-full mb-[78px]">
-                        {!errors.agreement && <p className="pb-2 h-[32px]"></p>}
-                        {errors.agreement && <p className="text-red-500 pb-2">* {errors.agreement.message}</p>}
-                        <label className="flex items-center gap-[10px] w-full cursor-pointer">
-                            <Input {...register("agreement")} type="checkbox" id="custom-checkbox" className="hidden peer" />
-                            <div className="min-w-[26px] min-h-[26px] bg-[#FCC9B9] hidden peer-checked:flex shadow-inner-light items-center justify-center">
-                                <Check width={24} height={24} className="text-black peer-checked:text-white" />
-                            </div>
-                            <div className="min-w-[26px] min-h-[26px] bg-[#FCC9B9] peer-checked:hidden shadow-inner-light flex items-center justify-center">
-
-                            </div>
-                            <h2 className="font-medium text-base">Olen tutvunud lepingu tingimustega ja nõustun käesoleva lepinguga.</h2>
-                        </label>
+                    <div className="w-full">
+                        <Contract />
                     </div>
                 </div>
-            }
+                <div className="flex flex-col items-start pt-2 w-full mb-[78px]">
+                    {!errors.agreement && <p className="pb-2 h-[32px]"></p>}
+                    {errors.agreement && <p className="text-red-500 pb-2">* {errors.agreement.message}</p>}
+                    <label className="flex items-center gap-[10px] w-full cursor-pointer">
+                        <Input {...register("agreement")} type="checkbox" id="custom-checkbox" className="hidden peer" />
+                        <div className="min-w-[26px] min-h-[26px] bg-[#FCC9B9] hidden peer-checked:flex shadow-inner-light items-center justify-center">
+                            <Check width={24} height={24} className="text-black peer-checked:text-white" />
+                        </div>
+                        <div className="min-w-[26px] min-h-[26px] bg-[#FCC9B9] peer-checked:hidden shadow-inner-light flex items-center justify-center">
+
+                        </div>
+                        <h2 className="font-medium text-base">Olen tutvunud lepingu tingimustega ja nõustun käesoleva lepinguga.</h2>
+                    </label>
+                </div>
+            </div>
+            {/* } */}
             <div className="z-10 flex flex-col md:flex-row items-center gap-[20px] mb-[51px]">
                 <SubmitButton disabled={isSubmitting} className="bg-accent hover:bg-accent w-[150px] rounded-full lg:w-[150px] md:h-[45px] text-black cursor">
                     <h1 className={cn(isSubmitting ? " hidden " : "block")}>

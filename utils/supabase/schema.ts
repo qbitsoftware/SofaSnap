@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 
-import { doublePrecision, integer, pgSchema, pgTable, point, real, serial, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { doublePrecision, integer, pgSchema, pgTable, point, real, serial, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
 
 const authSchema = pgSchema('auth');
 
@@ -73,7 +73,7 @@ export const user_review = pgTable('user_reviews', {
 
 export const address = pgTable('addresses', {
     id: serial("id").primaryKey().notNull(),
-    full_address: text("full_address").notNull(),
+    full_address: text("full_address").notNull().unique(),
     location: point("location", { mode: "xy" }).notNull(),
     postal_code: text("postal_code").notNull(),
     address_number: text("address_number").notNull(),
@@ -85,6 +85,10 @@ export const category_join = pgTable('category_join', {
     id: serial("id").primaryKey().notNull(),
     product_id: integer("product_id").references(() => product.id, { onDelete: 'cascade' }).notNull(),
     category_name_slug: text("category_name_slug").references(() => category.name_slug, { onUpdate: 'cascade' }).notNull(),
+}, (table) => {
+    return {
+        uniqueProductCategory: unique().on(table.product_id, table.category_name_slug),
+    };
 });
 
 export const address_join = pgTable("address_join", {

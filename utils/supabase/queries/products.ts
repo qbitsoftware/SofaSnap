@@ -1,3 +1,4 @@
+"server only"
 import db from '@/utils/supabase/db'
 import { category, category_join, product, address, address_join_product } from '@/utils/supabase/schema'
 import { eq, and, sql, desc } from 'drizzle-orm'
@@ -143,8 +144,8 @@ export const fetchProductsWithAddresses = async () => {
         }
 
         const productsWithAddresses: ProductWithAddress[] = result.map((row) => ({
-            ...row.product, 
-            address: row.address, 
+            ...row.product,
+            address: row.address,
         }));
 
         return {
@@ -190,6 +191,23 @@ export const addProduct = async (prod: TProductServer) => {
             //add product
             const insertedProduct = await tx.insert(product)
                 .values(p)
+                .onConflictDoUpdate({
+                    target: product.id,
+                    set: {
+                        name: p.name,
+                        description: p.description,
+                        width: p.width,
+                        heigth: p.heigth,
+                        length: p.length,
+                        material: p.material,
+                        type: p.type,
+                        price: p.price,
+                        preview_image: p.preview_image,
+                        all_img: p.all_img,
+                        start_date: p.start_date,
+                        end_date: p.end_date,
+                    }
+                })
                 .returning({ id: product.id });
 
             const productId = insertedProduct[0]?.id;
@@ -197,29 +215,64 @@ export const addProduct = async (prod: TProductServer) => {
             if (!productId) {
                 throw new Error("Failed to insert product.");
             }
-            //add category join
             const category: CategoryTS = {
                 category_name_slug: prod.category,
                 product_id: productId,
             };
-
+            const sub_category: CategoryTS = {
+                category_name_slug: prod.sub_category.toLowerCase(),
+                product_id: productId,
+            };
+            console.log("1")
             await tx.insert(category_join)
-                .values(category);
-            //add address
+                .values(category).
+                onConflictDoUpdate({
+                    target: [category_join.product_id, category_join.category_name_slug],
+                    set: {
+                        category_name_slug: category.category_name_slug,
+                    }
+                })
+
+            console.log("2")
+            await tx.insert(category_join)
+                .values(sub_category).
+                onConflictDoUpdate({
+                    target: [category_join.product_id, category_join.category_name_slug],
+                    set: {
+                        category_name_slug: sub_category.category_name_slug,
+                    }
+                })
+
             const ad: AddressTS = {
-                full_address: prod.address.properties.full_address,
+
+                full_address: prod.address.full_address!,
                 location: {
-                    x: prod.address.geometry.coordinates[0],
-                    y: prod.address.geometry.coordinates[1],
+                    x: prod.address.location![0],
+                    y: prod.address.location![1],
                 },
-                postal_code: prod.address.properties.context.postcode.name,
-                address_number: prod.address.properties.context.address.address_number,
-                region: prod.address.properties.context.region.name,
-                country_code: prod.address.properties.context.country.country_code,
-                country_name: prod.address.properties.context.country.name,
+                postal_code: prod.address.postal_code!,
+                address_number: prod.address.address_number!,
+                region: prod.address.region!,
+                country_code: prod.address.country_code!,
+                country_name: prod.address.country_name!,
             }
 
-            const insertedAddress = await tx.insert(address).values(ad).returning({ id: address.id })
+            console.log("3")
+            const insertedAddress = await tx.insert(address).
+                values(ad).
+                onConflictDoUpdate({
+                    target: address.full_address,
+                    set: {
+                        full_address: ad.full_address,
+                        location: ad.location,
+                        postal_code: ad.postal_code,
+                        address_number: ad.address_number,
+                        region: ad.region,
+                        country_code: ad.country_code,
+                        country_name: ad.country_name
+                    }
+                }).
+                returning({ id: address.id })
             const addressId = insertedAddress[0].id
             if (!addressId) {
                 throw new Error("Failed to insert product -> invalid address id")
@@ -229,7 +282,13 @@ export const addProduct = async (prod: TProductServer) => {
                 product_id: productId,
                 address_id: addressId,
             }
-            await tx.insert(address_join_product).values(adJoin)
+            await tx.insert(address_join_product).values(adJoin).
+                onConflictDoUpdate({
+                    target: product.id,
+                    set: {
+                        address_id: adJoin.address_id,
+                    }
+                })
         });
 
         return {
@@ -246,16 +305,16 @@ export const addProduct = async (prod: TProductServer) => {
 };
 
 export const fetchProduct = async (id: number) => {
-   
+
     try {
         const result = await db.select({
             product: product,
             address: address,
         })
-        .from(address_join_product)
-        .where(eq(product.id, id))
-        .innerJoin(product, eq(address_join_product.product_id, product.id))
-        .innerJoin(address, eq(address_join_product.address_id, address.id));
+            .from(address_join_product)
+            .where(eq(product.id, id))
+            .innerJoin(product, eq(address_join_product.product_id, product.id))
+            .innerJoin(address, eq(address_join_product.address_id, address.id));
         if (result.length == 0) {
             return {
                 data: undefined,
@@ -263,7 +322,7 @@ export const fetchProduct = async (id: number) => {
             }
         }
         const productWithAddress: ProductWithAddress = {
-            ...result[0].product, 
+            ...result[0].product,
             address: result[0].address,
         };
 
@@ -283,6 +342,13 @@ export const fetchProduct = async (id: number) => {
 export type ProductAndCategory = {
     category_join: CategoryJoin,
     products: Product,
+    addresses: AddressTS,
+}
+
+export type ProductAndCategories = {
+    categories: CategoryJoin[],
+    product: Product,
+    address: AddressTS,
 }
 export const fetchUserProducts = async () => {
     try {
@@ -294,7 +360,15 @@ export const fetchUserProducts = async () => {
                 error: "User unauthorized"
             }
         }
-        const result = await db.select().from(category_join).innerJoin(product, eq(category_join.product_id, product.id)).where(eq(product.user_id, user.data.user.id)) as ProductAndCategory[]
+        // const result = await db.select().from(category_join).innerJoin(product, eq(category_join.product_id, product.id)).where(eq(product.user_id, user.data.user.id)) as ProductAndCategory[]
+        const result = await db
+            .select()
+            .from(category_join)
+            .innerJoin(product, eq(category_join.product_id, product.id))
+            .innerJoin(address_join_product, eq(address_join_product.product_id, product.id))
+            .innerJoin(address, eq(address_join_product.address_id, address.id))
+            .where(eq(product.user_id, user.data.user.id))
+            .execute() as ProductAndCategory[];
         if (result.length == 0) {
             return {
                 data: undefined,
@@ -302,8 +376,24 @@ export const fetchUserProducts = async () => {
             }
         }
 
+        const productMap = new Map<number, ProductAndCategories>()
+
+        result.forEach(({ products, category_join, addresses }) => {
+            if (!productMap.has(products.id)) {
+                productMap.set(products.id, {
+                    product: products,
+                    categories: [category_join],
+                    address: addresses,
+                })
+            } else {
+                productMap.get(products.id)?.categories.push(category_join)
+            }
+        })
+
+        const finalResult = Array.from(productMap.values())
+
         return {
-            data: result,
+            data: finalResult,
             error: undefined
         }
 
@@ -326,8 +416,15 @@ export const fetchUserProduct = async (product_id: number) => {
             }
         }
 
-        const result = await db.select().from(category_join).innerJoin(product, eq(category_join.product_id, product.id)).where(eq(product.id, product_id)) as ProductAndCategory[]
-
+        // const result = await db.select().from(category_join).innerJoin(product, eq(category_join.product_id, product.id)).where(eq(product.id, product_id)) as ProductAndCategory[]
+        const result = await db
+            .select()
+            .from(category_join)
+            .innerJoin(product, eq(category_join.product_id, product.id))
+            .innerJoin(address_join_product, eq(address_join_product.product_id, product.id))
+            .innerJoin(address, eq(address_join_product.address_id, address.id))
+            .where(eq(product.id, product_id))
+            .execute() as ProductAndCategory[];
         if (result.length == 0) {
             return {
                 data: undefined,
@@ -342,8 +439,24 @@ export const fetchUserProduct = async (product_id: number) => {
             }
         }
 
+        const productMap = new Map<number, ProductAndCategories>()
+
+        result.forEach(({ products, category_join, addresses }) => {
+            if (!productMap.has(products.id)) {
+                productMap.set(products.id, {
+                    product: products,
+                    categories: [category_join],
+                    address: addresses,
+                })
+            } else {
+                productMap.get(products.id)?.categories.push(category_join)
+            }
+        })
+
+        const finalResult = Array.from(productMap.values())
+
         return {
-            data: result,
+            data: finalResult,
             error: undefined,
         }
     } catch (error) {

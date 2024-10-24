@@ -1,25 +1,47 @@
+"use client"
 import React from 'react'
-import { Globe, CircleUser, MailOpen } from 'lucide-react'
+import { CircleUser, Globe, ShoppingCart } from 'lucide-react'
 import Link from 'next/link'
+import Profile from './nav-bar-profile'
+import { motion } from 'framer-motion'
+import { User } from '@/utils/supabase/supabase.types'
 
-const NavIcons = () => {
+interface NavIconsProps {
+    user: User | null
+}
+const NavIcons = ({ user }: NavIconsProps) => {
     return (
         <div className="w-[132px] flex justify-center  gap-[19px] py-[6px]">
-            <div className=''>
+            <motion.div
+                className=''
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+            >
                 <Link href={"/lisa-toode"}>
                     <Globe width={31} height={31} />
                 </Link>
-            </div>
+            </motion.div>
             <div className=''>
-                <Link href={"/login"}>
-                    <CircleUser width={31} height={31} />
-                </Link>
+                {user ?
+                    <Profile user={user} />
+                    :
+                    <div>
+                        <Link href={"/login"}>
+                            <CircleUser className="h-[32px] w-[32px] cursor-pointer hover:scale-105" />
+                        </Link>
+                    </div>
+                }
             </div>
-            <div className=''>
-                <Link href={"/globe"}>
-                    <MailOpen width={31} height={31} />
+            <motion.div
+                className=''
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+            >
+                <Link href={"/ostukorv"}>
+                    <ShoppingCart width={31} height={31} />
                 </Link>
-            </div>
+
+            </motion.div>
         </div>
     )
 }

@@ -1,137 +1,201 @@
 'use client'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { XIcon } from 'lucide-react'
 import { IImage } from '@/lib/product-validation'
-import Image from 'next/image'
+import NextImage from 'next/image'
+import { debounce } from 'lodash'
 
-function AdvancedImageInput({ images, setImages, baseValue }: { images: IImage[], setImages: React.Dispatch<React.SetStateAction<IImage[]>>, baseValue: (value: string[]) => Promise<void> }) {
-    const [draggedItem, setDraggedItem] = useState<IImage | null>(null)
-    const [dragOverItem, setDragOverItem] = useState<IImage | null>(null)
-    const fileInputRef = useRef<HTMLInputElement>(null)
+interface ImageInputProps {
+  images: IImage[],
+  setImages: React.Dispatch<React.SetStateAction<IImage[]>>,
+  baseValue: (value: string[]) => void
+}
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const allowedFileTypes = ["image/jpeg", "image/png", "image/svg+xml", "image/jpg"];
-        const maxFileSizeMB = 10;
-        const maxFileSizeBytes = maxFileSizeMB * 1024 * 1024;
+function AdvancedImageInput({ images, setImages, baseValue }: ImageInputProps) {
+  const [draggedItem, setDraggedItem] = useState<IImage | null>(null)
+  const [dragOverItem, setDragOverItem] = useState<IImage | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-        if (event.target.files) {
-            const validImages = Array.from(event.target.files).filter((file) => {
-                const isValidType = allowedFileTypes.includes(file.type);
-                const isValidSize = file.size <= maxFileSizeBytes;
 
-                if (!isValidType) {
-                    alert(`${file.name} ei voimalda sellist failityypi. Ainult JPG, JPEG, SVG voi PNG`);
-                }
+  const isFirstRender = useRef(0)
+  const debouncedBaseValue = useRef(
+    debounce((input: string[]) => {
+      baseValue(input);
+    }, 300)
+  ).current;
 
-                if (!isValidSize) {
-                    alert(`${file.name} on liiga suur! Maksimaalne failisuurus on 10MB`);
-                }
-
-                return isValidType && isValidSize;
-            });
-
-            if (validImages.length > 0) {
-                const newImages = validImages.map((file) => ({
-                    id: Math.random().toString(36).substr(2, 9),
-                    name: file.name,
-                    preview: URL.createObjectURL(file),
-                    file,
-                }));
-
-                setImages((prevImages) => {
-                    const updated = [...prevImages, ...newImages]
-                    const lenImages = updated.length
-                    const baseValueInput: string[] = []
-                    for (let i = 0; i < lenImages; i++) {
-                        baseValueInput.push(String(i))
-                    }
-                    baseValue(baseValueInput)
-                    return updated
-                });
-            }
-        }
-    };
-
-    const handleButtonClick = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current.click()
-        }
+  useEffect(() => {
+    if (isFirstRender.current <= 1) {
+      isFirstRender.current++;
+      return;
     }
 
-    const removeImage = (id: string) => {
-        setImages((prevImages) => {
-            const updatedImages = prevImages.filter(img => img.id !== id)
-            const lenImages = updatedImages.length
-            const baseValueInput: string[] = []
-            for (let i = 0; i < lenImages; i++) {
-                baseValueInput.push(String(i))
-            }
-            baseValue(baseValueInput)
-            return updatedImages
-        });
-    };
+    const baseValueInput = images.map((img,) => img.name);
+    debouncedBaseValue(baseValueInput);
+  }, [images]);
 
-    const handleDragStart = (e: React.DragEvent<HTMLDivElement>, item: IImage) => {
-        setDraggedItem(item)
-        e.dataTransfer.effectAllowed = 'move'
-        e.dataTransfer.setData('text/plain', item.id)
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const allowedFileTypes = ["image/jpeg", "image/png", "image/svg+xml", "image/jpg"];
+    const maxFileSizeMB = 10;
+    const maxFileSizeBytes = maxFileSizeMB * 1024 * 1024;
+
+    if (event.target.files) {
+      const validImages = Array.from(event.target.files).filter((file) => {
+        const isValidType = allowedFileTypes.includes(file.type);
+        const isValidSize = file.size <= maxFileSizeBytes;
+
+        if (!isValidType) {
+          alert(`${file.name} ei voimalda sellist failityypi. Ainult JPG, JPEG, SVG voi PNG`);
+        }
+
+        if (!isValidSize) {
+          alert(`${file.name} on liiga suur! Maksimaalne failisuurus on 10MB`);
+        }
+
+        return isValidType && isValidSize;
+      });
+
+      if (validImages.length > 0) {
+        const newImages = validImages.map((file) => ({
+          id: Math.random().toString(36).substr(2, 9),
+          name: file.name,
+          preview: URL.createObjectURL(file),
+          file,
+        }));
+
+        setImages((prevImages) => {
+          const updated = [...prevImages, ...newImages]
+          const lenImages = updated.length
+          const baseValueInput: string[] = []
+          for (let i = 0; i < lenImages; i++) {
+            baseValueInput.push(String(i))
+          }
+
+          // baseValue(baseValueInput, true)
+          return updated
+        });
+      }
+    }
+  };
+
+  const handleButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click()
+    }
+  }
+
+  const removeImage = (id: string) => {
+    setImages((prevImages) => {
+      const updatedImages = prevImages.filter(img => img.id !== id)
+      const lenImages = updatedImages.length
+      const baseValueInput: string[] = []
+      for (let i = 0; i < lenImages; i++) {
+        baseValueInput.push(String(i))
+      }
+
+      // baseValue(baseValueInput, true)
+      return updatedImages
+    });
+  };
+
+
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, item: IImage) => {
+    setDraggedItem(item)
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', item.id)
+
+    const img = new Image()
+    img.crossOrigin = "anonymous"  // This is crucial to avoid CORS issues
+    img.src = item.preview
+
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = 100
+      canvas.height = 100
+      const ctx = canvas.getContext('2d')
+
+      if (ctx) {
+        ctx.drawImage(img, 0, 0, 100, 100)
 
         const dragPreview = document.createElement('div')
         dragPreview.style.width = '100px'
         dragPreview.style.height = '100px'
-        dragPreview.style.backgroundImage = `url(${item.preview})`
+        dragPreview.style.backgroundImage = `url(${canvas.toDataURL()})`
         dragPreview.style.backgroundSize = 'cover'
         dragPreview.style.backgroundPosition = 'center'
         dragPreview.style.border = '2px solid white'
         dragPreview.style.borderRadius = '8px'
         dragPreview.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'
+
         document.body.appendChild(dragPreview)
         e.dataTransfer.setDragImage(dragPreview, 50, 50)
+
+        // Remove the preview element after a short delay
         setTimeout(() => document.body.removeChild(dragPreview), 0)
+      }
     }
 
-    const handleDragOver = (e: React.DragEvent<HTMLDivElement>, item: IImage) => {
-        e.preventDefault()
-        e.dataTransfer.dropEffect = 'move'
-        setDragOverItem(item)
+  }
+  // const handleDragStart = (e: React.DragEvent<HTMLDivElement>, item: IImage) => {
+  //   setDraggedItem(item)
+  //   e.dataTransfer.effectAllowed = 'move'
+  //   e.dataTransfer.setData('text/plain', item.id)
+  //   console.log("item preview", item.preview.replaceAll(" ", "%20"))
+  //   const dragPreview = document.createElement('div')
+  //   dragPreview.style.width = '100px'
+  //   dragPreview.style.height = '100px'
+  //   dragPreview.style.backgroundImage = `url(${item.preview.replaceAll(" ", "%20")})`
+  //   dragPreview.style.backgroundSize = 'cover'
+  //   dragPreview.style.backgroundPosition = 'center'
+  //   dragPreview.style.border = '2px solid white'
+  //   dragPreview.style.borderRadius = '8px'
+  //   dragPreview.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'
+  //   document.body.appendChild(dragPreview)
+  //   e.dataTransfer.setDragImage(dragPreview, 50, 50)
+  //   setTimeout(() => document.body.removeChild(dragPreview), 0)
+  // }
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, item: IImage) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    setDragOverItem(item)
+  }
+
+  const handleDragLeave = () => {
+    setDragOverItem(null)
+  }
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, targetItem: IImage) => {
+    e.preventDefault()
+    if (!draggedItem) return
+
+    const newImages = [...images]
+    const draggedIndex = newImages.findIndex(img => img.id === draggedItem.id)
+    const targetIndex = newImages.findIndex(img => img.id === targetItem.id)
+
+    newImages.splice(draggedIndex, 1)
+    newImages.splice(targetIndex, 0, draggedItem)
+
+    setImages(newImages)
+    const lenImages = newImages.length
+    const baseValueInput: string[] = []
+    for (let i = 0; i < lenImages; i++) {
+      baseValueInput.push(String(i))
     }
+    // baseValue(baseValueInput, true)
+    setDraggedItem(null)
+    setDragOverItem(null)
+  }
 
-    const handleDragLeave = () => {
-        setDragOverItem(null)
-    }
+  const handleDragEnd = () => {
+    setDraggedItem(null)
+    setDragOverItem(null)
+  }
 
-    const handleDrop = (e: React.DragEvent<HTMLDivElement>, targetItem: IImage) => {
-        e.preventDefault()
-        if (!draggedItem) return
-
-        const newImages = [...images]
-        const draggedIndex = newImages.findIndex(img => img.id === draggedItem.id)
-        const targetIndex = newImages.findIndex(img => img.id === targetItem.id)
-
-        newImages.splice(draggedIndex, 1)
-        newImages.splice(targetIndex, 0, draggedItem)
-
-        setImages(newImages)
-        const lenImages = newImages.length
-        const baseValueInput: string[] = []
-        for (let i = 0; i < lenImages; i++) {
-            baseValueInput.push(String(i))
-        }
-        baseValue(baseValueInput)
-
-        setDraggedItem(null)
-        setDragOverItem(null)
-    }
-
-    const handleDragEnd = () => {
-        setDraggedItem(null)
-        setDragOverItem(null)
-    }
-
-return (
-    <div className="flex flex-col justify-center items-center w-full max-w-[300px] mx-auto p-4">
+  return (
+    <div className="flex flex-col justify-center items-center w-full max-w-[500px] mx-auto p-4">
       <div>
         <Button
           type="button"
@@ -155,9 +219,8 @@ return (
         {images.map((image, key) => (
           <div
             key={image.id}
-            className={`relative group transition-transform duration-200 ease-in-out ${
-              dragOverItem && dragOverItem.id === image.id ? 'scale-105' : ''
-            }`}
+            className={`relative group transition-transform duration-200 ease-in-out ${dragOverItem && dragOverItem.id === image.id ? 'scale-105' : ''
+              }`}
             draggable
             onDragStart={(e) => handleDragStart(e, image)}
             onDragOver={(e) => handleDragOver(e, image)}
@@ -165,8 +228,8 @@ return (
             onDrop={(e) => handleDrop(e, image)}
             onDragEnd={handleDragEnd}
           >
-            <div className='w-full aspect-square h-[140px] md:h-[130px] lg:h-[140px]'>
-              <Image
+            <div className='relative w-full aspect-square h-[160px] md:h-[160px]'>
+              <NextImage
                 src={image.preview}
                 alt={`Preview ${image.id}`}
                 className="object-cover rounded-md"
