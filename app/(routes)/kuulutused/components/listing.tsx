@@ -4,14 +4,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { ProductAndCategory } from "@/utils/supabase/queries/products"
+import { ProductAndCategories } from "@/utils/supabase/queries/products"
 import { AnimatePresence } from "framer-motion"
 import { ChevronLeft, ChevronRight, Edit } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRef, useState } from "react"
 
-export default function ListingCard({ listing }: { listing: ProductAndCategory }) {
+export default function ListingCard({ listing }: { listing: ProductAndCategories }) {
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -41,8 +41,8 @@ export default function ListingCard({ listing }: { listing: ProductAndCategory }
                     <div className="flex flex-col md:flex-row" onClick={() => setIsModalOpen(true)}>
                         <div className="relative w-full md:w-64 h-48">
                             <Image
-                                src={listing.products.preview_image}
-                                alt={listing.products.name}
+                                src={listing.product.preview_image}
+                                alt={listing.product.name}
                                 layout="fill"
                                 objectFit="cover"
                                 sizes="(max-width: 768px) 100vw, 256px"
@@ -50,16 +50,16 @@ export default function ListingCard({ listing }: { listing: ProductAndCategory }
                         </div>
                         <div className="p-6 cursor-pointer flex-1">
                             <div className="flex justify-between items-start mb-4">
-                                <h2 className="text-2xl font-semibold">{listing.products.name}</h2>
+                                <h2 className="text-2xl font-semibold">{listing.product.name}</h2>
                                 <Badge variant="outline" className="capitalize">
-                                    {listing.products.type == "sell" ? "müük" : "rent"}
+                                    {listing.product.type == "sell" ? "müük" : "rent"}
                                 </Badge>
                             </div>
-                            <p className="text-muted-foreground  md:max-w-[500px] mb-4 line-clamp-2 overflow-hidden text-ellipsis whitespace-nowrap">{listing.products.description}</p>
+                            <p className="text-muted-foreground  md:max-w-[500px] mb-4 line-clamp-2 overflow-hidden text-ellipsis whitespace-nowrap">{listing.product.description}</p>
                             <div className="flex justify-between items-center mb-4">
-                                <span className="text-2xl font-bold">${listing.products.price.toFixed(2)}</span>
+                                <span className="text-2xl font-bold">${listing.product.price.toFixed(2)}</span>
                                 <div className="flex space-x-2">
-                                    <Link href={`/kuulutused/${listing.products.id}`} onClick={(e) => e.stopPropagation()}>
+                                    <Link href={`/kuulutused/${listing.product.id}`} onClick={(e) => e.stopPropagation()}>
                                         <Button variant="outline" size="sm">
                                             <Edit className="h-4 w-4 mr-2" />
                                             Muuda
@@ -76,10 +76,10 @@ export default function ListingCard({ listing }: { listing: ProductAndCategory }
                     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                         <DialogContent className="sm:max-w-[700px]">
                             <DialogHeader>
-                                <DialogTitle>{listing.products.name}</DialogTitle>
+                                <DialogTitle>{listing.product.name}</DialogTitle>
                                 <DialogDescription>
                                     <Badge variant="outline" className="capitalize mb-2">
-                                        {listing.products.type}
+                                        {listing.product.type}
                                     </Badge>
                                 </DialogDescription>
                             </DialogHeader>
@@ -90,11 +90,11 @@ export default function ListingCard({ listing }: { listing: ProductAndCategory }
                                             className="relative gap-[20px] w-full h-[275px] flex overflow-x-auto scroll-smooth"
                                             ref={scrollRef}
                                         >
-                                            {listing.products.all_img && listing.products.all_img.map((img, index) => (
+                                            {listing.product.all_img && listing.product.all_img.map((img, index) => (
                                                 <div key={index} className="relative min-w-[250px] h-full flex-shrink-0">
                                                     <Image
                                                         src={img}
-                                                        alt={`${listing.products.name} - Image ${index + 1}`}
+                                                        alt={`${listing.product.name} - Image ${index + 1}`}
                                                         layout="fill"
                                                         objectFit="cover"
                                                         sizes="(max-width: 768px) 100vw, 700px"
@@ -120,24 +120,24 @@ export default function ListingCard({ listing }: { listing: ProductAndCategory }
                                             <ChevronRight className="h-4 w-4" />
                                         </Button>
                                     </div>
-                                    <p>{listing.products.description}</p>
+                                    <p>{listing.product.description}</p>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <span className="font-semibold">Price:</span> ${listing.products.price.toFixed(2)}
+                                            <span className="font-semibold">Price:</span> ${listing.product.price.toFixed(2)}
                                         </div>
                                         <div>
-                                            <span className="font-semibold">Dimensions:</span> {listing.products.width}x{listing.products.heigth}x{listing.products.length}
+                                            <span className="font-semibold">Dimensions:</span> {listing.product.width}x{listing.product.heigth}x{listing.product.length}
                                         </div>
                                         <div>
-                                            <span className="font-semibold">Material:</span> {listing.products.material}
+                                            <span className="font-semibold">Material:</span> {listing.product.material}
                                         </div>
-                                        {listing.products.type === 'rent' && listing.products.start_date && listing.products.end_date && (
+                                        {listing.product.type === 'rent' && listing.product.start_date && listing.product.end_date && (
                                             <div>
                                                 <div>
-                                                    <span className="font-semibold">Start:</span> {new Date(listing.products.start_date).toLocaleDateString()}
+                                                    <span className="font-semibold">Start:</span> {new Date(listing.product.start_date).toLocaleDateString()}
                                                 </div>
                                                 <div>
-                                                    <span className="font-semibold">End:</span> {new Date(listing.products.end_date).toLocaleDateString()}
+                                                    <span className="font-semibold">End:</span> {new Date(listing.product.end_date).toLocaleDateString()}
                                                 </div>
                                             </div>
                                         )}

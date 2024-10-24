@@ -1,29 +1,37 @@
 import { fetchUserProducts } from '@/utils/supabase/queries/products'
-import React from 'react'
+import React, { Suspense } from 'react'
 import UserListings from './components/user-listings'
 import { GetUserInfo } from '@/app/actions'
 import { redirect } from 'next/navigation'
+import LoadingSpinner from './components/loading-spinner'
 
-const Page = async () => {
+const UserProductsContent = async () => {
     const prods = await fetchUserProducts()
     const user = await GetUserInfo()
+
     if (!user.data.user) {
         redirect("/login")
     }
 
-    if (prods.data) {
-        return (
-            <div>
-                <UserListings listings={prods.data} />
-            </div>
-        )
+    if (prods.data && prods.data.length > 0) {
+        return <UserListings listings={prods.data} />
     } else {
         return (
-            <div>
-                Aktiivsed kuulutused puuduvad.
+            <div className="text-center p-4">
+                <p>Aktiivsed kuulutused puuduvad.</p>
             </div>
         )
     }
+}
+
+const Page = () => {
+    return (
+        <div className="container mx-auto p-4">
+            <Suspense fallback={<LoadingSpinner />}>
+                <UserProductsContent />
+            </Suspense>
+        </div>
+    )
 }
 
 export default Page

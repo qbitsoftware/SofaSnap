@@ -43,7 +43,7 @@ export const passwordChangeValidator = z.object({
 })
 
 export type TAccountInformationSchemaClient = z.infer<typeof updateInformationClient>
-export type TAccountInformationSchemaServer = z.infer<typeof updateInformationServer>
+// export type TAccountInformationSchemaServer = z.infer<typeof updateInformationServer>
 
 export const updateInformationClient = z.object({
     first_name: z.string().min(1, 'Nimi ei saa puududa'),
@@ -53,10 +53,10 @@ export const updateInformationClient = z.object({
     agreement: z.boolean().refine(val => val, 'Vali peab olema taidetud'),
 })
 
-export const updateInformationServer = z.object({
-    first_name: z.string().min(1, 'Nimi ei saa puududa'),
-    last_name: z.string().min(1, 'Perekonnanimi ei saa puududa'),
-    address: FeatureSchema,
-    phone: z.string().min(1, 'Tel nr ei saa puududa'),
-    agreement: z.boolean().refine(val => val, 'Vali peab olema taidetud'),
-})
+// export const updateInformationServer = z.object({
+//     first_name: z.string().min(1, 'Nimi ei saa puududa'),
+//     last_name: z.string().min(1, 'Perekonnanimi ei saa puududa'),
+//     address: FeatureSchema,
+//     phone: z.string().min(1, 'Tel nr ei saa puududa'),
+//     agreement: z.boolean().refine(val => val, 'Vali peab olema taidetud'),
+// })

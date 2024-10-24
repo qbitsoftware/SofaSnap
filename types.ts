@@ -17,4 +17,21 @@ export type Review = {
     text: string
 }
 
+export type Listing = {
+    user_id: string;
+    name: string;
+    category: string;
+    sub_category: string;
+    width: number;
+    heigth: number;
+    length: number;
+    material: string;
+    description?: string;
+    start_date?: Date;
+    end_date?: Date;
+    type: string;
+    price: number;
+    address: string;
+    all_img: string[];
+}
 

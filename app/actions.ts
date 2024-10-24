@@ -9,6 +9,7 @@ import { addProduct, fetchAllProducts, fetchProductsByCategories } from "@/utils
 import { Product } from "@/utils/supabase/supabase.types";
 import { passwordChangeValidator, TPasswordChangeSchema } from "@/lib/register-validation";
 import { AuthError } from "@supabase/supabase-js";
+import { fetchUserAddress } from "@/utils/supabase/queries/address";
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -54,7 +55,7 @@ export const signInAction = async (formData: FormData) => {
     return encodedRedirect("error", "/login", error.message);
   }
 
-  return redirect("/protected");
+  return redirect("/profiil");
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {
@@ -138,6 +139,17 @@ export const GetUserInfo = async () => {
   const supabase = createClient();
   const user = await supabase.auth.getUser()
   return user
+}
+
+export const GetUserAddress = async () => {
+  const supabase = createClient()
+  const user = await supabase.auth.getUser()
+  if (user.data.user) {
+    const user_address = await fetchUserAddress(user.data.user.id)
+    return user_address
+  } else {
+    return undefined
+  }
 }
 
 export async function createProductAction(body: TProductServer) {

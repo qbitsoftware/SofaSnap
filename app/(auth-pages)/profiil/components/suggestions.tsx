@@ -5,12 +5,17 @@ import { Address } from "@/lib/search-validation"
 import { Separator } from "@radix-ui/react-separator"
 import React, { Dispatch, SetStateAction } from "react"
 
+interface SuggestionProps {
+    isLoading: boolean,
+    inputValue: string,
+    showSuggestions: boolean,
+    suggestions: Address[],
+    setChosenSuggestion: Dispatch<SetStateAction<Feature | undefined>>,
+    setInputValue: (value: string) => void
+    id: string
+}
 
-const Suggestions = ({ isLoading, inputValue, showSuggestions, suggestions, setChosenSuggestion, setInputValue, id }:
-    {
-        isLoading: boolean, inputValue: string, showSuggestions: boolean, suggestions: Address[], setChosenSuggestion: Dispatch<SetStateAction<Feature | undefined>>, setInputValue: Dispatch<SetStateAction<string>>, id: string
-
-    }) => {
+const Suggestions = ({ isLoading, showSuggestions, suggestions, inputValue, setChosenSuggestion, setInputValue, id }: SuggestionProps) => {
     //how many suggestions we want
     const test = [1, 2, 3]
 
@@ -41,9 +46,9 @@ const Suggestions = ({ isLoading, inputValue, showSuggestions, suggestions, setC
         <div>
             {isLoading ?
                 <div>
-                    {test && inputValue.length > 0 && (
-                        <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-300 rounded-md shadow-xl z-50">
-                            {test.map((_, index) => (
+                    {inputValue.length > 0 && (
+                        <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-md shadow-xl z-50">
+                            {[0, 1, 2].map((_, index) => (
                                 <div key={index} className="hover:bg-gray-200 cursor-pointer w-full">
                                     <div className="p-4">
                                         <Skeleton className="h-4 w-1/2 mb-3" />
@@ -62,7 +67,7 @@ const Suggestions = ({ isLoading, inputValue, showSuggestions, suggestions, setC
                 :
                 <div>
                     {showSuggestions && suggestions.length > 0 && (
-                        <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-300 rounded-md shadow-xl z-50">
+                        <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-md shadow-xl z-50">
                             {suggestions.map((suggestion, index) => (
                                 <div key={index} className="hover:bg-gray-200 cursor-pointer w-full" onClick={() => saveState(suggestion)}>
                                     <div className="p-4" >

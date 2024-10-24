@@ -16,9 +16,9 @@ const LogOut = () => {
         const supabase = createClient();
         await supabase.auth.signOut();
         let currentPage = getURL()
-        if (currentPage == "/protected") {
-            currentPage = "/"
-        }
+        // if (currentPage == "/protected") {
+        currentPage = "/"
+        // }
         router.push(currentPage)
         router.refresh()
         toast.toast({

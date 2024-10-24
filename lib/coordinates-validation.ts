@@ -54,5 +54,17 @@ export const FeatureSchema = z.object({
     properties: PropertiesSchema,
 });
 
+// export type SSAddress = z.infer<typeof AddressTS
 export type Feature = z.infer<typeof FeatureSchema>
 
+export const addressSchema = z.object({
+    full_address: z.string().min(1).optional(),
+    location: z.tuple([z.number(), z.number()]).optional(),
+    postal_code: z.string().min(1).optional(),
+    address_number: z.string().min(1).optional(),
+    region: z.string().min(1).optional(),
+    country_code: z.string().min(1).optional(),
+    country_name: z.string().min(1).optional(),
+});
+
+export type AddressProduct = z.infer<typeof addressSchema>

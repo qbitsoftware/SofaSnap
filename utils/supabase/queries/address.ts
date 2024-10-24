@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm"
 import db from "../db"
-import { address, address_join_product } from "../schema"
+import { address, address_join, address_join_product } from "../schema"
+import { error } from "console"
 
 export const fetchProductAddress = async (id: number) => {
     try {
@@ -23,4 +24,26 @@ export const fetchProductAddress = async (id: number) => {
         }
     }
 
+}
+
+export const fetchUserAddress = async (user_id: string) => {
+    try {
+        const result = await db.select().from(address_join).innerJoin(address, eq(address_join.address_id, address.id)).where(eq(address_join.user_id, user_id))
+        if (result.length == 0) {
+            return {
+                data: undefined,
+                error: "No results found"
+            }
+        }
+        return {
+            data: result[0],
+            error: undefined
+        }
+    } catch (error) {
+        console.log("Error fetching user address")
+        return {
+            data: undefined,
+            error: "Server error"
+        }
+    }
 }

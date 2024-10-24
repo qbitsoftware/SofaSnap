@@ -1,14 +1,17 @@
-import { GetUserInfo } from "@/app/actions"
+import { GetUserAddress, GetUserInfo } from "@/app/actions"
 import { UpdateForm } from "./components/updateForm"
 import { redirect } from "next/navigation"
 import { TSignUpSchema } from "@/lib/register-validation"
 import { ChangePassword } from "./components/pwChangeForm"
+import { Suspense } from "react"
+import LoadingSpinner from "@/app/(routes)/kuulutused/components/loading-spinner"
 
-const Page = async () => {
+const BeforeProfiil = async () => {
     const user = await GetUserInfo()
     if (!user.data.user) {
         redirect("/login")
     }
+
     const userInfo = user.data.user.user_metadata as TSignUpSchema
     return (
         <div className="flex flex-col items-center mt-[68px] lg:mx-auto">
@@ -25,6 +28,16 @@ const Page = async () => {
                     <ChangePassword />
                 </div>
             </div>
+        </div>
+    )
+}
+
+const Page = () => {
+    return (
+        <div className="container mx-auto p-4">
+            <Suspense fallback={<LoadingSpinner />}>
+                <BeforeProfiil />
+            </Suspense>
         </div>
     )
 }

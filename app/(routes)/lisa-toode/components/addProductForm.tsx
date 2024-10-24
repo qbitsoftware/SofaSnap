@@ -8,58 +8,63 @@ import { ClipLoader } from 'react-spinners';
 import { useToast } from '@/components/hooks/use-toast';
 import { IImage, productSchema, productSchemaServer, TProductClient, TProductServer } from '@/lib/product-validation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
 import { Map } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Address, TAddressSearchSchema } from '@/lib/search-validation';
-import { Feature } from '@/lib/coordinates-validation';
+import { AddressProduct, Feature } from '@/lib/coordinates-validation';
 import { Suggestions } from '@/app/(auth-pages)/profiil/components/suggestions';
-import { debounce } from 'lodash';
+import { capitalize, debounce } from 'lodash';
 import { AdvancedImageInput } from './uploadForm';
-import { Category } from '@/utils/supabase/supabase.types';
-import { capitalize } from '@/utils/utils';
+import { AddressTS, Category } from '@/utils/supabase/supabase.types';
 import { SubmitButton } from '@/components/submit-button';
 import { Calender } from '@/components/calender';
 import { createProductAction } from '@/app/actions';
-import { AddProduct } from './breadcrumb';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import { TSignUpSchema } from '@/lib/register-validation';
+import { Listing } from '@/types';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import Link from 'next/link';
 
-const AddProductForm = ({ id, categories, user_metadata }: { id: string, categories: Category[], user_metadata: TSignUpSchema }) => {
+interface ProductFormProps {
+    id: string
+    categories: Category[]
+    user_metadata: TSignUpSchema
+    initialData: Listing | null
+    address?: AddressTS
+}
+
+export const AddProductForm = ({ id, categories, user_metadata, initialData, address }: ProductFormProps) => {
     const toast = useToast()
     const router = useRouter()
-    const [category, setCategory] = useState<string>('')
-    const [width, setW] = useState<number>(0)
-    const [heigth, setH] = useState<number>(0)
-    const [length, setL] = useState<number>(0)
     const [suggestions, setSuggestions] = useState<Address[]>([]);
     const [chosenSuggestion, setChosenSuggestion] = useState<Feature>();
     const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
-    const [inputValue, setInputValue] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [images, setImages] = useState<IImage[]>([])
-    const [listingType, setListingType] = useState<"rent" | "sell" | null>()
 
-    const handleListingTypeChange = async (value: "rent" | "sell") => {
-        setListingType(value)
-        setValue("type", value)
-        await trigger("type")
-    }
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-        reset,
-        trigger,
-        setValue,
-        getValues,
-    } = useForm<TProductClient>({
+    const form = useForm({
+        mode: "onChange",
         resolver: zodResolver(productSchema),
-    });
+        defaultValues: initialData || {
+            user_id: id,
+            name: "",
+            category: "",
+            sub_category: "",
+            width: 0,
+            heigth: 0,
+            length: 0,
+            material: "",
+            description: "",
+            start_date: undefined,
+            end_date: undefined,
+            type: "",
+            price: 0,
+            address: "",
+            all_img: [],
+        }
+    })
 
     useEffect(() => {
         function suggestion() {
@@ -67,26 +72,88 @@ const AddProductForm = ({ id, categories, user_metadata }: { id: string, categor
                 setShowSuggestions(false);
             }, 200)
         }
-        // set user name beforehand
-        setValue("user_id", id)
+
+        if (address) {
+            // set address
+            setChosenSuggestion({
+                type: "",
+                geometry: {
+                    type: "",
+                    coordinates: [address.location.x, address.location.y],
+                },
+                properties: {
+                    context: {
+                        country: {
+                            country_code: address.country_code,
+                            name: address.country_name,
+                        },
+                        region: {
+                            name: address.region,
+                        },
+                        postcode: {
+                            name: address.postal_code,
+                        },
+                        place: {
+                            name: "",
+                        },
+                        address: {
+                            address_number: address.address_number,
+                            street_name: "",
+                        },
+                    },
+                    coordinates: {
+                        latitude: address.location.x,
+                        longitude: address.location.y,
+                    },
+                    full_address: address.full_address,
+                    mapbox_id: "",
+                    place_formatted: address.full_address,
+                },
+            })
+            form.setValue("address", address.full_address)
+        }
+        //set images
+        if (initialData && initialData.all_img) {
+            const imagesToAdd: IImage[] = []
+            initialData.all_img.map((url) => {
+                imagesToAdd.push({ name: url.slice(url.lastIndexOf('-') + 1), preview: url, id: Math.random().toString(36).substr(2, 9), file: undefined })
+            })
+            setImages(imagesToAdd)
+        }
         document.addEventListener('mousedown', suggestion);
         return () => {
             document.removeEventListener('mousedown', suggestion);
         };
-    }, [id, setValue]);
+    }, []);
 
-    const onSubmit = async (data: TProductClient) => {
+    const onSubmit = async (data: Listing) => {
+        console.log("Submitting", data)
 
+
+        let converted_address: AddressProduct = {}
+        if (chosenSuggestion) {
+            converted_address = {
+                full_address: chosenSuggestion.properties.full_address,
+                location: [chosenSuggestion.geometry.coordinates[0], chosenSuggestion.geometry.coordinates[1]],
+                postal_code: chosenSuggestion.properties.context.postcode.name,
+                address_number: chosenSuggestion.properties.context.address.address_number,
+                region: chosenSuggestion.properties.context.region.name,
+                country_code: chosenSuggestion.properties.context.country.country_code,
+                country_name: chosenSuggestion.properties.context.country.name,
+            }
+        }
         const formData: TProductServer = {
             ...data,
-            user_id: id,
-            address: chosenSuggestion!,
+            address: converted_address,
             start_date: data.start_date instanceof Date ? data.start_date.toISOString() : "",
             end_date: data.end_date instanceof Date ? data.end_date.toISOString() : "",
-            all_img: ["test", "test"],
         };
-
-        //validate with server stuff first
+        // if (initialData) {
+        //     console.log("initialData", initialData)
+        //     console.log("formData", formData)
+        //     return
+        // }
+        // //validate with server stuff first
         const validationResult = productSchemaServer.safeParse(formData);
         if (validationResult.error) {
             toast.toast({
@@ -113,11 +180,19 @@ const AddProductForm = ({ id, categories, user_metadata }: { id: string, categor
         }
 
         const imgData = new FormData();
-
-        console.log("Images", images)
-
+        console.log("images", images)
+        if (initialData) {
+            const removedItems = initialData.all_img.filter(item => !data.all_img.includes(item.slice(item.lastIndexOf('-') + 1)));
+            if (removedItems.length > 0) {
+                removedItems.map((img) => {
+                    imgData.append('remove_images', img.split('/resources/')[1].trim())
+                })
+            }
+        }
         images.forEach((img) => {
-            imgData.append('images', img.file)
+            if (img.file) {
+                imgData.append('images', img.file)
+            }
         });
 
         const uploadResp = await fetch('/api/upload', {
@@ -125,7 +200,10 @@ const AddProductForm = ({ id, categories, user_metadata }: { id: string, categor
             body: imgData,
         });
 
-
+        // if (initialData) {
+        //     console.log("returing")
+        //     return
+        // }
         const uploadData = await uploadResp.json();
 
         if (!uploadResp.ok) {
@@ -137,6 +215,10 @@ const AddProductForm = ({ id, categories, user_metadata }: { id: string, categor
         }
         //update all_img with correct img data
         formData.all_img = uploadData.data
+        if (initialData) {
+            formData.all_img.push(...initialData.all_img.filter(item => data.all_img.includes(item.slice(item.lastIndexOf('-') + 1))))
+        }
+        console.log("formData", formData.all_img)
 
         const response = await createProductAction(formData)
         if (response.status === 400) {
@@ -167,20 +249,8 @@ const AddProductForm = ({ id, categories, user_metadata }: { id: string, categor
             })
         }
 
-        //RESET ALL THE FORM VALUES FOR UX
-        setCategory('')
-        setValue("category", "")
-        setW(0)
-        setH(0)
-        setL(0)
-        setInputValue('')
+        form.reset()
         setImages([])
-        setListingType(null)
-        reset()
-        //we still need the user id
-        setValue("user_id", id)
-
-
     }
 
     const fetchSuggestions = useCallback(
@@ -194,7 +264,7 @@ const AddProductForm = ({ id, categories, user_metadata }: { id: string, categor
 
             const data: TAddressSearchSchema = {
                 input: value,
-                user_id: id,
+                user_id: form.getValues("user_id"),
             };
             try {
                 const response = await fetch("/api/suggestion", {
@@ -219,14 +289,13 @@ const AddProductForm = ({ id, categories, user_metadata }: { id: string, categor
     );
 
     const handleDates = async (item: DateRange | undefined) => {
-        setValue("start_date", item?.from);
-        setValue("end_date", item?.to);
-        await trigger(["start_date", "end_date"]);
+        form.setValue("start_date", item?.from);
+        form.setValue("end_date", item?.to);
+        await form.trigger(["start_date", "end_date"]);
     };
 
     const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
-        setInputValue(value);
         setIsLoading(true)
         if (value.length >= 2) {
             fetchSuggestions(value);
@@ -235,273 +304,345 @@ const AddProductForm = ({ id, categories, user_metadata }: { id: string, categor
                 setIsLoading(false)
             }, 2000)
         }
-        setValue("address", inputValue)
-        await trigger("address")
+        form.setValue("address", value)
+        await form.trigger("address")
     };
 
-    const handleCategoryChange = async (value: string) => {
-        setCategory(value.toLocaleLowerCase())
-        setValue("category", value.toLocaleLowerCase())
-        await trigger("category");
+    const setFormValue = (value: string) => {
+        form.setValue("address", value)
     }
 
-    const setImagesBase = async (value: string[]) => {
-        setValue("all_img", value)
-        await trigger("all_img")
+    const handleImages = async (value: string[]) => {
+        form.setValue("all_img", value)
+        await form.trigger("all_img")
     }
 
-    const handleSubCategoryChange = async (value: string) => {
-        setValue("sub_category", value);
-        await trigger("sub_category");
+    const handleInputChangeSize = (e: React.ChangeEvent<HTMLInputElement>, onChange: (value: number | '') => void) => {
+        const value = e.target.value
+        if (value === '' || value === '0') {
+            onChange('')
+        } else {
+            onChange(+value)
+        }
     }
-
-    const handleInput = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValue("price", event.target.valueAsNumber)
-        await trigger("price");
-    }
-
-
 
     return (
-        <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-            <div className='mb-[36px] md:hidden'>
-                <AddProduct />
-            </div>
-            <div className="flex flex-col mb-[46px]">
-                <div className="mb-[27px]">
-                    <h2 className="font-medium text-sm md:text-lg">Vali kategooria</h2>
-                </div>
-                <div className="flex flex-col w-full gap-[11px] leading-4 max-w-[325px] md:max-w-[425px] lg:max-w-[500px]">
-                    <Select value={category} onValueChange={handleCategoryChange}>
-                        <SelectTrigger className='bg-white'>
-                            <SelectValue placeholder="Vali kategooria" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {categories.map((item, index) => (
-                                <SelectItem key={index} value={item.name_slug} className='bg-[#ffffff]'>{capitalize(item.name)}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    {errors.category && <p className="text-red-500">{errors.category.message}</p>}
-                    <div>
-                        <Select onValueChange={handleSubCategoryChange} disabled={category === ''}>
-                            <SelectTrigger className='bg-white'>
-                                <SelectValue placeholder="Mis tootega on tegemist" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {categories.map((c) => (
-                                    c.name_slug.toLocaleLowerCase() === category && c.sub_categories ? (
-                                        c.sub_categories.map((sub_c, i) => (
-                                            <SelectItem className='bg-white' key={i} value={sub_c}>
-                                                {sub_c}
-                                            </SelectItem>
-                                        ))
-                                    ) : null
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        {errors.sub_category && <p className="text-red-500">{errors.sub_category.message}</p>}
-                    </div>
-                    <div className="flex flex-col mt-[44px] gap-[30px]">
-                        <h2 className="font-medium text-lg">Toote kirjeldus</h2>
-                        <Input {...register("name")} placeholder='Nimi' className='bg-white' autoComplete='off' />
-                        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
-                        {/* Size input */}
-                        <div className=''>
-                            <div className='flex pt-2 items-center gap-2'>
-
-                                <div>
-                                    <Label htmlFor='width' className='flex pb-1 justify-center'>Laius</Label>
-                                    <Input
-                                        {...register("width", { valueAsNumber: true })}
-                                        value={width}
-                                        placeholder='Laius'
-                                        type='number'
-                                        className="w-20 text-center bg-white"
-                                        autoComplete='off'
-                                        onChange={data => {
-                                            setW(Number(data.target.value))
-                                            setValue("width", Number(data.target.value))
-                                            trigger("width")
-                                        }}
-                                    />
-                                </div>
-                                <span className="pt-3 text-gray-500">x</span>
-                                <div>
-                                    <Label htmlFor='heigth' className='flex pb-1 justify-center'>Korgus</Label>
-                                    <Input
-                                        {...register("heigth", { valueAsNumber: true })}
-                                        id='heigth'
-                                        name='heigth'
-                                        value={heigth}
-                                        placeholder='Korgus'
-                                        type='number'
-                                        className="w-20 text-center bg-white"
-                                        autoComplete='off'
-                                        onChange={data => {
-                                            setH(Number(data.target.value))
-                                            setValue("heigth", Number(data.target.value))
-                                            trigger("heigth")
-                                        }}
-                                    />
-                                </div>
-                                <span className=" pt-3 text-gray-500">x</span>
-                                <div>
-                                    <Label htmlFor='length' className='flex pb-1 justify-center'>Pikkus</Label>
-                                    <Input
-                                        {...register("length", { valueAsNumber: true })}
-                                        value={length}
-                                        placeholder='Pikkus'
-                                        type='number'
-                                        className="w-20 text-center bg-white"
-                                        autoComplete='off'
-                                        onChange={data => {
-                                            setL(Number(data.target.value))
-                                            setValue("length", Number(data.target.value))
-                                            trigger("length")
-                                        }}
-                                    />
-                                </div>
-                                {/* <p className="text-sm pt-3 text-gray-500">
-                                    {width || '0'} cm x {heigth || '0'} cm x {length || '0'} cm
-                                </p> */}
-                            </div>
-                            <div className='flex flex-col gap-1 pt-2'>
-                                {(() => {
-                                    const dimensionErrors = [
-                                        errors.width,
-                                        errors.heigth,
-                                        errors.length
-                                    ].filter(Boolean)
-
-                                    if (dimensionErrors.length >= 2) {
-                                        return <p className="text-red-500">Sisesta mõõtmed</p>
-                                    }
-
-                                    if (dimensionErrors.length === 1) {
-                                        return <p className="text-red-500">{dimensionErrors[0]?.message}</p>
-                                    }
-
-                                    return null;
-                                })()}
-                            </div>
-                        </div>
-
-
-                        <div>
-                            <Input {...register("material")} placeholder='Materjal' className='bg-white' autoComplete='off' />
-                            {errors.material && <p className="text-red-500">{errors.material.message}</p>}
-
-                        </div>
-                        <div>
-                            <Input {...register("description")} placeholder='Kirjeldus' className='bg-white' autoComplete='off' />
-                            {errors.description && <p className="text-red-500">{errors.description.message}</p>}
-                        </div>
-                    </div>
-
-                    <RadioGroup
-                        value={listingType || ""}
-                        onValueChange={handleListingTypeChange}
-                        className="flex flex-col space-y-1 mt-2 h-full"
-                    >
-                        <div className="flex items-center space-x-2">
-                            <Label htmlFor="rent" className='w-[50px]'>Rent</Label>
-                            <RadioGroupItem value="rent" id="rent" className='cursor-pointer' />
-                            <div className="relative pl-[20px]">
-                                <Input
-                                    disabled={listingType != "rent"}
-                                    placeholder="Rendi hind"
-                                    className='max-w-[200px] rounded-xl bg-white'
-                                    onChange={handleInput}
-                                    type='number'
-                                    step="0.01"
-                                />
-                            </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <Label htmlFor="sell" className='w-[50px]'>Müük</Label>
-                            <RadioGroupItem value="sell" id="sell" className='cursor-pointer' />
-                            <div className="relative pl-[20px]">
-                                <Input
-                                    disabled={listingType != "sell"}
-                                    placeholder="Müügi hind"
-                                    className='max-w-[200px] rounded-xl bg-white'
-                                    onChange={handleInput}
-                                    type='number'
-                                    step="0.01"
-                                />
-                            </div>
-                        </div>
-                        <p className="text-red-500">
-                            {errors.type ? errors.type.message : errors.price?.message}
-                        </p>
-                    </RadioGroup>
-
-                    {listingType == "rent" && <div>
-                        <Calender changeValueFunc={handleDates} disabled={["test", "test1", "test2", 'test3']} />
-                        {(errors.start_date || errors.end_date) && (
-                            <p className="text-red-500">
-                                {errors.start_date ? errors.start_date.message : errors.end_date?.message}
-                            </p>
+        <Form {...form} >
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+                <div className='flex flex-col gap-[10px]'>
+                    <FormField
+                        control={form.control}
+                        name="category"
+                        render={({ field }) => (
+                            <FormItem >
+                                <FormLabel>Kategooria</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl className='bg-white'>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Valige kategooria" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent className=''>
+                                        {categories.map((category) => (
+                                            <SelectItem key={category.name} value={category.name}>{capitalize(category.name)}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
                         )}
-                    </div>}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="sub_category"
+                        render={({ field }) => (
+                            <FormItem>
+                                <Select onValueChange={field.onChange}
+                                    disabled={form.getValues("category") === ''}
+                                    defaultValue={field.value}>
+                                    <FormControl className='bg-white'>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Mis tootega on tegemist" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent >
+                                        {categories.map((c) => (
+                                            c.name_slug.toLocaleLowerCase() === form.getValues("category") && c.sub_categories ? (
+                                                c.sub_categories.map((sub_c, i) => (
+                                                    <SelectItem className='bg-white' key={i} value={sub_c}>
+                                                        {capitalize(sub_c)}
+                                                    </SelectItem>
+                                                ))
+                                            ) : null
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+                <h2 className="font-medium text-lg">Toote kirjeldus</h2>
+                <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormControl className='bg-white'>
+                                <Input placeholder="Nimi" {...field} autoComplete='off' />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <div className="flex flex-col items-center">
+                    <div className='flex items-end space-x-2 sm:space-x-4'>
+                        <FormField
+                            control={form.control}
+                            name="width"
+                            render={({ field }) => (
+                                <FormItem className='flex flex-col items-center w-[100px] md:w-[125px]'>
+                                    <FormLabel>Laius (cm)</FormLabel>
+                                    <FormControl className='bg-white text-center'>
+                                        <Input type="number" {...field} onChange={e => handleInputChangeSize(e, field.onChange)} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
 
-                    <p className='flex items-center gap-1'>Aadress <span><Map /></span></p>
-                    <div className="relative mb-[24px] md:mb-[167px]">
-                        <Input
-                            {...register("address")}
-                            placeholder="Sisesta aadress"
-                            onChange={handleInputChange}
-                            value={inputValue}
-                            autoComplete="off"
-                            className='bg-white'
+                        <span className="text-lg mb-1">X</span>
+                        <FormField
+                            control={form.control}
+                            name="heigth"
+                            render={({ field }) => (
+                                <FormItem className='flex flex-col items-center w-[100px] md:w-[125px]'>
+                                    <FormLabel>Kõrgus (cm)</FormLabel>
+                                    <FormControl className='bg-white text-center'>
+                                        <Input type="number" {...field} onChange={e => handleInputChangeSize(e, field.onChange)} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
                         />
-                        <Suggestions
-                            isLoading={isLoading}
-                            suggestions={suggestions}
-                            showSuggestions={showSuggestions}
-                            inputValue={inputValue}
-                            setChosenSuggestion={setChosenSuggestion}
-                            setInputValue={setInputValue}
-                            id={id}
+
+                        <span className="text-lg mb-1">X</span>
+                        <FormField
+                            control={form.control}
+                            name="length"
+                            render={({ field }) => (
+                                <FormItem className='flex flex-col items-center w-[100px] md:w-[125px]'>
+                                    <FormLabel>Pikkus (cm)</FormLabel>
+                                    <FormControl className='bg-white text-center'>
+                                        <Input type="number" {...field} onChange={e => handleInputChangeSize(e, field.onChange)} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
                         />
-                        <p className="italic text-sm pl-1 pt-1 text-slate-700">Naide: Tamme 5</p>
-                        {errors.address && <p className="text-red-500">{errors.address.message}</p>}
                     </div>
-                    <div>
-                        <AdvancedImageInput images={images} setImages={setImages} baseValue={setImagesBase} />
-                        {images.length > 1 &&
-                            <div>
-                                <p className='italic text-slate-700'>
-                                    Samas jarjekorras kuvatakse ka pildid Teie kuulutusel. Jarjekorra muutmiseks lohistage pilte.
-                                </p>
-                            </div>}
-                        {errors.all_img && <p className="text-red-500">{errors.all_img.message}</p>}
-
+                    {/* Error messages */}
+                    <div className="flex mt-2">
+                        {form.formState.errors.width?.message && (
+                            <p className="text-sm font-medium text-destructive">{form.formState.errors.width.message}</p>
+                        )}
+                        {form.formState.errors.heigth?.message && !form.formState.errors.width?.message && (
+                            <p className="text-sm font-medium text-destructive">{form.formState.errors.heigth.message}</p>
+                        )}
+                        {form.formState.errors.length?.message && !form.formState.errors.width?.message && !form.formState.errors.heigth?.message && (
+                            <p className="text-sm font-medium text-destructive">{form.formState.errors.length.message}</p>
+                        )}
                     </div>
                 </div>
-            </div>
-            <div className="flex flex-col gap-[10px] items-center justify-center">
-                <SubmitButton onClick={() => { console.log(getValues()) }} disabled={isSubmitting} className="bg-accent hover:bg-accent w-[220px] rounded-full md:w-[202px] md:h-[55px] text-black cursor" type="submit">
-                    <h1 className={cn(isSubmitting ? " hidden " : "block")}>
-                        Kinnita
-                    </h1>
-                    <ClipLoader
-                        color={"#ffffff"}
-                        loading={isSubmitting}
-                        size={40}
-                        aria-label="Loading Spinner"
-                        data-testid="loader"
-                    />
-                </SubmitButton>
-                <Button onClick={() => { router.push("/") }} disabled={isSubmitting} className="bg-card hover:bg-accent w-[220px] rounded-full md:w-[202px] md:h-[55px] text-black cursor" type="submit">
-                    <h1 className={cn(isSubmitting ? " hidden " : "block")}>
-                        Tühista
-                    </h1>
-                </Button>
-            </div>
-        </form>
+                <FormField
+                    control={form.control}
+                    name="material"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormControl className='bg-white'>
+                                <Input {...field} placeholder='Materjal' autoComplete='off' />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormControl className='bg-white'>
+                                <Input {...field} placeholder='Kirjeldus' autoComplete='off' />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="type"
+                    render={({ field }) => (
+                        <FormItem className="space-y-3">
+                            <FormControl className=''>
+                                <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="flex flex-col space-y-4"
+                                >
+                                    <FormItem className="flex items-center space-x-3 h-[40px] space-y-0">
+                                        <FormLabel className="font-normal w-[50px]">Rendi</FormLabel>
+                                        <FormControl className='bg-white'>
+                                            <RadioGroupItem value="rent" />
+                                        </FormControl>
+                                        {form.getValues("type") === "rent" && (
+                                            <FormField
+                                                control={form.control}
+                                                name="price"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormControl className='bg-white'>
+                                                            <Input
+                                                                type="number"
+                                                                {...field}
+                                                                placeholder="Price"
+                                                                onChange={(e) => field.onChange(+e.target.value)}
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        )}
+
+                                    </FormItem>
+
+                                    <FormItem className="flex items-center space-x-3 h-[40px] space-y-0">
+                                        <FormLabel className="font-normal w-[50px] ">Müü</FormLabel>
+                                        <FormControl className='bg-white'>
+                                            <RadioGroupItem value="sell" />
+                                        </FormControl>
+                                        {form.getValues("type") === "sell" && (
+                                            <FormField
+                                                control={form.control}
+                                                name="price"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormControl className='bg-white'>
+                                                            <Input
+                                                                type="number"
+                                                                {...field}
+                                                                placeholder="Price"
+                                                                onChange={(e) => field.onChange(+e.target.value)}
+                                                            />
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        )}
+
+                                    </FormItem>
+                                </RadioGroup>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                {
+                    form.watch("type") === "rent" && <div className='md:h-[180px] md:pt-[50px]'>
+                        <FormField
+                            control={form.control}
+                            name="start_date"
+                            render={() => (
+                                <FormItem>
+                                    <Calender changeValueFunc={handleDates} disabled={[]} start_date={initialData?.start_date} end_date={initialData?.end_date} />
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="end_date"
+                            render={() => (
+                                <FormItem>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                    </div>
+                }
+
+                < FormField
+                    control={form.control}
+                    name="address"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>
+                                <p className='flex items-center gap-1'>Aadress <span><Map /></span></p>
+                            </FormLabel>
+                            <FormControl className='bg-white'>
+                                <Input placeholder="Aadress" {...field} onChange={handleInputChange} autoComplete='off' />
+                            </FormControl>
+                            <div className='relative'>
+                                <Suggestions
+                                    isLoading={isLoading}
+                                    suggestions={suggestions}
+                                    showSuggestions={showSuggestions}
+                                    inputValue={form.getValues("address")}
+                                    setChosenSuggestion={setChosenSuggestion}
+                                    setInputValue={setFormValue}
+                                    id={id}
+                                />
+                            </div>
+
+                            <FormDescription>
+                                Näide: Tamme 5
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                < FormField
+                    control={form.control}
+                    name="all_img"
+                    render={() => (
+                        <FormItem className=''>
+                            <AdvancedImageInput
+                                images={images}
+                                setImages={setImages}
+                                baseValue={handleImages}
+                            />
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <div className="flex flex-col gap-[10px] items-center justify-center">
+                    <SubmitButton onClick={() => { }} disabled={form.formState.isSubmitting} className="bg-accent hover:bg-accent w-[220px] rounded-full md:w-[202px] md:h-[55px] text-black cursor" type="submit">
+                        <h1 className={cn(form.formState.isSubmitting ? " hidden " : "block")}>
+                            {initialData ? "Salvesta muudatused" : "Kinnita"}
+                        </h1>
+                        <ClipLoader
+                            color={"#ffffff"}
+                            loading={form.formState.isSubmitting}
+                            size={40}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                        />
+                    </SubmitButton>
+                    <Button onClick={(e) => {
+                        e.preventDefault()
+                        if (initialData) {
+                            router.push("/kuulutused")
+                        } else {
+                            router.push("/")
+                        }
+                    }} disabled={form.formState.isSubmitting} className="bg-card hover:bg-accent w-[220px] rounded-full md:w-[202px] md:h-[55px] text-black cursor">
+                        <h1 className={cn(form.formState.isSubmitting ? " hidden " : "block")}>
+                            Tühista
+                        </h1>
+                    </Button>
+                </div>
+            </form >
+        </Form >
     )
 }
 
-export { AddProductForm }

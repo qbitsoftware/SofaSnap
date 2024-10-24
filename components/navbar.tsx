@@ -9,6 +9,7 @@ import { MobileNav } from "./mobile-nav"
 import { LogOut } from "./logout"
 import { FetchCategories } from "@/utils/supabase/queries/categories"
 import { GetUserInfo } from "@/app/actions"
+import Profile from "./nav-bar-profile"
 
 
 const NavBar = async () => {
@@ -42,7 +43,7 @@ const NavBar = async () => {
                             <div>
                                 <Link href={"/login"}>
                                     <Button className="rounded-full bg-accent text-bg-foreground px-[25px] lg:py-[11px] lg:px-[25px] xl:p-[11px] xl:px-[40px] shadow-xl">
-                                        Log in
+                                        Logi sisse
                                     </Button>
                                 </Link>
                             </div>
@@ -50,12 +51,18 @@ const NavBar = async () => {
                     </div>
                 </div>
                 <div className="xl:w-[132px] hidden lg:inline">
-                    <NavIcons />
+                    <NavIcons user={user.data.user} />
                 </div>
                 <div className="md:hidden">
-                    <Link href={"/login"}>
-                        <CircleUser width={32} height={32} />
-                    </Link>
+                    {user.data.user ? (
+                        <Profile user={user.data.user} />
+                    ) :
+                        <div>
+                            <Link href={"/login"}>
+                                <CircleUser className="h-[32px] w-[32px] cursor-pointer hover:scale-105" />
+                            </Link>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import { Button } from './ui/button'
 import { CalendarDays } from 'lucide-react'
@@ -12,13 +12,21 @@ import { Calendar } from "@/components/ui/calendar"
 interface CalenderProps {
     disabled: string[]
     changeValueFunc: (item: DateRange | undefined) => Promise<void>
+    start_date?: Date,
+    end_date?: Date,
 }
 
-export const Calender: React.FC<CalenderProps> = ({ changeValueFunc }: CalenderProps) => {
+export const Calender: React.FC<CalenderProps> = ({ changeValueFunc, start_date, end_date }: CalenderProps) => {
     const [dateRange, setDateRange] = useState<DateRange | undefined>()
-
+    useEffect(() => {
+        if (start_date && end_date) {
+            setDateRange({ from: start_date, to: end_date })
+        } else if (start_date) {
+            setDateRange({ from: start_date })
+        }
+    }, [start_date, end_date])
     return (
-        <div className="py-[24px] md:py-[108px]">
+        <div className="">
             <div className="">
                 <Popover>
                     <PopoverTrigger asChild className='py-8 px-2'>
