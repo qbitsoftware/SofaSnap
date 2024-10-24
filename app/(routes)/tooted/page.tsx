@@ -24,7 +24,7 @@ const Page = async ({ searchParams }: { searchParams: { page?: string } }) => {
     <div className="md:mx-auto px-6 md:px-[64px] max-w-[1440px]">
       <div className='md:mt-16 flex md:flex md:items-center md:justify-between'>
         <Link href={"/"}>
-          <ChevronLeft strokeWidth={1} className='ml-[-16px]' color='#000000' size={56} />
+          <ChevronLeft strokeWidth={1} className='ml-[-16px]' color='#000000' size={44} />
         </Link>
         <MapButton className='hidden md:flex' />
       </div>

@@ -2,16 +2,20 @@
 
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { Product } from '@/utils/supabase/supabase.types'
+import useCart from '@/hooks/use-cart'
+import { CartItem } from '@/lib/product-validation'
+import { Product, ProductWithAddress } from '@/utils/supabase/supabase.types'
 import { round } from '@/utils/utils'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
 interface SellFormProps {
-    product: Product
+    product: ProductWithAddress
 }
 
 export const SellForm: React.FC<SellFormProps> = ({ product }) => {
+
+    const cart = useCart()
 
     const [isMobile, setIsMobile] = useState<boolean>(false);
 
@@ -22,6 +26,18 @@ export const SellForm: React.FC<SellFormProps> = ({ product }) => {
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
     console.log(isMobile)
+
+    const onSubmit = () => {
+        const CartItem: CartItem = {
+            ...product,
+            type: "sell",
+            dateRange: {
+                from: new Date(),
+                to: new Date()
+            }
+        }
+        cart.addItem(CartItem)
+    }
 
 
     const fee = round(product.price * 0.05)
@@ -67,25 +83,26 @@ export const SellForm: React.FC<SellFormProps> = ({ product }) => {
                             </div>
                         </div>
                     </div>
-                    <Button type="submit" className="mt-8 w-full rounded-full bg-accent text-black">Osta</Button>
+                    <Button onClick={() => onSubmit()} type="submit" className="mt-8 w-full rounded-full bg-accent text-black">Osta</Button>
                 </div>
             </div>
-                {isMobile && (
-                    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-gray-200 p-4 flex justify-between items-center">
-                        <div className="flex flex-col">
-                            <div className="flex items-center gap-2">
-                                <span className="text-lg font-semibold">{product.price}€</span>
-                            </div>
+            {isMobile && (
+                <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-gray-200 p-4 flex justify-between items-center">
+                    <div className="flex flex-col">
+                        <div className="flex items-center gap-2">
+                            <span className="text-lg font-semibold">{product.price}€</span>
                         </div>
-                        <Button
-                            type="submit"
-                            className="rounded-2xl bg-accent text-black px-6 py-6 flex items-center"
-
-                        >
-                            Osta
-                        </Button>
                     </div>
-                )}
+                    <Button
+                        onClick={() => onSubmit()}
+                        type="submit"
+                        className="rounded-2xl bg-accent text-black px-6 py-6 flex items-center"
+
+                    >
+                        Osta
+                    </Button>
+                </div>
+            )}
         </div >
     )
 }

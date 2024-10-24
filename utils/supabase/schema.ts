@@ -106,3 +106,6 @@ export const address_join_product = pgTable("address_join_products", {
     product_id: integer('product_id').references(() => product.id).notNull(),
     address_id: integer("address_id").references(() => address.id).notNull(),
 })
+
+
+  

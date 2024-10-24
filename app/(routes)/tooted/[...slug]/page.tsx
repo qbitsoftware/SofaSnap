@@ -74,7 +74,7 @@ const CategoryPage = async ({
         <CategoryNavigation categories={category_objects} className='hidden md:flex' />
         <div className='md:mt-16 flex md:flex md:items-center md:justify-between'>
           <Link href="/">
-            <ChevronLeft strokeWidth={1} className='ml-[-16px]' color='#000000' size={56} />
+            <ChevronLeft strokeWidth={1} className='ml-[-16px]' color='#000000' size={44} />
           </Link>
           <h2 className='md:text-5xl hidden md:block'>{capitalize(category_objects[category_objects.length - 1].name)}</h2>
           <MapButton className='hidden md:flex' />

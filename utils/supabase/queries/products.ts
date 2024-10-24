@@ -250,7 +250,6 @@ export const addProduct = async (prod: TProductServer) => {
 };
 
 export const fetchProduct = async (id: number) => {
-
     try {
         const result = await db
             .select({
@@ -259,6 +258,7 @@ export const fetchProduct = async (id: number) => {
                 category: category
             })
             .from(address_join_product)
+            .where(eq(address_join_product.product_id, id))
             .innerJoin(category_join, eq(address_join_product.product_id, category_join.product_id))
             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
             .innerJoin(product, eq(address_join_product.product_id, product.id))

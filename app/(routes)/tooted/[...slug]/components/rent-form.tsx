@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState, useEffect } from "react";
 import { addDays, differenceInCalendarDays, format } from "date-fns";
-import { CalendarDays} from "lucide-react"
+import { CalendarDays } from "lucide-react"
 
 import { cn } from "@/lib/utils";
 import { toast } from "@/components/hooks/use-toast";
@@ -18,42 +18,32 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Product } from "@/utils/supabase/supabase.types";
+import { Product, ProductWithAddress } from "@/utils/supabase/supabase.types";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { formatEstonianDate, round } from "@/utils/utils";
 import { Calendar } from "@/components/ui/calendar"
+import useCart from "@/hooks/use-cart";
+import { RentFormSchema, CartItem } from "@/lib/product-validation";
 
-// Tere
 
-const FormSchema = z.object({
-  dateRange: z.object({
-    from: z.date({
-      required_error: "A start date is required.",
-    }),
-    to: z.date({
-      required_error: "An end date is required.",
-    }),
-  }).refine((data) => data.from <= data.to, {
-    message: "End date cannot be before start date.",
-    path: ["to"],
-  }),
-});
 
 interface DateFormProps {
-  product: Product;
+  product: ProductWithAddress;
 }
 
 export const RentForm: React.FC<DateFormProps> = ({ product }) => {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof RentFormSchema>>({
+    resolver: zodResolver(RentFormSchema),
     defaultValues: {
+      type: "rent",
       dateRange: {
         from: undefined,
         to: undefined,
       },
     },
   });
+  const cart = useCart()
 
   const getDateRangeString = () => {
     const { from, to } = form.getValues("dateRange")
@@ -99,17 +89,14 @@ export const RentForm: React.FC<DateFormProps> = ({ product }) => {
     updateValues(from, to);
   }, [form]);
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">
-            {JSON.stringify(data.dateRange, null, 2)}
-          </code>
-        </pre>
-      ),
-    });
+  function onSubmit(data: z.infer<typeof RentFormSchema>) {
+    const CartItem: CartItem = {
+      ...product,
+      dateRange: data.dateRange,
+      type: data.type
+    }
+
+    cart.addItem(CartItem)
   }
 
 

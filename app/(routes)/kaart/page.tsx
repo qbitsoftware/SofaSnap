@@ -20,12 +20,14 @@ const MapPage = async () => {
     redirect("/404")
   }
 
+  console.log("PRODUCTSSSS", products[0].category.sub_categories)
+
   console.log(process.env.GOOGLE_MAPS_KEY!)
 
   return (
     <div className='max-w-[1440px] mx-auto md:px-16 px-6 min-h-screen'>
       <div className='flex justify-between items-center md:mt-10'>
-        <ChevronLeft strokeWidth={1} size={56} className='md:ml-[-16px]' />
+        <ChevronLeft strokeWidth={1} size={44} className='md:ml-[-16px]' />
         <h1 className='md:text-5xl'>Leia sobiv toode kaardilt</h1>
         <Link href={"/tooted"}>
           <Button className='bg-secondary rounded-full px-6 py-6 '>

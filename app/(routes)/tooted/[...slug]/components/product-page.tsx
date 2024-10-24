@@ -23,6 +23,7 @@ interface ProductPageProps {
 
 const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories }) => {
   const { data, error } = await fetchProduct(product_id)
+  console.log("DATAAA",data)
   
   if (error && error == "Server error") {
     return (

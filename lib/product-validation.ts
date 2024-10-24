@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { FeatureSchema } from "./coordinates-validation";
+import { ProductWithAddress } from "@/utils/supabase/supabase.types";
 
 export const productSchema = z
     .object({
@@ -119,3 +120,23 @@ export interface IImage {
     preview: string;
     name: string;
 }
+
+
+
+export const RentFormSchema = z.object({
+    type: z.enum(["sell", "rent"]),
+    dateRange: z.object({
+        from: z.date({
+            required_error: "A start date is required.",
+        }),
+        to: z.date({
+            required_error: "An end date is required.",
+        }),
+    }).refine((data) => data.from <= data.to, {
+        message: "End date cannot be before start date.",
+        path: ["to"],
+    }),
+});
+
+export type CartItemTS = z.infer<typeof RentFormSchema>
+export type CartItem = CartItemTS & ProductWithAddress

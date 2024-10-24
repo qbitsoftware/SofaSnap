@@ -29,7 +29,7 @@ export default async function Index() {
         <Reviews />
         <RecentProducts data={products} error={productError} />
         <Cta />
-        <Benefits />
+        {/* <Benefits /> */}
         <PopularProducts data={products} error={productError} />
         <Globe />
       </main>
