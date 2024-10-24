@@ -15,6 +15,13 @@
       "when": 1727952022226,
       "tag": "0001_aberrant_archangel",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1729763943914,
+      "tag": "0002_tough_bloodstorm",
+      "breakpoints": true
     }
   ]
 }

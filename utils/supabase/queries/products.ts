@@ -181,6 +181,7 @@ export const addProduct = async (prod: TProductServer) => {
         type: prod.type,
         start_date: prod.start_date!,
         end_date: prod.end_date!,
+        unique_id: prod.unique_id,
         all_img: prod.all_img,
     }
 
@@ -196,7 +197,7 @@ export const addProduct = async (prod: TProductServer) => {
             const insertedProduct = await tx.insert(product)
                 .values(p)
                 .onConflictDoUpdate({
-                    target: product.id,
+                    target: product.unique_id,
                     set: {
                         name: p.name,
                         description: p.description,
@@ -368,7 +369,6 @@ export const fetchUserProducts = async () => {
                 error: "User unauthorized"
             }
         }
-        // const result = await db.select().from(category_join).innerJoin(product, eq(category_join.product_id, product.id)).where(eq(product.user_id, user.data.user.id)) as ProductAndCategory[]
         const result = await db
             .select()
             .from(category_join)
@@ -424,7 +424,6 @@ export const fetchUserProduct = async (product_id: number) => {
             }
         }
 
-        // const result = await db.select().from(category_join).innerJoin(product, eq(category_join.product_id, product.id)).where(eq(product.id, product_id)) as ProductAndCategory[]
         const result = await db
             .select()
             .from(category_join)

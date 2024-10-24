@@ -2,7 +2,7 @@
 
 import useCart from '@/hooks/use-cart'
 import { ChevronLeft, X } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CartItemComponent } from './components/cart-item'
 import { Separator } from '@/components/ui/separator'
 import { RentingRules } from './components/renting-rules'
@@ -16,10 +16,10 @@ const CartPage = () => {
 
   const items = cart.items
 
-  const updateTotalCombined = (newTotal: number) => {
-    
-    setTotalCombined((prevTotal) => prevTotal + newTotal);
-  };
+  useEffect(() => {
+    // cart.items.reduce((value,item) => value + item)
+    // setTotalCombined()
+  })
 
 
   const handleRemoveItem = (id: number) => {
@@ -33,7 +33,7 @@ const CartPage = () => {
         <div className='flex flex-col md:gap-[50px] md:mt-[90px]'>
           {items.map((item) =>
             <div className='flex justify-between' key={item.id}>
-              <CartItemComponent item={item} updateTotalCombined={updateTotalCombined} />
+              <CartItemComponent item={item}  />
               <X className='hover:cursor-pointer' onClick={() => handleRemoveItem(item.id)} />
             </div>)}
         </div>

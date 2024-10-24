@@ -1,11 +1,12 @@
 import { sql } from "drizzle-orm";
 
-import { doublePrecision, integer, pgSchema, pgTable, point, real, serial, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
+import { doublePrecision, integer, jsonb, pgSchema, pgTable, point, real, serial, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
 
 const authSchema = pgSchema('auth');
 
 export const user = authSchema.table('users', {
     id: uuid("id").primaryKey().notNull(),
+    raw_user_meta_data: jsonb("raw_user_meda_data"),
 });
 
 export const product = pgTable('products', {
@@ -22,6 +23,7 @@ export const product = pgTable('products', {
     }).$onUpdate(() => sql`NOW()`),
     description: text("description"),
     user_id: uuid('user_id').references(() => user.id, { onDelete: "cascade" }).notNull(),
+    unique_id: uuid('unique_id').unique().notNull(),
     preview_image: text("preview_image").notNull(),
     price: doublePrecision("price").notNull(),
     width: integer("width").notNull(),

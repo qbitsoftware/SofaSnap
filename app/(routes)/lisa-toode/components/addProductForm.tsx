@@ -63,8 +63,28 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             price: 0,
             address: "",
             all_img: [],
+            unique_id: crypto.randomUUID(),
         }
     })
+
+    const [subCategories, setSubCategories] = useState<string[] | null>([]);
+
+    useEffect(() => {
+        // Initial load for the subcategories
+        const initialCategory = form.getValues("category");
+        const selectedCategory = categories.find(c => c.name_slug.toLowerCase() === initialCategory);
+        setSubCategories(selectedCategory ? selectedCategory.sub_categories : []);
+
+        // Subscribe to category changes
+        const subscription = form.watch((values) => {
+            const categoryValue = values.category; // Access the watched category value
+            const selectedCategory = categories.find(c => c.name_slug.toLowerCase() === categoryValue);
+            setSubCategories(selectedCategory ? selectedCategory.sub_categories : []);
+        });
+
+        // Cleanup subscription on unmount
+        return () => subscription.unsubscribe();
+    }, [form, categories]);
 
     useEffect(() => {
         function suggestion() {
@@ -253,6 +273,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
         setImages([])
     }
 
+
     const fetchSuggestions = useCallback(
         debounce(async (value: string) => {
             if (value.length === 0) {
@@ -366,7 +387,12 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent >
-                                        {categories.map((c) => (
+                                        {subCategories.map((sub_c, i) => (
+                                            <SelectItem className='bg-white' key={i} value={sub_c}>
+                                                {capitalize(sub_c)}
+                                            </SelectItem>
+                                        ))}
+                                        {/* {categories.map((c) => (
                                             c.name_slug.toLocaleLowerCase() === form.getValues("category") && c.sub_categories ? (
                                                 c.sub_categories.map((sub_c, i) => (
                                                     <SelectItem className='bg-white' key={i} value={sub_c}>
@@ -374,7 +400,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                                     </SelectItem>
                                                 ))
                                             ) : null
-                                        ))}
+                                        ))} */}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />

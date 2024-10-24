@@ -30,9 +30,7 @@ const NavBar = async () => {
                 </Link>
             </div>
             <div className="flex gap-[21px] items-center">
-
                 <div className="hidden md:flex lg:w-[540px] xl:w-[530px] items-center py-[4px] justify-between">
-
                     <div className="md:gap-[50px]">
                         <NavLinks categories={cateogries.data} />
                     </div>

@@ -11,7 +11,6 @@ import React, { useEffect, useState } from 'react'
 
 interface CartItemProps {
   item: CartItem
-  updateTotalCombined: (total: number) => void;
 }
 
 

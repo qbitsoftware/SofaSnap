@@ -33,5 +33,6 @@ export type Listing = {
     price: number;
     address: string;
     all_img: string[];
+    unique_id: string;
 }
 
