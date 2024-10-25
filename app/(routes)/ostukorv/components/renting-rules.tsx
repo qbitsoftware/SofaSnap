@@ -2,7 +2,7 @@ import React from 'react'
 
 export const RentingRules = () => {
   return (
-    <div className='py-[50px]'>
+    <div className='md:py-[50px] py-[30px]'>
         <h1 className='md:text-4xl font-medium'>Rentimise Põhireeglid</h1>
         <div className='flex flex-col gap-3 mt-7 text-base font-medium'>
             <p>Mööbli heaperemehelik kasutamine.</p>

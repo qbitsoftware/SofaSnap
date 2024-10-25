@@ -1,9 +1,7 @@
 "use client"
 
 import { Separator } from '@/components/ui/separator'
-import useCart from '@/hooks/use-cart'
 import { CartItem } from '@/lib/product-validation'
-import { product } from '@/utils/supabase/schema'
 import { formatDate, round } from '@/utils/utils'
 import { differenceInCalendarDays } from 'date-fns'
 import Image from 'next/image'
@@ -40,21 +38,22 @@ export const CartItemComponent: React.FC<CartItemProps> = ({ item }) => {
   return (
     <div>
       <div className='flex gap-3'>
-        <div>
-          <Image className='rounded-3xl' src={item.preview_image} width={230} height={230} alt={item.name} />
+        <div className='relative sm:w-[230px] sm:h-[230px]  h-[130px] w-[130px] min-w-[130px]'>
+          <Image className='rounded-3xl absolute w-full h-full' src={item.preview_image} fill alt={item.name} />
         </div>
         <div className='flex flex-col gap-2'>
           <h2 className='font-semibold text-base'>{item.name}</h2>
           <p className='text-[15px] font-normal'>{item.price}€<span className=''>{item.type == "rent" ? " Päev" : ""}</span></p>
-          {item.type == "rent" &&
-            <div className='flex flex-col gap-2 text-[15px] font-normal'>
-              <p>Kuupäevad:</p>
+          {item.type == "rent"
+            ?
+            <div className='flex flex-col gap-2 text-[15px] font-normal sm:w-[230px] w-[140px]'>
+              {/* <p>Kuupäevad:</p> */}
               <p>{`${formatDate(new Date(item.dateRange.from))} - ${formatDate(new Date(item.dateRange.to))}`}</p>
               <Separator />
               <div className=''>
                 <div className='flex flex-col gap-2 mb-2'>
                   {/* <h3 className='text-2xl font-semibold'>Hinnateave</h3> */}
-                  <div className='flex gap-20 justify-between'>
+                  <div className='flex justify-between'>
                     <p>{`${item.price}€ x ${dateRange} Päeva`}</p>
                     <p className=''>{totalWithoutFee}€</p>
                   </div>
@@ -69,6 +68,18 @@ export const CartItemComponent: React.FC<CartItemProps> = ({ item }) => {
                   <p>{totalWithfee}€</p>
                 </div>
               </div>
+            </div>
+            :
+            <div className='sm:w-[230px] w-[140px]'>
+              <div className='flex justify-between  text-[15px]'>
+                <p>SofaSnap teenustasu </p>
+                <p>{round(totalWithoutFee * 0.05)}€</p>
+              </div>
+              <Separator />
+              <div className='flex justify-between font-semibold mt-2'>
+                  <p>Kokku</p>
+                  <p>{totalWithfee}€</p>
+                </div>
             </div>
           }
         </div>

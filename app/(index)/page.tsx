@@ -1,4 +1,4 @@
-import { Benefits } from "./components/benefits";
+// import { Benefits } from "./components/benefits";
 import { Categories } from "./components/categories";
 import { Cta } from "./components/cta-picture";
 import { LandingPage } from "./components/landing-page";

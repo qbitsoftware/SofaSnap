@@ -5,14 +5,14 @@ import { Map } from 'lucide-react'
 import Link from 'next/link'
 
 interface MapButtonProps {
-  className: string
+  className?: string
 }
 
 export const MapButton:React.FC<MapButtonProps> = ({className}) => {
   return (
-    <Link href="/kaart">
+    <Link className={cn("",className)} href="/kaart">
       <Button className={cn('md:w-[190px] md:h-[60px] flex rounded-full bg-secondary', className)}>
-            Kuva Kaardil <span ><Map /></span>
+            Kuva Kaardil <span className='px-2'><Map /></span>
       </Button>
     </Link>
   )

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { FeatureSchema, addressSchema } from "./coordinates-validation";
+import { addressSchema } from "./coordinates-validation";
 import { ProductWithAddress } from "@/utils/supabase/supabase.types";
 
 export const productSchema = z

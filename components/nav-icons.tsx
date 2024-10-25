@@ -39,10 +39,12 @@ const NavIcons = ({ user }: NavIconsProps) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >
-                <Link href={"/ostukorv"} className='relative'>
-                    <ShoppingCart width={31} height={31} />
-                    <div className='bg-accent absolute w-4 h-4 rounded-full top-0 right-[-5px] flex items-center justify-center'><span className='z-50 text-sm'>{cart.items.length} </span></div>
-                </Link>
+                {cart.items.length > 0 &&
+                    <Link href={"/ostukorv"} className='relative'>
+                        <ShoppingCart width={31} height={31} />
+                        <div className='bg-accent absolute w-4 h-4 rounded-full top-0 right-[-5px] flex items-center justify-center'><span className='z-50 text-sm'>{cart.items.length} </span></div>
+                    </Link>
+                }
 
             </motion.div>
         </div>
