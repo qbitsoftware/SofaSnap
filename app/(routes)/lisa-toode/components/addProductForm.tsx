@@ -26,6 +26,7 @@ import { TSignUpSchema } from '@/lib/register-validation';
 import { Listing } from '@/types';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import Link from 'next/link';
+import { Textarea } from '@/components/ui/textarea';
 
 interface ProductFormProps {
     id: string
@@ -70,19 +71,16 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
     const [subCategories, setSubCategories] = useState<string[] | null>([]);
 
     useEffect(() => {
-        // Initial load for the subcategories
         const initialCategory = form.getValues("category");
         const selectedCategory = categories.find(c => c.name_slug.toLowerCase() === initialCategory);
         setSubCategories(selectedCategory ? selectedCategory.sub_categories : []);
 
-        // Subscribe to category changes
         const subscription = form.watch((values) => {
-            const categoryValue = values.category; // Access the watched category value
+            const categoryValue = values.category;
             const selectedCategory = categories.find(c => c.name_slug.toLowerCase() === categoryValue);
             setSubCategories(selectedCategory ? selectedCategory.sub_categories : []);
         });
 
-        // Cleanup subscription on unmount
         return () => subscription.unsubscribe();
     }, [form, categories]);
 
@@ -136,7 +134,11 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
         if (initialData && initialData.all_img) {
             const imagesToAdd: IImage[] = []
             initialData.all_img.map((url) => {
-                imagesToAdd.push({ name: url.slice(url.lastIndexOf('-') + 1), preview: url, id: Math.random().toString(36).substr(2, 9), file: undefined })
+                // cut from the right place uuid have 4 (-) inside them so cut from fifth
+                const fileName = url.slice(url.lastIndexOf('/') + 1);
+                const parts = fileName.split('-');
+                const secondPart = parts.slice(5).join('-');
+                imagesToAdd.push({ name: secondPart, preview: url, id: Math.random().toString(36).substr(2, 9), file: undefined })
             })
             setImages(imagesToAdd)
         }
@@ -147,9 +149,8 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
     }, []);
 
     const onSubmit = async (data: Listing) => {
-        console.log("Submitting", data)
-
-
+        console.log("images", images)
+        // return
         let converted_address: AddressProduct = {}
         if (chosenSuggestion) {
             converted_address = {
@@ -168,11 +169,6 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             start_date: data.start_date instanceof Date ? data.start_date.toISOString() : "",
             end_date: data.end_date instanceof Date ? data.end_date.toISOString() : "",
         };
-        // if (initialData) {
-        //     console.log("initialData", initialData)
-        //     console.log("formData", formData)
-        //     return
-        // }
         // //validate with server stuff first
         const validationResult = productSchemaServer.safeParse(formData);
         if (validationResult.error) {
@@ -198,11 +194,26 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             })
             return
         }
+        console.log("initialData", initialData?.all_img)
+        console.log("data", data.all_img)
+        const filterRemovedItems = (initialData: Listing, data: Listing, option: boolean) => {
+            return initialData.all_img.filter(item => {
+                const fileName = item.slice(item.lastIndexOf('/') + 1);
 
+                const parts = fileName.split('-');
+                const secondPart = parts.slice(5).join('-');
+                console.log("second part", secondPart)
+                if (option) {
+                    return !data.all_img.includes(secondPart);
+                } else {
+                    return data.all_img.includes(secondPart)
+                }
+            });
+        };
         const imgData = new FormData();
-        console.log("images", images)
         if (initialData) {
-            const removedItems = initialData.all_img.filter(item => !data.all_img.includes(item.slice(item.lastIndexOf('-') + 1)));
+            // const removedItems = initialData.all_img.filter(item => !data.all_img.includes(item.slice(item.lastIndexOf('/') + 1)));
+            const removedItems = filterRemovedItems(initialData, data, true)
             if (removedItems.length > 0) {
                 removedItems.map((img) => {
                     imgData.append('remove_images', img.split('/resources/')[1].trim())
@@ -234,11 +245,15 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             return;
         }
         //update all_img with correct img data
+        console.log("upload data", uploadData.data)
         formData.all_img = uploadData.data
         if (initialData) {
-            formData.all_img.push(...initialData.all_img.filter(item => data.all_img.includes(item.slice(item.lastIndexOf('-') + 1))))
+
+            const changed_images = filterRemovedItems(initialData, data, false)
+            formData.all_img.push(...changed_images)
+            console.log("Changed images_", changed_images)
+            // return
         }
-        console.log("formData", formData.all_img)
 
         const response = await createProductAction(formData)
         if (response.status === 400) {
@@ -254,23 +269,40 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             })
             return
         } else if (response.status === 200) {
-            console.log("Everything is okay")
-            toast.toast({
-                title: "Kuulutus edukalt lisatud",
-                description: (
-                    <>
-                        Saad enda kuulutusi hallata{' '}
-                        <Link href="/kuulutused" className="underline font-medium">
-                            siit
-                        </Link>
-                        .
-                    </>
-                ),
-            })
+            if (initialData) {
+                toast.toast({
+                    title: "Kuulutuse muutmine oli edukas",
+                    description: (
+                        <>
+                            Kuulutusi saab hallata{' '}
+                            <Link href="/kuulutused" className="underline font-medium">
+                                siit
+                            </Link>
+                            .
+                        </>
+                    ),
+                })
+            } else {
+                toast.toast({
+                    title: "Kuulutus edukalt lisatud",
+                    description: (
+                        <>
+                            Kuulutusi saab hallata{' '}
+                            <Link href="/kuulutused" className="underline font-medium">
+                                siit
+                            </Link>
+                            .
+                        </>
+                    ),
+                })
+            }
         }
-
-        form.reset()
-        setImages([])
+        if (!initialData) {
+            form.reset()
+            setImages([])
+            form.setValue("unique_id", crypto.randomUUID())
+            console.log("form", form.getValues())
+        }
     }
 
 
@@ -387,20 +419,11 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent >
-                                        {subCategories.map((sub_c, i) => (
+                                        {subCategories?.map((sub_c, i) => (
                                             <SelectItem className='bg-white' key={i} value={sub_c}>
                                                 {capitalize(sub_c)}
                                             </SelectItem>
                                         ))}
-                                        {/* {categories.map((c) => (
-                                            c.name_slug.toLocaleLowerCase() === form.getValues("category") && c.sub_categories ? (
-                                                c.sub_categories.map((sub_c, i) => (
-                                                    <SelectItem className='bg-white' key={i} value={sub_c}>
-                                                        {capitalize(sub_c)}
-                                                    </SelectItem>
-                                                ))
-                                            ) : null
-                                        ))} */}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -495,7 +518,13 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                     render={({ field }) => (
                         <FormItem>
                             <FormControl className='bg-white'>
-                                <Input {...field} placeholder='Kirjeldus' autoComplete='off' />
+                                {/* <Input {...field} type='text-area' placeholder='Kirjeldus' autoComplete='off' /> */}
+                                <Textarea
+                                    placeholder='Kirjeldus'
+                                    autoComplete='off'
+                                    {...field}
+                                    className='resize-none h-[150px]'
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -523,22 +552,15 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                                 name="price"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormControl className='bg-white'>
-                                                            <Input
-                                                                type="number"
-                                                                {...field}
-                                                                placeholder="Price"
-                                                                onChange={(e) => field.onChange(+e.target.value)}
-                                                            />
+                                                        <FormControl className='bg-white text-center'>
+                                                            <Input type="number" {...field} onChange={e => handleInputChangeSize(e, field.onChange)} />
                                                         </FormControl>
-                                                        <FormMessage />
                                                     </FormItem>
                                                 )}
                                             />
                                         )}
 
                                     </FormItem>
-
                                     <FormItem className="flex items-center space-x-3 h-[40px] space-y-0">
                                         <FormLabel className="font-normal w-[50px] ">Müü</FormLabel>
                                         <FormControl className='bg-white'>
@@ -550,21 +572,18 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                                 name="price"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormControl className='bg-white'>
-                                                            <Input
-                                                                type="number"
-                                                                {...field}
-                                                                placeholder="Price"
-                                                                onChange={(e) => field.onChange(+e.target.value)}
-                                                            />
+                                                        <FormControl className='bg-white text-center'>
+                                                            <Input type="number" {...field} onChange={e => handleInputChangeSize(e, field.onChange)} />
                                                         </FormControl>
-                                                        <FormMessage />
                                                     </FormItem>
                                                 )}
                                             />
                                         )}
 
                                     </FormItem>
+                                    {form.formState.errors.price?.message &&
+                                        <p className="text-sm font-medium text-destructive">{form.formState.errors.price.message}</p>
+                                    }
                                 </RadioGroup>
                             </FormControl>
                             <FormMessage />

@@ -69,6 +69,7 @@ const Page = async ({ params }: PageProps): Promise<JSX.Element> => {
             price: prod.price,
             address: "",
             all_img: prod.all_img || [],
+            unique_id: prod.unique_id,
         }
 
 

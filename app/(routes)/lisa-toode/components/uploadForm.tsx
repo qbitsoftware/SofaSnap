@@ -45,6 +45,13 @@ function AdvancedImageInput({ images, setImages, baseValue }: ImageInputProps) {
       const validImages = Array.from(event.target.files).filter((file) => {
         const isValidType = allowedFileTypes.includes(file.type);
         const isValidSize = file.size <= maxFileSizeBytes;
+        let duplicateCheck = true
+        images.map((img) => {
+          if (img.name == file.name) {
+            alert(`${file.name} sama pilti ei saa 2 korda laadida`)
+            duplicateCheck = false;
+          }
+        })
 
         if (!isValidType) {
           alert(`${file.name} ei voimalda sellist failityypi. Ainult JPG, JPEG, SVG voi PNG`);
@@ -54,7 +61,7 @@ function AdvancedImageInput({ images, setImages, baseValue }: ImageInputProps) {
           alert(`${file.name} on liiga suur! Maksimaalne failisuurus on 10MB`);
         }
 
-        return isValidType && isValidSize;
+        return isValidType && isValidSize && duplicateCheck;
       });
 
       if (validImages.length > 0) {
