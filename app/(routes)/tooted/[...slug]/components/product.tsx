@@ -70,7 +70,7 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
                         className="p-2 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
                         aria-label="Next review"
                     >
-                        <ChevronRight strokeWidth={1}  size={40} />
+                        <ChevronRight strokeWidth={1} size={40} />
                     </button>
                 </div>
             </div>
@@ -86,7 +86,7 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
                     </div>
                 </div>
                 <div className=''>
-                    <p className='break-words overflow-wrap break-word'>{product.description}</p>
+                    <p className='break-words overflow-wrap break-word whitespace-pre-line'>{product.description}</p>
                 </div>
             </div>
         </div>

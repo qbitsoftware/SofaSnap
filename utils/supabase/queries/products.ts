@@ -31,6 +31,7 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
                 start_date: product.start_date,
                 end_date: product.end_date,
                 all_img: product.all_img,
+                unique_id: product.unique_id,
             })
             .from(category_join)
             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))

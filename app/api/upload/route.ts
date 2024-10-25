@@ -65,9 +65,8 @@ export async function POST(req: Request) {
         });
         if (filesToRemove.length > 0) {
             console.log("Files to remove", filesToRemove)
-            const { data, error } = await supabase.storage.
+            const { error } = await supabase.storage.
                 from("resources").remove(filesToRemove)
-            console.log("data", data, error)
             if (error) {
                 console.log("Error removing file", error);
                 throw new Error("File removal failed")
