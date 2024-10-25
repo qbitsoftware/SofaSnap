@@ -83,25 +83,30 @@ export const Categories: React.FC<CategoryProps> = ({ data, error }) => {
             ref={scrollContainerRef}
             className='max-h-[calc(100vh-200px)] overflow-y-auto'>
             {data.map((category, index) => (
-              <div
-                key={index}
-                className='relative w-full'
-                onClick={() => router.push(`/tooted/${category.name_slug}`)}
-              >
-                <div className='relative h-[200px]'>
-                  <Image
-                    src={category.image}
-                    alt={category.name}
-                    layout='fill'
-                    objectFit='cover'
-                  />
-                  <div className='absolute inset-0 flex items-end justify-center'>
-                    <div className='bg-white bg-opacity-30 backdrop-blur-lg w-full py-[20px] pl-[25px]'>
-                      <h3 className={cn('text-xl font-semibold', MontserratAlternates.className)} >{capitalize(category.name)}</h3>
+
+              (category.sub_categories?.length != 0 &&
+
+                <div
+                  key={index}
+                  className='relative w-full'
+                  onClick={() => router.push(`/tooted/${category.name_slug}`)}
+                >
+                  <div className='relative h-[200px]'>
+
+                    <Image
+                      src={category.image}
+                      alt={category.name}
+                      layout='fill'
+                      objectFit='cover'
+                    />
+                    <div className='absolute inset-0 flex items-end justify-center'>
+                      <div className='bg-white bg-opacity-30 backdrop-blur-lg w-full py-[20px] pl-[25px]'>
+                        <h3 className={cn('text-xl font-semibold', MontserratAlternates.className)} >{capitalize(category.name)}</h3>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )
             ))}
           </div>
           {showBottomButton && (

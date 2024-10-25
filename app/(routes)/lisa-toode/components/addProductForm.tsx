@@ -397,6 +397,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                     </FormControl>
                                     <SelectContent className=''>
                                         {categories.map((category) => (
+                                            (category.sub_categories?.length != 0) &&
                                             <SelectItem key={category.name} value={category.name}>{capitalize(category.name)}</SelectItem>
                                         ))}
                                     </SelectContent>

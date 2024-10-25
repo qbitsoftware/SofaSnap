@@ -226,10 +226,9 @@ export const addProduct = async (prod: TProductServer) => {
                 product_id: productId,
             };
             const sub_category: CategoryTS = {
-                category_name_slug: prod.sub_category.toLowerCase(),
+                category_name_slug: prod.sub_category.toLowerCase().replaceAll(" ", "-"),
                 product_id: productId,
             };
-            console.log("1")
             await tx.insert(category_join)
                 .values(category).
                 onConflictDoUpdate({
@@ -239,7 +238,6 @@ export const addProduct = async (prod: TProductServer) => {
                     }
                 })
 
-            console.log("2")
             await tx.insert(category_join)
                 .values(sub_category).
                 onConflictDoUpdate({

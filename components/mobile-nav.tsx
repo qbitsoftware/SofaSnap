@@ -9,6 +9,7 @@ import { usePathname } from 'next/navigation';
 interface Category {
     name: string;
     name_slug: string;
+    sub_categories: string[];
 }
 
 interface NavLinksProps {
@@ -119,12 +120,12 @@ function MobileNav({ categories }: NavLinksProps) {
                                         <Link href="/meist" onClick={toggleMenu}>Meist</Link>
                                     </motion.li>
                                     <motion.li variants={itemVariants}>
-                                        <Link href="/kuidas-see-tootab" onClick={toggleMenu}>Kuidas see tootab?</Link>
+                                        <Link href="/kuidas-see-tootab" onClick={toggleMenu}>Kuidas see töötab?</Link>
                                     </motion.li>
                                     <motion.li variants={itemVariants}>
                                         <div onClick={toggleCategories} className="text-black flex gap-[75px] items-center w-full cursor-pointer">
                                             <div>
-                                                Moobel
+                                                Mööbel
                                             </div>
                                             <ChevronRight />
                                         </div>
@@ -161,6 +162,7 @@ function MobileNav({ categories }: NavLinksProps) {
                                         exit="closed"
                                     >
                                         {categories?.map((category) => (
+                                            (category.sub_categories.length != 0) &&
                                             <motion.li
                                                 key={category.name_slug}
                                                 variants={itemVariants}

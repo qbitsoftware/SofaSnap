@@ -89,7 +89,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ categories }) => {
         whileTap={{ scale: 0.95 }}
       >
         <Link href={"/kuidas-see-tootab"}>
-          <h1>Kuidas see tootab</h1>
+          <h1>Kuidas see töötab</h1>
         </Link>
       </motion.div>
       <motion.div
@@ -99,7 +99,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ categories }) => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        <h1>Moobel</h1>
+        <h1>Mööbel</h1>
         <motion.div
           animate={{ rotate: isDialogOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}
@@ -119,7 +119,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ categories }) => {
             transition={{ duration: 0.3 }}
           >
             <div className="relative mt-[70px] px-[39px] pb-[143px] max-w-[937px] w-full max-h-[533px] h-full before:absolute before:inset-0 before:bg-cover before:bg-center before:bg-[url('/images/navbar-background.png')] before:mix-blend-overlay before:content-[''] before:pointer-events-none">
-              <h1 className="text-xl pt-[46px] pb-[24px]">Koik kategooriad</h1>
+              <h1 className="text-xl pt-[46px] pb-[24px]">Kõik kategooriad</h1>
               <motion.div
                 className='grid grid-cols-2 gap-y-[4px] gap-x-[300px]'
                 initial="hidden"
@@ -133,6 +133,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ categories }) => {
                 }}
               >
                 {categories && categories.map((category) => (
+                  (category.sub_categories?.length != 0) &&
                   <motion.div
                     key={category.name_slug}
                     variants={{

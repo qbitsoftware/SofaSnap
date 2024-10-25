@@ -22,8 +22,9 @@ interface CategoryCarouselProps {
 }
 
 export const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ Categories, className }) => {
-  
+
   const router = useRouter()
+  console.log("categories", Categories)
 
   return (
     <Carousel
@@ -34,6 +35,7 @@ export const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ Categories, 
     >
       <CarouselContent className="items-center">
         {Categories && Categories.map((category, idx) => (
+          (category.sub_categories?.length != 0) &&
           <CarouselItem key={idx} className="md:basis-1/3 xl:basis-1/4">
             <div className="p-1 flex justify-center">
               <Card onClick={() => router.push(`/tooted/${category.name_slug}`)} className="border-0 rounded-3xl bg-transparent hover:cursor-pointer">
