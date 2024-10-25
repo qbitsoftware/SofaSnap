@@ -5,12 +5,13 @@ import { Menu, X, ChevronLeft, ChevronRight, Loader } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { capitalize } from '@/utils/utils';
 import { usePathname } from 'next/navigation';
+import { Category } from '@/utils/supabase/supabase.types';
 
-interface Category {
-    name: string;
-    name_slug: string;
-    sub_categories: string[];
-}
+// interface Category {
+//     name: string;
+//     name_slug: string;
+//     sub_categories: string[] | undefined;
+// }
 
 interface NavLinksProps {
     categories: Category[] | undefined;
@@ -162,7 +163,7 @@ function MobileNav({ categories }: NavLinksProps) {
                                         exit="closed"
                                     >
                                         {categories?.map((category) => (
-                                            (category.sub_categories.length != 0) &&
+                                            (category.sub_categories && category.sub_categories.length != 0) &&
                                             <motion.li
                                                 key={category.name_slug}
                                                 variants={itemVariants}
