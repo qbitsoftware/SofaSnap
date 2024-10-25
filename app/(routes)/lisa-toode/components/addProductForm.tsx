@@ -72,12 +72,14 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
 
     useEffect(() => {
         const initialCategory = form.getValues("category");
-        const selectedCategory = categories.find(c => c.name_slug.toLowerCase() === initialCategory);
+
+        const selectedCategory = categories.find(c => c.name_slug.toLowerCase() === initialCategory.replaceAll("ö", "o").replaceAll("ä", "a").replaceAll("ü", "u").replaceAll("õ", "o"));
         setSubCategories(selectedCategory ? selectedCategory.sub_categories : []);
 
         const subscription = form.watch((values) => {
             const categoryValue = values.category;
-            const selectedCategory = categories.find(c => c.name_slug.toLowerCase() === categoryValue);
+
+            const selectedCategory = categories.find(c => c.name_slug.toLowerCase() === categoryValue?.replaceAll("ö", "o").replaceAll("ä", "a").replaceAll("ü", "u").replaceAll("õ", "o").trim());
             setSubCategories(selectedCategory ? selectedCategory.sub_categories : []);
         });
 
