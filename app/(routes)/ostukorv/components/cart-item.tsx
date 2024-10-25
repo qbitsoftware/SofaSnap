@@ -1,9 +1,7 @@
 "use client"
 
 import { Separator } from '@/components/ui/separator'
-import useCart from '@/hooks/use-cart'
 import { CartItem } from '@/lib/product-validation'
-import { product } from '@/utils/supabase/schema'
 import { formatDate, round } from '@/utils/utils'
 import { differenceInCalendarDays } from 'date-fns'
 import Image from 'next/image'

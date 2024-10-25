@@ -1,4 +1,4 @@
-import { GetUserAddress, GetUserInfo } from "@/app/actions"
+import { GetUserInfo } from "@/app/actions"
 import { UpdateForm } from "./components/updateForm"
 import { redirect } from "next/navigation"
 import { TSignUpSchema } from "@/lib/register-validation"

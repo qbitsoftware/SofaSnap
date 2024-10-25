@@ -18,6 +18,7 @@ interface ProfileProps {
     user: User | null
 }
 export default function Profile({ user }: ProfileProps) {
+    console.log(user)
 
     const router = useRouter()
     const toast = useToast()

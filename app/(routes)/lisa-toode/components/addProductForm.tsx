@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { ClipLoader } from 'react-spinners';
 import { useToast } from '@/components/hooks/use-toast';
-import { IImage, productSchema, productSchemaServer, TProductClient, TProductServer } from '@/lib/product-validation';
+import { IImage, productSchema, productSchemaServer, TProductServer } from '@/lib/product-validation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Map } from 'lucide-react';
 import { DateRange } from 'react-day-picker';

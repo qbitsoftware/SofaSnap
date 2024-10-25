@@ -8,7 +8,6 @@ import { addDays, differenceInCalendarDays, format } from "date-fns";
 import { CalendarDays } from "lucide-react"
 
 import { cn } from "@/lib/utils";
-import { toast } from "@/components/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Product, ProductWithAddress } from "@/utils/supabase/supabase.types";
+import { ProductWithAddress } from "@/utils/supabase/supabase.types";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { formatEstonianDate, round } from "@/utils/utils";

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Dot } from 'lucide-react'
-import { LanguageSelector } from './language-selector'
 
 const FooterBottom = () => {
     return (
