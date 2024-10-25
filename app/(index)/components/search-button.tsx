@@ -5,7 +5,6 @@ import React from 'react'
 
 export const SearchButton = () => {
     const onInput = () => {
-        console.log("tere")
     }
     return (
         <Button
