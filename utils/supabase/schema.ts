@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 
 import { doublePrecision, integer, pgSchema, pgTable, point, real, serial, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
+import { number } from "zod";
 
 const authSchema = pgSchema('auth');
 
@@ -20,7 +21,7 @@ export const product = pgTable('products', {
         withTimezone: true,
         mode: 'string',
         precision: 3
-    }).$onUpdate(() => sql`NOW()`),
+    }),
     description: text("description"),
     user_id: uuid('user_id').references(() => user.id, { onDelete: "cascade" }).notNull(),
     unique_id: uuid('unique_id').unique().notNull(),
@@ -40,6 +41,12 @@ export const product = pgTable('products', {
         mode: 'string',
     }),
     all_img: text("all_img").array().default(sql`'{}'::text[]`),
+    total_clicks: integer("total_clicks"),
+    last_visited: timestamp('last_visited', {
+        withTimezone: true,
+        mode: 'string',
+        precision: 3
+    }).$onUpdate(() => sql`NOW()`),
 })
 
 export const category = pgTable('categories', {
