@@ -1,12 +1,13 @@
 "use client"
 
+import { GetUserInfo } from '@/app/actions'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import useCart from '@/hooks/use-cart'
-import { CartItem } from '@/lib/product-validation'
-import { ProductWithAddress } from '@/utils/supabase/supabase.types'
+import { useCart } from '@/hooks/use-cart'
+import { CartItem, CartItemTS, ProductWithAddress } from '@/utils/supabase/supabase.types'
 import { round } from '@/utils/utils'
 import Image from 'next/image'
+import { redirect, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 interface SellFormProps {
@@ -14,8 +15,7 @@ interface SellFormProps {
 }
 
 export const SellForm: React.FC<SellFormProps> = ({ product }) => {
-
-    const cart = useCart()
+    const router = useRouter()
 
     const [isMobile, setIsMobile] = useState<boolean>(false);
 
@@ -27,16 +27,20 @@ export const SellForm: React.FC<SellFormProps> = ({ product }) => {
     }, []);
     console.log(isMobile)
 
-    const onSubmit = () => {
-        const CartItem: CartItem = {
-            ...product,
-            type: "sell",
-            dateRange: {
-                from: new Date(),
-                to: new Date()
-            }
+    const onSubmit = async () => {
+        const user = await GetUserInfo()
+        if (!user || !user.data.user?.id) {
+            redirect("/login")
         }
-        cart.addItem(CartItem)
+        const {addItemToCart} = useCart(user.data.user.id)
+        const CartItem: CartItemTS = {
+            product_id: product.id,
+            from: null, 
+            to: null
+        }
+        await addItemToCart(CartItem)
+        router.refresh()
+        return
     }
 
 

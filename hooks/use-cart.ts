@@ -1,41 +1,58 @@
-import { ProductWithAddress } from '@/utils/supabase/supabase.types'
-import { persist, createJSONStorage } from "zustand/middleware";
-import { create } from 'zustand'
-import { CartItem } from '@/lib/product-validation';
-import { toast } from 'react-hot-toast'
+import { CartItemTS, CartItemJoinProduct } from '@/utils/supabase/supabase.types';
+import { toast } from 'react-hot-toast';
+import { GetUserInfo, addCartItemAction, createCartAction, getCartAction, removeCartItemAction } from '@/app/actions';
+import { GetCartResult } from '@/utils/supabase/queries/cart';
 
-interface CartStore {
-    items: CartItem[]
-    addItem: (data: CartItem) => void
-    removeItem: (id: number) => void
-    removeAll: () => void
+interface CartService {
+    getCartItems: () => Promise<GetCartResult> ;
+    addItemToCart: (data: CartItemTS) => Promise<void>;
+    removeItemFromCart: (id: number, cart_id: number) => Promise<void>;
 }
 
+export const useCart = (user_id: string): CartService => {
+    const getCartItems = async (): Promise<GetCartResult> => {
+        return await getCartAction(user_id)
 
+    };
+    const addItemToCart = async (data: CartItemTS): Promise<void> => {
+        try {
+            const { data: cartData, error: createCartError } = await createCartAction(user_id);
 
-const useCart = create(
-    persist<CartStore>((set, get) => ({
-        items: [],
-        addItem: (data: CartItem) => {
-            const currentItems = get().items
-            const existingItem = currentItems.find((items) => items.id == data.id);
+            if (createCartError) {
+                toast.error(createCartError)
+            }
+            const { data: cartItemData, error: addItemError } = await addCartItemAction(
+                data.from,
+                data.to,
+                data.product_id,
+                cartData?.id!
+            );
 
-            if (existingItem) {
-                return toast( "Toode on juba ostukorvis" )
+            console.log("JOUUUUU",cartItemData, addItemError)
+
+            if (cartItemData && !addItemError ) {
+                toast.success("Toode lisatud ostukorvi");
+            } else if (cartItemData && addItemError) {
+                toast("Toode on juba ostukorvi lisatud");
             }
 
-            set({ items: [...get().items, data] })
-            toast.success("Toode lisatud ostukorvi")
-        },
-        removeItem: (id: number) => {
-            set({ items: get().items.filter((item) => item.id != id) })
-            toast.success("Toode ostukorvist eemaldatud" )
-        },
-        removeAll: () => set({ items: [] })
-    }), {
-        name: "cart-storage",
-        storage: createJSONStorage(() => localStorage)
-    })
-)
+        
+        } catch (error) {
+            console.error("Failed to add item to cart:", error);
+            toast.error("Failed to add item to cart");
+        }
+    };
+    const removeItemFromCart = async (id: number, cart_id: number): Promise<void> => {
+        try {
+            const { data, error} = await removeCartItemAction(id, cart_id);
+            if (data && !error) {
+                toast.success(data);
+            }
+        } catch (error) {
+            console.error("Failed to remove item from cart:", error);
+            toast.error("Failed to remove item from cart");
+        }
+    };
 
-export default useCart;
+    return { getCartItems, addItemToCart, removeItemFromCart };
+};

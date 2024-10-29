@@ -5,11 +5,13 @@ import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { productSchemaServer, TProductServer } from "@/lib/product-validation";
-import { addProduct, fetchAllProducts, fetchProductsByCategories } from "@/utils/supabase/queries/products";
-import { Product } from "@/utils/supabase/supabase.types";
+import { addProduct, fetchAllProducts, fetchProductsByCategories, fetchProductsByIds } from "@/utils/supabase/queries/products";
+import { Cart, CartItem, Product } from "@/utils/supabase/supabase.types";
 import { passwordChangeValidator, TPasswordChangeSchema } from "@/lib/register-validation";
 import { AuthError } from "@supabase/supabase-js";
 import { fetchUserAddress } from "@/utils/supabase/queries/address";
+import { addCartItem, CartItemWithDetails, createCart, getCart, GetCartResult, removeCartItem } from "@/utils/supabase/queries/cart";
+
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -255,4 +257,58 @@ export async function changePasswordAction(pw: TPasswordChangeSchema): Promise<{
       }
     }
   }
+}
+
+// export async function ValidateCart(cartItems: CartItem[]): Promise<CartValidationResponse> {
+//   const productIDs = cartItems.map((cartItem) => cartItem.id)
+//   const { data, error } = await fetchProductsByIds(productIDs)
+
+//   if (error || !data) {
+//     return {
+//       data: undefined,
+//       error: "Tooteid ei leitud"
+//     }
+//   }
+
+//   if (cartItems.length != data.length) {
+//     return {
+//       data: undefined,
+//       error: "Error, proovi hiljem uuesti"
+//     }
+//   }
+
+//   for (let i = 0; i < cartItems.length; i++) {
+//     const currentProduct = data.filter((product) => cartItems[i].id == product.id)[0]
+//     if (currentProduct.price != cartItems[i].price) {
+//       return {
+//         data: undefined,
+//         error: "Vale hind"
+//       }
+//     }
+//   }
+
+
+//   return {
+//     data: cartItems,
+//     error: undefined
+//   }
+// }
+
+export async function createCartAction(userID: string): Promise <{ data: Cart | undefined, error: string | undefined}>  {
+  console.log(await createCart(userID))
+  return await createCart(userID)
+}
+
+
+export async function addCartItemAction(from: Date | null, to: Date | null, product_id: number, cart_id: number):Promise <{ data: CartItem | undefined, error: string | undefined}>  {
+  return await addCartItem(from, to, product_id, cart_id)
+}
+
+export async function getCartAction(userID:string):Promise<GetCartResult>  {
+  return await getCart(userID)
+}
+
+export async function removeCartItemAction(cart_item_id:number, cart_id:number):Promise<{data: string | undefined, error: string | undefined}> {
+  return removeCartItem(cart_item_id, cart_id)
+
 }

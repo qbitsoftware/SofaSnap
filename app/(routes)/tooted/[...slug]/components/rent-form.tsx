@@ -17,13 +17,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ProductWithAddress } from "@/utils/supabase/supabase.types";
+import { CartItem, CartItemTS, ProductWithAddress } from "@/utils/supabase/supabase.types";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { formatEstonianDate, round } from "@/utils/utils";
 import { Calendar } from "@/components/ui/calendar"
-import useCart from "@/hooks/use-cart";
-import { RentFormSchema, CartItem } from "@/lib/product-validation";
+import { RentFormSchema } from "@/lib/product-validation";
+import { GetUserInfo, createCartAction } from "@/app/actions";
+import { useCart } from "@/hooks/use-cart";
+import { useRouter } from "next/navigation";
 
 
 
@@ -31,7 +33,8 @@ interface DateFormProps {
   product: ProductWithAddress;
 }
 
-export const RentForm: React.FC<DateFormProps> = ({ product }) => {
+export const RentForm: React.FC<DateFormProps> =({ product }) => {
+  const router = useRouter()
   const form = useForm<z.infer<typeof RentFormSchema>>({
     resolver: zodResolver(RentFormSchema),
     defaultValues: {
@@ -42,7 +45,7 @@ export const RentForm: React.FC<DateFormProps> = ({ product }) => {
       },
     },
   });
-  const cart = useCart()
+
 
   const getDateRangeString = () => {
     const { from, to } = form.getValues("dateRange")
@@ -88,14 +91,20 @@ export const RentForm: React.FC<DateFormProps> = ({ product }) => {
     updateValues(from, to);
   }, [form]);
 
-  function onSubmit(data: z.infer<typeof RentFormSchema>) {
-    const CartItem: CartItem = {
-      ...product,
-      dateRange: data.dateRange,
-      type: data.type
+  async function onSubmit(data: z.infer<typeof RentFormSchema>) {
+    console.log("tere")
+    const user = await GetUserInfo()
+
+    const {addItemToCart} = useCart(user.data.user?.id!)
+    const CartItem: CartItemTS = {
+      product_id: product.id,
+      from: data.dateRange.from,
+      to: data.dateRange.to,
     }
 
-    cart.addItem(CartItem)
+    await addItemToCart(CartItem)
+    router.refresh()
+    return
   }
 
 

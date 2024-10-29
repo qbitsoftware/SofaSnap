@@ -140,5 +140,5 @@ export const RentFormSchema = z.object({
     }),
 });
 
-export type CartItemTS = z.infer<typeof RentFormSchema>
-export type CartItem = CartItemTS & ProductWithAddress
+// export type CartItem = z.infer<typeof RentFormSchema>
+// export type CartItem = CartItemTS & ProductWithAddress
