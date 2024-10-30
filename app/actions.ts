@@ -4,8 +4,8 @@ import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { productSchemaServer, TProductServer } from "@/lib/product-validation";
-import { addProduct, fetchAllProducts, fetchProductsByCategories } from "@/utils/supabase/queries/products";
+import { productSchemaServer, Review, TProductServer } from "@/lib/product-validation";
+import { addProduct, addReview, fetchAllProducts, fetchProductsByCategories } from "@/utils/supabase/queries/products";
 import { Product } from "@/utils/supabase/supabase.types";
 import { passwordChangeValidator, TPasswordChangeSchema } from "@/lib/register-validation";
 import { AuthError } from "@supabase/supabase-js";
@@ -254,5 +254,14 @@ export async function changePasswordAction(pw: TPasswordChangeSchema): Promise<{
         error: "An unknown error occurred",
       }
     }
+  }
+}
+
+export async function addReviewAction(review: Review) {
+  try {
+    await addReview(review)
+    console.log("successful")
+  } catch (error) {
+    console.log("error")
   }
 }

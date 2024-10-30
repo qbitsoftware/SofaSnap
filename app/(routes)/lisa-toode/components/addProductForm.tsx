@@ -521,7 +521,6 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                     render={({ field }) => (
                         <FormItem>
                             <FormControl className='bg-white'>
-                                {/* <Input {...field} type='text-area' placeholder='Kirjeldus' autoComplete='off' /> */}
                                 <Textarea
                                     placeholder='Kirjeldus'
                                     autoComplete='off'
@@ -554,10 +553,13 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                                 control={form.control}
                                                 name="price"
                                                 render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormControl className='bg-white text-center'>
+                                                    <FormItem className='flex gap-2'>
+                                                        <FormControl className='bg-white text-center w-[150px]'>
                                                             <Input type="number" {...field} onChange={e => handleInputChangeSize(e, field.onChange)} />
                                                         </FormControl>
+                                                        <div className='flex flex-row'>
+                                                            € / Päev
+                                                        </div>
                                                     </FormItem>
                                                 )}
                                             />
@@ -574,10 +576,13 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                                 control={form.control}
                                                 name="price"
                                                 render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormControl className='bg-white text-center'>
+                                                    <FormItem className='flex gap-2'>
+                                                        <FormControl className='bg-white text-center w-[150px]'>
                                                             <Input type="number" {...field} onChange={e => handleInputChangeSize(e, field.onChange)} />
                                                         </FormControl>
+                                                        <div className='flex flex-row'>
+                                                            €
+                                                        </div>
                                                     </FormItem>
                                                 )}
                                             />

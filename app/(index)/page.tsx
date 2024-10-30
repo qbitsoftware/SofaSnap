@@ -6,16 +6,16 @@ import { PopularProducts } from "./components/popular-products";
 import { Reviews } from "./components/reviews";
 import { Globe } from "./components/globe";
 import { RecentProducts } from "./components/recent-products";
-import { fetchAllProducts } from "@/utils/supabase/queries/products";
+import { fetchAllProducts, fetchLastSeenProducts, fetchPopularProducts } from "@/utils/supabase/queries/products";
 import { FetchCategories } from "@/utils/supabase/queries/categories";
 import { ServerError } from "@/components/server-error";
 
 export default async function Index() {
-  const { data: products, error: productError } = await fetchAllProducts()
+  const { data: popularProducts, error: popularProductError } = await fetchPopularProducts()
+  const { data: latestProducts, error: latestProductError } = await fetchLastSeenProducts()
   const { data: categories, error: categoryError } = await FetchCategories()
-  console.log(productError)
 
-  if (productError || categoryError && (productError == "Server error" || categoryError == "Server error")) {
+  if (popularProductError || latestProductError || categoryError && (popularProductError == "Server error" || categoryError == "Server error" || latestProductError == "Server error")) {
     return (
       <ServerError />
     )
@@ -27,10 +27,10 @@ export default async function Index() {
         <LandingPage />
         <Categories data={categories} error={categoryError} />
         <Reviews />
-        <RecentProducts data={products} error={productError} />
+        <RecentProducts data={latestProducts} error={latestProductError} />
         <Cta />
         {/* <Benefits /> */}
-        <PopularProducts data={products} error={productError} />
+        <PopularProducts data={popularProducts} error={popularProductError} />
         <Globe />
       </main>
     </div>

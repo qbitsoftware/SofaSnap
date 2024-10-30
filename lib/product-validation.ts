@@ -74,6 +74,7 @@ export const productSchemaServer = z.object({
     price: z.number({ message: "Sisestage sobiv hind" }).min(1, "Madalaim hind on 1 euro").max(1000000, "Hind ei saa olla suurem kui 1 miljon"),
     address: addressSchema,
     all_img: z.array(z.string(), { message: "Lisa vähemalt 1 pilt tootest" }).min(1).max(10, "9 pilti on maksimaalne kogus"),
+    total_clicks: z.number().optional(),
 }).superRefine((value, ctx) => {
     const today = new Date();
     if (value.type === "rent") {
@@ -142,3 +143,16 @@ export const RentFormSchema = z.object({
 
 export type CartItemTS = z.infer<typeof RentFormSchema>
 export type CartItem = CartItemTS & ProductWithAddress
+
+export const reviewFormSchema = z.object({
+    user_id: z.string().optional(),
+    product_id: z.number(),
+    description: z.string().min(10, {
+        message: "Description must be at least 10 characters.",
+    }),
+    rating: z.enum(["1", "2", "3", "4", "5"], {
+        required_error: "Please select a rating.",
+    }),
+})
+
+export type Review = z.infer<typeof reviewFormSchema>

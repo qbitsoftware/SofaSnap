@@ -1,12 +1,11 @@
 "server only"
 import db from '@/utils/supabase/db'
-import { category, category_join, product, address, address_join_product } from '@/utils/supabase/schema'
-import { eq, and, sql, desc } from 'drizzle-orm'
+import { category, category_join, product, address, address_join_product, review, product_review } from '@/utils/supabase/schema'
+import { eq, and, sql, desc, gte } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
-import { AddressJoinProductTS, AddressTS, CategoryJoin, CategoryTS, Product, ProductRealTS, ProductWithAddress } from '../supabase.types'
-import { TProductServer } from '@/lib/product-validation'
+import { AddressJoinProductTS, AddressTS, CategoryJoin, CategoryTS, Product, ProductRealTS, ProductReview, ProductReviewTS, ProductWithAddress } from '../supabase.types'
+import { Review, TProductServer } from '@/lib/product-validation'
 import { GetUserInfo } from '@/app/actions'
-
 
 export const fetchProductsByCategories = async (categories: string[], page: number, limit = 30) => {
     const offset = (page - 1) * limit
@@ -32,6 +31,8 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
                 end_date: product.end_date,
                 all_img: product.all_img,
                 unique_id: product.unique_id,
+                total_clicks: product.total_clicks,
+                last_visited: product.last_visited,
             })
             .from(category_join)
             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
@@ -126,6 +127,50 @@ export const fetchAllProducts = async (page = 1, limit = 30) => {
     }
 }
 
+export const fetchLastSeenProducts = async () => {
+    const maxProducts = 10;
+    try {
+        const result = await db.select()
+            .from(product)
+            .orderBy(desc(product.last_visited))
+            .limit(maxProducts)
+
+        return {
+            data: result as Product[],
+            error: undefined,
+        }
+    } catch (error) {
+        return {
+            data: undefined,
+            error: "Failed to fetch products",
+        }
+    }
+}
+
+export const fetchPopularProducts = async () => {
+    const maxProducts = 10;
+    const now = new Date();
+    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+    try {
+        const result = await db.select()
+            .from(product)
+            .where(gte(product.created_at, firstDayOfMonth))
+            .orderBy(desc(product.total_clicks))
+            .limit(maxProducts)
+
+        return {
+            data: result as Product[],
+            error: undefined,
+        }
+    } catch (error) {
+        return {
+            data: undefined,
+            error: "Failed to fetch products",
+        }
+    }
+}
+
+
 export const fetchProductsWithAddresses = async () => {
     try {
         const result = await db
@@ -212,6 +257,7 @@ export const addProduct = async (prod: TProductServer) => {
                         all_img: p.all_img,
                         start_date: p.start_date,
                         end_date: p.end_date,
+                        updated_at: new Date().toISOString(),
                     }
                 })
                 .returning({ id: product.id });
@@ -261,7 +307,6 @@ export const addProduct = async (prod: TProductServer) => {
                 country_name: prod.address.country_name!,
             }
 
-            console.log("3")
             const insertedAddress = await tx.insert(address).
                 values(ad).
                 onConflictDoUpdate({
@@ -340,6 +385,31 @@ export const fetchProduct = async (id: number) => {
         };
     } catch (error) {
         console.log("Error fetching product", error)
+        return {
+            data: undefined,
+            error: "Server error"
+        }
+    }
+}
+
+export const addClick = async (id: number) => {
+    try {
+
+        const prod = await db.select().from(product).where(eq(product.id, id)).execute();
+        if (prod && prod[0].last_visited) {
+            const currentTime = new Date()
+            const lastVisitedTime = new Date(prod[0].last_visited)
+            if (currentTime.getTime() - lastVisitedTime.getTime() > 5 * 60 * 1000) {
+                await db.update(product).set({ total_clicks: sql`${product.total_clicks} + 1`, last_visited: currentTime.toISOString() }).where(eq(product.id, id))
+            }
+            return {
+                data: undefined,
+                error: undefined
+            }
+        }
+
+    } catch (error: any) {
+        console.log("Error adding click to a product", error)
         return {
             data: undefined,
             error: "Server error"
@@ -469,6 +539,49 @@ export const fetchUserProduct = async (product_id: number) => {
         return {
             data: undefined,
             error,
+        }
+    }
+}
+
+export const addReview = async (formData: Review) => {
+    try {
+        //add review
+        const result = await db.insert(review).values({ rating: Number(formData.rating), feedback: formData.description }).returning({ id: review.id })
+        //add to joingin table
+        const joinTable: ProductReviewTS = {
+            review_id: result[0].id,
+            product_id: formData.product_id
+        }
+        await db.insert(product_review).values(joinTable)
+        return {
+            data: undefined,
+            error: undefined
+        }
+    } catch (error: any) {
+        console.log("Error adding click to a product", error)
+        return {
+            data: undefined,
+            error: "Server error"
+        }
+    }
+}
+
+// type Reviews = {
+//     review: Review,
+//     product_review: ProductReview,
+
+export const getProductReviews = async (product_id: number) => {
+    try {
+        const reviews = await db.select().from(product_review).innerJoin(review, eq(product_review.review_id, review.id)).where(eq(product_review.product_id, product_id)).execute()
+        console.log("Reviews", reviews)
+        return {
+            data: reviews,
+            error: undefined
+        }
+    } catch (error) {
+        return {
+            data: undefined,
+            error: "Server error"
         }
     }
 }

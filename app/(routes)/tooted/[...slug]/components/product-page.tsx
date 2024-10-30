@@ -1,4 +1,4 @@
-import { fetchProduct } from '@/utils/supabase/queries/products'
+import { addClick, fetchProduct, getProductReviews } from '@/utils/supabase/queries/products'
 import { redirect } from 'next/navigation'
 import React from 'react'
 import { ProductComponent } from './product'
@@ -8,9 +8,10 @@ import { ProductImage } from './product-image'
 import { Reviews } from './reviews'
 import { RentForm } from './rent-form'
 import AddressComponent from './address'
-// import { OwnerRating } from './owner-rating'
 import { ServerError } from '@/components/server-error'
 import { SellForm } from './sell-form'
+import Link from 'next/link'
+import ReviewForm from './product-review-form'
 
 interface ProductPageProps {
   product_id: number
@@ -23,13 +24,16 @@ interface ProductPageProps {
 
 const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories }) => {
   const { data, error } = await fetchProduct(product_id)
-  console.log("DATAAA",data)
-  
+  const { data: reviews, error: reviewError } = await getProductReviews(product_id)
+
+
   if (error && error == "Server error") {
     return (
-      <ServerError/>
+      <ServerError />
     )
   }
+
+  await addClick(product_id)
 
   if (error || !data) {
     redirect("/404")
@@ -62,7 +66,9 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
       <div className='max-w-[1440px] md:px-16 px-6 mx-auto'>
         <CategoryNavigation className='hidden md:block' categories={categories.slice(0, -1)} product={data} />
         <div className='md:mt-16 ml-[-16px] md:flex md:items-center md:justify-between'>
-          <ChevronLeft strokeWidth={1} color='#555555' size={44} />
+          <Link href={"/tooted"}>
+            <ChevronLeft strokeWidth={1} color='#555555' size={44} />
+          </Link>
         </div>
         <div className='mt-8'>
           {<ProductComponent product={data} />}
@@ -79,9 +85,12 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
       <Reviews reviews={sampleReviews} className='hidden md:my-[150px] mx-auto md:w-[80%] max-w-[1280px]' />
       <div className='w-full mx-auto'>
         {data.type == "rent"
-        ? <RentForm product={data} />
-        : <SellForm product={data} />
+          ? <RentForm product={data} />
+          : <SellForm product={data} />
         }
+      </div>
+      <div className='flex justify-center'>
+        <ReviewForm product_id={product_id} />
       </div>
       <div className='md:mb-[200px]'>
         <AddressComponent product={data} className="" />
