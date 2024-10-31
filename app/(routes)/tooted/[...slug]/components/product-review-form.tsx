@@ -20,6 +20,7 @@ import { Review, reviewFormSchema } from "@/lib/product-validation"
 import { useEffect } from "react"
 import { addReview } from "@/utils/supabase/queries/products"
 import { addReviewAction } from "@/app/actions"
+import { useToast } from "@/components/hooks/use-toast"
 
 
 interface ReviewFormProps {
@@ -27,6 +28,7 @@ interface ReviewFormProps {
 }
 
 export default function ReviewForm({ product_id }: ReviewFormProps) {
+    const toast = useToast()
     const form = useForm<Review>({
         resolver: zodResolver(reviewFormSchema),
         defaultValues: {
@@ -41,17 +43,18 @@ export default function ReviewForm({ product_id }: ReviewFormProps) {
     }, [product_id])
 
     async function onSubmit(values: Review) {
-        console.log("values", values)
         try {
             const result = await addReviewAction(values)
-            console.log("Result", result)
+            form.reset()
+            toast.toast({ title: "Hinnang on edukalt lisatud" })
         } catch (error) {
             console.log("Big error", error)
+            toast.toast({ title: "Hinnangu lisamisel tekkis viga" })
         }
     }
 
     return (
-        <div className="flex justify-center md:min-h-[300px] mt-24 w-full max-w-[1000px]">
+        <div className="flex justify-center md:min-h-[300px] w-full max-w-[1000px]">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <FormField

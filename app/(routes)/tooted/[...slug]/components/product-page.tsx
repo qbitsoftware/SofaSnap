@@ -5,7 +5,7 @@ import { ProductComponent } from './product'
 import { CategoryNavigation } from './category-navigation'
 import { ChevronLeft } from 'lucide-react'
 import { ProductImage } from './product-image'
-import { Reviews } from './reviews'
+import { ReviewsComp } from './reviews'
 import { RentForm } from './rent-form'
 import AddressComponent from './address'
 import { ServerError } from '@/components/server-error'
@@ -38,28 +38,6 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
   if (error || !data) {
     redirect("/404")
   }
-  const sampleReviews = [
-    {
-      name: "John Doe",
-      rating: 5,
-      feedback: "Absolutely loved this! Exceeded my expectations in every way. Highly recommend!"
-    },
-    {
-      name: "Jane Smith",
-      rating: 4,
-      feedback: "Great experience overall, but there’s always room for improvement. Will definitely use again."
-    },
-    {
-      name: "Michael Brown",
-      rating: 3,
-      feedback: "It was okay, nothing extraordinary but got the job done."
-    },
-    {
-      name: "Tom Harris",
-      rating: 2,
-      feedback: "Not really what I was expecting, had some issues with the product."
-    }
-  ];
 
   return (
     <div className='md:min-h-screen w-full'>
@@ -82,16 +60,17 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
           <OwnerRating owner={user}/>
         </div>
       </div> */}
-      <Reviews reviews={sampleReviews} className='hidden md:my-[150px] mx-auto md:w-[80%] max-w-[1280px]' />
+      <ReviewsComp reviews={reviews} className='md:my-[150px] mx-auto md:w-[80%] max-w-[1280px]' />
+      <div className='flex justify-center'>
+        <ReviewForm product_id={product_id} />
+      </div>
       <div className='w-full mx-auto'>
         {data.type == "rent"
           ? <RentForm product={data} />
           : <SellForm product={data} />
         }
       </div>
-      <div className='flex justify-center'>
-        <ReviewForm product_id={product_id} />
-      </div>
+
       <div className='md:mb-[200px]'>
         <AddressComponent product={data} className="" />
       </div>

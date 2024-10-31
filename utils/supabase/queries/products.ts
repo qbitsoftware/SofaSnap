@@ -566,14 +566,22 @@ export const addReview = async (formData: Review) => {
     }
 }
 
-// type Reviews = {
-//     review: Review,
-//     product_review: ProductReview,
+export type Reviews = {
+    product_reviews: {
+        id: number;
+        product_id: number;
+        review_id: number;
+    };
+    reviews: {
+        id: number;
+        rating: number;
+        feedback: string;
+    };
+}
 
 export const getProductReviews = async (product_id: number) => {
     try {
-        const reviews = await db.select().from(product_review).innerJoin(review, eq(product_review.review_id, review.id)).where(eq(product_review.product_id, product_id)).execute()
-        console.log("Reviews", reviews)
+        const reviews = await db.select().from(product_review).innerJoin(review, eq(product_review.review_id, review.id)).where(eq(product_review.product_id, product_id)).execute() as Reviews[]
         return {
             data: reviews,
             error: undefined
