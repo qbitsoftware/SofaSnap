@@ -22,7 +22,6 @@ const BeforeLoading = async () => {
     }
 
     const userInfo = user.data.user.user_metadata as TSignUpSchema
-    console.log("UserInfo", userInfo.agreement)
 
     return (
         <div className='flex flex-col md:flex-row xl:max-w-[1440px] w-full sm:px-[56px] pt-[30px] mx-auto'>

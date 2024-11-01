@@ -14,24 +14,27 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ProductWithAddress } from "@/utils/supabase/supabase.types";
+import { CartItemTS, ProductWithAddress, User } from "@/utils/supabase/supabase.types";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { formatEstonianDate, round } from "@/utils/utils";
 import { Calendar } from "@/components/ui/calendar"
-import useCart from "@/hooks/use-cart";
-import { RentFormSchema, CartItem } from "@/lib/product-validation";
+import { RentFormSchema } from "@/lib/product-validation";
+import { useCart } from "@/hooks/use-cart";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 
 
 interface DateFormProps {
   product: ProductWithAddress;
+  user: User | null
 }
 
-export const RentForm: React.FC<DateFormProps> = ({ product }) => {
+export const RentForm: React.FC<DateFormProps> = ({ product, user }) => {
+  const router = useRouter()
   const form = useForm<z.infer<typeof RentFormSchema>>({
     resolver: zodResolver(RentFormSchema),
     defaultValues: {
@@ -42,7 +45,7 @@ export const RentForm: React.FC<DateFormProps> = ({ product }) => {
       },
     },
   });
-  const cart = useCart()
+
 
   const getDateRangeString = () => {
     const { from, to } = form.getValues("dateRange")
@@ -69,7 +72,6 @@ export const RentForm: React.FC<DateFormProps> = ({ product }) => {
   const updateValues = (from: Date, to: Date) => {
     let days
     if (!from || !to) {
-      //temp
       days = 7 + 1
       setDateRange(7 + 1)
     } else {
@@ -88,15 +90,26 @@ export const RentForm: React.FC<DateFormProps> = ({ product }) => {
     updateValues(from, to);
   }, [form]);
 
-  function onSubmit(data: z.infer<typeof RentFormSchema>) {
-    const CartItem: CartItem = {
-      ...product,
-      dateRange: data.dateRange,
-      type: data.type
+  const { addItemToCart } = useCart()
+  async function onSubmit(data: z.infer<typeof RentFormSchema>) {
+
+    const CartItem: CartItemTS = {
+      product_id: product.id,
+      from: data.dateRange.from,
+      to: data.dateRange.to,
     }
 
-    cart.addItem(CartItem)
+    if (!user) {
+      toast.error("Ostu sooritamiseks logi sisse")
+      return
+    }
+
+
+    await addItemToCart(CartItem, user.id)
+    router.refresh()
+    return
   }
+
 
 
   return (
@@ -150,7 +163,7 @@ export const RentForm: React.FC<DateFormProps> = ({ product }) => {
                   />
                 </PopoverContent>
               </Popover>
-              <FormMessage />
+              {/* <FormMessage/> */}
             </FormItem>
           )}
         />

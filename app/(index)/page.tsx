@@ -6,7 +6,7 @@ import { PopularProducts } from "./components/popular-products";
 import { Reviews } from "./components/reviews";
 import { Globe } from "./components/globe";
 import { RecentProducts } from "./components/recent-products";
-import { fetchAllProducts, fetchLastSeenProducts, fetchPopularProducts } from "@/utils/supabase/queries/products";
+import { fetchLastSeenProducts, fetchPopularProducts } from "@/utils/supabase/queries/products";
 import { FetchCategories } from "@/utils/supabase/queries/categories";
 import { ServerError } from "@/components/server-error";
 

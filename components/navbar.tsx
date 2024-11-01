@@ -10,11 +10,13 @@ import { LogOut } from "./logout"
 import { FetchCategories } from "@/utils/supabase/queries/categories"
 import { GetUserInfo } from "@/app/actions"
 import Profile from "./nav-bar-profile"
-
+import { useCart } from "@/hooks/use-cart"
 
 const NavBar = async () => {
 
+    const { getCartItems } = useCart()
     const user = await GetUserInfo()
+    const { data } = await getCartItems(user?.data.user?.id)
     const cateogries = await FetchCategories()
 
 
@@ -49,7 +51,7 @@ const NavBar = async () => {
                     </div>
                 </div>
                 <div className="xl:w-[132px] hidden lg:inline">
-                    <NavIcons user={user.data.user} />
+                    <NavIcons user={user.data.user} cartItems={data?.length}/>
                 </div>
                 <div className="md:hidden">
                     {user.data.user ? (

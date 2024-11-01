@@ -29,9 +29,6 @@ export async function POST(req: Request) {
             }
         }
 
-        console.log("filesToRemove", filesToRemove)
-        console.log("files to add", files)
-
         // return NextResponse.json({ data: undefined }, { status: 200 });
 
         const filePaths: string[] = new Array(files.length);

@@ -1,10 +1,9 @@
 "use client"
 
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { Reviews } from '@/utils/supabase/queries/products'
-import { ArrowRight, MessageSquare, Star } from 'lucide-react'
+import {MessageSquare, Star } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
@@ -28,7 +27,6 @@ export const ReviewsComp: React.FC<ReviewsProps> = ({ reviews, className }) => {
         return () => window.removeEventListener('resize', handleResize)
     }, [])
 
-    console.log("Reviews", reviews?.length)
 
     if (!reviews || reviews.length === 0) {
         return (

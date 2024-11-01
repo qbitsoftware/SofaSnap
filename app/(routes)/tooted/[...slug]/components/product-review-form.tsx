@@ -18,7 +18,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Review, reviewFormSchema } from "@/lib/product-validation"
 import { useEffect } from "react"
-import { addReview } from "@/utils/supabase/queries/products"
 import { addReviewAction } from "@/app/actions"
 import { useToast } from "@/components/hooks/use-toast"
 
@@ -44,7 +43,7 @@ export default function ReviewForm({ product_id }: ReviewFormProps) {
 
     async function onSubmit(values: Review) {
         try {
-            const result = await addReviewAction(values)
+            await addReviewAction(values)
             form.reset()
             toast.toast({ title: "Hinnang on edukalt lisatud" })
         } catch (error) {

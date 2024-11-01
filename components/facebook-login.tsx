@@ -9,7 +9,7 @@ const LoginFacebook = () => {
     const supabase = createClient()
 
     async function Login() {
-        const { data, error } = await supabase.auth.signInWithOAuth({
+        await supabase.auth.signInWithOAuth({
             provider: 'facebook',
             options: {
                 redirectTo: "http://localhost:3000/auth/callback",
@@ -19,7 +19,6 @@ const LoginFacebook = () => {
                 },
             },
         })
-        console.log(data, error)
     }
 
 

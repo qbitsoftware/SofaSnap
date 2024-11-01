@@ -131,9 +131,13 @@ export const RentFormSchema = z.object({
     dateRange: z.object({
         from: z.date({
             required_error: "A start date is required.",
+        }).refine((date) => date !== undefined, {
+            message: "Start date cannot be undefined.",
         }),
         to: z.date({
             required_error: "An end date is required.",
+        }).refine((date) => date !== undefined, {
+            message: "End date cannot be undefined.",
         }),
     }).refine((data) => data.from <= data.to, {
         message: "End date cannot be before start date.",

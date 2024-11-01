@@ -151,8 +151,6 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
     }, []);
 
     const onSubmit = async (data: Listing) => {
-        console.log("images", images)
-        // return
         let converted_address: AddressProduct = {}
         if (chosenSuggestion) {
             converted_address = {
@@ -196,15 +194,13 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             })
             return
         }
-        console.log("initialData", initialData?.all_img)
-        console.log("data", data.all_img)
+        
         const filterRemovedItems = (initialData: Listing, data: Listing, option: boolean) => {
             return initialData.all_img.filter(item => {
                 const fileName = item.slice(item.lastIndexOf('/') + 1);
 
                 const parts = fileName.split('-');
                 const secondPart = parts.slice(5).join('-');
-                console.log("second part", secondPart)
                 if (option) {
                     return !data.all_img.includes(secondPart);
                 } else {
@@ -303,7 +299,6 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             form.reset()
             setImages([])
             form.setValue("unique_id", crypto.randomUUID())
-            console.log("form", form.getValues())
         }
     }
 
