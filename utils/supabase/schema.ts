@@ -70,13 +70,15 @@ export const review = pgTable('reviews', {
 
 export const product_review = pgTable('product_reviews', {
     id: serial("id").primaryKey().notNull(),
+    user_id: uuid('user_id').references(() => user.id, { onDelete: "cascade" }).notNull(),
     product_id: integer("product_id").references(() => product.id, { onDelete: "cascade" }).notNull(),
     review_id: integer("review_id").references(() => review.id, { onDelete: "cascade" }).notNull(),
 })
 
 export const user_review = pgTable('user_reviews', {
     id: serial("id").primaryKey().notNull(),
-    user_id: uuid("user_id").references(() => user.id, { onDelete: "cascade" }).notNull(),
+    user_id: uuid("user_id").references(() => user.id, { onDelete: "cascade" }),
+    reviewer_id: uuid('reviewer_id').references(() => user.id, { onDelete: "cascade" }).notNull(),
     review_id: integer("review_id").references(() => review.id, { onDelete: "cascade" }).notNull(),
 })
 
@@ -132,16 +134,16 @@ export const cart = pgTable("cart", {
         withTimezone: true,
         mode: 'string',
         precision: 3
-    }).defaultNow().notNull().$onUpdate(() => sql`NOW()`), 
-    user_id: uuid("user_id").references(() => user.id, {onDelete: 'cascade'}).notNull()
+    }).defaultNow().notNull().$onUpdate(() => sql`NOW()`),
+    user_id: uuid("user_id").references(() => user.id, { onDelete: 'cascade' }).notNull()
 })
 
 export const cart_item = pgTable("cart_item", {
     id: serial("id").primaryKey().notNull().unique(),
     product_id: integer("product_id").references(() => product.id, { onUpdate: 'cascade', onDelete: 'cascade' }).notNull(),
-    cart_id: integer("cart_id").notNull() 
-    .references(() => cart.id, { onDelete: 'cascade', onUpdate: 'cascade' }) 
-    .notNull(), 
+    cart_id: integer("cart_id").notNull()
+        .references(() => cart.id, { onDelete: 'cascade', onUpdate: 'cascade' })
+        .notNull(),
     from: timestamp("from"),
     to: timestamp("to")
 })
@@ -156,10 +158,10 @@ export const order = pgTable("orders", {
         withTimezone: true,
         mode: 'string',
         precision: 3
-    }).defaultNow().notNull().$onUpdate(() => sql`NOW()`), 
+    }).defaultNow().notNull().$onUpdate(() => sql`NOW()`),
     product_id: integer("product_id").references(() => product.id).notNull(),
-    buyer_id: integer("buyer_id").references(() => user.id).notNull(),
-    seller_id: integer("seller_id").references(() => user.id).notNull(),
+    buyer_id: uuid("buyer_id").references(() => user.id).notNull(),
+    seller_id: uuid("seller_id").references(() => user.id).notNull(),
     type: text("type").notNull(),
     price: real("price").notNull(),
     fee: real("fee").notNull(),
