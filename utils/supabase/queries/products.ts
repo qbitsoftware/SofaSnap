@@ -1,7 +1,7 @@
 "server only"
 import db from '@/utils/supabase/db'
 import { category, category_join, product, address, address_join_product } from '@/utils/supabase/schema'
-import { eq, and, sql, desc } from 'drizzle-orm'
+import { eq, and, sql, desc, inArray } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
 import { AddressJoinProductTS, AddressTS, CategoryJoin, CategoryTS, Product, ProductRealTS, ProductWithAddress } from '../supabase.types'
 import { TProductServer } from '@/lib/product-validation'
@@ -166,6 +166,47 @@ export const fetchProductsWithAddresses = async () => {
     }
 };
 
+export const fetchProductsByIds = async(productIDs: number[]) => {
+    try {
+        const result = await db
+            .select({
+                product: product,
+                address: address,
+                category: category
+            })
+            .from(address_join_product)
+            .where(inArray(address_join_product.product_id, productIDs))
+            .innerJoin(category_join, eq(address_join_product.product_id, category_join.product_id))
+            .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
+            .innerJoin(product, eq(address_join_product.product_id, product.id))
+            .innerJoin(address, eq(address_join_product.address_id, address.id));
+
+        if (result.length === 0) {
+            return {
+                data: [],
+                error: "No products found",
+            };
+        }
+
+        const productsWithAddresses: ProductWithAddress[] = result.map((row) => ({
+            ...row.product,
+            address: row.address,
+            category: row.category
+        }));
+
+        return {
+            data: productsWithAddresses,
+            error: undefined,
+        };
+    } catch (error) {
+        console.error("Error fetching products with addresses:", error);
+        return {
+            data: undefined,
+            error: "Server error"
+        };
+    }
+}
+
 
 
 export const addProduct = async (prod: TProductServer) => {
@@ -261,7 +302,6 @@ export const addProduct = async (prod: TProductServer) => {
                 country_name: prod.address.country_name!,
             }
 
-            console.log("3")
             const insertedAddress = await tx.insert(address).
                 values(ad).
                 onConflictDoUpdate({
@@ -300,7 +340,6 @@ export const addProduct = async (prod: TProductServer) => {
             error: undefined,
         };
     } catch (error) {
-        console.log("ERR", error)
         return {
             data: undefined,
             error: "Server error",

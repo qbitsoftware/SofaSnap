@@ -2,22 +2,24 @@
 
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import useCart from '@/hooks/use-cart'
-import { CartItem } from '@/lib/product-validation'
-import { ProductWithAddress } from '@/utils/supabase/supabase.types'
+import { useCart } from '@/hooks/use-cart'
+import { CartItemTS, ProductWithAddress, User } from '@/utils/supabase/supabase.types'
 import { round } from '@/utils/utils'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 
 interface SellFormProps {
     product: ProductWithAddress
+    user: User | null
 }
 
-export const SellForm: React.FC<SellFormProps> = ({ product }) => {
-
-    const cart = useCart()
+export const SellForm: React.FC<SellFormProps> = ({ product, user }) => {
+    const router = useRouter()
 
     const [isMobile, setIsMobile] = useState<boolean>(false);
+   
 
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -25,18 +27,23 @@ export const SellForm: React.FC<SellFormProps> = ({ product }) => {
         window.addEventListener('resize', checkMobile);
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
-    console.log(isMobile)
+    
+    const {addItemToCart} = useCart()
+    const onSubmit = async () => {
 
-    const onSubmit = () => {
-        const CartItem: CartItem = {
-            ...product,
-            type: "sell",
-            dateRange: {
-                from: new Date(),
-                to: new Date()
-            }
+        if (!user) {
+            toast.error("Ostu sooritamiseks logi sisse")
+            return
         }
-        cart.addItem(CartItem)
+      
+        const CartItem: CartItemTS = {
+            product_id: product.id,
+            from: null, 
+            to: null
+        }
+        await addItemToCart(CartItem, user.id)
+        router.refresh()
+        return
     }
 
 

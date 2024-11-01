@@ -11,6 +11,7 @@ import AddressComponent from './address'
 // import { OwnerRating } from './owner-rating'
 import { ServerError } from '@/components/server-error'
 import { SellForm } from './sell-form'
+import { GetUserInfo } from '@/app/actions'
 
 interface ProductPageProps {
   product_id: number
@@ -22,12 +23,12 @@ interface ProductPageProps {
 }
 
 const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories }) => {
+  const user = await GetUserInfo()
   const { data, error } = await fetchProduct(product_id)
-  console.log("DATAAA",data)
-  
+
   if (error && error == "Server error") {
     return (
-      <ServerError/>
+      <ServerError />
     )
   }
 
@@ -77,12 +78,14 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
         </div>
       </div> */}
       <Reviews reviews={sampleReviews} className='hidden md:my-[150px] mx-auto md:w-[80%] max-w-[1280px]' />
-      <div className='w-full mx-auto'>
-        {data.type == "rent"
-        ? <RentForm product={data} />
-        : <SellForm product={data} />
-        }
-      </div>
+      {/* {user.data.user?.id && */}
+        <div className='w-full mx-auto'>
+          {data.type == "rent"
+            ? <RentForm product={data} user={user.data.user} />
+            : <SellForm product={data} user={user.data.user} />
+          }
+        </div>
+      {/* } */}
       <div className='md:mb-[200px]'>
         <AddressComponent product={data} className="" />
       </div>

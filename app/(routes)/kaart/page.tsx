@@ -19,11 +19,7 @@ const MapPage = async () => {
   if (!categories || !products) {
     redirect("/404")
   }
-
-  console.log("PRODUCTSSSS", products[0].category.sub_categories)
-
-  console.log(process.env.GOOGLE_MAPS_KEY!)
-
+  
   return (
     <div className='max-w-[1440px] mx-auto md:px-16 px-6 min-h-screen'>
       <div className='flex justify-between items-center md:mt-10'>

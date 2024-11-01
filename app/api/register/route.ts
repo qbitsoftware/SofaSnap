@@ -41,10 +41,8 @@ export async function POST(request: Request) {
             });
 
             if (error) {
-                console.log("Error", error)
                 return NextResponse.json({ error: 'Unexpected error occurred' + error, code: error.code }, { status: 500 });
             } else {
-                console.log("koik lkas hasti")
                 return NextResponse.json({ success: true }, { status: 200 })
             }
         }

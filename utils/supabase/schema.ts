@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
+import { float } from "drizzle-orm/mysql-core";
 
-import { doublePrecision, integer, pgSchema, pgTable, point, real, serial, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
+import { boolean, decimal, doublePrecision, integer, pgSchema, pgTable, point, real, serial, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
 import { number } from "zod";
 
 const authSchema = pgSchema('auth');
@@ -41,12 +42,12 @@ export const product = pgTable('products', {
         mode: 'string',
     }),
     all_img: text("all_img").array().default(sql`'{}'::text[]`),
-    total_clicks: integer("total_clicks"),
+    total_clicks: integer("total_clicks").default(0),
     last_visited: timestamp('last_visited', {
         withTimezone: true,
         mode: 'string',
         precision: 3
-    }).$onUpdate(() => sql`NOW()`),
+    }).$onUpdate(() => sql`NOW()`).defaultNow(),
 })
 
 export const category = pgTable('categories', {
@@ -121,4 +122,50 @@ export const address_join_product = pgTable("address_join_products", {
 })
 
 
-  
+export const cart = pgTable("cart", {
+    id: serial("id").primaryKey().notNull().unique(),
+    created_at: timestamp('created_at', {
+        withTimezone: true,
+        mode: 'string',
+    }).defaultNow().notNull(),
+    updated_at: timestamp('updated_at', {
+        withTimezone: true,
+        mode: 'string',
+        precision: 3
+    }).defaultNow().notNull().$onUpdate(() => sql`NOW()`), 
+    user_id: uuid("user_id").references(() => user.id, {onDelete: 'cascade'}).notNull()
+})
+
+export const cart_item = pgTable("cart_item", {
+    id: serial("id").primaryKey().notNull().unique(),
+    product_id: integer("product_id").references(() => product.id, { onUpdate: 'cascade', onDelete: 'cascade' }).notNull(),
+    cart_id: integer("cart_id").notNull() 
+    .references(() => cart.id, { onDelete: 'cascade', onUpdate: 'cascade' }) 
+    .notNull(), 
+    from: timestamp("from"),
+    to: timestamp("to")
+})
+
+export const order = pgTable("orders", {
+    id: serial("id").primaryKey().notNull().unique(),
+    created_at: timestamp('created_at', {
+        withTimezone: true,
+        mode: 'string',
+    }).defaultNow().notNull(),
+    updated_at: timestamp('updated_at', {
+        withTimezone: true,
+        mode: 'string',
+        precision: 3
+    }).defaultNow().notNull().$onUpdate(() => sql`NOW()`), 
+    product_id: integer("product_id").references(() => product.id).notNull(),
+    buyer_id: integer("buyer_id").references(() => user.id).notNull(),
+    seller_id: integer("seller_id").references(() => user.id).notNull(),
+    type: text("type").notNull(),
+    price: real("price").notNull(),
+    fee: real("fee").notNull(),
+    total_price: real("total_price"),
+    is_paid: boolean("is_paid").notNull(),
+    from: timestamp("from"),
+    to: timestamp("to"),
+    provider: text("provider")
+})

@@ -24,7 +24,7 @@ interface CategoryCarouselProps {
 export const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ Categories, className }) => {
 
   const router = useRouter()
-  console.log("categories", Categories)
+  // console.log("categories", Categories)
 
   return (
     <Carousel

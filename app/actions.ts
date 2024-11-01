@@ -6,10 +6,12 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { productSchemaServer, TProductServer } from "@/lib/product-validation";
 import { addProduct, fetchAllProducts, fetchProductsByCategories } from "@/utils/supabase/queries/products";
-import { Product } from "@/utils/supabase/supabase.types";
+import { Cart, CartItem, Product } from "@/utils/supabase/supabase.types";
 import { passwordChangeValidator, TPasswordChangeSchema } from "@/lib/register-validation";
 import { AuthError } from "@supabase/supabase-js";
 import { fetchUserAddress } from "@/utils/supabase/queries/address";
+import { addCartItem, createCart, getCart, GetCartResult, removeCartItem } from "@/utils/supabase/queries/cart";
+
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -255,4 +257,23 @@ export async function changePasswordAction(pw: TPasswordChangeSchema): Promise<{
       }
     }
   }
+}
+
+
+export async function createCartAction(userID: string): Promise <{ data: Cart | undefined, error: string | undefined}>  {
+  return await createCart(userID)
+}
+
+
+export async function addCartItemAction(from: Date | null, to: Date | null, product_id: number, cart_id: number):Promise <{ data: CartItem | undefined, error: string | undefined}>  {
+  return await addCartItem(from, to, product_id, cart_id)
+}
+
+export async function getCartAction(userID:string):Promise<GetCartResult>  {
+  return await getCart(userID)
+}
+
+export async function removeCartItemAction(cart_item_id:number, cart_id:number):Promise<{data: string | undefined, error: string | undefined}> {
+  return removeCartItem(cart_item_id, cart_id)
+
 }
