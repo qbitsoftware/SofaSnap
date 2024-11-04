@@ -594,13 +594,13 @@ export const fetchUserProduct = async (product_id: number) => {
 export const addReview = async (formData: Review) => {
     try {
         //add review
-        const result = await db.insert(review).values({ rating: Number(formData.rating), feedback: formData.description }).returning({ id: review.id })
-        //add to joingin table
-        const joinTable: ProductReviewTS = {
-            review_id: result[0].id,
-            product_id: formData.product_id
-        }
-        await db.insert(product_review).values(joinTable)
+        // const result = await db.insert(review).values({ rating: Number(formData.rating), feedback: formData.description }).returning({ id: review.id })
+        // //add to joingin table
+        // const joinTable: ProductReviewTS = {
+        //     review_id: result[0].id,
+        //     product_id: formData.product_id
+        // }
+        // await db.insert(product_review).values(joinTable)
         return {
             data: undefined,
             error: undefined
