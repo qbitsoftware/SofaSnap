@@ -13,6 +13,7 @@ import { SellForm } from './sell-form'
 import Link from 'next/link'
 import ReviewForm from './product-review-form'
 import { GetUserInfo } from '@/app/actions'
+import { getOrderItemsByProduct } from '@/utils/supabase/queries/orders'
 
 interface ProductPageProps {
   product_id: number
@@ -27,15 +28,17 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
   const user = await GetUserInfo()
   const { data, error } = await fetchProduct(product_id)
   const { data: reviews} = await getProductReviews(product_id)
+  const {data: orderItems, error: orderItemError} = await getOrderItemsByProduct(product_id) 
 
 
-  if (error && error == "Server error" ) {
+  if (error && error == "Server error" || orderItemError && orderItemError == "Server error" ) {
     return (
       <ServerError />
     )
   }
 
   await addClick(product_id)
+  console.log("ORDERITEMS",orderItems)
 
   if (error || !data) {
     redirect("/404")
@@ -68,7 +71,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
       </div>
       <div className='w-full mx-auto'>
           {data.type == "rent"
-              ? <RentForm product={data} user={user.data.user} />
+              ? <RentForm product={data} user={user.data.user} orderItems={orderItems!}/>
               : <SellForm product={data} user={user.data.user} />
           }
         </div>

@@ -229,10 +229,6 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             body: imgData,
         });
 
-        // if (initialData) {
-        //     console.log("returing")
-        //     return
-        // }
         const uploadData = await uploadResp.json();
 
         if (!uploadResp.ok) {

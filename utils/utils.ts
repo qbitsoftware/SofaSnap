@@ -33,3 +33,8 @@ export function round(x: number):number {
 export const formatEstonianDate = (date: Date) => {
   return format(date, "d.MMM", { locale: et }).toLowerCase()
 }
+
+export function toUTCDate(date: Date | null): Date | null {
+  if (!date) return null;
+  return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+}

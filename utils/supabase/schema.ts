@@ -159,15 +159,27 @@ export const order = pgTable("orders", {
         mode: 'string',
         precision: 3
     }).defaultNow().notNull().$onUpdate(() => sql`NOW()`),
-    product_id: integer("product_id").references(() => product.id).notNull(),
     buyer_id: uuid("buyer_id").references(() => user.id).notNull(),
-    seller_id: uuid("seller_id").references(() => user.id).notNull(),
-    type: text("type").notNull(),
     price: real("price").notNull(),
     fee: real("fee").notNull(),
     total_price: real("total_price"),
     is_paid: boolean("is_paid").notNull(),
+    provider: text("provider")
+})
+
+export const order_item = pgTable("order_items", {
+    id: serial("id").primaryKey().notNull(),
+    created_at: timestamp('created_at', {
+        withTimezone: true,
+        mode: 'string',
+    }).defaultNow().notNull(),
+    updated_at: timestamp('updated_at', {
+        withTimezone: true,
+        mode: 'string',
+        precision: 3
+    }).defaultNow().notNull().$onUpdate(() => sql`NOW()`),
+    product_id: integer("product_id").references(() => product.id).notNull(),
+    order_id: integer("order_id").references(() => order.id, {onDelete: "cascade", onUpdate: "cascade"}).notNull(),
     from: timestamp("from"),
     to: timestamp("to"),
-    provider: text("provider")
 })

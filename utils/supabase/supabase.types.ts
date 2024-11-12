@@ -1,5 +1,6 @@
 import { InferSelectModel } from "drizzle-orm";
-import { category, address, category_join, product, user, address_join_product, product_review, cart_item, cart, order } from "./schema";
+import { category, address, category_join, product, user, address_join_product, product_review, cart_item, cart, order, order_item } from "./schema";
+import { Infer } from "next/dist/compiled/superstruct";
 
 export type Product = InferSelectModel<typeof product>
 export type Category = InferSelectModel<typeof category>
@@ -25,3 +26,6 @@ export type CartItemTS = Omit<CartItem, "cart_id" | "id">
 export type CartItemJoinProduct = CartItem & Product
 export type Cart = InferSelectModel<typeof cart>
 
+export type OrderTS = Omit<Order, "id" | "created_at" | "updated_at">
+export type OrderItem = InferSelectModel<typeof order_item>
+export type OrderItemTS = Omit<OrderItem, "id" | "created_at" | "updated_at">

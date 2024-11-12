@@ -1,16 +1,84 @@
-// import db from "../db"
-// import { order } from "../schema"
-// import { Order } from "../supabase.types"
+import { calculatePrice } from "@/lib/utils";
+import db from "../db"
+import { order, order_item } from "../schema"
+import { CartItemTS, Order, OrderItemTS, OrderTS } from "../supabase.types"
+import { CartItemWithDetails } from "./cart";
+import { and, eq } from "drizzle-orm";
+import { error } from "console";
 
-// const addOrder = async () => {
+export const addOrder = async (cart: CartItemWithDetails[]) => {
+    try {
 
-//     const order_values = {
 
-//     }
+        const result = await db.transaction(async (tx) => {
+            const { price, fee, total } = calculatePrice(cart)
+            const orderData: OrderTS = {
+                price: price,
+                fee: fee,
+                total_price: total,
+                buyer_id: cart[0].cart.user_id,
+                is_paid: false,
+                provider: ""
+            }
 
-//     try {
-//         const result = await db.insert(order).values(order_values)
-//     } catch (error) {
+            const oldOrder = await tx.select()
+                .from(order)
+                .where(
+                    and(
+                        eq(order.buyer_id, cart[0].cart.user_id),
+                        eq(order.is_paid, false))
+                )
+            console.log("OLDORDER", oldOrder)
 
-//     }
-// }
+            for (let i = 0; i < oldOrder.length; i++) {
+                await tx.delete(order).where(eq(order.id, oldOrder[i].id))
+            }
+
+            const [newOrder] = await tx.insert(order).values(orderData).returning();
+
+            const orderItemsData: OrderItemTS[] = cart.map((item) => {
+                return {
+                    product_id: item.product.id,
+                    order_id: newOrder.id,
+                    from: item.cart_item.from,
+                    to: item.cart_item.to,
+                }
+            })
+
+
+            await tx.insert(order_item).values(orderItemsData);
+
+            return {
+                data: order,
+                error: undefined
+            }
+        });
+
+        return result;
+
+    } catch (error) {
+        return {
+            data: undefined,
+            error: "Server error"
+        }
+    }
+};
+
+
+export const getOrderItemsByProduct = async (productID: number) => {
+    try {
+        const result = await db.select()
+            .from(order_item)
+            .where(eq(order_item.product_id, productID))
+
+        return {
+            data: result,
+            error: undefined
+        }
+    } catch (error) {
+        return {
+            data: undefined,
+            error: "Server error"
+        }
+    }
+}

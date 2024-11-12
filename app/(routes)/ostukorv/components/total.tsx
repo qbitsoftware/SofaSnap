@@ -1,5 +1,6 @@
 "use client"
 
+import { calculatePrice } from '@/lib/utils';
 import { CartItemWithDetails } from '@/utils/supabase/queries/cart';
 import { round } from '@/utils/utils';
 import { differenceInCalendarDays } from 'date-fns';
@@ -15,19 +16,9 @@ export const TotalPrice: React.FC<TotalPriceProps> = ({ cartItems }) => {
     const [totalCombined, setTotalCombined] = useState<number>(0)
 
     useEffect(() => {
-        const totalPrice = cartItems.reduce((acc, item) => {
-            if (item.cart_item.to && item.cart_item.from) {
-                const daysDif = differenceInCalendarDays(item.cart_item.to, item.cart_item.from) + 1
-                const rentalDays = daysDif | 0;
-                return acc + (round(item.product.price * rentalDays));
-            } else {
-                return acc + (round(item.product.price));
-            }
-        }, 0);
+       const {price, fee, total} = calculatePrice(cartItems)
 
-        const totalWithFee = round(totalPrice * 1.05);
-
-        setTotalCombined(totalWithFee);
+        setTotalCombined(total);
     }, [cartItems]);
 
 

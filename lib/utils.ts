@@ -1,6 +1,15 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Feature } from "./coordinates-validation";
+import { CartItemWithDetails } from "@/utils/supabase/queries/cart";
+import { differenceInCalendarDays } from "date-fns";
+import { round } from "@/utils/utils";
+
+interface CartTotal {
+  price: number,
+  fee: number,
+  total: number
+}
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -67,4 +76,24 @@ export const fetchCoordinates = async (mapbox_id: string, session_token: string)
     console.error(err)
     return []
   }
+}
+
+export const calculatePrice = (cartItems: CartItemWithDetails[]): CartTotal => {
+  const totalPrice = cartItems.reduce((acc, item) => {
+    if (item.cart_item.to && item.cart_item.from) {
+      const daysDif = differenceInCalendarDays(item.cart_item.to, item.cart_item.from) + 1
+      const rentalDays = daysDif | 0;
+      return acc + (round(item.product.price * rentalDays));
+    } else {
+      return acc + (round(item.product.price));
+    }
+  }, 0);
+
+
+  return {
+    price: totalPrice,
+    fee: totalPrice * 0.05,
+    total: round(totalPrice * 1.05),
+  }
+
 }

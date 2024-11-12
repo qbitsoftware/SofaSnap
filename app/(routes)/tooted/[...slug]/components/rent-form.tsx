@@ -16,10 +16,10 @@ import {
   FormItem,
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CartItemTS, ProductWithAddress, User } from "@/utils/supabase/supabase.types";
+import { CartItemTS, OrderItem, ProductWithAddress, User } from "@/utils/supabase/supabase.types";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import { formatEstonianDate, round } from "@/utils/utils";
+import { formatEstonianDate, round, toUTCDate } from "@/utils/utils";
 import { Calendar } from "@/components/ui/calendar"
 import { RentFormSchema } from "@/lib/product-validation";
 import { useCart } from "@/hooks/use-cart";
@@ -31,9 +31,10 @@ import toast from "react-hot-toast";
 interface DateFormProps {
   product: ProductWithAddress;
   user: User | null
+  orderItems: OrderItem[]
 }
 
-export const RentForm: React.FC<DateFormProps> = ({ product, user }) => {
+export const RentForm: React.FC<DateFormProps> = ({ product, user,orderItems }) => {
   const router = useRouter()
   const form = useForm<z.infer<typeof RentFormSchema>>({
     resolver: zodResolver(RentFormSchema),
@@ -95,8 +96,8 @@ export const RentForm: React.FC<DateFormProps> = ({ product, user }) => {
 
     const CartItem: CartItemTS = {
       product_id: product.id,
-      from: data.dateRange.from,
-      to: data.dateRange.to,
+      from: toUTCDate(data.dateRange.from),
+      to: toUTCDate(data.dateRange.to),
     }
 
     if (!user) {
@@ -110,7 +111,7 @@ export const RentForm: React.FC<DateFormProps> = ({ product, user }) => {
     return
   }
 
-
+console.log(form.getValues())
 
   return (
     <Form {...form}>
@@ -156,10 +157,13 @@ export const RentForm: React.FC<DateFormProps> = ({ product, user }) => {
                     onSelect={(value) => {
                       if (value) {
                         field.onChange(value);
-                        updateValues(value.from!, value.to || value.from!);
+                        updateValues(value?.from!, value?.to! || value.from!);
                       }
                     }}
-                    numberOfMonths={isMobile ? 1 : 2}
+                    disabled={orderItems.map((orderItem) => ({
+                      from: orderItem?.from!,
+                      to: orderItem?.to!,
+                    }))}
                   />
                 </PopoverContent>
               </Popover>

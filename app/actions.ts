@@ -6,11 +6,12 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { productSchemaServer, Review, TProductServer } from "@/lib/product-validation";
 import { addProduct, addReview, fetchAllProducts, fetchProductsByCategories } from "@/utils/supabase/queries/products";
-import { Cart, CartItem, Product } from "@/utils/supabase/supabase.types";
+import { Cart, CartItem, OrderItemTS, OrderTS, Product } from "@/utils/supabase/supabase.types";
 import { passwordChangeValidator, TPasswordChangeSchema } from "@/lib/register-validation";
 import { AuthError } from "@supabase/supabase-js";
 import { fetchUserAddress } from "@/utils/supabase/queries/address";
-import { addCartItem, createCart, getCart, GetCartResult, removeCartItem } from "@/utils/supabase/queries/cart";
+import { addCartItem, CartItemWithDetails, createCart, getCart, GetCartResult, removeCartItem } from "@/utils/supabase/queries/cart";
+import { addOrder } from "@/utils/supabase/queries/orders";
 
 
 export const signUpAction = async (formData: FormData) => {
@@ -284,4 +285,8 @@ export async function getCartAction(userID:string):Promise<GetCartResult>  {
 export async function removeCartItemAction(cart_item_id:number, cart_id:number):Promise<{data: string | undefined, error: string | undefined}> {
   return removeCartItem(cart_item_id, cart_id)
 
+}
+
+export async function addOrderAction(cart: CartItemWithDetails[])  {
+  return await addOrder(cart)
 }

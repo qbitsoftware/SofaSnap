@@ -11,8 +11,6 @@ interface OwnerRatingProps {
 }
 
 export const OwnerRating: React.FC<OwnerRatingProps> = ({ owner }) => {
-    console.log(owner)
-    // Replace hard coded stuff
     return (
         <div className='md:flex md:flex-col'>
             <div className='flex items-center gap-2'>
