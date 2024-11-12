@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { Reviews } from '@/utils/supabase/queries/products'
-import {MessageSquare, Star } from 'lucide-react'
+import { MessageSquare, Star } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
@@ -30,22 +30,19 @@ export const ReviewsComp: React.FC<ReviewsProps> = ({ reviews, className }) => {
 
     if (!reviews || reviews.length === 0) {
         return (
-            <Card className={cn("w-full max-w-[1000px] bg-[#ebeeeb]", className)}>
+            // <Card className={cn("w-full max-w-[1000px] bg-[#ebeeeb]", className)}>
+            <div className=''>
                 <CardContent className="flex flex-col items-center justify-center py-12 text-center">
                     <div className="rounded-full bg-primary/10 p-4 mb-6">
                         <MessageSquare className="h-10 w-10 text-primary" />
                     </div>
-                    <CardTitle className="text-2xl font-bold mb-2">No Reviews Yet</CardTitle>
+                    <CardTitle className="text-2xl font-bold mb-2">Tootel pole hinnanguid</CardTitle>
                     <CardDescription className="max-w-[500px] mb-6">
-                        Be the first to share your experience! Your feedback helps others make informed decisions
-                        and helps us improve our service.
+                        Ole esimene, kes jagab oma kogemust! Sinu tagasiside aitab teistel teha teadlikke otsuseid ja aitab meil oma teenust paremaks muuta.
                     </CardDescription>
-                    {/* <Button className="group">
-                        Write a Review
-                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Button> */}
                 </CardContent>
-            </Card>
+            </div>
+            // </Card>
         )
     }
 

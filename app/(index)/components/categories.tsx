@@ -96,8 +96,8 @@ export const Categories: React.FC<CategoryProps> = ({ data, error }) => {
                     <Image
                       src={category.image}
                       alt={category.name}
-                      layout='fill'
-                      objectFit='cover'
+                      fill
+                      style={{ objectFit: "cover" }}
                     />
                     <div className='absolute inset-0 flex items-end justify-center'>
                       <div className='bg-white bg-opacity-30 backdrop-blur-lg w-full py-[20px] pl-[25px]'>

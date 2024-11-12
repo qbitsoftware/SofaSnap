@@ -14,7 +14,7 @@ export const LandingPage = () => {
             <div className='flex flex-col md:flex-row md:justify-between w-full'>
                 <div className="md:ml-16 flex md:flex flex-col md:items-start mt-[20px] md:mt-[83px]">
                     <div className='md:relative md:h-[150px] lg:h-[250px]'>
-                        <h1 className={cn('hidden md:block md:text-4xl lg:text-6xl md:w-[48vw] md:max-w-[553px] h-full font-semibold absolute z-10 text-start', MontserratAlternates.className)}>Rent furniture from <br className='lg:hidden' />people in your<br className='lg:hidden' /> area</h1>
+                        <h1 className={cn('hidden md:block md:text-4xl lg:text-6xl md:w-[48vw] md:max-w-[553px] h-full font-semibold absolute z-10 text-start', MontserratAlternates.className)}>Rentige mööblit oma<br className='lg:hidden' /> piirkonna inimestelt<br className='lg:hidden' /> </h1>
                         <h1 className={cn('md:hidden text-center text-2xl sm:text-4xl font-semibold', MontserratAlternates.className)}>Anna mööblile uus elu -<br></br>teenid sina, võidab loodus!</h1>
                     </div>
                     <Link className='mx-auto z-10' href={"/lisa-toode"} >
