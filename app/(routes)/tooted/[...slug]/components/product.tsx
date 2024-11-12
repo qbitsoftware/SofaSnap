@@ -81,7 +81,7 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
                         <p className='text-[14px] font-semibold md:text-lg flex'>
                             {product.price}
                             <span className=''>€</span>
-                            <span className='font-normal pl-2 md:pl-4'>Päev</span>
+                            {product.type == "rent" && <span className='font-normal pl-2 md:pl-4'>Päev</span>}
                         </p>
                     </div>
                 </div>

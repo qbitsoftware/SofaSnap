@@ -170,7 +170,7 @@ export const RentForm: React.FC<DateFormProps> = ({ product, user }) => {
         <div className="bg-[#ebeeeb] hidden px-6 md:px-0 w-full md:w-[90%] rounded-xl mx-auto max-w-[1160px] md:flex flex-col md:flex-row">
           <div className="hidden lg:block w-full md:w-[400px] drop-shadow-md">
             <Image
-              src={"/images/tool2.png"}
+              src={product.preview_image}
               alt={product.name}
               width={466}
               height={500}

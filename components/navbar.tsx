@@ -11,6 +11,7 @@ import { FetchCategories } from "@/utils/supabase/queries/categories"
 import { GetUserInfo } from "@/app/actions"
 import Profile from "./nav-bar-profile"
 import { useCart } from "@/hooks/use-cart"
+import { MobileCart } from "./cart-mobile"
 
 const NavBar = async () => {
 
@@ -28,15 +29,15 @@ const NavBar = async () => {
             <div className="cursor-pointer w-[68px] h-[68px] md:w-[200px] lg:min-w-[250px] xl:w-[545px] flex items-center">
                 <Link href={"/"}>
                     <Image alt="logo" className="md:hidden" src={"/branding/logo-black-small.svg"} width={68} height={68} />
-                    <Image alt="logo" className="hidden md:inline" src={"/branding/logo-black.png"} width={211} height={50} />
+                    <Image alt="logo" className="hidden md:inline" src={"/branding/logo-black.svg"} width={211} height={50} />
                 </Link>
             </div>
-            <div className="flex gap-[21px] items-center">
+            <div className="flex md:gap-[5px] lg:gap-[21px] items-center">
                 <div className="hidden md:flex lg:w-[540px] xl:w-[530px] items-center py-[4px] justify-between">
                     <div className="md:gap-[50px]">
                         <NavLinks categories={cateogries.data} />
                     </div>
-                    <div className="">
+                    <div className="hidden lg:inline">
                         {user.data.user ? (
                             <LogOut />
                         ) :
@@ -50,21 +51,33 @@ const NavBar = async () => {
                         }
                     </div>
                 </div>
-                <div className="xl:w-[132px] hidden lg:inline">
-                    <NavIcons user={user.data.user} cartItems={data?.length}/>
+                <div className="xl:w-[132px] hidden md:inline">
+                    <NavIcons user={user.data.user} cartItems={data?.length} />
                 </div>
                 <div className="md:hidden">
                     {user.data.user ? (
-                        <Profile user={user.data.user} />
+                        <div className="">
+
+                            <Profile user={user.data.user} />
+                            {/* <Link href={"/ostukorv"} className='relative'>
+                                <ShoppingCart width={31} height={31} />
+                                {data && data.length > 0 &&
+                                    <div className='bg-accent absolute w-4 h-4 rounded-full top-0 right-[-5px] flex items-center justify-center'><span className='z-50 text-sm'>{data.length} </span></div>
+                                }
+                            </Link> */}
+                            <MobileCart cart_items={data} />
+                        </div>
                     ) :
                         <div>
                             <Link href={"/login"}>
                                 <CircleUser className="h-[32px] w-[32px] cursor-pointer hover:scale-105" />
                             </Link>
+
                         </div>
                     }
                 </div>
             </div>
+
         </div>
     )
 };

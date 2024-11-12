@@ -12,7 +12,7 @@ const Footer = () => {
         items: [
             {
                 title: "Kuidas kasutada",
-                url: "/kuidas-kasutada",
+                url: "/kuidas-see-tootab",
             },
             {
                 title: "Vastutustundlik rentija",
@@ -22,10 +22,10 @@ const Footer = () => {
                 title: "Kindlustus soovitused",
                 url: "/vastutustundlik-rentija"
             },
-            {
-                title: "Pildi tuunimine AI abiga",
-                url: "/vastutustundlik-rentija"
-            }
+            // {
+            //     title: "Pildi tuunimine AI abiga",
+            //     url: "/vastutustundlik-rentija"
+            // }
         ]
     }
 
@@ -38,7 +38,7 @@ const Footer = () => {
             },
             {
                 title: "Tuhistamisvoimalus",
-                url: "/tuhistamisvoimalus"
+                url: "/tuhistamise-poliitika"
             },
             {
                 title: "Teata probleemsest kasutajast",
@@ -65,13 +65,13 @@ const Footer = () => {
                     </div>
                     <div className='hidden md:flex w-[160px] h-[72px] items-center justify-center'>
                         <Link href={"/"}>
-                            <Image alt='footer-logo' width={110} height={72} src={"/branding/logo-white.png"} />
+                            <Image alt='footer-logo' width={110} height={72} src={"/branding/logo-white.svg"} />
                         </Link>
                     </div>
                 </div>
                 <div className='flex items-center justify-center md:hidden w-[160px] h-[72px] py-[75px]'>
                     <Link href={"/"}>
-                        <Image alt='footer-logo' width={110} height={72} src={"/branding/logo-white.png"} />
+                        <Image alt='footer-logo' width={110} height={72} src={"/branding/logo-white.svg"} />
                     </Link>
                 </div>
                 <div className='flex '>

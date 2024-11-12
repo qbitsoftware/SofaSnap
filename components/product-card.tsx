@@ -34,7 +34,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                         </div>
                         <p className="hidden sm:block text-base md:[18px] md:leading-6 xl:leading-7 font-normal max-h-[50px] xl:max-h-[60px] md:max-h-[50px] max-w-[100%] overflow-hidden overflow-ellipsis">{product.description}</p>
                     </div>
-                    <span className="text-sm md:text-lg font-semibold ">{product.price}€ päev</span>
+                    <span className="text-sm md:text-lg font-semibold ">{product.price}€ {product.type == "rent" ? "päev" : ""}</span>
                 </div>
             </CardContent>
         </Card>

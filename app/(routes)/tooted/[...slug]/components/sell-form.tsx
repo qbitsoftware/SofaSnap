@@ -19,7 +19,7 @@ export const SellForm: React.FC<SellFormProps> = ({ product, user }) => {
     const router = useRouter()
 
     const [isMobile, setIsMobile] = useState<boolean>(false);
-   
+
 
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -27,18 +27,18 @@ export const SellForm: React.FC<SellFormProps> = ({ product, user }) => {
         window.addEventListener('resize', checkMobile);
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
-    
-    const {addItemToCart} = useCart()
+
+    const { addItemToCart } = useCart()
     const onSubmit = async () => {
 
         if (!user) {
             toast.error("Ostu sooritamiseks logi sisse")
             return
         }
-      
+
         const CartItem: CartItemTS = {
             product_id: product.id,
-            from: null, 
+            from: null,
             to: null
         }
         await addItemToCart(CartItem, user.id)
@@ -54,7 +54,7 @@ export const SellForm: React.FC<SellFormProps> = ({ product, user }) => {
             <div className="bg-[#ebeeeb] hidden px-6 md:px-0 w-full md:w-[90%] rounded-xl mx-auto max-w-[1160px] md:flex flex-col md:flex-row">
                 <div className="hidden lg:block w-full md:w-[400px] drop-shadow-md">
                     <Image
-                        src={"/images/tool2.png"}
+                        src={product.preview_image}
                         alt={product.name}
                         width={466}
                         height={500}

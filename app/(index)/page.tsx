@@ -28,7 +28,9 @@ export default async function Index() {
         <Categories data={categories} error={categoryError} />
         <Reviews />
         <RecentProducts data={latestProducts} error={latestProductError} />
-        <Cta />
+        <div className="overflow-hidden">
+          <Cta />
+        </div>
         {/* <Benefits /> */}
         <PopularProducts data={popularProducts} error={popularProductError} />
         <Globe />
