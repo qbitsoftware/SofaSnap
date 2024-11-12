@@ -183,3 +183,18 @@ export const order_item = pgTable("order_items", {
     from: timestamp("from"),
     to: timestamp("to"),
 })
+
+export const complaint = pgTable("complaints", {
+    id: serial("id").primaryKey().notNull(),
+    text: text("text").notNull(),
+    created_at: timestamp('created_at', {
+        withTimezone: true,
+        mode: 'string',
+    }).defaultNow().notNull(),
+    updated_at: timestamp('updated_at', {
+        withTimezone: true,
+        mode: 'string',
+        precision: 3
+    }).defaultNow().notNull().$onUpdate(() => sql`NOW()`),
+    resolved: boolean("resolved").default(false),
+})
