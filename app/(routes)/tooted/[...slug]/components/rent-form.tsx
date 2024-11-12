@@ -3,10 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { addDays, differenceInCalendarDays, format } from "date-fns";
 import { CalendarDays } from "lucide-react"
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,7 +33,7 @@ interface DateFormProps {
   orderItems: OrderItem[]
 }
 
-export const RentForm: React.FC<DateFormProps> = ({ product, user,orderItems }) => {
+export const RentForm: React.FC<DateFormProps> = ({ product, user, orderItems }) => {
   const router = useRouter()
   const form = useForm<z.infer<typeof RentFormSchema>>({
     resolver: zodResolver(RentFormSchema),
@@ -70,7 +69,7 @@ export const RentForm: React.FC<DateFormProps> = ({ product, user,orderItems }) 
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const updateValues = (from: Date, to: Date) => {
+  const updateValues = useCallback((from: Date | undefined, to: Date) => {
     let days
     if (!from || !to) {
       days = 7 + 1
@@ -84,12 +83,12 @@ export const RentForm: React.FC<DateFormProps> = ({ product, user,orderItems }) 
     setServiceFee(fee)
     setTotalPrice(total)
     setTotalWithFee(fee + total)
-  }
+  }, [product.price])
 
   useEffect(() => {
     const { from, to } = form.getValues("dateRange");
     updateValues(from, to);
-  }, [form]);
+  }, [form, updateValues]);
 
   const { addItemToCart } = useCart()
   async function onSubmit(data: z.infer<typeof RentFormSchema>) {
@@ -110,8 +109,6 @@ export const RentForm: React.FC<DateFormProps> = ({ product, user,orderItems }) 
     router.refresh()
     return
   }
-
-console.log(form.getValues())
 
   return (
     <Form {...form}>
@@ -157,13 +154,16 @@ console.log(form.getValues())
                     onSelect={(value) => {
                       if (value) {
                         field.onChange(value);
-                        updateValues(value?.from!, value?.to! || value.from!);
+                        updateValues(value.from, value.to || value.from!);
                       }
                     }}
-                    disabled={orderItems.map((orderItem) => ({
-                      from: orderItem?.from!,
-                      to: orderItem?.to!,
-                    }))}
+                    disabled={orderItems.map((orderItem) => {
+                      if (orderItem && orderItem.from && orderItem.to) {
+                        return { from: orderItem.from, to: orderItem.to }
+                      } else {
+                        return []
+                      }
+                    })}
                   />
                 </PopoverContent>
               </Popover>

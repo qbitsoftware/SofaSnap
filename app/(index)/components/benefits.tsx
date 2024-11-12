@@ -24,7 +24,7 @@ export const Benefits = () => {
         }, 5000)
 
         return () => clearInterval(timer)
-    }, [])
+    }, [benefits.length])
 
     const BenefitItem = ({ benefit, index }: { benefit: Benefit, index: number }) => (
         <div

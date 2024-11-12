@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
+import { CardContent, CardDescription, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { Reviews } from '@/utils/supabase/queries/products'
 import { MessageSquare, Star } from 'lucide-react'
@@ -30,7 +30,6 @@ export const ReviewsComp: React.FC<ReviewsProps> = ({ reviews, className }) => {
 
     if (!reviews || reviews.length === 0) {
         return (
-            // <Card className={cn("w-full max-w-[1000px] bg-[#ebeeeb]", className)}>
             <div className=''>
                 <CardContent className="flex flex-col items-center justify-center py-12 text-center">
                     <div className="rounded-full bg-primary/10 p-4 mb-6">
@@ -42,7 +41,6 @@ export const ReviewsComp: React.FC<ReviewsProps> = ({ reviews, className }) => {
                     </CardDescription>
                 </CardContent>
             </div>
-            // </Card>
         )
     }
 

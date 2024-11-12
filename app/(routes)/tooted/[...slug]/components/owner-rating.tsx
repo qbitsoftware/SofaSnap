@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { User } from '@/utils/supabase/supabase.types'
-import {  StarIcon } from 'lucide-react'
+import { StarIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -11,6 +11,7 @@ interface OwnerRatingProps {
 }
 
 export const OwnerRating: React.FC<OwnerRatingProps> = ({ owner }) => {
+    console.log("owner", owner)
     return (
         <div className='md:flex md:flex-col'>
             <div className='flex items-center gap-2'>

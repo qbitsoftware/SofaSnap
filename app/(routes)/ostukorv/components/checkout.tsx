@@ -1,12 +1,8 @@
 "use client"
 
 import { addOrderAction } from '@/app/actions'
-import { ServerError } from '@/components/server-error'
 import { Button } from '@/components/ui/button'
-import { calculatePrice } from '@/lib/utils'
 import { CartItemWithDetails } from '@/utils/supabase/queries/cart'
-import { OrderItemTS, OrderTS } from '@/utils/supabase/supabase.types'
-import { redirect } from 'next/navigation'
 import React from 'react'
 import toast from 'react-hot-toast'
 
@@ -19,12 +15,12 @@ export const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
 
     const handleCheckout = async (cart: CartItemWithDetails[]) => {
         try {
-            const {data, error} = await addOrderAction(cart)
-            console.log("DATA", data, "error", error)
+            const { error } = await addOrderAction(cart)
             if (error && error == "Server error") {
                 toast.error("Tekkis viga, proovige uuesti.")
             }
-        } catch(error) {
+        } catch (error) {
+            console.log(error)
             toast.error("Tekkis viga, proovige uuesti.")
         }
     }

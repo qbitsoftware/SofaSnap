@@ -34,7 +34,7 @@ function AdvancedImageInput({ images, setImages, baseValue }: ImageInputProps) {
 
     const baseValueInput = images.map((img,) => img.name);
     debouncedBaseValue(baseValueInput);
-  }, [images]);
+  }, [images, debouncedBaseValue]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const allowedFileTypes = ["image/jpeg", "image/png", "image/svg+xml", "image/jpg"];

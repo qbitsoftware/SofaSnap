@@ -39,7 +39,7 @@ export default function ReviewForm({ product_id }: ReviewFormProps) {
 
     useEffect(() => {
         form.setValue("product_id", product_id)
-    }, [product_id])
+    }, [form, product_id])
 
     async function onSubmit(values: Review) {
         try {

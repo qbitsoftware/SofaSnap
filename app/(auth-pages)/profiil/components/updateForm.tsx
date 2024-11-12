@@ -123,40 +123,44 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
         }
     }
 
+    const deboucnhedSuggestions = debounce(async (value: string) => {
+        if (value.length === 0) {
+            setShowSuggestions(false);
+            return;
+        }
+
+        setShowSuggestions(true);
+
+        const data: TAddressSearchSchema = {
+            input: value,
+            user_id: id,
+        };
+
+        try {
+            const response = await fetch("/api/suggestion", {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            const responseData = await response.json();
+
+            if (response.ok) {
+                setSuggestions(responseData.data);
+            }
+            setIsLoading(false)
+        } catch (error) {
+            console.error('Error fetching suggestions:', error);
+        }
+    }, 300)
+
     const fetchSuggestions = useCallback(
-        debounce(async (value: string) => {
-            if (value.length === 0) {
-                setShowSuggestions(false);
-                return;
-            }
-
-            setShowSuggestions(true);
-
-            const data: TAddressSearchSchema = {
-                input: value,
-                user_id: id,
-            };
-
-            try {
-                const response = await fetch("/api/suggestion", {
-                    method: "POST",
-                    body: JSON.stringify(data),
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
-
-                const responseData = await response.json();
-
-                if (response.ok) {
-                    setSuggestions(responseData.data);
-                }
-                setIsLoading(false)
-            } catch (error) {
-                console.error('Error fetching suggestions:', error);
-            }
-        }, 300),
-        [id, setShowSuggestions, setSuggestions, setIsLoading]
+        (value: string) => {
+            deboucnhedSuggestions(value)
+        },
+        [deboucnhedSuggestions]
     );
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

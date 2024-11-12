@@ -1,6 +1,6 @@
 "use client"
 
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { Button } from "./ui/button"
 import Link from "next/link"
 import { CartItemWithDetails } from "@/utils/supabase/queries/cart"
@@ -11,15 +11,16 @@ interface Props {
 
 
 export function MobileCart({ cart_items }: Props) {
-    if (!cart_items) {
-        return
-    }
-
-    // const router = useRouter()
     const pathName = usePathname()
     if (pathName == "/ostukorv" || pathName.includes("/tooted")) {
         return
     }
+
+    if (!cart_items) {
+        return
+    }
+
+
 
     return (
         <div className="md:hidden ">

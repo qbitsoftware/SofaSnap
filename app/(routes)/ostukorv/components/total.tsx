@@ -2,8 +2,6 @@
 
 import { calculatePrice } from '@/lib/utils';
 import { CartItemWithDetails } from '@/utils/supabase/queries/cart';
-import { round } from '@/utils/utils';
-import { differenceInCalendarDays } from 'date-fns';
 import React, { useEffect, useState } from 'react'
 
 interface TotalPriceProps {
@@ -16,7 +14,7 @@ export const TotalPrice: React.FC<TotalPriceProps> = ({ cartItems }) => {
     const [totalCombined, setTotalCombined] = useState<number>(0)
 
     useEffect(() => {
-       const {price, fee, total} = calculatePrice(cartItems)
+        const { total } = calculatePrice(cartItems)
 
         setTotalCombined(total);
     }, [cartItems]);

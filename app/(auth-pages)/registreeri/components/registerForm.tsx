@@ -149,42 +149,47 @@ const RegisterForm = () => {
         };
     }, []);
 
+    const deboucnedSuggestions = debounce(async (value: string) => {
+        if (value.length === 0) {
+            setShowSuggestions(false);
+            return;
+        }
+
+        setShowSuggestions(true);
+
+        const data: TAddressSearchSchema = {
+            input: value,
+            //just take email instead of userid becuase user is not logged in and does not have id at that moment
+            user_id: id,
+        };
+
+        try {
+            const response = await fetch("/api/suggestion", {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            const responseData = await response.json();
+
+            if (response.ok) {
+                setSuggestions(responseData.data);
+            }
+            setIsLoading(false)
+        } catch (error) {
+            console.error('Error fetching suggestions:', error);
+        }
+    }, 300)
+
+
     const fetchSuggestions = useCallback(
-        debounce(async (value: string) => {
-            if (value.length === 0) {
-                setShowSuggestions(false);
-                return;
-            }
-
-            setShowSuggestions(true);
-
-            const data: TAddressSearchSchema = {
-                input: value,
-                //just take email instead of userid becuase user is not logged in and does not have id at that moment
-                user_id: id,
-            };
-
-            try {
-                const response = await fetch("/api/suggestion", {
-                    method: "POST",
-                    body: JSON.stringify(data),
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
-
-                const responseData = await response.json();
-
-                if (response.ok) {
-                    setSuggestions(responseData.data);
-                }
-                setIsLoading(false)
-            } catch (error) {
-                console.error('Error fetching suggestions:', error);
-            }
-        }, 300),
-        [id, setShowSuggestions, setSuggestions, setIsLoading]
-    );
+        (value: string) => {
+            deboucnedSuggestions(value)
+        },
+        [deboucnedSuggestions]
+    )
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;

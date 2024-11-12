@@ -148,7 +148,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
         return () => {
             document.removeEventListener('mousedown', suggestion);
         };
-    }, []);
+    }, [address, form, initialData]);
 
     const onSubmit = async (data: Listing) => {
         let converted_address: AddressProduct = {}
@@ -194,7 +194,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             })
             return
         }
-        
+
         const filterRemovedItems = (initialData: Listing, data: Listing, option: boolean) => {
             return initialData.all_img.filter(item => {
                 const fileName = item.slice(item.lastIndexOf('/') + 1);
@@ -299,39 +299,44 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
     }
 
 
+    const debouncedFetchSuggestions = debounce(async (value: string) => {
+        if (value.length === 0) {
+            setShowSuggestions(false);
+            return;
+        }
+
+        setShowSuggestions(true);
+
+        const data: TAddressSearchSchema = {
+            input: value,
+            user_id: form.getValues("user_id"),
+        };
+
+        try {
+            const response = await fetch("/api/suggestion", {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            const responseData = await response.json();
+
+            if (response.ok) {
+                setSuggestions(responseData.data);
+            }
+            setIsLoading(false);
+        } catch (error) {
+            console.error('Error fetching suggestions:', error);
+        }
+    }, 300);
+
     const fetchSuggestions = useCallback(
-        debounce(async (value: string) => {
-            if (value.length === 0) {
-                setShowSuggestions(false);
-                return;
-            }
-
-            setShowSuggestions(true);
-
-            const data: TAddressSearchSchema = {
-                input: value,
-                user_id: form.getValues("user_id"),
-            };
-            try {
-                const response = await fetch("/api/suggestion", {
-                    method: "POST",
-                    body: JSON.stringify(data),
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
-
-                const responseData = await response.json();
-
-                if (response.ok) {
-                    setSuggestions(responseData.data);
-                }
-                setIsLoading(false)
-            } catch (error) {
-                console.error('Error fetching suggestions:', error);
-            }
-        }, 300),
-        [id, setShowSuggestions, setSuggestions, setIsLoading]
+        (value: string) => {
+            debouncedFetchSuggestions(value);
+        },
+        [debouncedFetchSuggestions]
     );
 
     const handleDates = async (item: DateRange | undefined) => {

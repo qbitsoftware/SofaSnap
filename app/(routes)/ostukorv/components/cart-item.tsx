@@ -27,32 +27,34 @@ export const CartItemComponent: React.FC<CartItemProps> = ({ cartItem, product, 
   const [totalWithfee, setTotalWithFee] = useState<number>(0)
   const [totalWithoutFee, setTotalWithoutFee] = useState<number>(0)
   const [dateRange, setDateRange] = useState<number>(0)
-  const {removeItemFromCart} = useCart()
+  const { removeItemFromCart } = useCart()
 
 
   useEffect(() => {
+    const handleRentPrice = (from: Date, to: Date) => {
+      const daysDif = differenceInCalendarDays(to, from) + 1
+      setDateRange(daysDif)
+      const totalwithoutfee = round(daysDif * product.price)
+      const totalwithfee = round(totalwithoutfee * 1.05)
+      setTotalWithoutFee(totalwithoutfee)
+      setTotalWithFee(totalwithfee)
+    }
+
+    const handleSellPrice = () => {
+      const totalwithoutfee = product.price
+      const totalwithfee = round(totalwithoutfee * 1.05)
+      setTotalWithoutFee(totalwithoutfee)
+      setTotalWithFee(totalwithfee)
+    }
+
     if (cartItem && cartItem.from && cartItem.to) {
       handleRentPrice(cartItem.from, cartItem.to)
     } else if (cartItem) {
       handleSellPrice()
     }
-  }, [cartItem])
+  }, [cartItem, product.price])
 
-  const handleRentPrice = (from: Date, to: Date) => {
-    const daysDif = differenceInCalendarDays(to, from) + 1
-    setDateRange(daysDif)
-    const totalwithoutfee = round(daysDif * product.price)
-    const totalwithfee = round(totalwithoutfee * 1.05)
-    setTotalWithoutFee(totalwithoutfee)
-    setTotalWithFee(totalwithfee)
-  }
 
-  const handleSellPrice = () => {
-    const totalwithoutfee = product.price
-    const totalwithfee = round(totalwithoutfee * 1.05)
-    setTotalWithoutFee(totalwithoutfee)
-    setTotalWithFee(totalwithfee)
-  }
 
   const handleRemoveItem = async (cart_item_id: number, cart_id: number) => {
     await removeItemFromCart(cart_item_id, cart_id)
@@ -101,9 +103,9 @@ export const CartItemComponent: React.FC<CartItemProps> = ({ cartItem, product, 
               </div>
               <Separator />
               <div className='flex justify-between font-semibold mt-2'>
-                  <p>Kokku</p>
-                  <p>{totalWithfee}€</p>
-                </div>
+                <p>Kokku</p>
+                <p>{totalWithfee}€</p>
+              </div>
             </div>
           }
         </div>

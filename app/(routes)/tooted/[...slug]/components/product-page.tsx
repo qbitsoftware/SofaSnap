@@ -11,7 +11,6 @@ import AddressComponent from './address'
 import { ServerError } from '@/components/server-error'
 import { SellForm } from './sell-form'
 import Link from 'next/link'
-import ReviewForm from './product-review-form'
 import { GetUserInfo } from '@/app/actions'
 import { getOrderItemsByProduct } from '@/utils/supabase/queries/orders'
 import { cn } from '@/lib/utils'
@@ -39,7 +38,6 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
   }
 
   await addClick(product_id)
-  console.log("ORDERITEMS",orderItems)
 
   if (error || !data) {
     redirect("/404")

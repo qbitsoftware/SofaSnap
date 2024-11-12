@@ -28,7 +28,6 @@ export const addOrder = async (cart: CartItemWithDetails[]) => {
                         eq(order.buyer_id, cart[0].cart.user_id),
                         eq(order.is_paid, false))
                 )
-            console.log("OLDORDER", oldOrder)
 
             for (let i = 0; i < oldOrder.length; i++) {
                 await tx.delete(order).where(eq(order.id, oldOrder[i].id))
@@ -49,7 +48,7 @@ export const addOrder = async (cart: CartItemWithDetails[]) => {
             await tx.insert(order_item).values(orderItemsData);
 
             return {
-                data: order,
+                data: null,
                 error: undefined
             }
         });
