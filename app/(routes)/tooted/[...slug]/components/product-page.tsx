@@ -70,8 +70,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
       }
       {/* <div className='flex justify-center'>
         <ReviewForm product_id={product_id} />
-      </div> */}
-
+    </div> */}
       <div className='w-full mx-auto'>
           {data.type == "rent"
               ? <RentForm product={data} user={user.data.user} orderItems={orderItems!}/>
