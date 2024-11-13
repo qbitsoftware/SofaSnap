@@ -24,7 +24,6 @@ const ChangePassword = () => {
 
     const onSubmit = async (data: TPasswordChangeSchema) => {
         const { error } = await changePasswordAction(data)
-        console.log("Error", error)
         if (error) {
             if (typeof error == 'string') {
                 toast.toast({

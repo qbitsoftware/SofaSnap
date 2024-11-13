@@ -4,10 +4,10 @@ import { CircleUser, Globe, ShoppingCart } from 'lucide-react'
 import Link from 'next/link'
 import Profile from './nav-bar-profile'
 import { motion } from 'framer-motion'
-import { User } from '@/utils/supabase/supabase.types'
+import { TSignUpSchema } from '@/lib/register-validation'
 
 interface NavIconsProps {
-    user: User | null
+    user: TSignUpSchema | undefined
     cartItems: number | undefined
 }
 const NavIcons = ({ user, cartItems }: NavIconsProps) => {

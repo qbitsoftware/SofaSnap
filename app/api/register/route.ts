@@ -35,7 +35,7 @@ export async function POST(request: Request) {
                         address: result.data.address.properties.full_address,
                         phone: result.data.phone,
                         agreement: result.data.agreement,
-
+                        role: 0,
                     },
                 },
             });

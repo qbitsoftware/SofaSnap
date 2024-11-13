@@ -1,10 +1,9 @@
 import { calculatePrice } from "@/lib/utils";
 import db from "../db"
 import { order, order_item } from "../schema"
-import { CartItemTS, Order, OrderItemTS, OrderTS } from "../supabase.types"
+import { OrderItemTS, OrderTS } from "../supabase.types"
 import { CartItemWithDetails } from "./cart";
 import { and, eq } from "drizzle-orm";
-import { error } from "console";
 
 export const addOrder = async (cart: CartItemWithDetails[]) => {
     try {

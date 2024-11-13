@@ -33,8 +33,8 @@ const Footer = () => {
         title: "Tugi",
         items: [
             {
-                title: "Abikeskus",
-                url: "/abikeskus",
+                title: "Kontaktid",
+                url: "/kontaktid",
             },
             {
                 title: "Tuhistamisvoimalus",

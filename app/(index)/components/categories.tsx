@@ -73,7 +73,7 @@ export const Categories: React.FC<CategoryProps> = ({ data, error }) => {
         <div className='relative'>
           {showTopButton && (
             <Button
-              className='absolute top-0 left-1/2 -translate-x-1/2 z-10'
+              className='absolute top-3 left-1/2 -translate-x-1/2 z-10'
               onClick={() => scrollTo('up')}
             >
               <ChevronUp className="h-4 w-4" />
@@ -81,7 +81,7 @@ export const Categories: React.FC<CategoryProps> = ({ data, error }) => {
           )}
           <div
             ref={scrollContainerRef}
-            className='max-h-[calc(100vh-200px)] overflow-y-auto'>
+            className='max-h-[calc(100vh-320px)] overflow-y-auto'>
             {data.map((category, index) => (
 
               (category.sub_categories?.length != 0 &&
@@ -111,7 +111,7 @@ export const Categories: React.FC<CategoryProps> = ({ data, error }) => {
           </div>
           {showBottomButton && (
             <Button
-              className='absolute bottom-0 left-1/2 -translate-x-1/2 z-10'
+              className='absolute bottom-3 left-1/2 -translate-x-1/2 z-10'
               onClick={() => scrollTo('down')}
             >
               <ChevronDown className="h-4 w-4" />

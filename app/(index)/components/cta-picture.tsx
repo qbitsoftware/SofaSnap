@@ -11,7 +11,8 @@ export const Cta = () => {
             <Image
                 className="absolute scale-100"
                 fill
-                objectFit="contain"
+                // objectFit="contain"
+                style={{ objectFit: "contain" }}
                 src="/images/hand-shaking-background2.png"
                 alt="second handshaking background"
             />
@@ -23,7 +24,7 @@ export const Cta = () => {
                 src="/images/Käed3.svg"
                 alt="handshaking"
             />
-             <Image
+            <Image
                 className="absolute aspect-[659/330] left-1/2 translate-x-[-50%] w-[55%] bottom-[-7.8%]"
                 width={0}
                 height={0}
@@ -32,8 +33,8 @@ export const Cta = () => {
             />
             {/* Text in the top-left on md and above */}
             <div className="absolute top-24 left-24 p-4 hidden md:block">
-                <h1 className={cn("text-lg md:text-4xl lg:text-7xl font-semibold text-gray-900 flex flex-col", MontserratAlternates.className)}>      
-                        Teeni seisma<br></br> jäänud mööblilt
+                <h1 className={cn("text-lg md:text-4xl lg:text-7xl font-semibold text-gray-900 flex flex-col", MontserratAlternates.className)}>
+                    Teeni seisma<br></br> jäänud mööblilt
                 </h1>
             </div>
 

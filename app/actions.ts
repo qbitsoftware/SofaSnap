@@ -12,6 +12,7 @@ import { AuthError } from "@supabase/supabase-js";
 import { fetchUserAddress } from "@/utils/supabase/queries/address";
 import { addCartItem, CartItemWithDetails, createCart, getCart, GetCartResult, removeCartItem } from "@/utils/supabase/queries/cart";
 import { addOrder } from "@/utils/supabase/queries/orders";
+import { createComplaint, getAllComplaints, updateComplaint } from "@/utils/supabase/queries/complaint";
 
 
 export const signUpAction = async (formData: FormData) => {
@@ -164,27 +165,23 @@ export async function createProductAction(body: TProductServer) {
       result.error.issues.forEach((issue) => {
         zodErrors[issue.path[0]] = issue.message;
       });
-      console.log("Zod validation errors:", zodErrors);
       return { errors: zodErrors, status: 400 };
     }
 
     //check if user has accepted terms and service
     const user = await GetUserInfo()
     if (user.error) {
-      console.log("Error adding product: ", user.error)
       return { error: "Unexpected error occured", status: 500 }
     }
 
     const { error } = await addProduct(result.data);
     if (error) {
-      console.error("Error adding product:", error);
       return { error: 'Unexpected error occurred', status: 500 };
     }
 
-    // console.log("Product added successfully:", result.data);
     return { data: "Product successfully added", status: 200 };
   } catch (error) {
-    console.error("Server action error:", error);
+    console.log("error", error)
     return { error: 'Unexpected error occurred', status: 500 };
   }
 }
@@ -289,4 +286,16 @@ export async function removeCartItemAction(cart_item_id: number, cart_id: number
 
 export async function addOrderAction(cart: CartItemWithDetails[]) {
   return await addOrder(cart)
+}
+
+export async function createComplaintAction(text: string) {
+  return await createComplaint(text)
+}
+
+export async function getAllComplaintsAction() {
+  return await getAllComplaints()
+}
+
+export async function updateComplaintAction(id: number) {
+  return await updateComplaint(id)
 }

@@ -11,8 +11,8 @@ const BeforeProfiil = async () => {
     if (!user.data.user) {
         redirect("/login")
     }
-
     const userInfo = user.data.user.user_metadata as TSignUpSchema
+
     return (
         <div className="flex flex-col items-center mt-[68px] lg:mx-auto">
             <div className="flex flex-col  lg:px-[64px] w-[300px] md:w-[700px] lg:w-[1000px] xl:w-[1200px] max-w-[1440px]">

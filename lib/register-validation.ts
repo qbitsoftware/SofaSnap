@@ -13,6 +13,7 @@ export const registerValidator = z.object({
     password: z.string().min(6, 'Parool peab olema vahemalt 6 tahemarki pikk'),
     confirm_password: z.string(),
     agreement: z.boolean().refine(val => val, 'Vali peab olema taidetud'),
+    role: z.number().optional(),
 }).refine(data => data.password === data.confirm_password, {
     message: 'Paroolid ei yhti',
     path: ['confirm_password'],

@@ -8,17 +8,16 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { motion } from 'framer-motion'
-import { User } from '@/utils/supabase/supabase.types'
 import { useRouter } from 'next/navigation'
 import { useToast } from './hooks/use-toast'
 import { createClient } from '@/utils/supabase/client'
 import { getURL } from 'next/dist/shared/lib/utils'
+import { TSignUpSchema } from '@/lib/register-validation'
 
 interface ProfileProps {
-    user: User | null
+    user: TSignUpSchema | undefined
 }
 export default function Profile({ user }: ProfileProps) {
-    void user
 
     const router = useRouter()
     const toast = useToast()
@@ -35,12 +34,12 @@ export default function Profile({ user }: ProfileProps) {
         })
     }
     const menuItems = [
-        { label: 'Profiil', href: '/profiil', protected: true },
-        { label: 'Minu kuulutused', href: '/kuulutused', protected: true },
-        { label: 'Lisa kuulutus', href: '/lisa-toode', protected: true },
-        { label: 'Ostukorv', href: '/ostukorv', protected: true },
-        { label: 'Sõnumid', href: '/messages', protected: true },
-        // { label: 'Seaded', href: '/settings' },
+        { label: 'Profiil', href: '/profiil', protected: false },
+        { label: 'Minu kuulutused', href: '/kuulutused', protected: false },
+        { label: 'Lisa kuulutus', href: '/lisa-toode', protected: false },
+        { label: 'Ostukorv', href: '/ostukorv', protected: false },
+        { label: 'Sõnumid', href: '/messages', protected: false },
+        { label: 'Admin', href: '/admin', protected: true },
         { label: 'Logi välja', action: logout },
     ]
 
@@ -58,25 +57,33 @@ export default function Profile({ user }: ProfileProps) {
                     </motion.div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="center" sideOffset={12} className="w-56">
-                    {menuItems.map((item, index) => (
-                        <DropdownMenuItem key={index} asChild>
-                            {item.action ? (
-                                <button
-                                    onClick={item.action}
-                                    className="flex w-full items-center px-2 py-2 text-sm transition-colors hover:bg-gray-100 cursor-pointer"
-                                >
-                                    {item.label}
-                                </button>
-                            ) : (
-                                <Link
-                                    href={item.href}
-                                    className="flex w-full items-center px-2 py-2 text-sm transition-colors hover:bg-gray-100 cursor-pointer"
-                                >
-                                    {item.label}
-                                </Link>
-                            )}
-                        </DropdownMenuItem>
-                    ))}
+                    {menuItems.map((item, index) => {
+                        if (item.protected && user?.role == 0) {
+                            console.log("test")
+                            return null
+                        } else {
+                            return (
+
+                                <DropdownMenuItem key={index} asChild>
+                                    {item.action ? (
+                                        <button
+                                            onClick={item.action}
+                                            className="flex w-full items-center px-2 py-2 text-sm transition-colors hover:bg-gray-100 cursor-pointer"
+                                        >
+                                            {item.label}
+                                        </button>
+                                    ) : (
+                                        <Link
+                                            href={item.href}
+                                            className="flex w-full items-center px-2 py-2 text-sm transition-colors hover:bg-gray-100 cursor-pointer"
+                                        >
+                                            {item.label}
+                                        </Link>
+                                    )}
+                                </DropdownMenuItem>
+                            )
+                        }
+                    })}
                 </DropdownMenuContent>
             </DropdownMenu>
         </div>
