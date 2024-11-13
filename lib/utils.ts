@@ -89,11 +89,14 @@ export const calculatePrice = (cartItems: CartItemWithDetails[]): CartTotal => {
     }
   }, 0);
 
+  console.log(totalPrice,
+   totalPrice * 0.05,
+    totalPrice + (totalPrice * 0.05),)
 
   return {
     price: totalPrice,
-    fee: totalPrice * 0.05,
-    total: round(totalPrice * 1.05),
+    fee: round(totalPrice * 0.05),
+    total: round(totalPrice + (totalPrice * 0.05)),
   }
 
 }

@@ -5,13 +5,14 @@ import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { productSchemaServer, Review, TProductServer } from "@/lib/product-validation";
-import { addProduct, addReview, fetchAllProducts, fetchProductsByCategories } from "@/utils/supabase/queries/products";
+import { addClick, addProduct, addReview, fetchAllProducts, fetchProduct, fetchProductsByCategories, getProductReviews } from "@/utils/supabase/queries/products";
 import { Cart, CartItem, Product } from "@/utils/supabase/supabase.types";
 import { passwordChangeValidator, TPasswordChangeSchema } from "@/lib/register-validation";
 import { AuthError } from "@supabase/supabase-js";
 import { fetchUserAddress } from "@/utils/supabase/queries/address";
 import { addCartItem, CartItemWithDetails, createCart, getCart, GetCartResult, removeCartItem } from "@/utils/supabase/queries/cart";
-import { addOrder } from "@/utils/supabase/queries/orders";
+import { addOrder, getOrderItemsByProduct } from "@/utils/supabase/queries/orders";
+import { CheckCategories, FetchCategories } from "@/utils/supabase/queries/categories";
 
 
 export const signUpAction = async (formData: FormData) => {
@@ -189,12 +190,12 @@ export async function createProductAction(body: TProductServer) {
   }
 }
 
-export async function fetchProducts(page: number): Promise<{ data: Product[] | undefined, error: string | undefined, totalCount: number }> {
-  return await fetchAllProducts(page)
+export async function fetchProducts(page: number, currentSort: string | undefined): Promise<{ data: Product[] | undefined, error: string | undefined, totalCount: number }> {
+  return await fetchAllProducts(page, currentSort)
 }
 
-export async function FetchProductsByCategories(categories: string[], page: number): Promise<{ data: Product[] | undefined, error: string | undefined, totalCount: number }> {
-  return await fetchProductsByCategories(categories, page)
+export async function FetchProductsByCategories(categories: string[], page: number, currentSort: string | undefined): Promise<{ data: Product[] | undefined, error: string | undefined, totalCount: number }> {
+  return await fetchProductsByCategories(categories, page, currentSort)
 }
 
 export async function changePasswordAction(pw: TPasswordChangeSchema): Promise<{ data: undefined, error: string | undefined | Record<string, string> | AuthError }> {
@@ -289,4 +290,32 @@ export async function removeCartItemAction(cart_item_id: number, cart_id: number
 
 export async function addOrderAction(cart: CartItemWithDetails[]) {
   return await addOrder(cart)
+}
+
+export async function fetchCategoriesAction()  {
+  return await FetchCategories() 
+}
+
+export async function fetchProductsByCategoriesAction(categories: string[], page: number, sort: string | undefined) {
+  return await FetchProductsByCategories(categories, page, sort)
+}
+
+export async function checkCategoriesAction(categories: string[]) {
+  return await CheckCategories(categories)
+}
+
+export async function fetchProductAction(product_id:number) {
+  return await fetchProduct(product_id)
+}
+
+export async function getProductReviewsAction(product_id: number) {
+  return await getProductReviews(product_id)
+}
+
+export async function addClickAction(id: number) {
+  return await addClick(id)
+}
+
+export async function getOrderItemsByProductAction(product_id: number) {
+  return await getOrderItemsByProduct(product_id)
 }

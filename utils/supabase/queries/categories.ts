@@ -1,4 +1,4 @@
-"server-only"
+"server only"
 
 import { inArray } from "drizzle-orm"
 import db from "../db"

@@ -1,13 +1,14 @@
 "server only"
+
 import db from '@/utils/supabase/db'
 import { category, category_join, product, address, address_join_product, review, product_review } from '@/utils/supabase/schema'
-import { eq, and, sql, desc, inArray, gte } from 'drizzle-orm'
+import { eq, and, sql, desc, inArray, gte, asc } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
 import { AddressJoinProductTS, AddressTS, CategoryJoin, CategoryTS, Product, ProductRealTS, ProductReview, ProductReviewTS, ProductWithAddress } from '../supabase.types'
 import { Review, TProductServer } from '@/lib/product-validation'
 import { GetUserInfo } from '@/app/actions'
 
-export const fetchProductsByCategories = async (categories: string[], page: number, limit = 30) => {
+export const fetchProductsByCategories = async (categories: string[], page: number, sort: string | undefined, limit = 30) => {
     const offset = (page - 1) * limit
     const categoryJoinAlias = alias(category_join, 'cj2');
 
@@ -38,6 +39,8 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
             .innerJoin(product, eq(product.id, category_join.product_id));
 
+
+
         if (categories.length > 1) {
             // @ts-ignore
             query = query
@@ -56,7 +59,15 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
 
         const result = await query
             .limit(limit)
-            .offset(offset);
+            .offset(offset)
+            .orderBy(
+                sort === 'date' ? desc(product.created_at) :
+                    sort === 'price_asc' ? asc(product.price) :
+                        sort === 'price_desc' ? desc(product.price) :
+                            sort === 'popularity' ? desc(product.total_clicks) :
+                                desc(product.created_at)
+            );
+
         let countQuery = db
             .select({ count: sql`count(*)`.mapWith(Number) })
             .from(category_join)
@@ -82,6 +93,7 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
         const countResult = await countQuery;
         const totalCount = countResult[0]?.count || 0;
 
+        console.log("RWESullt", result)
 
         return {
             data: result,
@@ -98,20 +110,27 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
     }
 };
 
-export const fetchAllProducts = async (page = 1, limit = 30) => {
+export const fetchAllProducts = async (page = 1, sort: string | undefined, limit = 30) => {
     const offset = (page - 1) * limit
 
     try {
         const result = await db.select()
             .from(product)
-            .orderBy(desc(product.created_at))
             .limit(limit)
             .offset(offset)
+            .orderBy(
+                sort === 'date' ? desc(product.created_at) :
+                    sort === 'price_asc' ? asc(product.price) :
+                        sort === 'price_desc' ? desc(product.price) :
+                            sort === 'popularity' ? desc(product.total_clicks) :
+                                desc(product.created_at)
+            );
 
         const [{ count }] = await db.select({
             count: sql<number>`count(*)`
         }).from(product)
 
+        console.log(result)
         return {
             data: result as Product[],
             error: undefined,

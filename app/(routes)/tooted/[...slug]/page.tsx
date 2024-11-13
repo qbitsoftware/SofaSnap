@@ -1,15 +1,15 @@
 import React from 'react'
 import ProductPage from './components/product-page'
 import { CategoryNavigation } from './components/category-navigation'
-import { ChevronLeft } from 'lucide-react'
+import {ChevronLeft } from 'lucide-react'
 import { MapButton } from '@/components/map-button'
 import { capitalize } from '@/utils/utils'
-import { Filter } from './components/filter'
 import { ProductList } from './components/product-list'
 import { FetchProductsByCategories } from '@/app/actions'
 import { redirect } from 'next/navigation'
 import { CheckCategories, FetchCategories } from '@/utils/supabase/queries/categories'
 import Link from 'next/link'
+import { SortDropdown } from './components/sort-dropdown'
 
 const PRODUCTS_PER_PAGE = 30
 
@@ -18,7 +18,7 @@ const CategoryPage = async ({
   searchParams,
 }: {
   params: { slug: string[] }
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: { [key: string]: string | string[] | undefined, sort?: string }
 }) => {
 
   let page = 1
@@ -62,7 +62,7 @@ const CategoryPage = async ({
       redirect('/404')
     }
 
-    const { data: productData, error: productError, totalCount } = await FetchProductsByCategories(categories, page)
+    const { data: productData, error: productError, totalCount } = await FetchProductsByCategories(categories, page, searchParams.sort)
     if (!productData || productError) {
       redirect('/404')
     }
@@ -80,7 +80,9 @@ const CategoryPage = async ({
           <MapButton className='hidden md:flex' />
         </div>
         <div className='md:px-10 mt-4 md:mt-10 mb-[100px] md:mb-0 md:max-w-[860px] lg:max-w-[1152px] xl:max-w-[1310px] sm:max-w-[540px] mx-auto'>
-          <Filter />
+          <div className={'lg:ml-[2%] xl:ml-[1%]'}>
+            <SortDropdown currentPage={page} />
+          </div>
           <div className='md:mt-10 mt-4'>
             <ProductList
               initialProducts={productData}
@@ -88,6 +90,7 @@ const CategoryPage = async ({
               currentPage={page}
               type='category'
               categories={categories}
+              currentSort={searchParams.sort}
             />
           </div>
         </div>

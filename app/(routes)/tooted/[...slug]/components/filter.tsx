@@ -6,7 +6,7 @@ interface FilterProps {
   className?: string
 }
 
-export const Filter:React.FC<FilterProps> = ({className}) => {
+export const Filterrrrr:React.FC<FilterProps> = ({className}) => {
   return (
     <div className={cn('lg:ml-[2%] xl:ml-[1%]', className)}>
         <AlignLeft strokeWidth={1.4} color='#000000' size={44}/>

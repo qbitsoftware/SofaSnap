@@ -17,9 +17,10 @@ interface ProductListProps {
   currentPage: number
   type: string
   categories: string[] | undefined
+  currentSort: string | undefined
 }
 
-export const ProductList: React.FC<ProductListProps> = ({ initialProducts, totalPages, currentPage, type, categories }) => {
+export const ProductList: React.FC<ProductListProps> = ({ initialProducts, totalPages, currentPage, type, categories, currentSort }) => {
   const [products, setProducts] = useState<Product[]>(initialProducts)
   const [page, setPage] = useState(currentPage)
   const [loading, setLoading] = useState(false)
@@ -40,9 +41,9 @@ export const ProductList: React.FC<ProductListProps> = ({ initialProducts, total
     let data: Product[] | undefined, error: string | undefined;
 
     if (type === "category" && categories) {
-      ({ data, error } = await FetchProductsByCategories(categories, nextPage));
+      ({ data, error } = await FetchProductsByCategories(categories, nextPage, currentSort));
     } else {
-      ({ data, error } = await fetchProducts(nextPage));
+      ({ data, error } = await fetchProducts(nextPage, currentSort));
     }
 
 

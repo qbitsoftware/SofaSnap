@@ -27,7 +27,7 @@ export function formatDate(date: Date | undefined) {
 }
 
 export function round(x: number):number {
-  return Math.round(x * 10) / 10
+  return Math.round(x * 100) / 100
 }
 
 export const formatEstonianDate = (date: Date) => {
