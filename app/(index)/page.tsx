@@ -14,7 +14,7 @@ export default async function Index() {
   const { data: popularProducts, error: popularProductError } = await fetchPopularProducts()
   const { data: latestProducts, error: latestProductError } = await fetchLastSeenProducts()
   const { data: categories, error: categoryError } = await FetchCategories()
-  const { data: allProducts } = await fetchAllProducts()
+  const { data: allProducts } = await fetchAllProducts(1, "", 300)
 
   if (popularProductError || latestProductError || categoryError && (popularProductError == "Server error" || categoryError == "Server error" || latestProductError == "Server error")) {
     return (
