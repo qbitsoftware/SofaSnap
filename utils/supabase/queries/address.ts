@@ -1,7 +1,6 @@
 import { eq } from "drizzle-orm"
 import db from "../db"
 import { address, address_join, address_join_product } from "../schema"
-import { error } from "console"
 
 export const fetchProductAddress = async (id: number) => {
     try {

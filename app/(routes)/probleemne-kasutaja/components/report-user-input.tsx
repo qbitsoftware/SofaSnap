@@ -11,6 +11,8 @@ import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormMessage } from '@/components/ui/form'
+import { createComplaintAction } from '@/app/actions'
+import { useToast } from '@/components/hooks/use-toast'
 
 const feedbackSchema = z.object({
     message: z
@@ -22,6 +24,7 @@ const feedbackSchema = z.object({
 type FeedBack = z.infer<typeof feedbackSchema>
 
 export function ReportUserInput() {
+    const toast = useToast()
     const form = useForm<FeedBack>({
         resolver: zodResolver(feedbackSchema),
         defaultValues: {
@@ -34,7 +37,13 @@ export function ReportUserInput() {
 
     const onSubmit = async (message: FeedBack) => {
         setIsSubmitting(true)
-        console.log("Submitted message:", message)
+        try {
+            await createComplaintAction(message.message)
+            toast.toast({ title: "Sõnum saadeti edukalt" })
+        } catch (error) {
+            toast.toast({ title: "Sõnumi saatmisel tekkis tõrge" })
+            console.error(error)
+        }
         form.reset()
         setIsSubmitting(false)
     }

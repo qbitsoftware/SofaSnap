@@ -1,14 +1,91 @@
+"use client"
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { MontserratAlternates } from '@/fonts'
 import { cn } from '@/lib/utils'
 import { Search } from 'lucide-react'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { SearchButton } from './search-button'
 import Link from 'next/link'
+import { Product } from '@/utils/supabase/supabase.types'
+import { useRouter } from 'next/navigation'
 
-export const LandingPage = () => {
+interface Props {
+    products: Product[] | undefined
+}
+
+export const LandingPage = ({ products }: Props) => {
+    const [inputValue, setInputValue] = useState<string>('');
+    const [filteredSuggestions, setFilteredSuggestions] = useState<Product[]>([]);
+    const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
+    const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState<number>(-1);
+
+    const inputRef = useRef<HTMLInputElement>(null);
+    const suggestionsRef = useRef<HTMLUListElement>(null);
+
+    const router = useRouter()
+
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                suggestionsRef.current &&
+                !suggestionsRef.current.contains(event.target as Node) &&
+                inputRef.current &&
+                !inputRef.current.contains(event.target as Node)
+            ) {
+                setShowSuggestions(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setInputValue(value);
+
+        if (value.length > 0 && products) {
+
+            const filtered = products.filter(
+                (product) => product.name.toLowerCase().includes(value.toLowerCase())
+            );
+            setFilteredSuggestions(filtered);
+            setShowSuggestions(true);
+        } else {
+            setShowSuggestions(false);
+        }
+
+        setSelectedSuggestionIndex(-1);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setSelectedSuggestionIndex((prev) =>
+                prev < filteredSuggestions.length - 1 ? prev + 1 : prev
+            );
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setSelectedSuggestionIndex((prev) => (prev > 0 ? prev - 1 : prev));
+        } else if (e.key === 'Enter' && selectedSuggestionIndex > -1) {
+            setInputValue(filteredSuggestions[selectedSuggestionIndex].name);
+            setShowSuggestions(false);
+        }
+    };
+
+    const handleSuggestionClick = (product: Product) => {
+        setInputValue(product.name);
+        setShowSuggestions(false);
+        inputRef.current?.focus();
+        router.push("/tooted/" + product.id)
+    };
+
     return (
         <div className='w-full md:min-h-[470px] lg:min-h-[650px] xl:min-h-[810px] max-w-[1440px] mx-auto mb-[30px]'>
             <div className='flex flex-col md:flex-row md:justify-between w-full'>
@@ -33,7 +110,38 @@ export const LandingPage = () => {
             <div className='md:block hidden md:w-[523px] md:ml-16 relative mt-[26px]'>
                 <Search className='absolute left-5 xl:top-[20px] top-[14px]' color='white' />
                 <SearchButton />
-                <Input className='md:w-[523px] bg-secondary rounded-full md:h-[53px] xl:h-[65px] text-background px-[60px] text-xl' />
+                {/* <Input className='md:w-[523px] bg-[#5C6D72]/30 rounded-full md:h-[53px] xl:h-[65px] text-background px-[60px] text-xl' /> */}
+                <Input
+                    ref={inputRef}
+                    className='md:w-[523px] bg-[#5C6D72]/30 rounded-full md:h-[53px] xl:h-[65px] text-background px-[60px] text-xl'
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
+                    onFocus={() => setShowSuggestions(inputValue.length > 0)}
+                />
+                {showSuggestions && (
+                    <ul
+                        ref={suggestionsRef}
+                        className="absolute z-10 w-full mt-2 bg-[#5C6D72]/70 rounded-xl shadow-lg max-h-60 overflow-auto"
+                    >
+                        {filteredSuggestions.map((product, index) => (
+                            <li
+                                key={index}
+                                className={`px-4 py-2 cursor-pointer text-background hover:bg-[#5C6D72] ${index === selectedSuggestionIndex ? 'bg-[#5C6D72]' : ''
+                                    }`}
+                                onClick={() => handleSuggestionClick(product)}
+                                onMouseEnter={() => {
+                                    router.prefetch(`/tooted/${product.id}`)
+                                }}
+                            >
+                                <div className='flex justify-between'>
+                                    <p>{product.type == "sell" ? "MÜÜK" : "RENT"}: {product.name}</p>
+                                    <p>{product.price}€</p>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </div>
         </div>
     )

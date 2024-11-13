@@ -12,6 +12,7 @@ import { GetUserInfo } from "@/app/actions"
 import Profile from "./nav-bar-profile"
 import { useCart } from "@/hooks/use-cart"
 import { MobileCart } from "./cart-mobile"
+import { TSignUpSchema } from "@/lib/register-validation"
 
 const NavBar = async () => {
 
@@ -20,16 +21,17 @@ const NavBar = async () => {
     const { data } = await getCartItems(user?.data.user?.id)
     const cateogries = await FetchCategories()
 
+    const userInfo = user.data?.user?.user_metadata as TSignUpSchema
 
     return (
         <div className="flex px-6 md:px-[64px] w-full max-w-[1440px] h-[68px] md:h-[50px] mt-[14px] mb-[35px] md:my-[35px] items-center justify-between mx-auto">
             <div className="md:hidden">
                 <MobileNav categories={cateogries.data} />
             </div>
-            <div className="cursor-pointer w-[68px] h-[68px] md:w-[200px] lg:min-w-[250px] xl:w-[545px] flex items-center">
+            <div className="cursor-pointer w-[68px] h-auto md:w-[200px] lg:min-w-[250px] xl:w-[545px] flex items-center">
                 <Link href={"/"}>
                     <Image alt="logo" className="md:hidden" src={"/branding/logo-black-small.svg"} width={68} height={68} />
-                    <Image alt="logo" className="hidden md:inline" src={"/branding/logo-black.svg"} width={211} height={50} />
+                    <Image alt="logo" className="hidden md:inline" src={"/branding/logo-black.svg"} style={{ height: "auto" }} width={211} height={50} />
                 </Link>
             </div>
             <div className="flex md:gap-[5px] lg:gap-[21px] items-center">
@@ -52,13 +54,13 @@ const NavBar = async () => {
                     </div>
                 </div>
                 <div className="xl:w-[132px] hidden md:inline">
-                    <NavIcons user={user.data.user} cartItems={data?.length} />
+                    <NavIcons user={userInfo} cartItems={data?.length} />
                 </div>
                 <div className="md:hidden">
                     {user.data.user ? (
                         <div className="">
 
-                            <Profile user={user.data.user} />
+                            <Profile user={userInfo} />
                             {/* <Link href={"/ostukorv"} className='relative'>
                                 <ShoppingCart width={31} height={31} />
                                 {data && data.length > 0 &&
