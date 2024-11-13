@@ -76,7 +76,7 @@ export const ProductList: React.FC<ProductListProps> = ({ initialProducts, total
     setPage(nextPage)
     setLoading(false)
     loadingRef.current = false
-  }, [hasMore, page, categories, type])
+  }, [hasMore, page, categories, type, currentSort])
 
   useEffect(() => {
     if (!isMobile) return
