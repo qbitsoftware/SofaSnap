@@ -22,6 +22,7 @@ export const Products: React.FC<ProductsProps> = ({ products }) => {
                     ${index % 2 === 0 ? 'justify-self-start lg:justify-self-center' : 'justify-self-end lg:justify-self-center'}`}
                     key={product.id}
                     onClick={() => router.push(`${path}/${product.id}`)}
+                    onMouseEnter={() => {router.prefetch(`${path}/${product.id}`)}}
                 >
                     <ProductCard className='w-full h-full' product={product} />
                 </div>

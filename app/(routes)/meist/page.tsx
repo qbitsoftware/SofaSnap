@@ -13,8 +13,8 @@ const Page = () => {
         <Text />
       </div>
 
-      <div className='w-[240px] md:w-[280px] lg:w-[326px] h-[130px] mb-[100px] md:mb-[160px] lg:mb-[200px] mx-auto'>
-        <Image alt='logo' width={326} height={130} src={"/branding/logo-meist-uus.svg"} />
+      <div className='w-[240px] md:w-[280px] lg:w-[326px] h-auto mb-[100px] md:mb-[160px] lg:mb-[200px] mx-auto'>
+        <Image alt='logo' width={326} height={159} src={"/branding/logo-meist-uus.svg"} />
       </div>
     </div>
   )

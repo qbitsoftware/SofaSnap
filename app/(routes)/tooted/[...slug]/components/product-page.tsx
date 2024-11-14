@@ -27,11 +27,11 @@ interface ProductPageProps {
 const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories }) => {
   const user = await GetUserInfo()
   const { data, error } = await fetchProduct(product_id)
-  const { data: reviews} = await getProductReviews(product_id)
-  const {data: orderItems, error: orderItemError} = await getOrderItemsByProduct(product_id) 
+  const { data: reviews } = await getProductReviews(product_id)
+  const { data: orderItems, error: orderItemError } = await getOrderItemsByProduct(product_id)
 
 
-  if (error && error == "Server error" || orderItemError && orderItemError == "Server error" ) {
+  if (error && error == "Server error" || orderItemError && orderItemError == "Server error") {
     return (
       <ServerError />
     )
@@ -56,7 +56,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
           {<ProductComponent product={data} />}
         </div>
       </div>
-      <div className={cn('md:mt-[100px] mt-[50px', data.type == "sell" ? "mb-[150px]" : "mb-20")}>
+      <div className={cn('md:mt-[100px] mt-[50px]', data.type == "sell" ? "mb-[150px]" : "mb-20")}>
         <ProductImage product={data} />
       </div>
       {/* <div className='bg-[#CBD3CB]/35 '>
@@ -72,11 +72,11 @@ const ProductPage: React.FC<ProductPageProps> = async ({ product_id, categories 
         <ReviewForm product_id={product_id} />
     </div> */}
       <div className='w-full mx-auto'>
-          {data.type == "rent"
-              ? <RentForm product={data} user={user.data.user} orderItems={orderItems!}/>
-              : <SellForm product={data} user={user.data.user} />
-          }
-        </div>
+        {data.type == "rent"
+          ? <RentForm product={data} user={user.data.user} orderItems={orderItems!} />
+          : <SellForm product={data} user={user.data.user} />
+        }
+      </div>
       <div className='md:mb-[200px]'>
         <AddressComponent product={data} className="" />
       </div>

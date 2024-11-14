@@ -13,13 +13,13 @@ interface NavIconsProps {
 const NavIcons = ({ user, cartItems }: NavIconsProps) => {
 
     return (
-        <div className="w-[132px] flex justify-center  gap-[19px] py-[6px]">
+        <div className="md:w-[100px] lg:w-[132px] flex justify-center  gap-[19px] py-[6px]">
             <motion.div
-                className=''
+                className='md:hidden lg:inline'
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >
-                <Link href={"/lisa-toode"}>
+                <Link href={"/tooted"}>
                     <Globe width={31} height={31} />
                 </Link>
             </motion.div>

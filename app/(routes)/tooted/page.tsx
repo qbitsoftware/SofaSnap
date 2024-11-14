@@ -5,11 +5,12 @@ import { AlignLeft, ChevronLeft } from 'lucide-react'
 import { MapButton } from '@/components/map-button'
 import Link from 'next/link'
 import { SortDropdown } from './[...slug]/components/sort-dropdown'
+import { ShoppingBag } from 'lucide-react'
 
 const PRODUCTS_PER_PAGE = 30
-export const dynamic = 'force-dynamic'; 
+export const dynamic = 'force-dynamic';
 
-const Page = async ({ searchParams }: { searchParams: { page?: string, sort?:string } }) => {
+const Page = async ({ searchParams }: { searchParams: { page?: string, sort?: string } }) => {
   const currentPage = searchParams.page ? parseInt(searchParams.page, 10) : 1
 
   const { data, error, totalCount } = await fetchProducts(currentPage, searchParams.sort)
@@ -33,18 +34,25 @@ const Page = async ({ searchParams }: { searchParams: { page?: string, sort?:str
         <MapButton className='md:flex hidden' />
       </div>
       <div className='md:px-10 mt-4 md:mt-10 mb-[100px] md:mb-0 md:max-w-[860px] lg:max-w-[1152px] xl:max-w-[1310px] sm:max-w-[540px] mx-auto'>
-      <div className={'lg:ml-[2%] xl:ml-[1%]'}>
-          <SortDropdown currentPage={currentPage}/>
-      </div>
+        <div className={'lg:ml-[2%] xl:ml-[1%]'}>
+          <SortDropdown currentPage={currentPage} />
+        </div>
         <div className='mt-4 md:mt-10'>
-          <ProductList
-            initialProducts={data || []}
-            totalPages={totalPages}
-            currentPage={currentPage}
-            type={"product"}
-            categories={undefined}
-            currentSort={searchParams.sort}
-          />
+          {!data || data?.length == 0 ?
+            <div className="flex flex-col items-center justify-center p-8 text-center">
+              <ShoppingBag className="w-12 h-12 text-gray-400 mb-4" />
+              <p className="text-lg font-medium text-gray-600">Tooted puuduvad</p>
+            </div>
+            :
+            <ProductList
+              initialProducts={data || []}
+              totalPages={totalPages}
+              currentPage={currentPage}
+              type={"product"}
+              categories={undefined}
+              currentSort={searchParams.sort}
+            />
+          }
         </div>
       </div>
     </div>

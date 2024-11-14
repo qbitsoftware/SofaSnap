@@ -34,10 +34,11 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
                 unique_id: product.unique_id,
                 total_clicks: product.total_clicks,
                 last_visited: product.last_visited,
+                status: product.status,
             })
             .from(category_join)
             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
-            .innerJoin(product, eq(product.id, category_join.product_id));
+            .innerJoin(product, eq(product.id, category_join.product_id))
 
 
 
@@ -48,13 +49,19 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
                 .where(
                     and(
                         eq(category_join.category_name_slug, categories[0]),
-                        eq(categoryJoinAlias.category_name_slug, categories[1])
+                        eq(categoryJoinAlias.category_name_slug, categories[1]),
+                        eq(product.status, "accepted")
                     )
                 );
         } else {
             // @ts-ignore
             query = query
-                .where(eq(category_join.category_name_slug, categories[0]));
+                .where(
+                    and(
+                        eq(product.status, "accepted"),
+                        eq(category_join.category_name_slug, categories[0])
+                    )
+                )
         }
 
         const result = await query
@@ -80,7 +87,8 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
                 .where(
                     and(
                         eq(category_join.category_name_slug, categories[0]),
-                        eq(categoryJoinAlias.category_name_slug, categories[1])
+                        eq(categoryJoinAlias.category_name_slug, categories[1]),
+                        eq(product.status, "accepted")
                     )
                 );
         } else {
@@ -92,8 +100,6 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
 
         const countResult = await countQuery;
         const totalCount = countResult[0]?.count || 0;
-
-        console.log("RWESullt", result)
 
         return {
             data: result,
@@ -116,6 +122,7 @@ export const fetchAllProducts = async (page = 1, sort: string | undefined, limit
     try {
         const result = await db.select()
             .from(product)
+            .where(eq(product.status, "accepted"))
             .limit(limit)
             .offset(offset)
             .orderBy(
@@ -153,6 +160,9 @@ export const fetchLastSeenProducts = async () => {
             .from(product)
             .orderBy(desc(product.last_visited))
             .limit(maxProducts)
+            .where(
+                eq(product.status, "accepted")
+            )
 
         return {
             data: result as Product[],
@@ -173,14 +183,21 @@ export const fetchPopularProducts = async () => {
     try {
         let result = await db.select()
             .from(product)
-            .where(gte(product.created_at, firstDayOfMonth))
+            .where(
+                and(
+                    eq(product.status, "accepted"),
+                    gte(product.created_at, firstDayOfMonth),
+                )
+            )
             .orderBy(desc(product.total_clicks))
             .limit(maxProducts)
-
 
         if (result.length == 0) {
             result = await db.select()
                 .from(product)
+                .where(
+                    eq(product.status, "accepted"),
+                )
                 .orderBy(desc(product.total_clicks))
                 .limit(maxProducts)
         }
@@ -207,6 +224,7 @@ export const fetchProductsWithAddresses = async () => {
                 category: category
             })
             .from(address_join_product)
+            .where(eq(product.status, "accepted"))
             .innerJoin(category_join, eq(address_join_product.product_id, category_join.product_id))
             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
             .innerJoin(product, eq(address_join_product.product_id, product.id))
@@ -247,7 +265,12 @@ export const fetchProductsByIds = async (productIDs: number[]) => {
                 category: category
             })
             .from(address_join_product)
-            .where(inArray(address_join_product.product_id, productIDs))
+            .where(
+                and(
+                    inArray(address_join_product.product_id, productIDs),
+                    eq(product.status, "accepted")
+                )
+            )
             .innerJoin(category_join, eq(address_join_product.product_id, category_join.product_id))
             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
             .innerJoin(product, eq(address_join_product.product_id, product.id))
@@ -296,6 +319,7 @@ export const addProduct = async (prod: TProductServer) => {
         start_date: prod.start_date!,
         end_date: prod.end_date!,
         unique_id: prod.unique_id,
+        status: "pending",
         all_img: prod.all_img,
     }
 
@@ -422,6 +446,19 @@ export const addProduct = async (prod: TProductServer) => {
 
 export const fetchProduct = async (id: number) => {
     try {
+        const user = await GetUserInfo();
+        console.log('user', user.data.user?.user_metadata);
+
+        let statusCondition;
+        if (user && user.data.user?.user_metadata.role !== 1) {
+            statusCondition = eq(product.status, "accepted");
+        }
+        // Construct conditions for the query
+        const conditions = [
+            eq(address_join_product.product_id, id),
+            statusCondition
+        ].filter(Boolean);
+
         const result = await db
             .select({
                 product: product,
@@ -429,7 +466,7 @@ export const fetchProduct = async (id: number) => {
                 category: category
             })
             .from(address_join_product)
-            .where(eq(address_join_product.product_id, id))
+            .where(and(...conditions))
             .innerJoin(category_join, eq(address_join_product.product_id, category_join.product_id))
             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
             .innerJoin(product, eq(address_join_product.product_id, product.id))
@@ -440,6 +477,7 @@ export const fetchProduct = async (id: number) => {
                 error: "No results found"
             }
         }
+        console.log("Result", result)
         const productWithAddress: ProductWithAddress = {
             ...result[0].product,
             address: result[0].address,
@@ -652,6 +690,53 @@ export const getProductReviews = async (product_id: number) => {
         return {
             data: reviews,
             error: undefined
+        }
+    } catch (error) {
+        return {
+            data: undefined,
+            error: "Server error"
+        }
+    }
+}
+
+export const getPendingProducts = async () => {
+    try {
+        const user = await GetUserInfo()
+        if (user.data && user.data.user?.user_metadata.role == 1) {
+            const result = await db.select().from(product).where(eq(product.status, "pending"))
+            return {
+                data: result,
+                error: undefined
+            }
+        }
+        return {
+            data: undefined,
+            error: undefined,
+        }
+
+    } catch (error) {
+        return {
+            data: undefined,
+            error: "Server error"
+        }
+    }
+}
+
+export const updateProductStatus = async (product_id: number, status: string) => {
+    try {
+        const user = await GetUserInfo()
+
+        if (user.data && user.data.user?.user_metadata.role == 1) {
+            await db.update(product).set({ status: status }).where(eq(product.id, product_id))
+            return {
+                data: undefined,
+                error: undefined,
+            }
+
+        }
+        return {
+            data: undefined,
+            error: 'Unauthorized',
         }
     } catch (error) {
         return {

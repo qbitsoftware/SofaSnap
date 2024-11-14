@@ -31,7 +31,7 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, clas
       <CarouselContent className="-ml-2 md:-ml-4">
         {products && products.map((product, idx) => (
           <CarouselItem key={idx} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/3 xl:basis-1/3">
-            <div onClick={() => router.push(`/tooted/${product.id}`)} className="p-1 flex justify-center">
+            <div onClick={() => router.push(`/tooted/${product.id}`)} className="p-1 flex justify-center" onMouseEnter={() => router.prefetch(`/tooted/${product.id}`)}>
               <ProductCard product={product} className="w-full max-w-[312px] h-[350px] md:h-[410px]" />
             </div>
           </CarouselItem>

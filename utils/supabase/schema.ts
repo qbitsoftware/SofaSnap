@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import { float } from "drizzle-orm/mysql-core";
 
-import { boolean, decimal, doublePrecision, integer, pgSchema, pgTable, point, real, serial, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
+import { boolean, decimal, doublePrecision, integer, pgEnum, pgSchema, pgTable, point, real, serial, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
 import { number } from "zod";
 
 const authSchema = pgSchema('auth');
@@ -10,6 +10,7 @@ export const user = authSchema.table('users', {
     id: uuid("id").primaryKey().notNull(),
     // raw_user_meta_data: jsonb("raw_user_meda_data"),
 });
+
 
 export const product = pgTable('products', {
     id: serial("id").primaryKey().notNull(),
@@ -48,6 +49,7 @@ export const product = pgTable('products', {
         mode: 'string',
         precision: 3
     }).$onUpdate(() => sql`NOW()`).defaultNow(),
+    status: text("status").default("pending"),
 })
 
 export const category = pgTable('categories', {

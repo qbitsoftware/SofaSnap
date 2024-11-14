@@ -26,7 +26,7 @@ const MapPage = async () => {
         <Link href={"/"}>
           <ChevronLeft strokeWidth={1} size={44} className='md:ml-[-16px]' />
         </Link>
-        <h1 className='md:text-5xl'>Leia sobiv toode kaardilt</h1>
+        <h1 className='md:text-3xl lg:text-5xl'>Leia sobiv toode kaardilt</h1>
         <Link href={"/tooted"}>
           <Button className='bg-secondary rounded-full px-6 py-6 '>
             Kuva tooted

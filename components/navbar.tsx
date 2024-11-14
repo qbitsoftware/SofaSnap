@@ -30,8 +30,8 @@ const NavBar = async () => {
             </div>
             <div className="cursor-pointer w-[68px] h-auto md:w-[200px] lg:min-w-[250px] xl:w-[545px] flex items-center">
                 <Link href={"/"}>
-                    <Image alt="logo" className="md:hidden" src={"/branding/logo-black-small.svg"} width={68} height={68} />
-                    <Image alt="logo" className="hidden md:inline" src={"/branding/logo-black.svg"} style={{ height: "auto" }} width={211} height={50} />
+                    <Image alt="logo" className="md:hidden" src={"/branding/logo-black-small.svg"} width={68} height={58} />
+                    <Image alt="logo" className="hidden md:inline" src={"/branding/logo-black.svg"} style={{ height: "auto" }} width={211} height={65} />
                 </Link>
             </div>
             <div className="flex md:gap-[5px] lg:gap-[21px] items-center">

@@ -1,7 +1,7 @@
 import React from 'react'
 import ProductPage from './components/product-page'
 import { CategoryNavigation } from './components/category-navigation'
-import {ChevronLeft } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 import { MapButton } from '@/components/map-button'
 import { capitalize } from '@/utils/utils'
 import { ProductList } from './components/product-list'
@@ -10,6 +10,7 @@ import { redirect } from 'next/navigation'
 import { CheckCategories, FetchCategories } from '@/utils/supabase/queries/categories'
 import Link from 'next/link'
 import { SortDropdown } from './components/sort-dropdown'
+import { ShoppingBag } from 'lucide-react'
 
 const PRODUCTS_PER_PAGE = 30
 
@@ -92,6 +93,12 @@ const CategoryPage = async ({
               categories={categories}
               currentSort={searchParams.sort}
             />
+            {productData.length == 0 &&
+              <div className="flex flex-col items-center justify-center p-8 text-center">
+                <ShoppingBag className="w-12 h-12 text-gray-400 mb-4" />
+                <p className="text-lg font-medium text-gray-600">Selles kategoorias puuduvad hetkel tooted</p>
+              </div>
+            }
           </div>
         </div>
       </div>

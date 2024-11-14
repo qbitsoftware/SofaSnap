@@ -157,17 +157,18 @@ export const RentForm: React.FC<DateFormProps> = ({ product, user, orderItems })
                         updateValues(value.from, value.to || value.from!);
                       }
                     }}
-                    disabled={orderItems.map((orderItem) => {
-                      if (orderItem && orderItem.from && orderItem.to) {
-                        return { from: orderItem.from, to: orderItem.to }
-                      } else {
-                        return []
-                      }
-                    })}
+                    disabled={[
+                      { from: new Date(0), to: new Date(new Date().setHours(0, 0, 0, 0) - 1) },
+                      ...orderItems.map((orderItem) => {
+                        if (orderItem && orderItem.from && orderItem.to) {
+                          return { from: orderItem.from, to: orderItem.to };
+                        }
+                        return [];
+                      })
+                    ]}
                   />
                 </PopoverContent>
               </Popover>
-              {/* <FormMessage/> */}
             </FormItem>
           )}
         />
@@ -178,7 +179,7 @@ export const RentForm: React.FC<DateFormProps> = ({ product, user, orderItems })
               alt={product.name}
               width={466}
               height={500}
-              objectFit="contain"
+              style={{ objectFit: "contain" }}
               className="my-6 mx-auto md:mx-10 rounded-lg"
             />
           </div>

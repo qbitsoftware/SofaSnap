@@ -1,45 +1,54 @@
 'use client'
-
-import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Product } from '@/utils/supabase/supabase.types'
+import { updateProductStatusAction } from "@/app/actions"
+import Link from "next/link"
+import { useToast } from "@/components/hooks/use-toast"
+import { useRouter } from "next/navigation"
 
-type Application = {
-    id: number
-    productName: string
-    applicantName: string
-    status: 'pending' | 'accepted' | 'rejected'
+interface Props {
+    products: Product[]
 }
 
-export function ProductApplications() {
-    const [applications, setApplications] = useState<Application[]>([
-        { id: 1, productName: "Super Gadget", applicantName: "John Doe", status: 'pending' },
-        { id: 2, productName: "Awesome Tool", applicantName: "Jane Smith", status: 'pending' },
-        { id: 3, productName: "Cool Device", applicantName: "Bob Johnson", status: 'pending' },
-    ])
+export function ProductApplications({ products }: Props) {
+    const router = useRouter()
+    const toast = useToast()
 
-    const handleAction = (id: number, action: 'accept' | 'reject') => {
-        setApplications(apps => apps.map(app =>
-            app.id === id ? { ...app, status: action === 'accept' ? 'accepted' : 'rejected' } : app
-        ))
+    const resolveProduct = async (answer: string, product_id: number) => {
+        try {
+            await updateProductStatusAction(product_id, answer)
+            if (answer == "accepted") {
+                toast.toast({ title: "Kuulutus edukalt vastuvõetud" })
+            } else {
+                toast.toast({ title: "Kuulutus edukalt tagasi lükatud" })
+            }
+        } catch (error) {
+            console.error(error)
+            toast.toast({ title: "Kuulutuse hindamisega tekkis probleem" })
+        }
+        router.refresh()
     }
 
     return (
         <div className="space-y-4">
-            {applications.map(app => (
+            {products.map(app => (
                 <Card key={app.id} className='bg-white'>
                     <CardHeader>
-                        <CardTitle>{app.productName}</CardTitle>
-                        <CardDescription>Applied by: {app.applicantName}</CardDescription>
+                        <CardTitle>{app.name}</CardTitle>
+                        <CardDescription>Kasutaja ID: {app.user_id}</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <p>Status: {app.status}</p>
+                        <Link href={"/tooted/" + app.id}>
+                            <Button variant="outline">Vaata kuulutust</Button>
+                        </Link>
+                        <p className="pt-5">Staatus: {app.status == "pending" ? "Ootel" : app.status == "accepted" ? "Tagasi lükatud" : "Vastu võetud"}</p>
                     </CardContent>
                     <CardFooter className="flex justify-end space-x-2">
                         {app.status === 'pending' && (
                             <>
-                                <Button onClick={() => handleAction(app.id, 'accept')} variant="outline">Accept</Button>
-                                <Button onClick={() => handleAction(app.id, 'reject')} variant="outline">Reject</Button>
+                                <Button onClick={() => resolveProduct("accepted", app.id)} variant="outline">Kinnita</Button>
+                                <Button onClick={() => resolveProduct("rejected", app.id)} variant="outline">Lükka tagasi</Button>
                             </>
                         )}
                     </CardFooter>

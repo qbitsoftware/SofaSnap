@@ -10,16 +10,16 @@ interface ProductImageProps {
 export const ProductImage: React.FC<ProductImageProps> = ({ product }) => {
   return (
     <div className='bg-[#000000]/10 flex justify-center'>
-      <div className='w-[50%]'>
+      <div className='w-[50%] h-auto'>
         <Image
           // placeholder
-          className='mx-auto'
+          className='mx-auto h-auto'
           src={"/images/tool2.png"}
           alt={product.name}
-          layout='intrinsic'
+          // layout='intrinsic'
           width={531}
-          height={500}
-          objectFit='contain'
+          height={605}
+          style={{ objectFit: 'contain', height: 'auto' }}
         />
       </div>
     </div>

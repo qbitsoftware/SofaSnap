@@ -41,7 +41,9 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
                                 src={image}
                                 alt={product.name}
                                 fill
-                                objectFit='cover'
+                                sizes='(max-width: 1024) 48vw, (max-width: 1280px) 54vw, 60vw'
+                                style={{ objectFit: "cover" }}
+                                priority
                             />
                         </div>
                     ))}
@@ -85,10 +87,18 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
                         </p>
                     </div>
                 </div>
-                <div className=''>
-                    <p className='break-words overflow-wrap break-word whitespace-pre-line'>{product.description}</p>
+                <div className='font-light text-md'>
+                    <div className='flex'>
+                        <p className='font-bold'>Materjal: <span className='font-light'>{product.material}</span></p>
+                    </div>
+                    <div>
+                      <p className='font-bold'>Mõõtmed: <span className='font-light'>{`${product.length} x ${product.width} x ${product.heigth}`}</span></p>
                 </div>
             </div>
+            <div className=''>
+                <p className='break-words overflow-wrap break-word whitespace-pre-line'>{product.description}</p>
+            </div>
         </div>
+        </div >
     )
 }

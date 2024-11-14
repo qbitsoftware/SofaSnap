@@ -14,6 +14,8 @@ import { addCartItem, CartItemWithDetails, createCart, getCart, GetCartResult, r
 import { addOrder, getOrderItemsByProduct } from "@/utils/supabase/queries/orders";
 import { createComplaint, getAllComplaints, updateComplaint } from "@/utils/supabase/queries/complaint";
 import { CheckCategories, FetchCategories } from "@/utils/supabase/queries/categories";
+import { getPendingProducts } from "@/utils/supabase/queries/products";
+import { updateProductStatus } from "@/utils/supabase/queries/products";
 
 
 export const signUpAction = async (formData: FormData) => {
@@ -301,8 +303,8 @@ export async function updateComplaintAction(id: number) {
   return await updateComplaint(id)
 }
 
-export async function fetchCategoriesAction()  {
-  return await FetchCategories() 
+export async function fetchCategoriesAction() {
+  return await FetchCategories()
 }
 
 export async function fetchProductsByCategoriesAction(categories: string[], page: number, sort: string | undefined) {
@@ -313,7 +315,7 @@ export async function checkCategoriesAction(categories: string[]) {
   return await CheckCategories(categories)
 }
 
-export async function fetchProductAction(product_id:number) {
+export async function fetchProductAction(product_id: number) {
   return await fetchProduct(product_id)
 }
 
@@ -327,4 +329,12 @@ export async function addClickAction(id: number) {
 
 export async function getOrderItemsByProductAction(product_id: number) {
   return await getOrderItemsByProduct(product_id)
+}
+
+export async function getPendingProductsAction() {
+  return await getPendingProducts()
+}
+
+export async function updateProductStatusAction(product_id: number, status: string) {
+  return await updateProductStatus(product_id, status)
 }

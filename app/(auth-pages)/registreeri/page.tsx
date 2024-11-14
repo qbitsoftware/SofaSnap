@@ -24,7 +24,7 @@ const Page = async () => {
                 <RegisterForm />
             </div>
             <div className="hidden md:flex w-full h-[532px] mb-[324px] ml-[-350px] lg:ml-[-200px] lg:scale-125 xl:ml-[0px] xl:scale-150 2xl:scale-175 2xl:ml-[250px] overflow-hidden">
-                <Image src={"/images/couch.svg"} height={532} width={1063} objectFit="contain" alt="couch" />
+                <Image src={"/images/couch.svg"} height={532} width={1063} style={{ objectFit: "contain" }} alt="couch" />
             </div>
         </div>
     )

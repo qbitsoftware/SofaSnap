@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap,LoadScriptNext, Marker } from '@react-google-maps/api';
 import Loader from './loader';
 import { ProductWithAddress } from '@/utils/supabase/supabase.types';
 
@@ -24,8 +24,8 @@ const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({ api, products }
         return <div>Error: Google Maps API key is missing</div>;
     }
 
-    const validProducts = products?.filter(product => 
-        product.address?.location?.x != null && 
+    const validProducts = products?.filter(product =>
+        product.address?.location?.x != null &&
         product.address?.location?.y != null
     ) || [];
 
@@ -34,24 +34,24 @@ const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({ api, products }
         : fallbackCenter;
 
     return (
-        <LoadScript googleMapsApiKey={api} loadingElement={<Loader />}>
+        <LoadScriptNext googleMapsApiKey={api} loadingElement={<Loader />}>
             <GoogleMap
                 mapContainerStyle={containerStyle}
                 center={center}
                 zoom={validProducts.length > 0 ? 11 : 7}
             >
                 {validProducts.map((product, idx) => (
-                    <Marker 
-                        key={product.id || idx} 
+                    <Marker
+                        key={idx}
                         position={{
-                            lat: product.address.location.y, 
+                            lat: product.address.location.y,
                             lng: product.address.location.x
-                        }} 
+                        }}
                         title={product.name}
                     />
                 ))}
             </GoogleMap>
-        </LoadScript>
+        </LoadScriptNext>
     );
 };
 

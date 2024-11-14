@@ -91,11 +91,11 @@ export const LandingPage = ({ products }: Props) => {
             <div className='flex flex-col md:flex-row md:justify-between w-full'>
                 <div className="md:ml-16 flex md:flex flex-col md:items-start mt-[20px] md:mt-[83px]">
                     <div className='md:relative md:h-[150px] lg:h-[250px]'>
-                        <h1 className={cn('hidden md:block md:text-4xl lg:text-6xl md:w-[48vw] md:max-w-[553px] h-full font-semibold absolute z-10 text-start', MontserratAlternates.className)}>Rentige mööblit oma<br className='lg:hidden' /> piirkonna inimestelt<br className='lg:hidden' /> </h1>
+                        <h1 className={cn('hidden md:block md:text-4xl lg:text-6xl md:w-[50vw] md:max-w-[553px] h-full font-semibold absolute z-10 text-start', MontserratAlternates.className)}>Rentige mööblit oma<br className='lg:hidden' /> piirkonna inimestelt<br className='lg:hidden' /> </h1>
                         <h1 className={cn('md:hidden text-center text-2xl sm:text-4xl font-semibold', MontserratAlternates.className)}>Anna mööblile uus elu -<br></br>teenid sina, võidab loodus!</h1>
                     </div>
                     <Link className='mx-auto z-10' href={"/lisa-toode"} >
-                        <Button className='md:bg-accent text-[#F07162] bg-transparent md:text-foreground hover:bg-transparent rounded-3xl md:hover:bg-accent md:w-[180px] md:h-[60px] mt-5 md:mt-0 underline md:no-underline'>
+                        <Button className='md:bg-accent text-[#F07162] bg-transparent md:text-foreground hover:bg-transparent rounded-3xl md:hover:bg-[#f07162] md:w-[180px] md:h-[60px] mt-5 md:mt-0 underline md:no-underline'>
                             Lisa oma tooted
                         </Button>
                     </Link>

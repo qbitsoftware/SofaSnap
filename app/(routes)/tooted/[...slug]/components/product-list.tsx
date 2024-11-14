@@ -120,38 +120,41 @@ export const ProductList: React.FC<ProductListProps> = ({ initialProducts, total
           />}
         </div>
       ) : (
-        <div className='my-[100px] hidden md:block'>
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                {page > 1 && (
-                  <PaginationPrevious className='hover:text-white' href={`?page=${page - 1}`} />
-                )}
-              </PaginationItem>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                <PaginationItem key={p}>
-                  <PaginationLink
-                    href={`?page=${p}`}
-                    isActive={p === page}
-                  >
-                    {p}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              {totalPages > 5 && page < totalPages - 2 && (
+        < div className='my-[100px] hidden md:block'>
+          {initialProducts.length != 0 &&
+            <Pagination>
+              <PaginationContent>
                 <PaginationItem>
-                  <PaginationEllipsis />
+                  {page > 1 && (
+                    <PaginationPrevious className='hover:text-white' href={`?page=${page - 1}`} />
+                  )}
                 </PaginationItem>
-              )}
-              <PaginationItem>
-                {page < totalPages && (
-                  <PaginationNext className='hover:text-white' href={`?page=${page + 1}`} />
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                  <PaginationItem key={p}>
+                    <PaginationLink
+                      href={`?page=${p}`}
+                      isActive={p === page}
+                    >
+                      {p}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                {totalPages > 5 && page < totalPages - 2 && (
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
                 )}
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+                <PaginationItem>
+                  {page < totalPages && (
+                    <PaginationNext className='hover:text-white' href={`?page=${page + 1}`} />
+                  )}
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          }
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   )
 }

@@ -28,7 +28,7 @@ export default async function Login({ searchParams }: { searchParams: Message })
         <div className="flex flex-col gap-4 [&>input]:mb-3 mt-8">
           <div className="relative">
             <Label className="absolute top-[-6px] bg-background left-3 py-[2px] px-[4px] rounded-xl" htmlFor="email">Email</Label>
-            <Input className="bg-accent-foreground h-12" name="email" placeholder="you@example.com" required />
+            <Input className="bg-accent-foreground h-12" name="email" placeholder="you@example.com" required autoComplete="off" />
           </div>
           <div className="relative">
             <Label className="absolute top-[-6px] bg-background left-3 py-[2px] px-[4px] rounded-xl" htmlFor="password">Parool</Label>
@@ -45,10 +45,10 @@ export default async function Login({ searchParams }: { searchParams: Message })
               className="text-base text-accent-foreground font-normal underline"
               href="/forgot-password"
             >
-              Forgot Password?
+              Unustasid parooli?
             </Link>
           </div>
-          <SubmitButton className="bg-accent hover:bg-accent w-[256px] h-[48px] md:w-[376px] md:h-[65px] mx-auto mt-10" pendingText="Signing In..." formAction={signInAction}>
+          <SubmitButton className="bg-accent hover:bg-[#f07162] w-[256px] h-[48px] md:w-[376px] md:h-[65px] mx-auto mt-10" pendingText="Sisse logimine..." formAction={signInAction}>
             Logi sisse
           </SubmitButton>
           <Link href={"/registreeri"} className="md:w-[376px] md:h-[65px] bg-[#D9D9D9] mx-auto rounded-lg">

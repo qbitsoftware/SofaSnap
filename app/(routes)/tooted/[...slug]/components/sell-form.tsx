@@ -58,7 +58,7 @@ export const SellForm: React.FC<SellFormProps> = ({ product, user }) => {
                         alt={product.name}
                         width={466}
                         height={500}
-                        objectFit="contain"
+                        style={{ objectFit: 'contain' }}
                         className="my-6 mx-auto md:mx-10 rounded-lg"
                     />
                 </div>

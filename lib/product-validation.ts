@@ -19,6 +19,7 @@ export const productSchema = z
         type: z.string({ message: "Valige kuulutuse tüüp" }).min(1, "Valige sobiv kuulutuse tüüp"),
         price: z.number({ message: "Sisestage sobiv hind" }).min(1, "Madalaim hind on 1 euro").max(1000000, "Hind ei saa olla suurem kui 1 miljon"),
         address: z.string().min(1, "Aadress on nõutud"),
+        status: z.string().optional(),
         all_img: z.array(z.string(), { message: "Lisa vähemalt 1 pilt tootest" }).min(1, "Lisa vähemalt 1 pilt tootest").max(10, "10 pilti on maksimaalne kogus"),
     }).superRefine((value, ctx) => {
 

@@ -17,7 +17,7 @@ export default function ListingCard({ listing }: { listing: ProductAndCategories
                                 src={listing.product.preview_image}
                                 alt={listing.product.name}
                                 layout="fill"
-                                objectFit="cover"
+                                style={{ objectFit: 'cover' }}
                                 sizes="(max-width: 768px) 100vw, 256px"
                             />
                         </div>

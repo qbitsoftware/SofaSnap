@@ -19,7 +19,7 @@ const Footer = () => {
                 url: "/vastutustundlik-rentija"
             },
             {
-                title: "Kindlustus soovitused",
+                title: "Kindlustuse soovitused",
                 url: "/vastutustundlik-rentija"
             },
             // {
@@ -63,15 +63,15 @@ const Footer = () => {
                             <FooterMenu {...menu_2} />
                         </div>
                     </div>
-                    <div className='hidden md:flex w-[160px] h-[72px] items-center justify-center'>
+                    <div className='hidden md:flex  items-center justify-center'>
                         <Link href={"/"}>
-                            <Image alt='footer-logo' width={110} height={72} src={"/branding/logo-white.svg"} />
+                            <Image alt='footer-logo' width={110} height={107} src={"/branding/logo-white.svg"} />
                         </Link>
                     </div>
                 </div>
-                <div className='flex items-center justify-center md:hidden w-[160px] h-[72px] py-[75px]'>
+                <div className='flex items-center justify-center md:hidden py-[35px] pb-[45px]'>
                     <Link href={"/"}>
-                        <Image alt='footer-logo' width={110} height={72} src={"/branding/logo-white.svg"} />
+                        <Image alt='footer-logo' width={110} height={107} src={"/branding/logo-white.svg"} />
                     </Link>
                 </div>
                 <div className='flex '>
