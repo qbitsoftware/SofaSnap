@@ -47,6 +47,7 @@
     "next": "latest",
     "next-themes": "^0.3.0",
     "postgres": "^3.4.4",
+    "posthog-js": "^1.186.1",
     "prettier": "^3.3.3",
     "raw-body": "^3.0.0",
     "react": "18.2.0",

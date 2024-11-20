@@ -2,7 +2,6 @@ import React from 'react'
 import Image from 'next/image'
 import { FooterMenu } from './footer-menu'
 import { FooterMenuProps } from './footer-menu'
-import { FooterBottom } from './footer-bottom'
 import Link from 'next/link'
 
 const Footer = () => {
@@ -22,10 +21,10 @@ const Footer = () => {
                 title: "Kindlustuse soovitused",
                 url: "/vastutustundlik-rentija"
             },
-            // {
-            //     title: "Pildi tuunimine AI abiga",
-            //     url: "/vastutustundlik-rentija"
-            // }
+            {
+                title: "Privaatsuspoliitika",
+                url: "/privaatsuspoliitika"
+            }
         ]
     }
 
@@ -45,8 +44,8 @@ const Footer = () => {
                 url: "/probleemne-kasutaja"
             },
             {
-                title: "Hinnakiri",
-                url: "/hinnakiri"
+                title: "KKK",
+                url: "/kkk"
             }
         ]
     }
@@ -73,9 +72,6 @@ const Footer = () => {
                     <Link href={"/"}>
                         <Image alt='footer-logo' width={110} height={107} src={"/branding/logo-white.svg"} />
                     </Link>
-                </div>
-                <div className='flex '>
-                    <FooterBottom />
                 </div>
             </div>
         </footer>

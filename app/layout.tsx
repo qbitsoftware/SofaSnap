@@ -4,6 +4,8 @@ import { inter } from "@/fonts";
 import { Toaster } from "@/components/ui/toaster";
 import NavBar from "@/components/navbar";
 import ToastProvider from "@/providers/toast-provider";
+import CookieBanner from "@/components/cookie-banner";
+import CSPostHogProvider from "@/providers/posthog-provider";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -23,8 +25,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.className} >
-      <body className="no-scrollbar min-w-[300px] w-full h-full">
-          <ToastProvider/>
+      <CSPostHogProvider>
+        <body className="no-scrollbar min-w-[300px] w-full h-full">
+          <ToastProvider />
           <div>
             <NavBar />
           </div>
@@ -37,7 +40,9 @@ export default function RootLayout({
           <div>
             <Toaster />
           </div>
-      </body>
+          <CookieBanner />
+        </body>
+      </CSPostHogProvider>
     </html>
   );
 }
