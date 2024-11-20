@@ -59,7 +59,6 @@ export default function Profile({ user }: ProfileProps) {
                 <DropdownMenuContent align="center" sideOffset={12} className="w-56">
                     {menuItems.map((item, index) => {
                         if (item.protected && user?.role == 0) {
-                            console.log("test")
                             return null
                         } else {
                             return (

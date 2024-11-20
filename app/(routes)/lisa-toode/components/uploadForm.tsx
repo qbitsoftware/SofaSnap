@@ -145,24 +145,7 @@ function AdvancedImageInput({ images, setImages, baseValue }: ImageInputProps) {
     }
 
   }
-  // const handleDragStart = (e: React.DragEvent<HTMLDivElement>, item: IImage) => {
-  //   setDraggedItem(item)
-  //   e.dataTransfer.effectAllowed = 'move'
-  //   e.dataTransfer.setData('text/plain', item.id)
-  //   console.log("item preview", item.preview.replaceAll(" ", "%20"))
-  //   const dragPreview = document.createElement('div')
-  //   dragPreview.style.width = '100px'
-  //   dragPreview.style.height = '100px'
-  //   dragPreview.style.backgroundImage = `url(${item.preview.replaceAll(" ", "%20")})`
-  //   dragPreview.style.backgroundSize = 'cover'
-  //   dragPreview.style.backgroundPosition = 'center'
-  //   dragPreview.style.border = '2px solid white'
-  //   dragPreview.style.borderRadius = '8px'
-  //   dragPreview.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'
-  //   document.body.appendChild(dragPreview)
-  //   e.dataTransfer.setDragImage(dragPreview, 50, 50)
-  //   setTimeout(() => document.body.removeChild(dragPreview), 0)
-  // }
+
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>, item: IImage) => {
     e.preventDefault()

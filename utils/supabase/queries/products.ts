@@ -136,8 +136,6 @@ export const fetchAllProducts = async (page = 1, sort: string | undefined, limit
         const [{ count }] = await db.select({
             count: sql<number>`count(*)`
         }).from(product)
-
-        console.log(result)
         return {
             data: result as Product[],
             error: undefined,
@@ -447,7 +445,6 @@ export const addProduct = async (prod: TProductServer) => {
 export const fetchProduct = async (id: number) => {
     try {
         const user = await GetUserInfo();
-        console.log('user', user.data.user?.user_metadata);
 
         let statusCondition;
         if (user && user.data.user?.user_metadata.role !== 1) {
@@ -477,7 +474,6 @@ export const fetchProduct = async (id: number) => {
                 error: "No results found"
             }
         }
-        console.log("Result", result)
         const productWithAddress: ProductWithAddress = {
             ...result[0].product,
             address: result[0].address,

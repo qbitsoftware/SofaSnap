@@ -35,7 +35,6 @@ export const useCart = (): CartService => {
             );
 
 
-            console.log(cartItemData, addItemError)
             if (cartItemData && !addItemError ) {
                 toast.success("Toode lisatud ostukorvi");
                 return

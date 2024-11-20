@@ -9,7 +9,7 @@ const LoginGoogle = () => {
     const supabase = createClient()
 
     async function Login() {
-        const { data, error } = await supabase.auth.signInWithOAuth({
+        await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
                 redirectTo: "http://localhost:3000/auth/callback",
@@ -19,7 +19,6 @@ const LoginGoogle = () => {
                 },
             },
         })
-        console.log(data, error)
     }
 
     return (
