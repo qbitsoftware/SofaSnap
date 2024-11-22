@@ -19,7 +19,7 @@ const BeforeProfiil = async () => {
 
                 {!userInfo.agreement &&
                     <div className="flex  text-center h-[50px] items-center justify-center py-[20px] my-5  w-full border-2 rounded-lg bg-yellow-100">
-                        <h1 className="text-slate-700 ">Accept terms of service in order to rent stuff</h1>
+                        <h1 className="text-slate-700 ">Rendi-ja müügiteenuste kasutamiseks nõustuge kasutustingimustega.</h1>
                     </div>
                 }
 

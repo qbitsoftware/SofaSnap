@@ -24,7 +24,7 @@ const LoginFacebook = () => {
 
     return (
         <div>
-            <Button className='w-[80px] md:w-[130px] h-[44px] bg-background hover:bg-background border-[1px] border-[#D2D5DA]' onClick={() => Login()}>
+            <Button className='w-[123px] md:w-[195px] h-[44px] bg-background hover:bg-background border-[1px] border-[#D2D5DA]' onClick={() => Login()}>
                 <Image src={"/icons/facebook.svg"} alt='facebook' width={24} height={24} />
             </Button>
         </div>
