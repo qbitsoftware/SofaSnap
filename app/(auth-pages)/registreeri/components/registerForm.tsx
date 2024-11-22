@@ -61,12 +61,12 @@ const RegisterForm = () => {
             const { code } = responseData
             if (code == "user_already_exists") {
                 toast.toast({
-                    title: "User with this email already exists",
+                    title: "Kasutaja selle emailiga on juba registreeritud.",
                 })
                 return
             }
             toast.toast({
-                title: "Register failed, contact administrator",
+                title: "Registreerimine ebaõnnestus. Proovige hiljem uuesti.",
             })
             return;
         }
@@ -130,7 +130,7 @@ const RegisterForm = () => {
 
         if (responseData.success) {
             toast.toast({
-                title: "Account created successfully",
+                title: "Kasutaja edukalt loodud",
             })
             router.push("/")
             router.refresh()

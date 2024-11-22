@@ -10,18 +10,15 @@ export async function POST(req: Request) {
 
         for (const [, value] of formData.entries()) {
             if (value instanceof File) {
-                // Validate the file size (limit to 10MB)
                 if (value.size > 10 * 1024 * 1024) {
                     return NextResponse.json({ error: 'Fail on liiga suur' }, { status: 400 });
                 }
 
-                // Validate the file type (only allow PNG, JPG, JPEG, SVG)
                 const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
                 if (!allowedTypes.includes(value.type)) {
                     return NextResponse.json({ error: 'Faili tüüp on keelatud' }, { status: 400 });
                 }
 
-                // If validation passes, add the file to the list
                 files.push(value);
             }
             if (typeof value == "string") {
@@ -29,11 +26,8 @@ export async function POST(req: Request) {
             }
         }
 
-        // return NextResponse.json({ data: undefined }, { status: 200 });
-
         const filePaths: string[] = new Array(files.length);
 
-        // console.log("Starting to upload files to bucket")
         const supabase = createClient()
         const uploadPromises = files.map(async (file, index) => {
             const filename = `${uuidv4()}-${file.name}`.replaceAll(" ", "");
@@ -48,24 +42,20 @@ export async function POST(req: Request) {
             if (data) {
                 const filepath = data.path;
                 if (process.env.BUCKET_URL) {
-                    // filePaths.push(process.env.BUCKET_URL! + "/" + filepath);
                     filePaths[index] = process.env.BUCKET_URL! + "/" + filepath
-                } else {
-                    console.error("Missing bucket url")
                 }
             }
 
             if (error) {
-                console.log("Error uploading file", error);
+                void error;
                 throw new Error("Upload failed");
             }
         });
         if (filesToRemove.length > 0) {
-            console.log("Files to remove", filesToRemove)
             const { error } = await supabase.storage.
                 from("resources").remove(filesToRemove)
             if (error) {
-                console.log("Error removing file", error);
+                void error;
                 throw new Error("File removal failed")
             }
         }
@@ -73,7 +63,7 @@ export async function POST(req: Request) {
         await Promise.all(uploadPromises);
         return NextResponse.json({ data: filePaths }, { status: 200 });
     } catch (error) {
-        console.log(error)
+        void error;
         return NextResponse.json({ error: 'Unexpected error occurred' }, { status: 500 });
     }
 }

@@ -47,7 +47,7 @@ export default function ReviewForm({ product_id }: ReviewFormProps) {
             form.reset()
             toast.toast({ title: "Hinnang on edukalt lisatud" })
         } catch (error) {
-            console.log("Big error", error)
+            void error
             toast.toast({ title: "Hinnangu lisamisel tekkis viga" })
         }
     }

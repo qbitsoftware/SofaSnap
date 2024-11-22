@@ -74,7 +74,7 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
 
         if (!response.ok) {
             toast.toast({
-                title: "Updating account information failed. Try again later!",
+                title: "Profiili uuendamine ebaõnnestus. Proovige hiljem uuesti!",
             })
             return;
         }
@@ -117,7 +117,7 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
 
         if (responseData.success) {
             toast.toast({
-                title: "Account information updated successfully",
+                title: "Profiili uuendamine õnnestus",
             })
             router.refresh()
         }

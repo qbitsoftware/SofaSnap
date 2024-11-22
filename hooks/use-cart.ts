@@ -4,7 +4,7 @@ import { GetUserInfo, addCartItemAction, createCartAction, getCartAction, remove
 import { GetCartResult } from '@/utils/supabase/queries/cart';
 
 interface CartService {
-    getCartItems: (userID: string | undefined) => Promise<GetCartResult> ;
+    getCartItems: (userID: string | undefined) => Promise<GetCartResult>;
     addItemToCart: (data: CartItemTS, userID: string) => Promise<void>;
     removeItemFromCart: (id: number, cart_id: number) => Promise<void>;
 }
@@ -35,7 +35,7 @@ export const useCart = (): CartService => {
             );
 
 
-            if (cartItemData && !addItemError ) {
+            if (cartItemData && !addItemError) {
                 toast.success("Toode lisatud ostukorvi");
                 return
             } else if (cartItemData && addItemError) {
@@ -43,21 +43,21 @@ export const useCart = (): CartService => {
                 return
             }
 
-        
+
         } catch (error) {
-            console.error("Failed to add item to cart:", error);
-            toast.error("Failed to add item to cart");
+            void error
+            toast.error("Toote lisamine ebaõnnestus");
         }
     };
     const removeItemFromCart = async (id: number, cart_id: number): Promise<void> => {
         try {
-            const { data, error} = await removeCartItemAction(id, cart_id);
+            const { data, error } = await removeCartItemAction(id, cart_id);
             if (data && !error) {
                 toast.success(data);
             }
         } catch (error) {
-            console.error("Failed to remove item from cart:", error);
-            toast.error("Failed to remove item from cart");
+            void error
+            toast.error("Toote eemaldamine ebaõnnestus");
         }
     };
 

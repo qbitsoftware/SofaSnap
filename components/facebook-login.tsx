@@ -12,7 +12,7 @@ const LoginFacebook = () => {
         await supabase.auth.signInWithOAuth({
             provider: 'facebook',
             options: {
-                redirectTo: "http://localhost:3000/auth/callback",
+                redirectTo: "https://seatly.eu/auth/callback",
                 queryParams: {
                     access_type: 'offline',
                     prompt: 'consent',

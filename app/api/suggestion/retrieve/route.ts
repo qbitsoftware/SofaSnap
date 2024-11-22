@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ data: fetchedCoordinates }, { status: 200 });
     } catch (error) {
-        console.log(error)
+        void error;
         return NextResponse.json({ error: 'Unexpected error occurred' }, { status: 500 });
     }
 }

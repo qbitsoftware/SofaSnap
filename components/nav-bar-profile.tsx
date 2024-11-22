@@ -30,7 +30,7 @@ export default function Profile({ user }: ProfileProps) {
         router.push(currentPage)
         router.refresh()
         toast.toast({
-            title: "Successfully logged out",
+            title: "Edukalt välja logitud",
         })
     }
     const menuItems = [

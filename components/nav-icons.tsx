@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { CircleUser, Globe, ShoppingCart } from 'lucide-react'
+import { CircleUser, Plus, ShoppingCart } from 'lucide-react'
 import Link from 'next/link'
 import Profile from './nav-bar-profile'
 import { motion } from 'framer-motion'
@@ -19,8 +19,8 @@ const NavIcons = ({ user, cartItems }: NavIconsProps) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >
-                <Link href={"/tooted"}>
-                    <Globe width={31} height={31} />
+                <Link href={"/lisa-toode"}>
+                    <Plus width={31} height={31} />
                 </Link>
             </motion.div>
             <div className=''>

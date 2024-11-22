@@ -36,7 +36,6 @@ export const fetchSuggestions = async (search_input: string, session_token: stri
     const response = await fetch(suggestUrl + queryParams, {
       method: "GET"
     })
-    // console.log(response.status, response.ok, response)
 
     const json = await response.json()
     if (response.ok !== true || response.status !== 200) return []
@@ -88,10 +87,6 @@ export const calculatePrice = (cartItems: CartItemWithDetails[]): CartTotal => {
       return acc + (round(item.product.price));
     }
   }, 0);
-
-  console.log(totalPrice,
-   totalPrice * 0.05,
-    totalPrice + (totalPrice * 0.05),)
 
   return {
     price: totalPrice,

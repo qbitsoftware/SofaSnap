@@ -51,7 +51,7 @@ export async function POST(request: Request) {
             Object.keys(zodErrors).length > 0 ? { errors: zodErrors } : { success: true }
         );
     } catch (error) {
-        console.log(error)
+        void error;
         return NextResponse.json({ error: 'Unexpected error occurred' }, { status: 500 });
     }
 }

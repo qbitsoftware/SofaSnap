@@ -77,7 +77,7 @@ export const createCart = async (userID: string) => {
             error: undefined
         };
     } catch (error) {
-        console.log(error);
+        void error;
         return {
             data: undefined,
             error: "Server error"

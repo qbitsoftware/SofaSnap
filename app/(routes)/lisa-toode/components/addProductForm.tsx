@@ -173,15 +173,14 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
         const validationResult = productSchemaServer.safeParse(formData);
         if (validationResult.error) {
             toast.toast({
-                title: "Formi on valesit taidetud!",
+                title: "Sisend on vigane!",
             })
-            console.log(validationResult.error)
             return
         }
 
         if (user_metadata.agreement == undefined || !user_metadata.agreement) {
             toast.toast({
-                title: "Kuulutuse lisamiseks peate noustuma meie teenuse tingimustega!",
+                title: "Kuulutuse lisamiseks peate nõustuma meie teenuse tingimustega!",
                 description: (
                     <>
                         Noustuge meie tingimustega {' '}
@@ -232,20 +231,17 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
         const uploadData = await uploadResp.json();
 
         if (!uploadResp.ok) {
-            console.log('Upload successful:', data);
             toast.toast({
-                title: "Pildi uleslaadimine ebaonnestus. Proovige hiljem uuesti",
+                title: "Pildi üleslaadimine ebaõnnestus. Proovige hiljem uuesti",
             })
             return;
         }
         //update all_img with correct img data
-        console.log("upload data", uploadData.data)
         formData.all_img = uploadData.data
         if (initialData) {
 
             const changed_images = filterRemovedItems(initialData, data, false)
             formData.all_img.push(...changed_images)
-            console.log("Changed images_", changed_images)
             // return
         }
 
@@ -265,7 +261,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
         } else if (response.status === 200) {
             if (initialData) {
                 toast.toast({
-                    title: "Kuulutuse muutmine oli edukas",
+                    title: "Kuulutuse muutmine oli edukas.",
                     description: (
                         <>
                             Kuulutusi saab hallata{' '}
@@ -278,7 +274,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                 })
             } else {
                 toast.toast({
-                    title: "Kuulutus edukalt lisatud",
+                    title: "Kuulutus on edukalt lisatud.",
                     description: (
                         <>
                             Kuulutusi saab hallata{' '}

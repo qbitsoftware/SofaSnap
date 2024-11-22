@@ -20,7 +20,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
                 toast.error("Tekkis viga, proovige uuesti.")
             }
         } catch (error) {
-            console.log(error)
+            void error;
             toast.error("Tekkis viga, proovige uuesti.")
         }
     }

@@ -15,7 +15,7 @@ export const createComplaint = async (comp_text: string) => {
             error: undefined
         };
     } catch (error) {
-        console.log(error);
+        void error;
         return {
             data: undefined,
             error: "Server error"
@@ -32,7 +32,7 @@ export const getAllComplaints = async () => {
             error: undefined
         };
     } catch (error) {
-        console.log(error);
+        void error;
         return {
             data: undefined,
             error: "Server error"
@@ -50,7 +50,7 @@ export const updateComplaint = async (id: number) => {
             error: undefined
         };
     } catch (error) {
-        console.log(error);
+        void error;
         return {
             data: undefined,
             error: "Server error"

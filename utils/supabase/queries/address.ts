@@ -16,7 +16,7 @@ export const fetchProductAddress = async (id: number) => {
             error: undefined
         }
     } catch (error) {
-        console.log("Error fetching product", error)
+        void error;
         return {
             data: undefined,
             error: "Server error"
@@ -39,7 +39,7 @@ export const fetchUserAddress = async (user_id: string) => {
             error: undefined
         }
     } catch (error) {
-        console.log("Error fetching user address")
+        void error;
         return {
             data: undefined,
             error: "Server error"

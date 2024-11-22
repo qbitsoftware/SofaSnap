@@ -13,7 +13,6 @@ export async function POST(request: Request) {
             result.error.issues.forEach((issue) => {
                 zodErrors[issue.path[0]] = issue.message;
             });
-            console.log(zodErrors)
             return NextResponse.json({ errors: zodErrors }, { status: 400 });
         }
 
@@ -24,7 +23,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ data: fetchedSuggestions }, { status: 200 });
     } catch (error) {
-        console.log(error)
+        void error;
         return NextResponse.json({ error: 'Unexpected error occurred' }, { status: 500 });
     }
 }

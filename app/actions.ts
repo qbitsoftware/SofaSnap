@@ -184,7 +184,7 @@ export async function createProductAction(body: TProductServer) {
 
     return { data: "Product successfully added", status: 200 };
   } catch (error) {
-    console.log("error", error)
+    void error;
     return { error: 'Unexpected error occurred', status: 500 };
   }
 }
@@ -244,7 +244,7 @@ export async function changePasswordAction(pw: TPasswordChangeSchema): Promise<{
       error: undefined,
     }
   } catch (error: unknown) {
-    console.log(error);
+    void error
 
     if (error instanceof Error) {
       return {
@@ -264,7 +264,7 @@ export async function addReviewAction(review: Review) {
   try {
     await addReview(review)
   } catch (error) {
-    console.log(error)
+    void error
   }
 }
 

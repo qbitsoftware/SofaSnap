@@ -485,7 +485,7 @@ export const fetchProduct = async (id: number) => {
             error: undefined,
         };
     } catch (error) {
-        console.log("Error fetching product", error)
+        void error;
         return {
             data: undefined,
             error: "Server error"
@@ -510,7 +510,7 @@ export const addClick = async (id: number) => {
         }
 
     } catch (error: any) {
-        console.log("Error adding click to a product", error)
+        void error;
         return {
             data: undefined,
             error: "Server error"
@@ -646,7 +646,7 @@ export const fetchUserProduct = async (product_id: number) => {
 
 export const addReview = async (formData: Review) => {
     try {
-        //add review
+        // //add review
         // const result = await db.insert(review).values({ rating: Number(formData.rating), feedback: formData.description }).returning({ id: review.id })
         // //add to joingin table
         // const joinTable: ProductReviewTS = {
@@ -659,7 +659,7 @@ export const addReview = async (formData: Review) => {
             error: undefined
         }
     } catch (error: any) {
-        console.log("Error adding click to a product", error)
+        void error;
         return {
             data: undefined,
             error: "Server error"

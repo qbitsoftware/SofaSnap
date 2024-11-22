@@ -96,7 +96,7 @@ export const LandingPage = ({ products }: Props) => {
                     </div>
                     <Link className='mx-auto z-10' href={"/lisa-toode"} >
                         <Button className='md:bg-accent text-[#F07162] bg-transparent md:text-foreground hover:bg-transparent rounded-3xl md:hover:bg-[#f07162] md:w-[180px] md:h-[60px] mt-5 md:mt-0 underline md:no-underline'>
-                            Lisa oma tooted
+                            Vaata tooteid
                         </Button>
                     </Link>
                 </div>

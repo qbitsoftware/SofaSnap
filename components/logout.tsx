@@ -22,7 +22,7 @@ const LogOut = () => {
         router.push(currentPage)
         router.refresh()
         toast.toast({
-            title: "Successfully logged out",
+            title: "Edukalt välja logitud",
         })
     }
 

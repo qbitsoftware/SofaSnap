@@ -44,7 +44,7 @@ export const FetchCategories = async () => {
             error: undefined
         }
     } catch (error) {
-        console.log("fetching returned error", error)
+        void error;
         return {
             data: undefined,
             error: "Server error"
