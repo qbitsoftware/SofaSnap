@@ -84,7 +84,7 @@ export const CartItemComponent: React.FC<CartItemProps> = ({ cartItem, product, 
                     <p className=''>{totalWithoutFee}€</p>
                   </div>
                   <div className='flex justify-between'>
-                    <p>SofaSnap teenustasu </p>
+                    <p>Seatly teenustasu </p>
                     <p>{round(totalWithoutFee * 0.05)}€</p>
                   </div>
                 </div>
@@ -98,7 +98,7 @@ export const CartItemComponent: React.FC<CartItemProps> = ({ cartItem, product, 
             :
             <div className='sm:w-[230px] w-[140px]'>
               <div className='flex justify-between  text-[15px]'>
-                <p>SofaSnap teenustasu </p>
+                <p>Seatly teenustasu </p>
                 <p>{round(totalWithoutFee * 0.05)}€</p>
               </div>
               <Separator />

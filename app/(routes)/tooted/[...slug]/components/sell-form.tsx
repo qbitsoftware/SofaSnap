@@ -77,7 +77,7 @@ export const SellForm: React.FC<SellFormProps> = ({ product, user }) => {
                             <div>{product.price}€</div>
                         </div>
                         <div className="md:flex justify-between">
-                            <div>SofaSnapi teenustasu</div>
+                            <div>Seatly teenustasu</div>
                             <div>{fee}€</div>
                         </div>
                         <Separator className="bg-black/25" />

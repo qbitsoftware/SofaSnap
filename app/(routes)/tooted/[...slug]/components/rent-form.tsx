@@ -205,7 +205,7 @@ export const RentForm: React.FC<DateFormProps> = ({ product, user, orderItems })
                 <div>{totalPrice}€</div>
               </div>
               <div className="md:flex justify-between">
-                <div>SofaSnapi teenustasu</div>
+                <div>Seatly teenustasu</div>
                 <div>{serviceFee}€</div>
               </div>
               <Separator className="bg-black/25" />

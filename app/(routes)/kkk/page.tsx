@@ -19,7 +19,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "Kas Seatly vahendab tehinguid?",
-    answer: "Jah, Seatly on vahendaja platvorm, mis aitab kuulutajatel ja rentijatel/müüjatel omavahel ühendust võtta. Platvorm võtab vahendustasu 15% iga renditehingu pealt."
+    answer: "Jah, Seatly on vahendaja platvorm, mis aitab kuulutajatel ja rentijatel/müüjatel omavahel ühendust võtta. Platvorm võtab vahendustasu 5% iga renditehingu pealt."
   },
   {
     question: "Mida pean tegema, et kuulutus lisada?",
@@ -47,7 +47,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "Mida teha, kui mul on probleem või küsimus?",
-    answer: "Seatly klienditugi on valmis aitama! Võta meiega ühendust:\n- E-post: [email@seatly.com]\n- Telefon: +372 58090777"
+    answer: "Seatly klienditugi on valmis aitama! Võta meiega ühendust:\n- E-post: seatly@seatly.com\n- Telefon: +372 58090777"
   },
   {
     question: "Kas Seatly-l on äpp?",
@@ -55,7 +55,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "Kas kuulutuste lisamine on tasuta?",
-    answer: "Kuulutuse lisamine platvormile on tasuta, kuid Seatly võtab iga tehingu pealt 15% vahendustasu."
+    answer: "Kuulutuse lisamine platvormile on tasuta, kuid Seatly võtab iga tehingu pealt 5% vahendustasu."
   },
   {
     question: "Millised makseviisid on aktsepteeritud?",
@@ -88,7 +88,7 @@ export default function FAQ() {
       {faqData.map((item, index) => (
         <div key={index} className="border border-gray-200 rounded-lg overflow-hidden">
           <button
-            className="flex justify-between items-center w-full p-4 text-left bg-white hover:bg-gray-50 transition-colors duration-200"
+            className="flex justify-between items-center w-full p-4 text-left  hover:bg-gray-50 transition-colors duration-200"
             onClick={() => toggleItem(index)}
           >
             <span className="text-lg font-semibold">{item.question}</span>

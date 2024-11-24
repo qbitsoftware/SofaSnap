@@ -1,56 +1,15 @@
 "use client"
 
-import { useState } from 'react'
-
 export default function PrivacyPolicy() {
-    const [activeSection, setActiveSection] = useState<string | null>(null)
-
-    const toggleSection = (id: string) => {
-        setActiveSection(activeSection === id ? null : id)
-    }
-
-    const sections = [
-        { id: 'data-collection', title: 'Milliseid andmeid me kogume?' },
-        { id: 'data-usage', title: 'Kuidas me teie andmeid kasutame?' },
-        { id: 'data-sharing', title: 'Kuidas andmeid jagatakse?' },
-        { id: 'cookies', title: 'Küpsised ja jälgimistehnoloogiad' },
-        { id: 'data-retention', title: 'Andmete säilitamine' },
-        { id: 'your-rights', title: 'Teie õigused' },
-        { id: 'data-security', title: 'Andmete turvalisus' },
-        { id: 'contact', title: 'Kontaktandmed ja kaebused' },
-        { id: 'changes', title: 'Muudatused privaatsuspoliitikas' },
-    ]
 
     return (
         <div className='px-6 md:px-[64px] max-w-[1440px] mx-auto'>
-            <div className=" mx-auto p-6 bg-white shadow-lg rounded-lg">
+            <div className=" mx-auto bg-background rounded-lg md:mt-20 mt-10">
                 <h1 className="text-3xl font-bold mb-6 text-gray-800">Privaatsuspoliitika</h1>
                 <p className="text-sm text-gray-600 mb-6">Viimati uuendatud: 18.11.2024</p>
                 <p className="mb-6 text-gray-700">
                     Seatly OÜ (edaspidi &quot;Platvorm&quot; või &quot;Seatly&quot;) austab teie privaatsust ja on pühendunud teie isikuandmete kaitsmisele. Käesolev privaatsuspoliitika selgitab, kuidas me kogume, kasutame, jagame ja hoiame teie isikuandmeid, kui kasutate meie veebilehte ja teenuseid.
                 </p>
-                <div className="mb-8">
-                    <h2 className="text-xl font-semibold mb-4 text-gray-800">Sisukord</h2>
-                    <ul className="space-y-2">
-                        {sections.map((section) => (
-                            <li key={section.id}>
-                                <a
-                                    href={`#${section.id}`}
-                                    className="text-blue-600 hover:underline"
-                                    onClick={(e) => {
-                                        e.preventDefault()
-                                        toggleSection(section.id)
-                                        const element = document.getElementById(section.id)
-                                        element?.scrollIntoView({ behavior: 'smooth' })
-                                    }}
-                                >
-                                    {section.title}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-
                 <section id="data-collection" className="mb-8">
                     <h2 className="text-2xl font-semibold mb-4 text-gray-800">1. Milliseid andmeid me kogume?</h2>
                     <p className="mb-4 text-gray-700">Kogume teie kohta järgmisi andmeid:</p>
@@ -147,7 +106,7 @@ export default function PrivacyPolicy() {
                     <h2 className="text-2xl font-semibold mb-4 text-gray-800">8. Kontaktandmed ja kaebused</h2>
                     <p className="mb-4 text-gray-700">Kui teil on küsimusi või muresid seoses oma isikuandmetega, võtke meiega ühendust:</p>
                     <ul className="list-disc pl-6 text-gray-700">
-                        <li>E-post: [email@seatly.com]</li>
+                        <li>E-post: seatly@seatly.com</li>
                         <li>Postiaadress: Seatly OÜ, Harju maakond, Tallinn, Haabersti linnaosa, Vabaõhumuuseumi tee 4a-20, 13522</li>
                     </ul>
                 </section>

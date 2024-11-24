@@ -86,12 +86,11 @@ export default function CookieBanner() {
                 <li>Funktsionaalsus: Küpsised aitavad veebilehel korralikult töötada (nt sisselogimise meeldejätmine).</li>
                 <li>Eelistused: Salvestame teie valikud, nagu keele- või privaatsusseaded.</li>
                 <li>Analüütika: Küpsised aitavad meil jälgida, kuidas külastajad veebilehte kasutavad, et saaksime seda paremaks muuta.</li>
-                <li>Reklaamid: Näitame küpsiste abil teile asjakohaseid pakkumisi.</li>
               </ul>
               <h3 className="font-semibold mb-2">Kuidas küpsiste kasutamist hallata?</h3>
               <p className="mb-4">Teil on õigus küpsised igal ajal blokeerida või kustutada, kasutades oma veebibrauseri seadeid. Siiski võib teatud küpsiste keelamine mõjutada Seatly veebilehe funktsionaalsust.</p>
               <h3 className="font-semibold mb-2">Lisateave</h3>
-              <p>Loe täpsemalt meie privaatsuspoliitikast või võta küsimuste korral ühendust: [email@seatly.com].</p>
+              <p>Loe täpsemalt meie privaatsuspoliitikast või võta küsimuste korral ühendust: seatly@seatly.com.</p>
             </CardContent>
             <CardFooter className="flex justify-end">
               <Button onClick={() => setShowPolicy(false)}>Tagasi</Button>

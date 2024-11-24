@@ -18,8 +18,8 @@ const Footer = () => {
                 url: "/vastutustundlik-rentija"
             },
             {
-                title: "Kindlustuse soovitused",
-                url: "/vastutustundlik-rentija"
+                title: "Müügitingimused",
+                url: "/muugitingimused"
             },
             {
                 title: "Privaatsuspoliitika",

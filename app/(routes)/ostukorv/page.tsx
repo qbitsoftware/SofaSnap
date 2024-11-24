@@ -50,7 +50,8 @@ const CartPage = async () => {
             <TotalPrice cartItems={data} />
             <div className='md:mx-auto px-6 md:px-[64px] max-w-[1440px] flex md:flex-row gap-[10px] justify-end xl:my-[200px] my-[50px] md:my-[100px]'>
               {/* <Button className='bg-[#D9D9D9] text-black px-10 py-6'>Katkesta</Button> */}
-            <Checkout cart={data}/>
+
+              <Checkout cart={data} />
             </div>
           </div>
           :
