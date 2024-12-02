@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { CartItemWithDetails } from '@/utils/supabase/queries/cart'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 
 interface CheckoutProps {
     cart: CartItemWithDetails[]
@@ -14,8 +15,27 @@ interface CheckoutProps {
 
 
 export const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
+    const router = useRouter()
+    const [agreed, setAgreed] = useState<boolean>(false)
 
-    const [agreed, setAgreed] = useState(false)
+    useEffect(() => {
+        const consent = localStorage.getItem("terms-and-conditions")
+        if (consent === "accepted") {
+            setAgreed(true)
+        } else {
+            setAgreed(false)
+        }
+    }, []) 
+
+    const handleAgreement = (isChecked: boolean) => {
+        if (isChecked) {
+            localStorage.setItem("terms-and-conditions", "accepted")
+        } else {
+            localStorage.setItem("terms-and-conditions", "rejected")
+        }
+        setAgreed(isChecked)
+    }
+
 
     const handleCheckout = async (cart: CartItemWithDetails[]) => {
         try {
@@ -23,6 +43,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
             if (error && error == "Server error") {
                 toast.error("Tekkis viga, proovige uuesti.")
             }
+            router.push("/kassa")
         } catch (error) {
             void error;
             toast.error("Tekkis viga, proovige uuesti.")
@@ -34,7 +55,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
                 <Checkbox
                     id="terms"
                     checked={agreed}
-                    onCheckedChange={() => setAgreed(!agreed)}
+                    onCheckedChange={(checked:boolean) => handleAgreement(checked)}
                 />
                 <label
                     htmlFor="terms"

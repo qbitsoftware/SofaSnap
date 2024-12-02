@@ -10,14 +10,22 @@ import { GetUserInfo } from '@/app/actions'
 import { redirect } from 'next/navigation'
 import { TotalPrice } from './components/total'
 import { Checkout } from './components/checkout'
+import { MaksekeskusClient } from '@/maksekeskus/client'
 
 const CartPage = async () => {
+
+  const apiKey = process.env.SECRET_KEY
 
   const user = await GetUserInfo()
 
   if (!user || !user.data.user || !user.data.user.id) {
     redirect("/login")
   }
+
+  if (!apiKey) {
+    console.log("EI OLEEEE KEEEEYD")
+  }
+  const paymentClient = new MaksekeskusClient(apiKey!)
 
   const { getCartItems } = useCart()
 

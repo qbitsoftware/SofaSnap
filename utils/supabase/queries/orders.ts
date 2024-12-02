@@ -1,9 +1,11 @@
 import { calculatePrice } from "@/lib/utils";
 import db from "../db"
-import { order, order_item } from "../schema"
+import { order, order_item, product } from "../schema"
 import { OrderItemTS, OrderTS } from "../supabase.types"
 import { CartItemWithDetails } from "./cart";
 import { and, eq } from "drizzle-orm";
+import { boolean } from "drizzle-orm/pg-core";
+import { error } from "console";
 
 export const addOrder = async (cart: CartItemWithDetails[]) => {
     try {
@@ -77,6 +79,21 @@ export const getOrderItemsByProduct = async (productID: number) => {
         return {
             data: undefined,
             error: "Server error"
+        }
+    }
+}
+
+export const completeOrder = async (buyer_id: string, is_paid: boolean, provider: string) => {
+    try {
+        const result = await db.update(order).set({ is_paid: is_paid, provider: provider }).where(eq(order.buyer_id, buyer_id));
+        return {
+            data: result,
+            error: undefined,
+        }
+    } catch (error) {
+        return {
+            data: undefined,
+            error: error
         }
     }
 }

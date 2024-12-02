@@ -16,6 +16,8 @@ import { createComplaint, getAllComplaints, updateComplaint } from "@/utils/supa
 import { CheckCategories, FetchCategories } from "@/utils/supabase/queries/categories";
 import { getPendingProducts } from "@/utils/supabase/queries/products";
 import { updateProductStatus } from "@/utils/supabase/queries/products";
+import { MaksekeskusClient } from "@/maksekeskus/client";
+import { ITransaction } from "@/maksekeskus/maksekeskus_types";
 
 
 export const signUpAction = async (formData: FormData) => {
@@ -338,3 +340,14 @@ export async function getPendingProductsAction() {
 export async function updateProductStatusAction(product_id: number, status: string) {
   return await updateProductStatus(product_id, status)
 }
+
+export async function createTransactionAction(transaction: ITransaction) {
+  const apiKey = process.env.SECRET_KEY
+
+  if (!apiKey) {
+    console.log("EI OLEEEE KEEEEYD")
+  }
+  const paymentClient = new MaksekeskusClient(apiKey!)
+
+  return await paymentClient.createTransaction(transaction)
+} 
