@@ -1,29 +1,32 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { CartItemWithDetails } from '@/utils/supabase/queries/cart'
+import { calculatePrice } from '@/lib/utils'
 
-export default function OrderSummary() {
+interface Props {
+  cartItems: CartItemWithDetails[]
+}
+
+export default function OrderSummary({ cartItems }: Props) {
+  const price = calculatePrice(cartItems)
   return (
-    <Card className="bg-secondary">
+    <Card className="bg-card">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold">Tellimuse andmed</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex justify-between text-base">
-          <span>Subtotal</span>
-          <span>$99.99</span>
+          <span>Tooted</span>
+          <span>{price.price} €</span>
         </div>
         <div className="flex justify-between text-base">
-          <span>Shipping</span>
-          <span>$9.99</span>
-        </div>
-        <div className="flex justify-between text-base">
-          <span>Tax</span>
-          <span>$10.00</span>
+          <span>Teenustasu</span>
+          <span>{price.fee} €</span>
         </div>
         <Separator className="my-4" />
         <div className="flex justify-between text-lg font-semibold">
-          <span>Total</span>
-          <span>$119.98</span>
+          <span>Kokku</span>
+          <span>{price.total} €</span>
         </div>
       </CardContent>
     </Card>

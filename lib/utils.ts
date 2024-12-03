@@ -93,5 +93,34 @@ export const calculatePrice = (cartItems: CartItemWithDetails[]): CartTotal => {
     fee: round(totalPrice * 0.05),
     total: round(totalPrice + (totalPrice * 0.05)),
   }
-
 }
+
+export const validateMAC = async (mac: string, json: JSON) => {
+  if (!process.env.SECRET_KEY) {
+    console.log("No secret key found");
+    return;
+  }
+
+  const jsonString = JSON.stringify(json);
+
+  const data = jsonString + process.env.SECRET_KEY;
+
+  const encoder = new TextEncoder();
+  const encodedData = encoder.encode(data);
+
+  const hashBuffer = await crypto.subtle.digest("SHA-512", encodedData);
+
+  const hashHexUpperCase = bufferToHex(hashBuffer).toUpperCase();
+
+  if (hashHexUpperCase === mac) {
+    console.log("MAC is valid");
+  } else {
+    console.log("MAC is invalid");
+  }
+};
+
+function bufferToHex(buffer: ArrayBuffer): string {
+  const hexArray = Array.from(new Uint8Array(buffer));
+  return hexArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+}
+

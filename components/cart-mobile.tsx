@@ -12,16 +12,14 @@ interface Props {
 
 export function MobileCart({ cart_items }: Props) {
     const pathName = usePathname()
-    if (pathName == "/ostukorv" || pathName.includes("/tooted")) {
-        return
+    if (pathName == "/ostukorv" || pathName.includes("/tooted") || pathName == "/kassa") {
+        return;
     }
+    
 
     if (!cart_items) {
         return
-    }
-
-
-
+    } 
     return (
         <div className="md:hidden ">
             <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#F6F6F6] border-t border-gray-300 p-4 flex justify-between items-center">

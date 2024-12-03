@@ -3,7 +3,6 @@ import { Auth } from "@/components/auth";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Button } from "@/components/ui/button";
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -16,6 +15,8 @@ export default async function Login({ searchParams }: { searchParams: Message })
   if (user.data.user) {
     redirect("/profiil")
   }
+
+
   return (
     <div className="flex justify-center items-center w-full flex-col md:min-h-[80vh] pb-20">
       <Image src={"/images/profile.svg"} width={185} height={185} alt="profile" priority />
@@ -39,6 +40,9 @@ export default async function Login({ searchParams }: { searchParams: Message })
               placeholder="Your password"
               required
             />
+            {/* {searchParams.error &&  (
+              <p className="text-red-600 text-sm mt-2">Vale kasutajanimi või parool</p> 
+            )} */}
           </div>
           <div className="flex justify-between items-center">
             <Link

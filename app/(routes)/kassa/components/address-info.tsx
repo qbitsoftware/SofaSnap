@@ -45,8 +45,6 @@ interface AddressInfoProps {
 
 export default function AddressInfo({ onNext, userData, cart, setPaymentOptions }: AddressInfoProps) {
 
-  console.log("CAARRTT", cart)
-
   const form = useForm<AddressFormValues>({
     resolver: zodResolver(addressSchema),
     defaultValues: {
@@ -87,7 +85,7 @@ export default function AddressInfo({ onNext, userData, cart, setPaymentOptions 
     }
     try {
       const result = await createTransactionAction(transaction)
-        setPaymentOptions(result.payment_methods)
+      setPaymentOptions(result.payment_methods)
     } catch (error: any) {
       console.log("Error", error)
     }

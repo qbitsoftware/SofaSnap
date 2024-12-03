@@ -7,22 +7,18 @@ import { useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 export default function PaymentSelection({ onNext, onPrev, payment_options }: { onNext: () => void; onPrev: () => void; payment_options: PaymentMethods | null }) {
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null)
+  console.log(selectedMethod)
 
   const router = useRouter()
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (selectedMethod) {
-      onNext()
-    }
-  }
-
-  const handleClick = (e: React.MouseEvent) => {
     console.log("selected", selectedMethod)
     if (selectedMethod) {
-        router.push(selectedMethod)
+      router.push(selectedMethod)
     }
   }
 
@@ -48,8 +44,8 @@ export default function PaymentSelection({ onNext, onPrev, payment_options }: { 
   const allMethods = [
     ...payment_options.cards,
     ...payment_options.banklinks,
-    ...payment_options.other,
-    ...payment_options.payLater
+    // ...payment_options.other,
+    // ...payment_options.payLater
   ]
 
   return (
@@ -60,9 +56,21 @@ export default function PaymentSelection({ onNext, onPrev, payment_options }: { 
         className="space-y-4"
       >
         {allMethods.map((method) => (
-          <div key={method.name} className="flex items-center space-x-3 border p-4 rounded-md">
-            <RadioGroupItem value={method.url} id={method.name} />
-            <Label htmlFor={method.name} className="flex items-center space-x-2 text-base font-medium cursor-pointer">
+          <div
+            key={method.name}
+            className={cn("relative flex flex-col md:flex-row items-center space-x-3 border p-4 rounded-md hover:border-accent-foreground transition-colors cursor-pointer", selectedMethod == method.url ? "bg-accent-foreground" : "")}>
+            <RadioGroupItem
+              value={method.url}
+              id={method.name}
+              className="sr-only peer"
+            />
+            <Label
+              htmlFor={method.name}
+              className="flex flex-col md:flex-row items-center space-x-2 text-base font-medium cursor-pointer w-full h-full absolute inset-0"
+            >
+              <span className="sr-only">{method.display_name || method.name}</span>
+            </Label>
+            <div className="flex flex-col md:flex-row items-center space-x-2 z-10 pointer-events-none">
               {method.logo_url && (
                 <Image
                   src={method.logo_url}
@@ -72,21 +80,20 @@ export default function PaymentSelection({ onNext, onPrev, payment_options }: { 
                 />
               )}
               <span>{method.display_name || method.name}</span>
-            </Label>
+            </div>
           </div>
         ))}
       </RadioGroup>
       <div className="flex justify-between gap-4">
         <Button type="button" variant="secondary" onClick={onPrev} className="w-full py-6 text-white">
-          Previous
+          Tagasi
         </Button>
         <Button
           type="submit"
           className="w-full py-6 bg-accent text-white"
           disabled={!selectedMethod}
-          onClick={handleClick}
         >
-          Next
+          Järgmine
         </Button>
       </div>
     </form>

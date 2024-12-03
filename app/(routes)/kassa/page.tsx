@@ -3,14 +3,13 @@ import React from 'react'
 import { Checkout } from './components/checkout'
 import { getCart } from '@/utils/supabase/queries/cart'
 import { ServerError } from '@/components/server-error'
+import { redirect } from 'next/navigation'
 
 const Page = async () => {
   const user = await GetUserInfo()
 
   if (!user || !user.data.user?.id) {
-    return (
-      <ServerError />
-    )
+    redirect("/")
   }
 
   const cart = await getCart(user.data.user?.id)
