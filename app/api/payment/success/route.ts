@@ -1,5 +1,7 @@
 import { validateMAC } from "@/lib/utils";
 import { NextResponse } from "next/server";
+import { Notification } from "@/maksekeskus/maksekeskus_types";
+import { getOrder } from "@/utils/supabase/queries/orders";
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -11,7 +13,7 @@ export async function POST(req: Request) {
     try {
         const contentType = req.headers.get('content-type');
 
-        let body;
+        let body: Notification;
         let mac;
         if (contentType === 'application/x-www-form-urlencoded') {
             const text = await req.text();
@@ -30,39 +32,17 @@ export async function POST(req: Request) {
             throw new Error('Unsupported content type');
         }
 
-        // console.log('Received body:', body);
-        console.log('Received mac:', mac)
-        validateMAC(mac!, body)
-
-        // Validate required fields
-        const requiredFields = ['shop', 'amount', 'currency', 'transaction', 'status'];
-        for (const field of requiredFields) {
-            if (!body[field]) {
-                console.error(`Missing required field: ${field}`);
-                return NextResponse.json(
-                    { success: false, message: `Missing required field: ${field}` },
-                    { status: 400 }
-                );
-            }
+        const validMac = await validateMAC(mac!, body)
+        if (!validMac) {
+            return NextResponse.json({ success: false }, { status: 500 })
         }
 
-        // Process the data (business logic)
-        const { shop, amount, currency, transaction, status, reference, merchant_data, customer_name } = body;
-
-        if (status === 'COMPLETED') {
-            console.log(`Transaction ${transaction} completed successfully for shop ${shop}`);
-            // Update order status in your database, send email, etc.
-        } else if (status === 'CANCELLED' || status === 'EXPIRED') {
-            console.log(`Transaction ${transaction} was cancelled or expired`);
-            // Handle failed transaction
+        const order = await getOrder(body.transaction)
+        if (order.data) {
+            return NextResponse.redirect("/kassa?id=", order.data[0].id)
         } else {
-            console.log(`Transaction ${transaction} is in status: ${status}`);
-            // Handle other statuses
+            return NextResponse.redirect("/kassa")
         }
-
-        // Send a success response
-        return NextResponse.json({ success: true }, { status: 200 });
-
     } catch (error) {
         console.error('Error processing payment return:', error);
         return NextResponse.json(

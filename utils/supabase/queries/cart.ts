@@ -32,7 +32,7 @@ export const getCart = async (userID: string): Promise<GetCartResult> => {
         if (result.length === 0) {
             return {
                 data: undefined,
-                error: "No cart items found for this user"
+                error: "Empty Cart Error"
             };
         }
 
@@ -60,7 +60,7 @@ export const createCart = async (userID: string) => {
             .from(cart)
             .where(eq(cart.user_id, userID))
             .limit(1);
-            
+
         if (existingCart.length > 0) {
             return {
                 data: existingCart[0],
@@ -127,30 +127,30 @@ export const addCartItem = async (from: Date | null, to: Date | null, product_id
 };
 
 export const removeCartItem = async (cart_item_id: number, cart_id: number) => {
-  try {
-    await db
-      .delete(cart_item)
-      .where(eq(cart_item.id, cart_item_id));
+    try {
+        await db
+            .delete(cart_item)
+            .where(eq(cart_item.id, cart_item_id));
 
-    const remainingItems = await db
-      .select({ count: sql<string>`COUNT(*)` })
-      .from(cart_item)
-      .where(eq(cart_item.cart_id, cart_id));
+        const remainingItems = await db
+            .select({ count: sql<string>`COUNT(*)` })
+            .from(cart_item)
+            .where(eq(cart_item.cart_id, cart_id));
 
-    if (parseInt(remainingItems[0].count, 10) === 0) {
-      await db
-        .delete(cart)
-        .where(eq(cart.id, cart_id));
+        if (parseInt(remainingItems[0].count, 10) === 0) {
+            await db
+                .delete(cart)
+                .where(eq(cart.id, cart_id));
+        }
+
+        return {
+            data: "Toode ostukorvist eemaldatud",
+            error: undefined,
+        };
+    } catch (error) {
+        return {
+            data: undefined,
+            error: "Toote ostukorvist eemaldamisel tekkis viga",
+        };
     }
-
-    return {
-      data: "Toode ostukorvist eemaldatud",
-      error: undefined,
-    };
-  } catch (error) {
-    return {
-      data: undefined,
-      error: "Toote ostukorvist eemaldamisel tekkis viga",
-    };
-  }
 };

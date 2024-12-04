@@ -28,4 +28,9 @@ export type Cart = InferSelectModel<typeof cart>
 
 export type OrderTS = Omit<Order, "id" | "created_at" | "updated_at">
 export type OrderItem = InferSelectModel<typeof order_item>
+export type OrderItemJoinProduct = {
+    order: Order;
+    order_item: OrderItem;
+    product: Product;
+};
 export type OrderItemTS = Omit<OrderItem, "id" | "created_at" | "updated_at">

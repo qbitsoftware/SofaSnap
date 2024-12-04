@@ -16,13 +16,14 @@ import { Input } from "@/components/ui/input"
 import { z } from "zod"
 import { useEffect, useState } from "react"
 import { User } from "@supabase/supabase-js"
-import { createTransactionAction } from "@/app/actions"
+import { addOrderAction, createTransactionAction } from "@/app/actions"
 import { ITransaction } from "@/maksekeskus/maksekeskus_types"
 import { CartItemWithDetails } from "@/utils/supabase/queries/cart"
 import { calculatePrice } from "@/lib/utils"
 import { Dispatch } from "react"
 import { SetStateAction } from "react"
 import { PaymentMethods } from "@/maksekeskus/maksekeskus_types"
+import toast from "react-hot-toast"
 
 
 const addressSchema = z.object({
@@ -86,6 +87,16 @@ export default function AddressInfo({ onNext, userData, cart, setPaymentOptions 
     try {
       const result = await createTransactionAction(transaction)
       setPaymentOptions(result.payment_methods)
+      try {
+        const { error } = await addOrderAction(cart, result.id)
+        if (error && error == "Server error") {
+          toast.error("Tekkis viga, proovige uuesti.")
+        }
+      } catch (error) {
+        void error;
+        toast.error("Tekkis viga, proovige uuesti.")
+      }
+
     } catch (error: any) {
       console.log("Error", error)
     }

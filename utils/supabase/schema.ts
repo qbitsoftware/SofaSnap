@@ -166,7 +166,8 @@ export const order = pgTable("orders", {
     fee: real("fee").notNull(),
     total_price: real("total_price"),
     is_paid: boolean("is_paid").notNull(),
-    provider: text("provider")
+    provider: text("provider"),
+    transaction_id: uuid("transaction_id").notNull()
 })
 
 export const order_item = pgTable("order_items", {

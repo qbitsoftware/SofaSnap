@@ -67,7 +67,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ user, cart }) => {
                                     <AddressInfo onNext={handleNextStep} userData={user} cart={cart.data} setPaymentOptions={setPaymentMethods} />
                                 </TabsContent>
                                 <TabsContent value="Maksmine">
-                                    <PaymentSelection onNext={handleNextStep} onPrev={handlePrevStep} payment_options={paymentMethods} />
+                                    <PaymentSelection onPrev={handlePrevStep} payment_options={paymentMethods} />
                                 </TabsContent>
                                 <TabsContent value="Kinnitus">
                                     <ThankYou onPrev={handlePrevStep} />

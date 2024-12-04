@@ -1,16 +1,15 @@
 import { calculatePrice } from "@/lib/utils";
 import db from "../db"
-import { order, order_item, product } from "../schema"
-import { OrderItemTS, OrderTS } from "../supabase.types"
+import { cart, order, order_item, product } from "../schema"
+import { OrderItemJoinProduct, OrderItemTS, OrderTS } from "../supabase.types"
 import { CartItemWithDetails } from "./cart";
 import { and, eq } from "drizzle-orm";
 import { boolean } from "drizzle-orm/pg-core";
 import { error } from "console";
+import { GetUserInfo } from "@/app/actions";
 
-export const addOrder = async (cart: CartItemWithDetails[]) => {
+export const addOrder = async (cart: CartItemWithDetails[], transaction_id: string) => {
     try {
-
-
         const result = await db.transaction(async (tx) => {
             const { price, fee, total } = calculatePrice(cart)
             const orderData: OrderTS = {
@@ -19,7 +18,8 @@ export const addOrder = async (cart: CartItemWithDetails[]) => {
                 total_price: total,
                 buyer_id: cart[0].cart.user_id,
                 is_paid: false,
-                provider: ""
+                provider: "",
+                transaction_id: transaction_id
             }
 
             const oldOrder = await tx.select()
@@ -83,17 +83,93 @@ export const getOrderItemsByProduct = async (productID: number) => {
     }
 }
 
-export const completeOrder = async (buyer_id: string, is_paid: boolean, provider: string) => {
+export const completeOrder = async (is_paid: boolean, provider: string, transaction_id: string) => {
     try {
-        const result = await db.update(order).set({ is_paid: is_paid, provider: provider }).where(eq(order.buyer_id, buyer_id));
+        const result = await db.update(order).set({ is_paid: is_paid, provider: provider }).where(eq(order.transaction_id, transaction_id)).returning();
+        try {
+            await db.delete(cart).where(eq(cart.user_id, result[0].buyer_id))
+        } catch (error) {
+            console.log(error)
+            return {
+                data: undefined,
+                error: "Server error"
+            }
+        }
         return {
             data: result,
             error: undefined,
         }
+
     } catch (error) {
         return {
             data: undefined,
-            error: error
+            error: "Server error"
+        }
+    }
+}
+
+export const getOrder = async (transaction_id: string) => {
+    try {
+        const result = await db.select().from(order).where(eq(order.transaction_id, transaction_id))
+        if (result.length == 0) {
+            return {
+                data: undefined,
+                error: "Order not found"
+            }
+        }
+        return {
+            data: result,
+            error: undefined
+        }
+    } catch (error) {
+        return {
+            data: undefined,
+            error: "Server Error"
+        }
+    }
+}
+
+
+export const getOrderItems = async (order_id: number) => {
+    try {
+        const user = await GetUserInfo()
+        if (!user || !user.data.user?.id) {
+            return {
+                data: undefined,
+                error: "Unauthorized"
+            }
+        }
+        const result = await db.select({
+            order: order,
+            order_item: order_item,
+            product: product,
+        })
+            .from(order_item)
+            .innerJoin(product, eq(product.id, order_item.product_id))
+            .innerJoin(order, eq(order.id, order_id))
+            .where(and(eq(order_item.order_id, order_id), eq(order.buyer_id, user.data.user?.id)))
+
+        if (result.length == 0) {
+            return {
+                data: undefined,
+                error: "Orderitems not found"
+            }
+        }
+
+        const items: OrderItemJoinProduct[] = result.map(row => ({
+            order: row.order,
+            order_item: row.order_item,
+            product: row.product
+        }))
+
+        return {
+            data: items,
+            error: undefined
+        }
+    } catch (error) {
+        return {
+            data: undefined,
+            error: "Server error"
         }
     }
 }

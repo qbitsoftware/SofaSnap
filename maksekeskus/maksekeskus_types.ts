@@ -72,7 +72,7 @@ export interface PaymentMethods {
     payLater: PayLater[];
 }
 
-interface Banklink {
+export interface Banklink {
     channel: string;
     countries: string[];
     country: string;
@@ -83,7 +83,7 @@ interface Banklink {
     url: string;
 }
 
-interface Card {
+export interface Card {
     channel: string;
     display_name: string;
     logo_url: string;
@@ -113,4 +113,18 @@ interface PayLater {
     min_amount: number;
     name: string;
     url: string;
+}
+
+export interface Notification {
+    amount: string,
+    currency: string
+    customer_name: string
+    merchant_data?: string
+    message_time: Date
+    message_type: string
+    reference?: string
+    shop: string
+    signature: string
+    status: string
+    transaction: string
 }

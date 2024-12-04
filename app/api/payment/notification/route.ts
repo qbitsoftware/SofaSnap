@@ -1,4 +1,9 @@
+import { GetUserInfo } from "@/app/actions";
+import { validateMAC } from "@/lib/utils";
+import { Notification } from "@/maksekeskus/maksekeskus_types";
+import { completeOrder } from "@/utils/supabase/queries/orders";
 import { NextResponse } from "next/server";
+import { validate } from "uuid";
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -9,10 +14,8 @@ const corsHeaders = {
 export async function POST(req: Request) {
     try {
         const contentType = req.headers.get('content-type');
-        let body;
         let mac;
         if (contentType === 'application/x-www-form-urlencoded; charset=UTF-8') {
-            console.log("Contnent type is url")
             const text = await req.text();
             const params = new URLSearchParams(text);
             const jsonString = params.get('json');
@@ -22,23 +25,28 @@ export async function POST(req: Request) {
                 throw new Error('Missing "json" parameter in the body');
             }
 
-
-            body = JSON.parse(jsonString);
-
-        } else if (contentType == "application/json") {
-            console.log("JSONN")
-        } else {
-            console.log("content type", contentType)
+            const body: Notification = JSON.parse(jsonString);
+            if (mac &&  !await validateMAC(mac, body)) {
+                return NextResponse.json({ success: false }, { status: 401 });
+            }
+            if (body.status == "COMPLETED") {
+                try {
+                    const res = await completeOrder(true, "", body.transaction)
+                    if (!res.data) {
+                        return NextResponse.json({ success: false }, { status: 500 });
+                    }
+                } catch (error) {
+                    return NextResponse.json({ success: false }, { status: 500 });
+                }
+            }
         }
-        console.log("Body", body)
-        console.log("mac", mac)
         return NextResponse.json({ success: true }, { status: 200 });
-        //databse functons
     } catch (error) {
         console.error('Error reading request body:', error);
         return NextResponse.json({ success: false }, { status: 500 });
     }
 }
+
 
 
 

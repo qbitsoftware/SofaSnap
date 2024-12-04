@@ -289,8 +289,8 @@ export async function removeCartItemAction(cart_item_id: number, cart_id: number
 
 }
 
-export async function addOrderAction(cart: CartItemWithDetails[]) {
-  return await addOrder(cart)
+export async function addOrderAction(cart: CartItemWithDetails[], transaction_id: string) {
+  return await addOrder(cart, transaction_id)
 }
 
 export async function createComplaintAction(text: string) {
