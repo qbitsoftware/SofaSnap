@@ -1,3 +1,5 @@
+"use client"
+
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -5,7 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import OrderSummary from './order-summary'
 import { OrderItemJoinProduct } from '@/utils/supabase/supabase.types'
-import { formatEstonianDate } from '@/utils/utils'
+import { formatDateEstonia } from '@/utils/utils'
+import { useEffect } from 'react'
 
 interface Props {
     order_items: OrderItemJoinProduct[]
@@ -13,6 +16,11 @@ interface Props {
 
 export default function OrderConfirmation({ order_items }: Props) {
 
+    useEffect(() => {
+        if (order_items) {
+            localStorage.removeItem("terms-and-conditions");
+        }
+    }, [order_items]);
 
     return (
         <div className="container mx-auto px-6 md:px-[64px] max-w-[1440px]">
@@ -34,13 +42,15 @@ export default function OrderConfirmation({ order_items }: Props) {
                             </div>
                             <div className="flex justify-between text-base">
                                 <span className="font-medium">Kuupäev:</span>
-                                <span>{formatEstonianDate(order_items[0].order.created_at)}</span>
+                                <span>{formatDateEstonia(new Date(order_items[0].order.created_at))}</span>
                             </div>
                             <Separator />
                             <div className="space-y-4">
                                 {order_items.map((item, index) => (
                                     <div key={index} className="flex justify-between text-base">
                                         <span>{item.product.name} </span>
+                                        {item.order_item.from && item.order_item.to ? 
+                                        <span>{formatDateEstonia(item.order_item.from)} - {formatDateEstonia(item.order_item.to)}</span> : ""}
                                         {/* <span>${(item.order_item.from?.getDate() - ite).toFixed(2)}</span> */}
                                     </div>
                                 ))}

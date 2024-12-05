@@ -28,6 +28,11 @@ export function formatDate(date: Date | undefined) {
   return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
+export function formatDateEstonia(date: Date | undefined) {
+  if (!date) return ''
+  return date.toLocaleDateString('et', { year: 'numeric', month: 'numeric', day: 'numeric' })
+}
+
 export function round(x: number): number {
   return Math.round(x * 100) / 100
 }

@@ -31,6 +31,7 @@ const Page = async ({ searchParams }: { searchParams: { id?: string } }) => {
 
   if (orderId) {
     const orderItems = await getOrderItems(Number(orderId))
+
     if (orderItems && orderItems.data) {
       return <OrderConfirmation order_items={orderItems.data} />
     } else {

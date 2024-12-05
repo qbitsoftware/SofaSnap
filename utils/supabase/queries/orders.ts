@@ -19,6 +19,7 @@ export const addOrder = async (cart: CartItemWithDetails[], transaction_id: stri
                 buyer_id: cart[0].cart.user_id,
                 is_paid: false,
                 provider: "",
+                status: "started",
                 transaction_id: transaction_id
             }
 
@@ -83,9 +84,9 @@ export const getOrderItemsByProduct = async (productID: number) => {
     }
 }
 
-export const completeOrder = async (is_paid: boolean, provider: string, transaction_id: string) => {
+export const completeOrder = async (is_paid: boolean, provider: string, transaction_id: string, status: string) => {
     try {
-        const result = await db.update(order).set({ is_paid: is_paid, provider: provider }).where(eq(order.transaction_id, transaction_id)).returning();
+        const result = await db.update(order).set({ is_paid: is_paid, provider: provider, status: status }).where(eq(order.transaction_id, transaction_id)).returning();
         try {
             await db.delete(cart).where(eq(cart.user_id, result[0].buyer_id))
         } catch (error) {

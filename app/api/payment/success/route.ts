@@ -38,15 +38,23 @@ export async function POST(req: Request) {
         }
 
         const order = await getOrder(body.transaction)
-        if (order.data) {
-            return NextResponse.redirect("/kassa?id=", order.data[0].id)
+        let redirectUrl;
+        if (process.env.NODE_ENV === 'production') {
+            redirectUrl = process.env.SITE_URL_PROD
+        } else if (process.env.NODE_ENV === 'development') {
+            redirectUrl = process.env.SITE_URL_DEV
         } else {
-            return NextResponse.redirect("/kassa")
+            throw Error('invalid url')
+        }
+        if (order.data) {
+            return NextResponse.redirect(`${redirectUrl}/kassa?id=${order.data[0].id}`, { status: 302 })
+        } else {
+            return NextResponse.redirect(`${redirectUrl}/kassa`, { status: 302 })
         }
     } catch (error) {
         console.error('Error processing payment return:', error);
         return NextResponse.json(
-            { success: false, message: "ERROR" || 'Internal server error' },
+            { success: false, message: 'Internal server error' },
             { status: 500 }
         );
     }
