@@ -1,51 +1,51 @@
 // Setup type definitions for built-in Supabase Runtime APIs
-import "jsr:@supabase/functions-js/edge-runtime.d.ts"
-import { send } from "https://deno.land/x/smtp/mod.ts"
+// import "jsr:@supabase/functions-js/edge-runtime.d.ts"
+// import { send } from "https://deno.land/x/smtp/mod.ts"
 
-Deno.serve(async (req) => {
-  try {
-    const { name, email, orderItems, total } = await req.json()
+// Deno.serve(async (req) => {
+//   try {
+//     const { name, email, orderItems, total } = await req.json()
 
-    const subject = `Order Confirmation - Thank you for your purchase!`
-    const message = `
-      Hi ${name},
+//     const subject = `Order Confirmation - Thank you for your purchase!`
+//     const message = `
+//       Hi ${name},
 
-      Thank you for your purchase! Here are your order details:
+//       Thank you for your purchase! Here are your order details:
 
-      ${orderItems.map(item => `- ${item.name}: $${item.price} x ${item.quantity}`).join("\n")}
+//       ${orderItems.map(item => `- ${item.name}: $${item.price} x ${item.quantity}`).join("\n")}
 
-      Total: $${total}
+//       Total: $${total}
 
-      We appreciate your business!
+//       We appreciate your business!
 
-      Best regards,
-      Your Company
-    `
+//       Best regards,
+//       Your Company
+//     `
 
-    // SMTP Configuration
-    await send({
-      hostname: "mail.veebimajutus.ee",
-      port: 465,
-      username: Deno.env.get("SMTP_USERNAME"),
-      password: Deno.env.get("SMTP_PASSWORD"),
-      from: Deno.env.get("SMTP_FROM"),
-      to: email,
-      subject,
-      content: message,
-    })
+//     // SMTP Configuration
+//     await send({
+//       hostname: "mail.veebimajutus.ee",
+//       port: 465,
+//       username: Deno.env.get("SMTP_USERNAME"),
+//       password: Deno.env.get("SMTP_PASSWORD"),
+//       from: Deno.env.get("SMTP_FROM"),
+//       to: email,
+//       subject,
+//       content: message,
+//     })
 
-    return new Response(
-      JSON.stringify({ message: "Email sent successfully!" }),
-      { headers: { "Content-Type": "application/json" } }
-    )
-  } catch (error) {
-    console.error("Email sending failed:", error)
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    )
-  }
-})
+//     return new Response(
+//       JSON.stringify({ message: "Email sent successfully!" }),
+//       { headers: { "Content-Type": "application/json" } }
+//     )
+//   } catch (error) {
+//     console.error("Email sending failed:", error)
+//     return new Response(
+//       JSON.stringify({ error: error.message }),
+//       { status: 500, headers: { "Content-Type": "application/json" } }
+//     )
+//   }
+// })
 
 /* To invoke locally:
 
