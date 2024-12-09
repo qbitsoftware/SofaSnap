@@ -35,14 +35,14 @@ export const CartItemComponent: React.FC<CartItemProps> = ({ cartItem, product, 
       const daysDif = differenceInCalendarDays(to, from) + 1
       setDateRange(daysDif)
       const totalwithoutfee = round(daysDif * product.price)
-      const totalwithfee = round(totalwithoutfee * 1.05)
+      const totalwithfee = round(totalwithoutfee * 1.15)
       setTotalWithoutFee(totalwithoutfee)
       setTotalWithFee(totalwithfee)
     }
 
     const handleSellPrice = () => {
       const totalwithoutfee = product.price
-      const totalwithfee = round(totalwithoutfee * 1.05)
+      const totalwithfee = round(totalwithoutfee * 1.15)
       setTotalWithoutFee(totalwithoutfee)
       setTotalWithFee(totalwithfee)
     }
@@ -85,7 +85,7 @@ export const CartItemComponent: React.FC<CartItemProps> = ({ cartItem, product, 
                   </div>
                   <div className='flex justify-between'>
                     <p>Seatly teenustasu </p>
-                    <p>{round(totalWithoutFee * 0.05)}€</p>
+                    <p>{round(totalWithoutFee * 0.15)}€</p>
                   </div>
                 </div>
                 <Separator />
@@ -99,7 +99,7 @@ export const CartItemComponent: React.FC<CartItemProps> = ({ cartItem, product, 
             <div className='sm:w-[230px] w-[140px]'>
               <div className='flex justify-between  text-[15px]'>
                 <p>Seatly teenustasu </p>
-                <p>{round(totalWithoutFee * 0.05)}€</p>
+                <p>{round(totalWithoutFee * 0.15)}€</p>
               </div>
               <Separator />
               <div className='flex justify-between font-semibold mt-2'>

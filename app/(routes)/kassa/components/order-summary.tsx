@@ -26,7 +26,7 @@ export default function OrderSummary({ cartItems, orderItems }: Props) {
   return (
     <Card className="bg-card">
       <CardHeader>
-        <CardTitle className="text-2xl font-semibold">Tellimuse andmed</CardTitle>
+        <CardTitle className="text-2xl font-semibold">Tellimuse kirjeldus</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-4">

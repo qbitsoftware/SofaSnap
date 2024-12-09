@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent } from '@/components/ui/card'
 import AddressInfo from './address-info'
@@ -21,14 +21,14 @@ interface CheckoutProps {
 
 export const Checkout: React.FC<CheckoutProps> = ({ user, cart }) => {
 
+    const [currentStep, setCurrentStep] = useState(0)
+    const [paymentMethods, setPaymentMethods] = useState<PaymentMethods | null>(null)
 
     if (!cart.data) {
         return (
             <ServerError />
         )
     }
-    const [currentStep, setCurrentStep] = useState(0)
-    const [paymentMethods, setPaymentMethods] = useState<PaymentMethods | null>(null)
     const steps = ['Aadress', 'Maksmine', 'Kinnitus']
 
     const handleNextStep = () => {

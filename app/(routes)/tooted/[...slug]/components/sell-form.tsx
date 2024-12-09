@@ -47,7 +47,7 @@ export const SellForm: React.FC<SellFormProps> = ({ product, user }) => {
     }
 
 
-    const fee = round(product.price * 0.05)
+    const fee = round(product.price * 0.15)
     const total = round(product.price + fee)
     return (
         <div>

@@ -36,7 +36,7 @@ export const Text = () => {
                 <ul>
                     <li>3.1. Müügi teostamine: Müüja ja ostja lepivad müügitingimustes kokku otse Platvormi sõnumisüsteemi kaudu. Platvorm soovitab kokku leppida ka üleandmise tingimused (asukoht, transport, aeg).</li>
                     <li>3.2. Maksmine: Kõik maksed toimuvad Platvormi kaudu, mis lisab tehingule turvalisuse. Müüja saab tasu pärast tehingu edukat lõpetamist ja ostja kinnitust.</li>
-                    <li>3.3. Vahendustasu: Seatly võtab iga müügitehingu pealt vahendustasu 5%.</li>
+                    <li>3.3. Vahendustasu: Seatly võtab iga müügitehingu pealt vahendustasu 15%.</li>
                 </ul>
             </div>
             {/* Section 4 */}

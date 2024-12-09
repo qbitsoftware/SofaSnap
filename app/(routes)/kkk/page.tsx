@@ -19,7 +19,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "Kas Seatly vahendab tehinguid?",
-    answer: "Jah, Seatly on vahendaja platvorm, mis aitab kuulutajatel ja rentijatel/müüjatel omavahel ühendust võtta. Platvorm võtab vahendustasu 5% iga renditehingu pealt."
+    answer: "Jah, Seatly on vahendaja platvorm, mis aitab kuulutajatel ja rentijatel/müüjatel omavahel ühendust võtta. Platvorm võtab vahendustasu 15% iga renditehingu pealt."
   },
   {
     question: "Mida pean tegema, et kuulutus lisada?",
@@ -55,7 +55,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "Kas kuulutuste lisamine on tasuta?",
-    answer: "Kuulutuse lisamine platvormile on tasuta, kuid Seatly võtab iga tehingu pealt 5% vahendustasu."
+    answer: "Kuulutuse lisamine platvormile on tasuta, kuid Seatly võtab iga tehingu pealt 15% vahendustasu."
   },
   {
     question: "Millised makseviisid on aktsepteeritud?",

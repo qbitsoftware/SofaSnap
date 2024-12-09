@@ -1,6 +1,5 @@
 import React from 'react'
-import { Button } from './ui/button'
-import { Home, RefreshCcw } from 'lucide-react'
+import { Home } from 'lucide-react'
 import Link from 'next/link'
 
 export function ServerError() {

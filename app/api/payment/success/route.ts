@@ -1,13 +1,7 @@
 import { validateMAC } from "@/lib/utils";
 import { NextResponse } from "next/server";
 import { Notification } from "@/maksekeskus/maksekeskus_types";
-import { getOrder } from "@/utils/supabase/queries/orders";
-
-const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-};
+import { changeOrderStatus, getOrder } from "@/utils/supabase/queries/orders";
 
 export async function POST(req: Request) {
     try {
@@ -35,6 +29,16 @@ export async function POST(req: Request) {
         const validMac = await validateMAC(mac!, body)
         if (!validMac) {
             return NextResponse.json({ success: false }, { status: 500 })
+        }
+
+        try {
+            const result = await changeOrderStatus("", body.transaction, body.status)
+            if (!result.data) {
+                return NextResponse.json({ success: false }, { status: 500 });
+            }
+        } catch (error) {
+            console.error(error)
+            return NextResponse.json({ success: false }, { status: 500 });
         }
 
         const order = await getOrder(body.transaction)

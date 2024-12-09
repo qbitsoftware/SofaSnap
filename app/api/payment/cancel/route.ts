@@ -1,21 +1,61 @@
+import { validateMAC } from "@/lib/utils";
 import { NextResponse } from "next/server";
-
-const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-};
+import { Notification } from "@/maksekeskus/maksekeskus_types";
+import { changeOrderStatus} from "@/utils/supabase/queries/orders";
 
 export async function POST(req: Request) {
     try {
-        const body = await req.json()
+        const contentType = req.headers.get('content-type');
 
-        console.log('Received body:', body);
+        let body: Notification;
+        let mac;
+        if (contentType === 'application/x-www-form-urlencoded') {
+            const text = await req.text();
+            const params = new URLSearchParams(text);
+            const jsonString = params.get('json');
+            mac = params.get('mac')
 
-        return NextResponse.json({ success: true }, { status: 200 });
+            if (!jsonString) {
+                throw new Error('Missing "json" parameter in the body');
+            }
+
+            body = JSON.parse(jsonString);
+
+        } else {
+            throw new Error('Unsupported content type');
+        }
+
+        const validMac = await validateMAC(mac!, body)
+        if (!validMac) {
+            return NextResponse.json({ success: false }, { status: 500 })
+        }
+
+        try {
+            const result = await changeOrderStatus("", body.transaction, body.status)
+            if (!result.data) {
+                return NextResponse.json({ success: false }, { status: 500 });
+            }
+        } catch (error) {
+            console.error(error)
+            return NextResponse.json({ success: false }, { status: 500 });
+        }
+
+        let redirectUrl;
+        if (process.env.NODE_ENV === 'production') {
+            redirectUrl = process.env.SITE_URL_PROD
+        } else if (process.env.NODE_ENV === 'development') {
+            redirectUrl = process.env.SITE_URL_DEV
+        } else {
+            throw Error('invalid url')
+        }
+
+        return NextResponse.redirect(`${redirectUrl}/kassa`, { status: 302 })
     } catch (error) {
-        console.error('Error reading request body:', error);
-        return NextResponse.json({ success: false }, { status: 500 });
+        console.error('Error processing payment return:', error);
+        return NextResponse.json(
+            { success: false, message: 'Internal server error' },
+            { status: 500 }
+        );
     }
 }
 

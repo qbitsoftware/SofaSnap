@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { z } from "zod"
-import { useEffect, useState } from "react"
+import { useEffect} from "react"
 import { User } from "@supabase/supabase-js"
 import { addOrderAction, createTransactionAction } from "@/app/actions"
 import { ITransaction } from "@/maksekeskus/maksekeskus_types"
@@ -97,7 +97,7 @@ export default function AddressInfo({ onNext, userData, cart, setPaymentOptions 
         toast.error("Tekkis viga, proovige uuesti.")
       }
 
-    } catch (error: any) {
+    } catch (error) {
       console.log("Error", error)
     }
     onNext()

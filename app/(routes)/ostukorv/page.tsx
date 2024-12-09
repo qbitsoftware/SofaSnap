@@ -10,22 +10,14 @@ import { GetUserInfo } from '@/app/actions'
 import { redirect } from 'next/navigation'
 import { TotalPrice } from './components/total'
 import { Checkout } from './components/checkout'
-import { MaksekeskusClient } from '@/maksekeskus/client'
 
 const CartPage = async () => {
-
-  const apiKey = process.env.SECRET_KEY
 
   const user = await GetUserInfo()
 
   if (!user || !user.data.user || !user.data.user.id) {
     redirect("/login")
   }
-
-  if (!apiKey) {
-    console.log("EI OLEEEE KEEEEYD")
-  }
-  const paymentClient = new MaksekeskusClient(apiKey!)
 
   const { getCartItems } = useCart()
 
@@ -59,7 +51,7 @@ const CartPage = async () => {
             <div className='md:mx-auto px-6 md:px-[64px] max-w-[1440px] flex md:flex-row gap-[10px] justify-end xl:my-[200px] my-[50px] md:my-[100px]'>
               {/* <Button className='bg-[#D9D9D9] text-black px-10 py-6'>Katkesta</Button> */}
 
-              <Checkout cart={data} />
+              <Checkout />
             </div>
           </div>
           :

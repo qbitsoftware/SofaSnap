@@ -44,13 +44,19 @@ export default function OrderConfirmation({ order_items }: Props) {
                                 <span className="font-medium">Kuupäev:</span>
                                 <span>{formatDateEstonia(new Date(order_items[0].order.created_at))}</span>
                             </div>
+                            <div className="flex justify-between text-base">
+                                <span className="font-medium">Summa kokku:</span>
+                                <span>{order_items[0].order.total_price} € </span>
+                            </div>
+                            <br />
+                            <h1 className='text-xl font-semibold'>Tooted </h1>
                             <Separator />
                             <div className="space-y-4">
                                 {order_items.map((item, index) => (
                                     <div key={index} className="flex justify-between text-base">
                                         <span>{item.product.name} </span>
-                                        {item.order_item.from && item.order_item.to ? 
-                                        <span>{formatDateEstonia(item.order_item.from)} - {formatDateEstonia(item.order_item.to)}</span> : ""}
+                                        {item.order_item.from && item.order_item.to ?
+                                            <span>{formatDateEstonia(item.order_item.from)} - {formatDateEstonia(item.order_item.to)}</span> : ""}
                                         {/* <span>${(item.order_item.from?.getDate() - ite).toFixed(2)}</span> */}
                                     </div>
                                 ))}

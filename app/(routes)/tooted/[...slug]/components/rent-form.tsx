@@ -79,7 +79,7 @@ export const RentForm: React.FC<DateFormProps> = ({ product, user, orderItems })
       days = differenceInCalendarDays(to, from) + 1
     }
     const total = round(days * product.price)
-    const fee = round(total * 0.05)
+    const fee = round(total * 0.15)
     setServiceFee(fee)
     setTotalPrice(total)
     setTotalWithFee(fee + total)

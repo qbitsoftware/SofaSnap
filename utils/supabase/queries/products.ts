@@ -358,14 +358,16 @@ export const addProduct = async (prod: TProductServer) => {
                 throw new Error("Failed to insert product.");
             }
             const category: CategoryTS = {
-                category_name_slug: prod.category,
+                category_name_slug: prod.category.replaceAll("ä", "a").replaceAll("ö", "o").replaceAll("õ", "o").replaceAll("ü", "u"),
                 product_id: productId,
             };
+
             const sub_category: CategoryTS = {
-                category_name_slug: prod.sub_category.toLowerCase().replaceAll(" ", "-"),
+                category_name_slug: prod.sub_category.toLowerCase().replaceAll(" ", "-").replaceAll("ä", "a").replaceAll("ö", "o").replaceAll("õ", "o").replaceAll("ü", "u"),
                 product_id: productId,
             };
-            await tx.insert(category_join)
+
+            const result = await tx.insert(category_join)
                 .values(category).
                 onConflictDoUpdate({
                     target: [category_join.product_id, category_join.category_name_slug],
@@ -374,7 +376,7 @@ export const addProduct = async (prod: TProductServer) => {
                     }
                 })
 
-            await tx.insert(category_join)
+            const result2 = await tx.insert(category_join)
                 .values(sub_category).
                 onConflictDoUpdate({
                     target: [category_join.product_id, category_join.category_name_slug],
@@ -396,6 +398,7 @@ export const addProduct = async (prod: TProductServer) => {
                 country_code: prod.address.country_code!,
                 country_name: prod.address.country_name!,
             }
+
 
             const insertedAddress = await tx.insert(address).
                 values(ad).
@@ -421,6 +424,7 @@ export const addProduct = async (prod: TProductServer) => {
                 product_id: productId,
                 address_id: addressId,
             }
+
             await tx.insert(address_join_product).values(adJoin).
                 onConflictDoUpdate({
                     target: product.id,

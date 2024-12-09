@@ -58,7 +58,7 @@ export const Text = () => {
             <div>
                 <p>5. Tasumine ja vahendustasu</p>
                 <ul>
-                    <li>- Kui renditehing on kokku lepitud, toimub maksmine platvormi kaudu, mis lisab tehingule 5% vahendustasu. See tähendab, et sina ei pea muretsema arvelduste pärast – platvorm haldab seda automaatselt.</li>
+                    <li>- Kui renditehing on kokku lepitud, toimub maksmine platvormi kaudu, mis lisab tehingule 15% vahendustasu. See tähendab, et sina ei pea muretsema arvelduste pärast – platvorm haldab seda automaatselt.</li>
                 </ul>
             </div>
             {/* Punkt 6 */}

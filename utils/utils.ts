@@ -53,6 +53,7 @@ type GroupedMethod = {
 };
 
 export function groupPaymentMethods(paymentMethods: PaymentMethods): GroupedMethod[] {
+  console.log("PaymentMethods", paymentMethods)
   const creditCards: GroupedMethod = {
     name: 'credit_cards',
     displayName: 'Krediitkaart',

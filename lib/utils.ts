@@ -91,8 +91,8 @@ export const calculatePrice = (cartItems: CartItemWithDetails[]): CartTotal => {
 
   return {
     price: totalPrice,
-    fee: round(totalPrice * 0.05),
-    total: round(totalPrice + (totalPrice * 0.05)),
+    fee: round(totalPrice * 0.15),
+    total: round(totalPrice + (totalPrice * 0.15)),
   }
 }
 

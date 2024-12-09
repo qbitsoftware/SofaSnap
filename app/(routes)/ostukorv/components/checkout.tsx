@@ -1,20 +1,17 @@
 "use client"
 
-import { addOrderAction } from '@/app/actions'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { CartItemWithDetails } from '@/utils/supabase/queries/cart'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 
-interface CheckoutProps {
-    cart: CartItemWithDetails[]
-}
+// interface CheckoutProps {
+//     cart: CartItemWithDetails[]
+// }
 
 
-export const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
+export const Checkout: React.FC = () => {
     const router = useRouter()
     const [agreed, setAgreed] = useState<boolean>(false)
 
@@ -25,7 +22,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
         } else {
             setAgreed(false)
         }
-    }, []) 
+    }, [])
 
     const handleAgreement = (isChecked: boolean) => {
         if (isChecked) {
@@ -36,26 +33,13 @@ export const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
         setAgreed(isChecked)
     }
 
-
-    // const handleCheckout = async (cart: CartItemWithDetails[]) => {
-    //     try {
-    //         const { error } = await addOrderAction(cart)
-    //         if (error && error == "Server error") {
-    //             toast.error("Tekkis viga, proovige uuesti.")
-    //         }
-    //         router.push("/kassa")
-    //     } catch (error) {
-    //         void error;
-    //         toast.error("Tekkis viga, proovige uuesti.")
-    //     }
-    // }
     return (
         <div className='flex flex-col gap-[10px] items-end justify-end'>
             <div className="flex items-center space-x-2 mb-4 md:mb-0 ">
                 <Checkbox
                     id="terms"
                     checked={agreed}
-                    onCheckedChange={(checked:boolean) => handleAgreement(checked)}
+                    onCheckedChange={(checked: boolean) => handleAgreement(checked)}
                 />
                 <label
                     htmlFor="terms"

@@ -84,9 +84,25 @@ export const getOrderItemsByProduct = async (productID: number) => {
     }
 }
 
-export const completeOrder = async (is_paid: boolean, provider: string, transaction_id: string, status: string) => {
+export const changeOrderStatus = async (provider: string, transaction_id: string, status: string) => {
     try {
-        const result = await db.update(order).set({ is_paid: is_paid, provider: provider, status: status }).where(eq(order.transaction_id, transaction_id)).returning();
+        const result = await db.update(order).set({ provider: provider, status: status }).where(eq(order.transaction_id, transaction_id)).returning();
+        return {
+            data: result,
+            error: undefined,
+        }
+
+    } catch (error) {
+        return {
+            data: undefined,
+            error: "Server error"
+        }
+    }
+}
+
+export const completeOrder = async (provider: string, transaction_id: string) => {
+    try {
+        const result = await db.update(order).set({ is_paid: true, provider: provider, status: "COMPLETED" }).where(eq(order.transaction_id, transaction_id)).returning();
         try {
             await db.delete(cart).where(eq(cart.user_id, result[0].buyer_id))
         } catch (error) {

@@ -18,6 +18,7 @@ import { getPendingProducts } from "@/utils/supabase/queries/products";
 import { updateProductStatus } from "@/utils/supabase/queries/products";
 import { MaksekeskusClient } from "@/maksekeskus/client";
 import { ITransaction } from "@/maksekeskus/maksekeskus_types";
+import { sendEmail } from "@/lib/emails";
 
 
 export const signUpAction = async (formData: FormData) => {
@@ -176,12 +177,13 @@ export async function createProductAction(body: TProductServer) {
     //check if user has accepted terms and service
     const user = await GetUserInfo()
     if (user.error) {
-      return { error: "Unexpected error occured", status: 500 }
+      return { error: "user error", status: 500 }
     }
 
     const { error } = await addProduct(result.data);
+    console.log("Error", error)
     if (error) {
-      return { error: 'Unexpected error occurred', status: 500 };
+      return { error: 'product add error', status: 500 };
     }
 
     return { data: "Product successfully added", status: 200 };
@@ -351,3 +353,11 @@ export async function createTransactionAction(transaction: ITransaction) {
 
   return await paymentClient.createTransaction(transaction)
 } 
+
+export async function sendEmailAction(to: string, sub: string, content: string){
+  try {
+   await sendEmail(to, sub, content)
+  } catch (error) {
+    console.error(error)
+  }
+}

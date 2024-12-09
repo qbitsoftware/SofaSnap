@@ -21,7 +21,7 @@ export const Benefits = () => {
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentBenefitIndex((prevIndex) => (prevIndex + 1) % benefits.length)
-        }, 5000)
+        }, 2000)
 
         return () => clearInterval(timer)
     }, [benefits.length])
@@ -29,7 +29,7 @@ export const Benefits = () => {
     const BenefitItem = ({ benefit, index }: { benefit: Benefit, index: number }) => (
         <div
             key={index}
-            className="relative flex flex-col items-center rounded-xl "
+            className="relative flex flex-col items-center rounded-xl"
         >
             <div className={`absolute inset-0 bg-gradient-to-br ${benefit.gradient} opacity-15 blur-xl rounded-full`}></div>
             <div className="relative z-10 flex flex-col items-center justify-center h-[300px]">
@@ -42,10 +42,7 @@ export const Benefits = () => {
     )
 
     return (
-        <div className="relative w-full md:max-h-[500px] md:h-[100vh] xl:max-h-[800px] flex flex-col">
-            <div className='hidden md:flex relative w-full h-[70%]'>
-                <Image className='w-full absolute right-0' src={"/images/lamp.svg"} width={0} height={0} style={{ width: "30%" }} alt="lamp" />
-            </div>
+        <div className="relative w-full md:max-h-[500px] xl:max-h-[800px] flex flex-col md:mt-10">
             <div className="w-full py-12 px-4 md:px-8 lg:px-16">
                 <div className="max-w-7xl mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

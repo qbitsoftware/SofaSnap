@@ -246,6 +246,8 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
         }
 
         const response = await createProductAction(formData)
+        console.log("Regualr response", response)
+        console.log("Response status", response.status)
         if (response.status === 400) {
             toast.toast({
                 title: "Midagi laks valesti :(",

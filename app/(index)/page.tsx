@@ -9,6 +9,7 @@ import { RecentProducts } from "./components/recent-products";
 import { fetchAllProducts, fetchLastSeenProducts, fetchPopularProducts } from "@/utils/supabase/queries/products";
 import { FetchCategories } from "@/utils/supabase/queries/categories";
 import { ServerError } from "@/components/server-error";
+import { Benefits } from "./components/benefits";
 
 export default async function Index() {
   const { data: popularProducts, error: popularProductError } = await fetchPopularProducts()
@@ -32,7 +33,7 @@ export default async function Index() {
         <div className="overflow-hidden">
           <Cta />
         </div>
-        {/* <Benefits /> */}
+        <Benefits />
         <PopularProducts data={popularProducts} error={popularProductError} />
         <Globe />
       </main>

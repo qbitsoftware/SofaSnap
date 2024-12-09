@@ -58,7 +58,8 @@ export default function Profile({ user }: ProfileProps) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="center" sideOffset={12} className="w-56">
                     {menuItems.map((item, index) => {
-                        if (item.protected && Number(user?.role) == 0) {
+                        // console.log("userrole", user?.role)
+                        if ((item.protected && Number(user?.role) == 0) || (item.protected && !user?.role)) {
                             return null
                         } else {
                             return (

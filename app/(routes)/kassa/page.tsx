@@ -5,7 +5,6 @@ import { getCart } from '@/utils/supabase/queries/cart'
 import { ServerError } from '@/components/server-error'
 import { redirect } from 'next/navigation'
 import OrderConfirmation from './components/confirmation-page'
-import { OrderItemJoinProduct } from '@/utils/supabase/supabase.types'
 import { getOrderItems } from '@/utils/supabase/queries/orders'
 
 const Page = async ({ searchParams }: { searchParams: { id?: string } }) => {
@@ -15,7 +14,8 @@ const Page = async ({ searchParams }: { searchParams: { id?: string } }) => {
     redirect("/")
   }
 
-  const orderId = searchParams.id
+  const orderId = searchParams.id || ""
+
 
   const cart = await getCart(user.data.user?.id)
   if (cart.error) {
@@ -35,7 +35,7 @@ const Page = async ({ searchParams }: { searchParams: { id?: string } }) => {
     if (orderItems && orderItems.data) {
       return <OrderConfirmation order_items={orderItems.data} />
     } else {
-      return <div>No order found</div>
+      redirect("/")
     }
   }
 
