@@ -12,12 +12,10 @@ import { groupPaymentMethods } from '@/utils/utils';
 
 export default function PaymentSelection({ onPrev, payment_options }: { onPrev: () => void; payment_options: PaymentMethods | null }) {
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null)
-  console.log(selectedMethod)
 
   const router = useRouter()
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("selected", selectedMethod)
     if (selectedMethod) {
       router.push(selectedMethod)
     }

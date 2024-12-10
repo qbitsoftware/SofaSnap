@@ -98,7 +98,6 @@ export const calculatePrice = (cartItems: CartItemWithDetails[]): CartTotal => {
 
 export const validateMAC = async (mac: string, json: Notification) => {
   if (!process.env.SECRET_KEY) {
-    console.log("No secret key found");
     return;
   }
 
@@ -114,10 +113,8 @@ export const validateMAC = async (mac: string, json: Notification) => {
   const hashHexUpperCase = bufferToHex(hashBuffer).toUpperCase();
 
   if (hashHexUpperCase === mac) {
-    console.log("MAC is valid");
     return true
   } else {
-    console.log("MAC is invalid");
     return false
   }
 };

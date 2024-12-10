@@ -347,7 +347,6 @@ export async function createTransactionAction(transaction: ITransaction) {
   const apiKey = process.env.SECRET_KEY
 
   if (!apiKey) {
-    console.log("EI OLEEEE KEEEEYD")
   }
   const paymentClient = new MaksekeskusClient(apiKey!)
 

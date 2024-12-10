@@ -106,7 +106,6 @@ export const completeOrder = async (provider: string, transaction_id: string) =>
         try {
             await db.delete(cart).where(eq(cart.user_id, result[0].buyer_id))
         } catch (error) {
-            console.log(error)
             return {
                 data: undefined,
                 error: "Server error"
