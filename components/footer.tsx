@@ -36,7 +36,7 @@ const Footer = () => {
                 url: "/kontaktid",
             },
             {
-                title: "Tühistamisvoimalus",
+                title: "Tühistamisvõimalus",
                 url: "/tuhistamise-poliitika"
             },
             {

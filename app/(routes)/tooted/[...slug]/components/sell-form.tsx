@@ -41,6 +41,11 @@ export const SellForm: React.FC<SellFormProps> = ({ product, user }) => {
             from: null,
             to: null
         }
+
+        if (user.id == product.user_id) {
+            toast.error("Enda toodet ei ole võimalik osta")
+            return
+        }
         await addItemToCart(CartItem, user.id)
         router.refresh()
         return

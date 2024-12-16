@@ -1,12 +1,13 @@
 "server only"
 
 import db from '@/utils/supabase/db'
-import { category, category_join, product, address, address_join_product, review, product_review } from '@/utils/supabase/schema'
-import { eq, and, sql, desc, inArray, gte, asc } from 'drizzle-orm'
-import { alias } from 'drizzle-orm/pg-core'
+import { category, category_join, product, address, address_join_product, review, product_review, order, order_item } from '@/utils/supabase/schema'
+import { eq, and, sql, desc, inArray, gte, asc, isNull, or } from 'drizzle-orm'
+import { alias, timestamp } from 'drizzle-orm/pg-core'
 import { AddressJoinProductTS, AddressTS, CategoryJoin, CategoryTS, Product, ProductRealTS, ProductReview, ProductReviewTS, ProductWithAddress } from '../supabase.types'
 import { Review, TProductServer } from '@/lib/product-validation'
 import { GetUserInfo } from '@/app/actions'
+import { error, time } from 'console'
 
 export const fetchProductsByCategories = async (categories: string[], page: number, sort: string | undefined, limit = 30) => {
     const offset = (page - 1) * limit
@@ -34,6 +35,7 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
                 unique_id: product.unique_id,
                 total_clicks: product.total_clicks,
                 last_visited: product.last_visited,
+                deleted_at: product.deleted_at,
                 status: product.status,
             })
             .from(category_join)
@@ -58,6 +60,7 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
             query = query
                 .where(
                     and(
+                        isNull(product.deleted_at),
                         eq(product.status, "accepted"),
                         eq(category_join.category_name_slug, categories[0])
                     )
@@ -86,6 +89,7 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
                 .innerJoin(categoryJoinAlias, eq(category_join.product_id, categoryJoinAlias.product_id))
                 .where(
                     and(
+                        isNull(product.deleted_at),
                         eq(category_join.category_name_slug, categories[0]),
                         eq(categoryJoinAlias.category_name_slug, categories[1]),
                         eq(product.status, "accepted")
@@ -122,7 +126,7 @@ export const fetchAllProducts = async (page = 1, sort: string | undefined, limit
     try {
         const result = await db.select()
             .from(product)
-            .where(eq(product.status, "accepted"))
+            .where(and(eq(product.status, "accepted"), isNull(product.deleted_at)))
             .limit(limit)
             .offset(offset)
             .orderBy(
@@ -159,7 +163,10 @@ export const fetchLastSeenProducts = async () => {
             .orderBy(desc(product.last_visited))
             .limit(maxProducts)
             .where(
-                eq(product.status, "accepted")
+                and(
+                    eq(product.status, "accepted"),
+                    isNull(product.deleted_at),
+                )
             )
 
         return {
@@ -185,6 +192,7 @@ export const fetchPopularProducts = async () => {
                 and(
                     eq(product.status, "accepted"),
                     gte(product.created_at, firstDayOfMonth),
+                    isNull(product.deleted_at),
                 )
             )
             .orderBy(desc(product.total_clicks))
@@ -194,7 +202,10 @@ export const fetchPopularProducts = async () => {
             result = await db.select()
                 .from(product)
                 .where(
-                    eq(product.status, "accepted"),
+                    and(
+                        eq(product.status, "accepted"),
+                        isNull(product.deleted_at),
+                    )
                 )
                 .orderBy(desc(product.total_clicks))
                 .limit(maxProducts)
@@ -222,7 +233,12 @@ export const fetchProductsWithAddresses = async () => {
                 category: category
             })
             .from(address_join_product)
-            .where(eq(product.status, "accepted"))
+            .where(
+                and(
+                    eq(product.status, "accepted"),
+                    isNull(product.deleted_at),
+                )
+            )
             .innerJoin(category_join, eq(address_join_product.product_id, category_join.product_id))
             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
             .innerJoin(product, eq(address_join_product.product_id, product.id))
@@ -265,6 +281,7 @@ export const fetchProductsByIds = async (productIDs: number[]) => {
             .from(address_join_product)
             .where(
                 and(
+                    isNull(product.deleted_at),
                     inArray(address_join_product.product_id, productIDs),
                     eq(product.status, "accepted")
                 )
@@ -319,6 +336,7 @@ export const addProduct = async (prod: TProductServer) => {
         unique_id: prod.unique_id,
         status: "pending",
         all_img: prod.all_img,
+        deleted_at: null
     }
 
     try {
@@ -363,10 +381,11 @@ export const addProduct = async (prod: TProductServer) => {
             };
 
             const sub_category: CategoryTS = {
-                category_name_slug: prod.sub_category.toLowerCase().replaceAll(" ", "-").replaceAll("ä", "a").replaceAll("ö", "o").replaceAll("õ", "o").replaceAll("ü", "u"),
+                category_name_slug: prod.sub_category.toLowerCase().replace(/\s*-\s*|\s+/g, '-').replaceAll("ä", "a").replaceAll("ö", "o").replaceAll("õ", "o").replaceAll("ü", "u"),
                 product_id: productId,
             };
 
+            console.log("1")
             const result = await tx.insert(category_join)
                 .values(category).
                 onConflictDoUpdate({
@@ -376,6 +395,7 @@ export const addProduct = async (prod: TProductServer) => {
                     }
                 })
 
+            console.log("2")
             const result2 = await tx.insert(category_join)
                 .values(sub_category).
                 onConflictDoUpdate({
@@ -384,6 +404,7 @@ export const addProduct = async (prod: TProductServer) => {
                         category_name_slug: sub_category.category_name_slug,
                     }
                 })
+
 
             const ad: AddressTS = {
 
@@ -400,6 +421,7 @@ export const addProduct = async (prod: TProductServer) => {
             }
 
 
+            console.log("3")
             const insertedAddress = await tx.insert(address).
                 values(ad).
                 onConflictDoUpdate({
@@ -425,6 +447,7 @@ export const addProduct = async (prod: TProductServer) => {
                 address_id: addressId,
             }
 
+            console.log("5")
             await tx.insert(address_join_product).values(adJoin).
                 onConflictDoUpdate({
                     target: product.id,
@@ -439,6 +462,7 @@ export const addProduct = async (prod: TProductServer) => {
             error: undefined,
         };
     } catch (error) {
+        console.log("Big error", error)
         return {
             data: undefined,
             error: "Server error",
@@ -460,6 +484,14 @@ export const fetchProduct = async (id: number) => {
             statusCondition
         ].filter(Boolean);
 
+
+
+        let anotherstatusCondition;
+        if (user && user.data.user) {
+            anotherstatusCondition = eq(product.user_id, user.data.user.id)
+        }
+
+
         const result = await db
             .select({
                 product: product,
@@ -467,7 +499,11 @@ export const fetchProduct = async (id: number) => {
                 category: category
             })
             .from(address_join_product)
-            .where(and(...conditions))
+            .where(or(
+                and(...conditions, isNull(product.deleted_at)),
+                and(eq(address_join_product.product_id, id), anotherstatusCondition)
+            ),
+            )
             .innerJoin(category_join, eq(address_join_product.product_id, category_join.product_id))
             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
             .innerJoin(product, eq(address_join_product.product_id, product.id))
@@ -549,7 +585,7 @@ export const fetchUserProducts = async () => {
             .innerJoin(product, eq(category_join.product_id, product.id))
             .innerJoin(address_join_product, eq(address_join_product.product_id, product.id))
             .innerJoin(address, eq(address_join_product.address_id, address.id))
-            .where(eq(product.user_id, user.data.user.id))
+            .where(and(eq(product.user_id, user.data.user.id), isNull(product.deleted_at)))
             .execute() as ProductAndCategory[];
         if (result.length == 0) {
             return {
@@ -604,7 +640,7 @@ export const fetchUserProduct = async (product_id: number) => {
             .innerJoin(product, eq(category_join.product_id, product.id))
             .innerJoin(address_join_product, eq(address_join_product.product_id, product.id))
             .innerJoin(address, eq(address_join_product.address_id, address.id))
-            .where(eq(product.id, product_id))
+            .where(and(eq(product.id, product_id), isNull(product.deleted_at)))
             .execute() as ProductAndCategory[];
         if (result.length == 0) {
             return {
@@ -738,6 +774,59 @@ export const updateProductStatus = async (product_id: number, status: string) =>
             data: undefined,
             error: 'Unauthorized',
         }
+    } catch (error) {
+        return {
+            data: undefined,
+            error: "Server error"
+        }
+    }
+}
+
+export const deleteProduct = async (product_id: number) => {
+    try {
+        const user = await GetUserInfo()
+        if (!user || !user.data.user?.id) {
+            return {
+                data: undefined,
+                error: "Palun logige uuesti sisse",
+            };
+        }
+
+        // Igaks juhuks jatan selle siia
+
+        // const items = await db.select().from(order_item)
+        // .where(
+        //     eq(order_item.product_id, product_id)
+        // )
+
+        // if (items) {
+        //     const currentTime = new Date()
+        //     for (let i = 0; i < items.length; i++) {
+        //         const from = items[i].from;
+        //         const to = items[i].to;
+        //         if (from && to && currentTime >= from && currentTime <= to) {
+        //             return {
+        //                 data: undefined,
+        //                 error: "Toode on hetkel rendis"
+        //             }
+        //         }
+        //     }
+        // }
+
+
+        await db.update(product).set({ deleted_at: sql`CURRENT_TIMESTAMP` })
+            .where(
+                and(
+                    eq(product.user_id, user.data.user.id),
+                    eq(product.id, product_id))
+            )
+
+        return {
+            data: "Toode on edukalt kuulutuste seast eemaldatud",
+            error: undefined
+
+        }
+
     } catch (error) {
         return {
             data: undefined,

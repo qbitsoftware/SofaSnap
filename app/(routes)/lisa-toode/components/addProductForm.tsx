@@ -169,7 +169,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             start_date: data.start_date instanceof Date ? data.start_date.toISOString() : "",
             end_date: data.end_date instanceof Date ? data.end_date.toISOString() : "",
         };
-        // //validate with server stuff first
+        //validate with server stuff first
         const validationResult = productSchemaServer.safeParse(formData);
         if (validationResult.error) {
             toast.toast({
@@ -364,13 +364,20 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
         await form.trigger("all_img")
     }
 
-    const handleInputChangeSize = (e: React.ChangeEvent<HTMLInputElement>, onChange: (value: number | '') => void) => {
-        const value = e.target.value
-        if (value === '' || value === '0') {
-            onChange('')
-        } else {
-            onChange(+value)
+    const handleInputChangeSize = (e: React.ChangeEvent<HTMLInputElement>, onChange: (value: number | '') => void, fieldName: string) => {
+        let value = e.target.value.trim()
+        //only allow 0-9 numbers
+        if (/[^0-9]/.test(value)) {
+            return
         }
+        if (/^0+$/.test(value)) {
+            value = "0"
+        } else {
+            value = value.replace(/^0+/, "")
+        }
+        const score = value === '' ? 0 : Number(value)
+        form.setValue(fieldName as "width" | "heigth" | "length" | "price", score)
+        onChange(score)
     }
 
     return (
@@ -448,7 +455,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                 <FormItem className='flex flex-col items-center w-[100px] md:w-[125px]'>
                                     <FormLabel>Laius (cm)</FormLabel>
                                     <FormControl className='bg-white text-center'>
-                                        <Input type="number" {...field} onChange={e => handleInputChangeSize(e, field.onChange)} />
+                                        <Input type="text" inputMode='numeric' pattern='[0-9]*' {...field} onChange={e => handleInputChangeSize(e, field.onChange, "width")} />
                                     </FormControl>
                                 </FormItem>
                             )}
@@ -462,7 +469,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                 <FormItem className='flex flex-col items-center w-[100px] md:w-[125px]'>
                                     <FormLabel>Kõrgus (cm)</FormLabel>
                                     <FormControl className='bg-white text-center'>
-                                        <Input type="number" {...field} onChange={e => handleInputChangeSize(e, field.onChange)} />
+                                        <Input type="text" inputMode='numeric' pattern='[0-9]*' {...field} onChange={e => handleInputChangeSize(e, field.onChange, "heigth")} />
                                     </FormControl>
                                 </FormItem>
                             )}
@@ -476,7 +483,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                 <FormItem className='flex flex-col items-center w-[100px] md:w-[125px]'>
                                     <FormLabel>Pikkus (cm)</FormLabel>
                                     <FormControl className='bg-white text-center'>
-                                        <Input type="number" {...field} onChange={e => handleInputChangeSize(e, field.onChange)} />
+                                        <Input type="text" inputMode='numeric' pattern='[0-9]*' {...field} onChange={e => handleInputChangeSize(e, field.onChange, "length")} />
                                     </FormControl>
                                 </FormItem>
                             )}
@@ -547,7 +554,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                                 render={({ field }) => (
                                                     <FormItem className='flex gap-2'>
                                                         <FormControl className='bg-white text-center w-[150px]'>
-                                                            <Input type="number" {...field} onChange={e => handleInputChangeSize(e, field.onChange)} />
+                                                            <Input type="text" inputMode='numeric' pattern='[0-9]*' {...field} onChange={e => handleInputChangeSize(e, field.onChange, "price")} />
                                                         </FormControl>
                                                         <div className='flex flex-row'>
                                                             € / Päev
@@ -570,7 +577,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                                 render={({ field }) => (
                                                     <FormItem className='flex gap-2'>
                                                         <FormControl className='bg-white text-center w-[150px]'>
-                                                            <Input type="number" {...field} onChange={e => handleInputChangeSize(e, field.onChange)} />
+                                                            <Input type="text" inputMode='numeric' pattern='[0-9]*' {...field} onChange={e => handleInputChangeSize(e, field.onChange, "price")} />
                                                         </FormControl>
                                                         <div className='flex flex-row'>
                                                             €

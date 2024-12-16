@@ -93,6 +93,7 @@ export const RentForm: React.FC<DateFormProps> = ({ product, user, orderItems })
   const { addItemToCart } = useCart()
   async function onSubmit(data: z.infer<typeof RentFormSchema>) {
 
+
     const CartItem: CartItemTS = {
       product_id: product.id,
       from: toUTCDate(data.dateRange.from),
@@ -104,6 +105,12 @@ export const RentForm: React.FC<DateFormProps> = ({ product, user, orderItems })
       return
     }
 
+
+    //don't let user to order its own items
+    if (user.id == product.user_id) {
+      toast.error("Enda toodet ei ole võimalik rentida")
+      return
+    }
 
     await addItemToCart(CartItem, user.id)
     router.refresh()

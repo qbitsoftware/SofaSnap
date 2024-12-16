@@ -10,6 +10,8 @@ import { GetUserInfo } from '@/app/actions'
 import { redirect } from 'next/navigation'
 import { TotalPrice } from './components/total'
 import { Checkout } from './components/checkout'
+import { cn } from '@/lib/utils'
+import { CartItemWithDetails } from '@/utils/supabase/queries/cart'
 
 const CartPage = async () => {
 
@@ -22,6 +24,20 @@ const CartPage = async () => {
   const { getCartItems } = useCart()
 
   const { data } = await getCartItems(user.data.user.id)
+
+  const isRent = (data: CartItemWithDetails[]): boolean => {
+    let isRent = false
+    if (!data) {
+      return false
+    }
+    data.map((cartItem) => {
+      if (cartItem.product.type == "rent") {
+        isRent = true
+      }
+    })
+    return isRent
+  }
+
 
   return (
     <div className="">
@@ -43,10 +59,10 @@ const CartPage = async () => {
               </div>
             </div>
             <Separator className='w-full md:mt-[100px] bg-[#1E1E1E]/30' />
-            <div className='md:mx-auto px-6 md:px-[64px] max-w-[1440px]'>
+            <div className={cn('md:mx-auto px-6 md:px-[64px] max-w-[1440px]', !isRent(data) && "hidden")}>
               <RentingRules />
+              <Separator className='w-full md:mt-[60px] bg-[#1E1E1E]/30' />
             </div>
-            <Separator className='w-full md:mt-[60px] bg-[#1E1E1E]/30' />
             <TotalPrice cartItems={data} />
             <div className='md:mx-auto px-6 md:px-[64px] max-w-[1440px] flex md:flex-row gap-[10px] justify-end xl:my-[200px] my-[50px] md:my-[100px]'>
               {/* <Button className='bg-[#D9D9D9] text-black px-10 py-6'>Katkesta</Button> */}

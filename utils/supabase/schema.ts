@@ -24,6 +24,10 @@ export const product = pgTable('products', {
         mode: 'string',
         precision: 3
     }),
+    deleted_at: timestamp("deleted_at", {
+        withTimezone: true,
+        mode: 'string',
+    }),
     description: text("description"),
     user_id: uuid('user_id').references(() => user.id, { onDelete: "cascade" }).notNull(),
     unique_id: uuid('unique_id').unique().notNull(),

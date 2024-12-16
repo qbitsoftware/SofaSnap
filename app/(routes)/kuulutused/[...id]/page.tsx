@@ -41,16 +41,16 @@ const Page = async ({ params }: PageProps): Promise<JSX.Element> => {
         const category = prods.data[0].categories
         let c = "";
         let c_sub = "";
-        category.map((cat) => {
-            let isMatch = false;
-
+        category.map((cat, index) => {
             data.map((category_to_find) => {
-                if (category_to_find.sub_categories?.includes(cat.category_name_slug)) {
-                    isMatch = true; // If found, set flag to true
+                if (category_to_find.name_slug == cat.category_name_slug) {
+                    if (index == 0) {
+                        c = category_to_find.name
+                    } else {
+                        c_sub = category_to_find.name
+                    }
                 }
             });
-
-            return isMatch ? c_sub = cat.category_name_slug : c = cat.category_name_slug;
         });
 
         const initData: Listing = {
@@ -71,7 +71,6 @@ const Page = async ({ params }: PageProps): Promise<JSX.Element> => {
             all_img: prod.all_img || [],
             unique_id: prod.unique_id,
         }
-
 
         return (
             <div className='flex flex-col md:flex-row xl:max-w-[1440px] w-full sm:px-[56px] pt-[30px] mx-auto'>

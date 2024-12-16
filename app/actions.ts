@@ -5,7 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { productSchemaServer, Review, TProductServer } from "@/lib/product-validation";
-import { addClick, addProduct, addReview, fetchAllProducts, fetchProduct, fetchProductsByCategories, getProductReviews } from "@/utils/supabase/queries/products";
+import { addClick, addProduct, addReview, deleteProduct, fetchAllProducts, fetchProduct, fetchProductsByCategories, getProductReviews } from "@/utils/supabase/queries/products";
 import { Cart, CartItem, Product } from "@/utils/supabase/supabase.types";
 import { passwordChangeValidator, TPasswordChangeSchema } from "@/lib/register-validation";
 import { AuthError } from "@supabase/supabase-js";
@@ -359,4 +359,8 @@ export async function sendEmailAction(to: string, sub: string, content: string){
   } catch (error) {
     console.error(error)
   }
+}
+
+export async function  deleteProductAction(product_id: number): Promise<{ data: string | undefined, error: string | undefined }> {
+    return await deleteProduct(product_id)
 }

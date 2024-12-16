@@ -37,7 +37,7 @@ function AdvancedImageInput({ images, setImages, baseValue }: ImageInputProps) {
   }, [images, debouncedBaseValue]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const allowedFileTypes = ["image/jpeg", "image/png", "image/svg+xml", "image/jpg"];
+    const allowedFileTypes = ["image/jpeg", "image/png", "image/jpg"];
     const maxFileSizeMB = 10;
     const maxFileSizeBytes = maxFileSizeMB * 1024 * 1024;
 
@@ -54,7 +54,7 @@ function AdvancedImageInput({ images, setImages, baseValue }: ImageInputProps) {
         })
 
         if (!isValidType) {
-          alert(`${file.name} ei voimalda sellist failityypi. Ainult JPG, JPEG, SVG voi PNG`);
+          alert(`${file.name} ei voimalda sellist failitüüpi. Ainult JPG, JPEG või PNG`);
         }
 
         if (!isValidSize) {
@@ -80,7 +80,7 @@ function AdvancedImageInput({ images, setImages, baseValue }: ImageInputProps) {
             baseValueInput.push(String(i))
           }
 
-          // baseValue(baseValueInput, true)
+          // baseValue(baseValueInput)
           return updated
         });
       }

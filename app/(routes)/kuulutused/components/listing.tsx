@@ -1,12 +1,37 @@
+import { deleteProductAction } from "@/app/actions"
+import { useToast } from "@/components/hooks/use-toast"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { ProductAndCategories } from "@/utils/supabase/queries/products"
-import { Edit } from "lucide-react"
+import { Edit, Trash, Eye } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 export default function ListingCard({ listing }: { listing: ProductAndCategories }) {
+
+    const [isOpen, setIsOpen] = useState(false)
+    const toast = useToast()
+
+    const router = useRouter()
+
+    const handleDelete = async (product_id: number) => {
+        try {
+            const result = await deleteProductAction(product_id)
+            console.log(result)
+            toast.toast({ title: result.data })
+            setIsOpen(false)
+            router.refresh()
+
+        } catch (error) {
+            void error;
+            toast.toast({ title: "Midagi läks valesti" })
+        }
+    }
+
     return (
         <div>
             <Card className="overflow-hidden border border-gray-200 hover:border-gray-300 transition-all duration-300 ease-in-out bg-white">
@@ -32,18 +57,42 @@ export default function ListingCard({ listing }: { listing: ProductAndCategories
                             <div className="flex justify-between items-center mb-4">
                                 <span className="text-2xl font-bold">${listing.product.price.toFixed(2)}</span>
                                 <div className="flex space-x-2">
+                                    <Link href={`/tooted/${listing.product.id}`} onClick={(e) => e.stopPropagation()}>
+                                        <Button variant="outline" size="sm">
+                                            <Eye className="h-4 w-4 mr-2" />
+                                            Eelvaade
+                                        </Button>
+                                    </Link>
                                     <Link href={`/kuulutused/${listing.product.id}`} onClick={(e) => e.stopPropagation()}>
                                         <Button variant="outline" size="sm">
                                             <Edit className="h-4 w-4 mr-2" />
                                             Muuda
                                         </Button>
                                     </Link>
+                                    <Button onClick={() => setIsOpen(true)} variant={"destructive"}>
+                                        <Trash className="h-4 w-4 mr-2" />
+                                        Kustuta
+                                    </Button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </CardContent>
             </Card>
+            <Dialog open={isOpen} onOpenChange={() => setIsOpen(false)}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Kas olete kindel, et soovite kuulutuse kustutada?</DialogTitle>
+                        <DialogDescription>
+                            Peale kuulutuse eemaldamist ei ole võimalik kuulutust taastada.
+                        </DialogDescription>
+                        <Button className="!mt-4" onClick={() => handleDelete(listing.product.id)} variant={"destructive"}>
+                            <Trash className="h-4 w-4 mr-2" />
+                            Kustuta
+                        </Button>
+                    </DialogHeader>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
