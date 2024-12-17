@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { LoginGoogle } from './google-login'
-import { LoginFacebook } from './facebook-login'
 
 export const Auth: React.FC = () => {
     return (
@@ -12,7 +11,7 @@ export const Auth: React.FC = () => {
             >
                 <Image src={"/icons/apple.svg"} alt='apple' width={24} height={24} />
             </Button> */}
-            <LoginFacebook />
+            {/* <LoginFacebook /> */}
             <LoginGoogle />
         </div>
     )

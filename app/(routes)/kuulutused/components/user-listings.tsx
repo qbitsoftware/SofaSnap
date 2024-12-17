@@ -11,6 +11,7 @@ interface UserListingsProps {
 }
 
 export default function UserListings({ listings }: UserListingsProps) {
+    console.log("Listings", listings)
     return (
         <div className="container mx-auto px-4 py-12 max-w-4xl">
             <motion.h1
@@ -23,7 +24,7 @@ export default function UserListings({ listings }: UserListingsProps) {
             </motion.h1>
             <Tabs defaultValue='accepted'>
                 <TabsList className='bg-white p-1 rounded-md inline-tabs flex justify-evenly'>
-                    <TabsTrigger className='w-full' value="declined">Tagasi Lükatud</TabsTrigger>
+                    <TabsTrigger className='w-full' value="rejected">Tagasi Lükatud</TabsTrigger>
                     <TabsTrigger className='w-full' value="pending">Läbi vaatamisel</TabsTrigger>
                     <TabsTrigger className='w-full' value="accepted">Aktiivsed</TabsTrigger>
                 </TabsList>

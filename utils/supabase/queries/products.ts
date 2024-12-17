@@ -198,7 +198,7 @@ export const fetchPopularProducts = async () => {
             .orderBy(desc(product.total_clicks))
             .limit(maxProducts)
 
-        if (result.length == 0) {
+        if (result.length < 3) {
             result = await db.select()
                 .from(product)
                 .where(
@@ -376,16 +376,15 @@ export const addProduct = async (prod: TProductServer) => {
                 throw new Error("Failed to insert product.");
             }
             const category: CategoryTS = {
-                category_name_slug: prod.category.replaceAll("ä", "a").replaceAll("ö", "o").replaceAll("õ", "o").replaceAll("ü", "u"),
+                category_name_slug: prod.category.replaceAll("ä", "a").replaceAll("ö", "o").replaceAll("õ", "o").replaceAll("ü", "u").replaceAll("ž", "z"),
                 product_id: productId,
             };
 
             const sub_category: CategoryTS = {
-                category_name_slug: prod.sub_category.toLowerCase().replace(/\s*-\s*|\s+/g, '-').replaceAll("ä", "a").replaceAll("ö", "o").replaceAll("õ", "o").replaceAll("ü", "u"),
+                category_name_slug: prod.sub_category.toLowerCase().replace(/\s*-\s*|\s+/g, '-').replaceAll("ä", "a").replaceAll("ö", "o").replaceAll("õ", "o").replaceAll("ü", "u").replaceAll("ž", "z"),
                 product_id: productId,
             };
 
-            console.log("1")
             const result = await tx.insert(category_join)
                 .values(category).
                 onConflictDoUpdate({
@@ -395,7 +394,6 @@ export const addProduct = async (prod: TProductServer) => {
                     }
                 })
 
-            console.log("2")
             const result2 = await tx.insert(category_join)
                 .values(sub_category).
                 onConflictDoUpdate({
@@ -421,7 +419,6 @@ export const addProduct = async (prod: TProductServer) => {
             }
 
 
-            console.log("3")
             const insertedAddress = await tx.insert(address).
                 values(ad).
                 onConflictDoUpdate({
@@ -447,7 +444,6 @@ export const addProduct = async (prod: TProductServer) => {
                 address_id: addressId,
             }
 
-            console.log("5")
             await tx.insert(address_join_product).values(adJoin).
                 onConflictDoUpdate({
                     target: product.id,
@@ -501,7 +497,7 @@ export const fetchProduct = async (id: number) => {
             .from(address_join_product)
             .where(or(
                 and(...conditions, isNull(product.deleted_at)),
-                and(eq(address_join_product.product_id, id), anotherstatusCondition)
+                and(eq(address_join_product.product_id, id), anotherstatusCondition, isNull(product.deleted_at))
             ),
             )
             .innerJoin(category_join, eq(address_join_product.product_id, category_join.product_id))
@@ -739,7 +735,7 @@ export const getPendingProducts = async () => {
     try {
         const user = await GetUserInfo()
         if (user.data && user.data.user?.user_metadata.role == 1) {
-            const result = await db.select().from(product).where(eq(product.status, "pending"))
+            const result = await db.select().from(product).where(and(eq(product.status, "pending"), isNull(product.deleted_at)))
             return {
                 data: result,
                 error: undefined

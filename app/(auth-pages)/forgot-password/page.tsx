@@ -4,7 +4,6 @@ import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { SmtpMessage } from "../smtp-message";
 import { Mail } from "lucide-react";
 
 export default function ForgotPassword({
@@ -53,7 +52,6 @@ export default function ForgotPassword({
         </form>
         <FormMessage message={searchParams} />
       </div>
-      <SmtpMessage />
     </div>
   );
 }

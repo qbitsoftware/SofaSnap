@@ -1,7 +1,7 @@
 import React from 'react'
 import { ProductList } from './[...slug]/components/product-list'
 import { fetchProducts } from '@/app/actions'
-import { AlignLeft, ChevronLeft } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 import { MapButton } from '@/components/map-button'
 import Link from 'next/link'
 import { SortDropdown } from './[...slug]/components/sort-dropdown'
@@ -29,12 +29,12 @@ const Page = async ({ searchParams }: { searchParams: { page?: string, sort?: st
           <ChevronLeft strokeWidth={1} className='ml-[-16px]' color='#000000' size={44} />
         </Link>
         <div className={'lg:ml-[2%] xl:ml-[1%] md:hidden'}>
-          <AlignLeft strokeWidth={1.4} color='#000000' size={44} />
+          <SortDropdown currentPage={currentPage} />
         </div>
         <MapButton className='md:flex hidden' />
       </div>
       <div className='md:px-10 mt-4 md:mt-10 mb-[100px] md:mb-0 md:max-w-[860px] lg:max-w-[1152px] xl:max-w-[1310px] sm:max-w-[540px] mx-auto'>
-        <div className={'lg:ml-[2%] xl:ml-[1%]'}>
+        <div className={'lg:ml-[2%] xl:ml-[1%] hidden md:flex'}>
           <SortDropdown currentPage={currentPage} />
         </div>
         <div className='mt-4 md:mt-10'>

@@ -154,7 +154,7 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
         } catch (error) {
             console.error('Error fetching suggestions:', error);
         }
-    }, 300)
+    }, 500)
 
     const fetchSuggestions = useCallback(
         (value: string) => {

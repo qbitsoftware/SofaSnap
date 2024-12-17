@@ -59,7 +59,7 @@ const faqData: FAQItem[] = [
   },
   {
     question: "Millised makseviisid on aktsepteeritud?",
-    answer: "Platvorm aktsepteerib pangakaarte ja muid elektroonilisi makseviise (näiteks Stripe või PayPal, sõltuvalt Seatly valikutest)."
+    answer: "Platvorm aktsepteerib pangakaarte ja muid elektroonilisi makseviise."
   },
   {
     question: "Kuidas tagastatakse mööbel pärast rendiperioodi lõppu?",

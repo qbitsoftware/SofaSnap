@@ -38,7 +38,7 @@ export default function Profile({ user }: ProfileProps) {
         { label: 'Minu kuulutused', href: '/kuulutused', protected: false },
         { label: 'Lisa kuulutus', href: '/lisa-toode', protected: false },
         { label: 'Ostukorv', href: '/ostukorv', protected: false },
-        { label: 'Sõnumid', href: '/messages', protected: false },
+        // { label: 'Sõnumid', href: '/messages', protected: false },
         { label: 'Admin', href: '/admin', protected: true },
         { label: 'Logi välja', action: logout },
     ]

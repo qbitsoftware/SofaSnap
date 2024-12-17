@@ -23,13 +23,13 @@ export default async function Login({ searchParams }: { searchParams: Message })
       <Auth />
       <div className="relative md:w-[406px]">
         <Separator color="[#FBFBFB]" className="w-full mt-5" />
-        <p className="text-[#CFCFCF] text-center font-semibold absolute top-2/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background w-8">OR</p>
+        <p className="text-[#CFCFCF] text-center font-semibold absolute top-2/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-background w-10">VÕI</p>
       </div>
       <form className="flex flex-col min-w-64 md:w-[400px] mx-auto">
         <div className="flex flex-col gap-4 [&>input]:mb-3 mt-8">
           <div className="relative">
             <Label className="absolute top-[-6px] bg-background left-3 py-[2px] px-[4px] rounded-xl" htmlFor="email">Email</Label>
-            <Input className="bg-accent-foreground h-12" name="email" placeholder="you@example.com" required autoComplete="off" />
+            <Input className="bg-accent-foreground h-12" name="email" type="email" placeholder="sinu@email.com" required autoComplete="off" />
           </div>
           <div className="relative">
             <Label className="absolute top-[-6px] bg-background left-3 py-[2px] px-[4px] rounded-xl" htmlFor="password">Parool</Label>
@@ -37,12 +37,9 @@ export default async function Login({ searchParams }: { searchParams: Message })
               className="h-12 bg-[#D9D9D980]"
               type="password"
               name="password"
-              placeholder="Your password"
+              placeholder="Sisesta parool"
               required
             />
-            {/* {searchParams.error &&  (
-              <p className="text-red-600 text-sm mt-2">Vale kasutajanimi või parool</p> 
-            )} */}
           </div>
           <div className="flex justify-between items-center">
             <Link

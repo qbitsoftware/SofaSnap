@@ -19,7 +19,7 @@ const AddressComponent: React.FC<AddressProps> = ({ product, className }) => {
                 <div className='h-full max-w-[1440px] px-[64px] mx-auto md:flex md:flex-col md:justify-center gap-1 py-2'>
                     <MapPin />
                     <p className='font-medium'>Asukoht kaardil</p>
-                    <p className='font-normal'>{product.address.full_address}</p>
+                    <p className='font-normal'>{product.address.region}</p>
                 </div>
             </div>
         </>
