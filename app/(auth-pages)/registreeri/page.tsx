@@ -20,11 +20,13 @@ const Page = async () => {
                     </Link>
                 </div>
             </div>
-            <div className="mb-[64px] lg:px-[64px] w-[300px] sm:w-[450px] md:w-[700px] lg:w-[1000px] xl:w-[1400px] max-w-[1440px]">
+            <div className="lg:px-[64px] w-[300px] sm:w-[450px] md:w-[700px] lg:w-[1000px] xl:w-[1400px] max-w-[1440px]">
                 <RegisterForm />
             </div>
-            <div className="hidden md:flex w-full h-[532px] mb-[324px] ml-[-350px] lg:ml-[-200px] lg:scale-125 xl:ml-[0px] xl:scale-150 2xl:scale-175 2xl:ml-[250px] overflow-hidden">
-                <Image src={"/images/couch.svg"} height={532} width={1063} style={{ objectFit: "contain" }} alt="couch" />
+            <div className="hidden md:block w-full relative h-[944px] mb-[324px] overflow-hidden">
+                <div className="absolute left-0 md:left-[-350px] lg:left-[0px]">
+                    <Image src={"/images/couch.svg"} height={532} width={1063} style={{ objectFit: "contain" }} alt="couch" />
+                </div>
             </div>
         </div>
     )

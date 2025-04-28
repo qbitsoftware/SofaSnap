@@ -24,7 +24,8 @@ const Contract = () => {
             heading: "Tasud ja Arveldamine",
             subHeadings: [
                 "Vahendustasu: Kasutaja nõustub tasuma platvormile vahendustasu, mis on 15% rendi- või müügihinnast iga tehingu kohta.",
-                "Tasude Muutmine: Platvormil on õigus muuta vahendustasu protsenti, teavitades sellest kasutajaid ette vähemalt 14 päeva enne muudatuste jõustumist."
+                "Tasude Muutmine: Platvormil on õigus muuta vahendustasu protsenti, teavitades sellest kasutajaid ette vähemalt 14 päeva enne muudatuste jõustumist.",
+                "Tagasimaksed ja Tühistamised: Tagasimaksed ja tühistamised toimuvad vastavalt platvormi tühistamispoliitikale, mis on kättesaadav kasutajatingimustes."
             ],
         },
         {
@@ -38,20 +39,34 @@ const Contract = () => {
             heading: "Kasutaja Kohustused",
             subHeadings: [
                 "Reklaamide Täpsus: Kasutaja kinnitab, et reklaamidel sisalduv teave on täpne ja täielik.",
-                "Seaduste Järgimine: Kasutaja kinnitab, et ta järgib kõiki asjakohaseid seadusi ja eeskirju renditavate objektide reklaamimisel ja rentimisel.",
+                "Seaduste Järgimine: Kasutaja kinnitab, et ta järgib kõiki asjakohaseid seadusi ja eeskirju renditavate või müüdavate objektide reklaamimisel ja tehingute tegemisel.",
+                "Maksukohustuste Täitmine: Kasutaja vastutab kõikide maksukohustuste täitmise eest, mis võivad kaasneda platvormi kasutamisega.",
             ],
         },
         {
             heading: "Lepingu Lõpetamine",
             subHeadings: [
-                ".Lepingu Lõpetamine: Mõlemad pooled võivad lepingu igal ajal lõpetada, teavitades sellest teist poolt ette."
+                ".Lepingu Lõpetamine: Mõlemad pooled võivad lepingu igal ajal lõpetada, teavitades sellest teist poolt ette vähemalt 7 päeva."
             ],
         },
         {
             heading: "Muud Tingimused",
             subHeadings: [
-                "Muudatused Lepingus: Platvormil on õigus muuta lepingut, teavitades sellest kasutajaid ette.",
+                "Muudatused Lepingus: Platvormil on õigus muuta lepingut, teavitades sellest kasutajaid ette vähemalt 14 päeva enne muudatuste jõustumist.",
                 "Konfidentsiaalsus: Mõlemad pooled nõustuvad hoidma konfidentsiaalset teavet ja mitte avaldama seda kolmandatele isikutele.",
+            ]
+        },
+        {
+            heading: "Vaidluste Lahendamine ja Kohaldatav Seadus",
+            subHeadings: [
+                "Vaidluste Lahendamine: Kõik lepingu täitmisest tulenevad vaidlused lahendatakse läbirääkimiste teel. Kui kokkuleppele ei jõuta, lahendatakse vaidlused Harju Maakohtus Eesti seaduste alusel.",
+            ]
+        },
+        {
+            heading: "Andmekaitse ja Isikuandmed",
+            subHeadings: [
+                "Isikuandmete Kaitse: Platvorm töötleb kasutajate isikuandmeid vastavalt Euroopa Liidu isikuandmete kaitse üldmääruse (GDPR) nõuetele. Täpsem info andmekaitse kohta on saadaval platvormi privaatsuspoliitikas.",
+                "Kasutaja Nõusolek: Konto loomisel ja platvormi kasutamisel nõustub kasutaja platvormi privaatsustingimustega."
             ]
         }
     ]
@@ -62,7 +77,7 @@ const Contract = () => {
                     Vahendusplatvormi Teenusleping
                 </h1>
                 <h1>
-                    Viimati uuendatud: 17.12.2024
+                    Viimati uuendatud: 28.04.2025
                 </h1>
                 {text.map((t, key) => (
                     <div key={key}>
@@ -74,15 +89,6 @@ const Contract = () => {
                         ))}
                     </div>
                 ))}
-                {/* <h1>
-                    Allakirjutatud:
-                </h1>
-                <h1>
-                    Platvormi Esindaja: [Nimi ja allkiri]
-                </h1>
-                <h1>
-                    Kasutaja: [Nimi ja allkiri]
-                </h1> */}
             </div>
         </div>
     )

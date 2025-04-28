@@ -37,12 +37,12 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
                                 }`}
                         >
                             <Image
-                                className='absolute w-full h-full rounded-xl object-cover'
+                                className='absolute w-full h-full rounded-xl object-contain'
                                 src={image}
                                 alt={product.name}
                                 fill
                                 sizes='(max-width: 1024) 48vw, (max-width: 1280px) 54vw, 60vw'
-                                style={{ objectFit: "cover" }}
+                                style={{ objectFit: "contain" }}
                                 priority
                             />
                         </div>
