@@ -1,37 +1,38 @@
 import { z } from 'zod';
-import { FeatureSchema } from './coordinates-validation';
 
-export type TSignUpSchema = z.infer<typeof registerValidator>
-export type TSignUpSchemaServer = z.infer<typeof registerValidatorServer>
-
-export const registerValidator = z.object({
-    first_name: z.string().min(1, 'Nimi on kohustuslik'),
-    last_name: z.string().min(1, 'Perekonnanimi on kohustuslik'),
-    address: z.string().min(1, 'Aadress on kohustuslik'),
-    phone: z.string().min(1, 'Telefoninumber on kohustsulik'),
+const baseRegisterSchema = z.object({
     email: z.string().email('Ebakorrektne emaili address'),
     password: z.string().min(6, 'Parool peab olema vähemalt 6 tähemarki pikk'),
     confirm_password: z.string(),
     agreement: z.boolean().refine(val => val, 'Väli peab olema täidetud'),
     role: z.number().optional(),
-}).refine(data => data.password === data.confirm_password, {
-    message: 'Paroolid ei ühti',
-    path: ['confirm_password'],
 });
 
-export const registerValidatorServer = z.object({
+const eraisikSchema = baseRegisterSchema.extend({
+    userType: z.literal('Eraisik'),
     first_name: z.string().min(1, 'Nimi on kohustuslik'),
     last_name: z.string().min(1, 'Perekonnanimi on kohustuslik'),
-    address: FeatureSchema,
-    phone: z.string().min(1, 'Telefoninumber on kohustsuli'),
-    email: z.string().email('Ebakorrektne emaili address'),
-    password: z.string().min(6, 'Parool peab olema vähemalt 6 tähemarki pikk'),
-    confirm_password: z.string(),
-    agreement: z.boolean().refine(val => val, 'Väli peab olema täidetud'),
-}).refine(data => data.password === data.confirm_password, {
+    address: z.string().min(1, 'Aadress on kohustuslik'),
+    phone: z.string().min(1, 'Telefoninumber on kohustuslik'),
+});
+
+const ariklientSchema = baseRegisterSchema.extend({
+    userType: z.literal('Äriklient'),
+    company_name: z.string().min(1, 'Ettevõtte nimi on kohustuslik'),
+    registry_code: z.string().min(1, 'Registri kood on kohustuslik'),
+    vat_number: z.string().optional(),
+    phone: z.string().min(1, 'Telefoninumber on kohustuslik'),
+    contact_person: z.string().min(1, 'Kontaktisik on kohustuslik'),
+});
+
+export const registerValidator = z.discriminatedUnion('userType', [
+    eraisikSchema,
+    ariklientSchema,
+]).refine(data => data.password === data.confirm_password, {
     message: 'Paroolid ei ühti',
     path: ['confirm_password'],
 });
+export type TSignUpSchema = z.infer<typeof registerValidator>
 
 export type TPasswordChangeSchema = z.infer<typeof passwordChangeValidator>
 
@@ -43,21 +44,29 @@ export const passwordChangeValidator = z.object({
     path: ['confirm_password'],
 })
 
-export type TAccountInformationSchemaClient = z.infer<typeof updateInformationClient>
-// export type TAccountInformationSchemaServer = z.infer<typeof updateInformationServer>
+const baseUpdateInformationSchema = z.object({
+    phone: z.string().min(1, 'Telefoninumber ei saa puududa'),
+    agreement: z.boolean().refine(val => val, 'Väli peab olema täidetud'),
+});
 
-export const updateInformationClient = z.object({
+const eraisikUpdateSchema = baseUpdateInformationSchema.extend({
+    userType: z.literal('Eraisik'),
     first_name: z.string().min(1, 'Nimi ei saa puududa'),
     last_name: z.string().min(1, 'Perekonnanimi ei saa puududa'),
     address: z.string().min(1, 'Aadress ei saa puududa'),
-    phone: z.string().min(1, 'Telefoninumber ei saa puududa'),
-    agreement: z.boolean().refine(val => val, 'Väli peab olema taidetud'),
-})
+});
 
-// export const updateInformationServer = z.object({
-//     first_name: z.string().min(1, 'Nimi ei saa puududa'),
-//     last_name: z.string().min(1, 'Perekonnanimi ei saa puududa'),
-//     address: FeatureSchema,
-//     phone: z.string().min(1, 'Tel nr ei saa puududa'),
-//     agreement: z.boolean().refine(val => val, 'Vali peab olema taidetud'),
-// })
+const ariklientUpdateSchema = baseUpdateInformationSchema.extend({
+    userType: z.literal('Äriklient'),
+    company_name: z.string().min(1, 'Ettevõtte nimi ei saa puududa'),
+    registry_code: z.string().min(1, 'Registri kood ei saa puududa'),
+    vat_number: z.string().optional(),
+    contact_person: z.string().min(1, 'Kontaktisik ei saa puududa'),
+});
+
+export const updateInformationClient = z.discriminatedUnion('userType', [
+    eraisikUpdateSchema,
+    ariklientUpdateSchema,
+]);
+
+export type TAccountInformationSchemaClient = z.infer<typeof updateInformationClient>

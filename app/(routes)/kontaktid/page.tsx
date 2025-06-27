@@ -1,6 +1,7 @@
 import React from 'react'
 import { Breadcrumb } from '@/components/breadcrumb'
 import { Text } from './components/text'
+import { ReportUserInput } from '../probleemne-kasutaja/components/report-user-input'
 
 const Page = () => {
     return (
@@ -8,8 +9,11 @@ const Page = () => {
             <div className='mb-[38px]'>
                 <Breadcrumb text='Kontaktid' link='/' />
             </div>
-            <div className='md:ml-[60px] lg:ml-[135px] mb-[179px]'>
+            <div className='md:ml-[60px] lg:ml-[135px] mb-[20px]'>
                 <Text />
+            </div>
+            <div className='md:ml-[60px] lg:ml-[135px] mb-[179px]'>
+                <ReportUserInput />
             </div>
         </div>
     )

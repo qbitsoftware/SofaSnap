@@ -11,45 +11,42 @@ import { Check } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { ClipLoader } from "react-spinners"
 import { Contract } from "./contract"
-import { Suggestions } from "../../profiil/components/suggestions"
-import { Address, TAddressSearchSchema } from "@/lib/search-validation"
-import { useCallback, useEffect, useState } from "react"
-import { debounce } from "lodash"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Feature } from "@/lib/coordinates-validation"
+import { ContractCompany } from "./contract-company"
+
+type UserType = "Eraisik" | "Äriklient";
 
 const RegisterForm = () => {
 
     const router = useRouter()
     const toast = useToast()
-    //search bar stuff
-    const [suggestions, setSuggestions] = useState<Address[]>([]);
-    const [chosenSuggestion, setChosenSuggestion] = useState<Feature>();
-    const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
-    const [inputValue, setInputValue] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const id = "somerandomuseridchangelater"
+
+    const [userType, setUserType] = useState<UserType>("Eraisik");
 
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
         setError,
+        reset,
+        setValue,
     } = useForm<TSignUpSchema>({
         resolver: zodResolver(registerValidator),
+        defaultValues: {
+            userType: "Eraisik"
+        }
     });
 
+    useEffect(() => {
+        reset();
+        setValue('userType', userType);
+    }, [userType, reset, setValue]);
 
     const onSubmit = async (data: TSignUpSchema) => {
-        const formData = {
-            ...data,
-            address: chosenSuggestion,
-        };
-
-
         const response = await fetch("/api/register", {
             method: "POST",
-            body: JSON.stringify(formData),
+            body: JSON.stringify(data),
             headers: {
                 "Content-Type": "application/json",
             },
@@ -95,6 +92,30 @@ const RegisterForm = () => {
                     message: errors.last_name,
                 })
             }
+            if (errors.company_name) {
+                setError("company_name", {
+                    type: "server",
+                    message: errors.company_name,
+                })
+            }
+            if (errors.registry_code) {
+                setError("registry_code", {
+                    type: "server",
+                    message: errors.registry_code,
+                })
+            }
+            if (errors.vat_number) {
+                setError("vat_number", {
+                    type: "server",
+                    message: errors.vat_number,
+                })
+            }
+            if (errors.contact_person) {
+                setError("contact_person", {
+                    type: "server",
+                    message: errors.contact_person,
+                })
+            }
             if (errors.address) {
                 setError("address", {
                     type: "server",
@@ -137,122 +158,116 @@ const RegisterForm = () => {
         }
     }
 
-    useEffect(() => {
-        function suggestion() {
-            setTimeout(() => {
-                setShowSuggestions(false);
-            }, 200)
-        }
-        document.addEventListener('mousedown', suggestion);
-        return () => {
-            document.removeEventListener('mousedown', suggestion);
-        };
-    }, []);
-
-    const deboucnedSuggestions = debounce(async (value: string) => {
-        if (value.length === 0) {
-            setShowSuggestions(false);
-            return;
-        }
-
-        setShowSuggestions(true);
-
-        const data: TAddressSearchSchema = {
-            input: value,
-            //just take email instead of userid becuase user is not logged in and does not have id at that moment
-            user_id: id,
-        };
-
-        try {
-            const response = await fetch("/api/suggestion", {
-                method: "POST",
-                body: JSON.stringify(data),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-
-            const responseData = await response.json();
-
-            if (response.ok) {
-                setSuggestions(responseData.data);
-            }
-            setIsLoading(false)
-        } catch (error) {
-            console.error('Error fetching suggestions:', error);
-        }
-    }, 300)
-
-
-    const fetchSuggestions = useCallback(
-        (value: string) => {
-            deboucnedSuggestions(value)
-        },
-        [deboucnedSuggestions]
-    )
-
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        setInputValue(value);
-        setIsLoading(true)
-        fetchSuggestions(value);
-    };
-
-
     return (
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-            <div className="mb-[26px] md:mb-[52px]">
-                <div className="mb-[29px] pl-[4px] md:pl-[0px] md:mb-[22px]">
-                    <h2 className="font-medium text-lg">Isikuandmed</h2>
+            <input type="hidden" {...register("userType")} value={userType} />
+
+            <div className="mb-[40px]">
+                <div className="flex gap-[20px] justify-center md:justify-start md:pl-[75px]">
+                    <Button
+                        type="button"
+                        onClick={() => setUserType("Eraisik")}
+                        className={cn(
+                            "w-[150px] h-[45px] rounded-lg transition-colors",
+                            userType === "Eraisik"
+                                ? "bg-accent text-black"
+                                : "bg-[#D9D9D9] text-black hover:bg-[#C0C0C0]"
+                        )}
+                    >
+                        Eraisik
+                    </Button>
+                    <Button
+                        type="button"
+                        onClick={() => setUserType("Äriklient")}
+                        className={cn(
+                            "w-[150px] h-[45px] rounded-lg transition-colors",
+                            userType === "Äriklient"
+                                ? "bg-accent text-black"
+                                : "bg-[#D9D9D9] text-black hover:bg-[#C0C0C0]"
+                        )}
+                    >
+                        Äriklient
+                    </Button>
                 </div>
-                <div className="flex flex-col w-full gap-[5px] md:gap-[11px] md:w-[500px] md:pl-[75px] leading-4">
-                    <Input {...register("first_name")} placeholder="Nimi" autoComplete="off" />
-                    {errors.first_name && <p className="text-red-500">{errors.first_name.message}</p>}
-                    <Input {...register("last_name")} placeholder="Perekonnanimi" autoComplete="off" />
-                    {errors.last_name && <p className="text-red-500">{errors.last_name.message}</p>}
-                    <div className="relative">
-                        <Input
-                            {...register("address")}
-                            placeholder="Aadress"
-                            onChange={handleInputChange}
-                            value={inputValue}
-                            autoComplete="off"
-                        />
-                        <Suggestions
-                            isLoading={isLoading}
-                            suggestions={suggestions}
-                            showSuggestions={showSuggestions}
-                            inputValue={inputValue}
-                            setChosenSuggestion={setChosenSuggestion}
-                            setInputValue={setInputValue}
-                            id={id}
-                        />
-                        <p className="italic text-sm pl-1 pt-1 text-slate-700">Naide: Tamme 5</p>
+            </div>
+
+            {userType === "Eraisik" ? (
+                <>
+                    <div className="mb-[26px] md:mb-[52px]">
+                        <div className="mb-[29px] pl-[4px] md:pl-[0px] md:mb-[22px]">
+                            <h2 className="font-medium text-lg">Isikuandmed</h2>
+                        </div>
+                        <div className="flex flex-col w-full gap-[5px] md:gap-[11px] md:w-[500px] md:pl-[75px] leading-4">
+                            <Input {...register("first_name")} placeholder="Nimi" autoComplete="off" />
+                            {(errors as any).first_name && <p className="text-red-500">{(errors as any).first_name.message}</p>}
+                            <Input {...register("last_name")} placeholder="Perekonnanimi" autoComplete="off" />
+                            {(errors as any).last_name && <p className="text-red-500">{(errors as any).last_name.message}</p>}
+                            <Input {...register("address")} placeholder="Aadress" autoComplete="off" />
+                            {(errors as any).address && <p className="text-red-500">{(errors as any).address.message}</p>}
+                            <Input {...register("phone")} placeholder="Tel nr" autoComplete="off" />
+                            {errors.phone && <p className="text-red-500">{errors.phone.message}</p>}
+                        </div>
                     </div>
-                    {errors.address && <p className="text-red-500">{errors.address.message}</p>}
-                    <Input {...register("phone")} placeholder="Tel nr" autoComplete="off" />
-                    {errors.phone && <p className="text-red-500">{errors.phone.message}</p>}
-                </div>
-            </div>
-            <div className="mb-[46px]">
-                <div className="pl-[4px] md:pl-[0px] mb-[26px]">
-                    <h2 className="font-medium text-lg">Kasutaja info</h2>
-                </div>
-                <div className="flex flex-col w-full gap-[5px] md:gap-[11px] md:w-[500px] md:pl-[75px] leading-4">
-                    <Input {...register("email")} placeholder="Meiliaadress" autoComplete="off" />
-                    {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-                    <Input {...register("password")} placeholder="Parool" type="password" autoComplete="off" />
-                    {errors.password && <p className="text-red-500">{errors.password.message}</p>}
-                    <Input {...register("confirm_password")} placeholder="Parool veel kord" type="password" autoComplete="off" />
-                    {errors.confirm_password && <p className="text-red-500">{errors.confirm_password.message}</p>}
-                </div>
-            </div>
+                    <div className="mb-[46px]">
+                        <div className="pl-[4px] md:pl-[0px] mb-[26px]">
+                            <h2 className="font-medium text-lg">Kasutaja info</h2>
+                        </div>
+                        <div className="flex flex-col w-full gap-[5px] md:gap-[11px] md:w-[500px] md:pl-[75px] leading-4">
+                            <Input {...register("email")} placeholder="Meiliaadress" autoComplete="off" />
+                            {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+                            <Input {...register("password")} placeholder="Parool" type="password" autoComplete="off" />
+                            {errors.password && <p className="text-red-500">{errors.password.message}</p>}
+                            <Input {...register("confirm_password")} placeholder="Parool veel kord" type="password" autoComplete="off" />
+                            {errors.confirm_password && <p className="text-red-500">{errors.confirm_password.message}</p>}
+                        </div>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className="mb-[26px] md:mb-[52px]">
+                        <div className="mb-[29px] pl-[4px] md:pl-[0px] md:mb-[22px]">
+                            <h2 className="font-medium text-lg">Ettevõtte andmed</h2>
+                        </div>
+                        <div className="flex flex-col w-full gap-[5px] md:gap-[11px] md:w-[500px] md:pl-[75px] leading-4">
+                            <Input {...register("company_name")} placeholder="Ettevõtte nimi" autoComplete="off" />
+                            {(errors as any).company_name && <p className="text-red-500">{(errors as any).company_name.message}</p>}
+                            <Input {...register("registry_code")} placeholder="Registri kood" autoComplete="off" />
+                            {(errors as any).registry_code && <p className="text-red-500">{(errors as any).registry_code.message}</p>}
+                            <Input {...register("vat_number")} placeholder="KMKR (kui on)" autoComplete="off" />
+                            {(errors as any).vat_number && <p className="text-red-500">{(errors as any).vat_number.message}</p>}
+                            <Input {...register("phone")} placeholder="Tel nr" autoComplete="off" />
+                            {errors.phone && <p className="text-red-500">{errors.phone.message}</p>}
+                            <Input {...register("email")} placeholder="Email" autoComplete="off" />
+                            {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+                            <Input {...register("contact_person")} placeholder="Kontaktisik" autoComplete="off" />
+                            {(errors as any).contact_person && <p className="text-red-500">{(errors as any).contact_person.message}</p>}
+                        </div>
+                    </div>
+                    <div className="mb-[46px]">
+                        <div className="pl-[4px] md:pl-[0px] mb-[26px]">
+                            <h2 className="font-medium text-lg">Kasutaja info</h2>
+                        </div>
+                        <div className="flex flex-col w-full gap-[5px] md:gap-[11px] md:w-[500px] md:pl-[75px] leading-4">
+                            <Input {...register("password")} placeholder="Parool" type="password" autoComplete="off" />
+                            {errors.password && <p className="text-red-500">{errors.password.message}</p>}
+                            <Input {...register("confirm_password")} placeholder="Parool veel kord" type="password" autoComplete="off" />
+                            {errors.confirm_password && <p className="text-red-500">{errors.confirm_password.message}</p>}
+                        </div>
+                    </div>
+                </>
+            )}
+
             <div className="w-full md:mb-[54px]">
                 <div className="mb-[10px] md:mb-[32px]">
                     <h2 className="font-medium text-lg pl-[10px]">Leping</h2>
                 </div>
                 <div className="w-full">
-                    <Contract />
+                    {userType === "Eraisik" ? (
+                        <Contract />
+                    ) : (
+                        <ContractCompany />
+                    )
+                    }
                 </div>
             </div>
             <div className={cn("flex flex-col items-start w-full pl-[10px] mb-[35px] md:mb-[188px]")}>

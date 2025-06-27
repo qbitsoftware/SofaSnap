@@ -24,7 +24,7 @@ const BeforeProfiil = async () => {
                 }
 
                 <div className="flex flex-col md:flex-row w-[300px] md:w-full gap-[70px] md:gap-[30px] lg:gap-[50px] xl:gap-[70px] mb-[75px]">
-                    <UpdateForm user={userInfo} email={userInfo.email} id={user.data.user.id} />
+                    <UpdateForm user={userInfo} email={userInfo.email} />
                     <ChangePassword />
                 </div>
             </div>

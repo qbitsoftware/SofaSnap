@@ -24,15 +24,33 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'User authentication failed' }, { status: 401 });
         }
 
-
-        const { error: updateError } = await supabase.auth.updateUser({
-            data: {
+        let data;
+        if (result.data.userType === 'Eraisik') {
+            data = {
                 first_name: result.data.first_name,
                 last_name: result.data.last_name,
-                phone: result.data.phone,
                 address: result.data.address,
+                phone: result.data.phone,
                 agreement: result.data.agreement,
+                userType: result.data.userType,
+                role: 0,
+
             }
+        } else {
+            data = {
+                company_name: result.data.company_name,
+                registry_code: result.data.registry_code,
+                vat_number: result.data.vat_number,
+                phone: result.data.phone,
+                contact_person: result.data.contact_person,
+                agreement: result.data.agreement,
+                userType: result.data.userType,
+                role: 0,
+            }
+        }
+
+        const { error: updateError } = await supabase.auth.updateUser({
+            data
         });
 
         if (updateError) {

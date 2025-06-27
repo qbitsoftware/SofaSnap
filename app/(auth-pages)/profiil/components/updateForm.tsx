@@ -3,7 +3,7 @@ import { useToast } from "@/components/hooks/use-toast"
 import { SubmitButton } from "@/components/submit-button"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { TAccountInformationSchemaClient, updateInformationClient } from "@/lib/register-validation"
+import { TAccountInformationSchemaClient, TSignUpSchema, updateInformationClient } from "@/lib/register-validation"
 import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Check } from "lucide-react"
@@ -11,22 +11,18 @@ import { useForm } from "react-hook-form"
 import { ClipLoader } from "react-spinners"
 import { Contract } from "../../registreeri/components/contract"
 import { useRouter } from "next/navigation"
-import { useCallback, useEffect, useState } from "react"
-import { Address, TAddressSearchSchema } from "@/lib/search-validation"
-import { debounce } from "lodash"
-import { Suggestions } from "./suggestions"
-import { Feature } from "@/lib/coordinates-validation"
 import Link from "next/link"
+import { ContractCompany } from "../../registreeri/components/contract-company"
 
-const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient, email: string, id: string }) => {
+interface Props {
+    user: TSignUpSchema
+    email: string,
+}
+
+const UpdateForm = ({ user, email }: Props) => {
 
     const toast = useToast()
     const router = useRouter()
-    const [suggestions, setSuggestions] = useState<Address[]>([]);
-    const [chosenSuggestion, setChosenSuggestion] = useState<Feature>();
-    const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
-    const [inputValue, setInputValue] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const {
         register,
@@ -35,31 +31,16 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
         setError,
     } = useForm<TAccountInformationSchemaClient>({
         resolver: zodResolver(updateInformationClient),
-        defaultValues: user,
+        defaultValues: {
+            ...user,
+            userType: user.userType
+        },
     });
-
-
-    useEffect(() => {
-        function suggestion() {
-            setTimeout(() => {
-                setShowSuggestions(false);
-            }, 200)
-        }
-        document.addEventListener('mousedown', suggestion);
-        return () => {
-            document.removeEventListener('mousedown', suggestion);
-        };
-    }, []);
 
     const onSubmit = async (data: TAccountInformationSchemaClient) => {
         const formData = {
             ...data,
-        }
-
-        if (chosenSuggestion) {
-            formData.address = chosenSuggestion.properties.full_address
-        } else {
-            setInputValue(formData.address)
+            userType: user.userType,
         }
 
         const response = await fetch("/api/account", {
@@ -82,24 +63,7 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
         if (responseData.errors) {
             const errors = responseData.errors;
 
-            if (errors.first_name) {
-                setError("first_name", {
-                    type: "server",
-                    message: errors.first_name,
-                })
-            }
-            if (errors.last_name) {
-                setError("last_name", {
-                    type: "server",
-                    message: errors.last_name,
-                })
-            }
-            if (errors.address) {
-                setError("address", {
-                    type: "server",
-                    message: errors.address,
-                })
-            }
+            // Common fields
             if (errors.phone) {
                 setError("phone", {
                     type: "server",
@@ -112,6 +76,56 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
                     message: errors.agreement,
                 })
             }
+
+            // Eraisik specific fields
+            if (user.userType === "Eraisik") {
+                if (errors.first_name) {
+                    setError("first_name", {
+                        type: "server",
+                        message: errors.first_name,
+                    })
+                }
+                if (errors.last_name) {
+                    setError("last_name", {
+                        type: "server",
+                        message: errors.last_name,
+                    })
+                }
+                if (errors.address) {
+                    setError("address", {
+                        type: "server",
+                        message: errors.address,
+                    })
+                }
+            }
+
+            // Äriklient specific fields
+            if (user.userType === "Äriklient") {
+                if (errors.company_name) {
+                    setError("company_name", {
+                        type: "server",
+                        message: errors.company_name,
+                    })
+                }
+                if (errors.registry_code) {
+                    setError("registry_code", {
+                        type: "server",
+                        message: errors.registry_code,
+                    })
+                }
+                if (errors.vat_number) {
+                    setError("vat_number", {
+                        type: "server",
+                        message: errors.vat_number,
+                    })
+                }
+                if (errors.contact_person) {
+                    setError("contact_person", {
+                        type: "server",
+                        message: errors.contact_person,
+                    })
+                }
+            }
             return
         }
 
@@ -123,100 +137,63 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
         }
     }
 
-    const deboucnhedSuggestions = debounce(async (value: string) => {
-        if (value.length === 0) {
-            setShowSuggestions(false);
-            return;
-        }
-
-        setShowSuggestions(true);
-
-        const data: TAddressSearchSchema = {
-            input: value,
-            user_id: id,
-        };
-
-        try {
-            const response = await fetch("/api/suggestion", {
-                method: "POST",
-                body: JSON.stringify(data),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-
-            const responseData = await response.json();
-
-            if (response.ok) {
-                setSuggestions(responseData.data);
-            }
-            setIsLoading(false)
-        } catch (error) {
-            console.error('Error fetching suggestions:', error);
-        }
-    }, 500)
-
-    const fetchSuggestions = useCallback(
-        (value: string) => {
-            deboucnhedSuggestions(value)
-        },
-        [deboucnhedSuggestions]
-    );
-
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        setInputValue(value);
-        setIsLoading(true)
-        fetchSuggestions(value);
-    };
-
-
     return (
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
+            <input type="hidden" {...register("userType")} value={user.userType} />
             <div className="mb-[52px]">
-                <div className="mb-[22px]">
-                    <h2 className="font-medium text-lg">Isikuandmed</h2>
-                </div>
-                <div className="flex flex-col gap-[11px] leading-4">
-                    <Input disabled={true} placeholder={email} />
-                    <Input  {...register("first_name")} placeholder="Nimi" autoComplete="off" />
-                    {errors.first_name && <p className="text-red-500">{errors.first_name.message}</p>}
-                    <Input {...register("last_name")} placeholder="Perekonnanimi" autoComplete="off" />
-                    {errors.last_name && <p className="text-red-500">{errors.last_name.message}</p>}
-
-                    <div className="relative">
-                        <Input
-                            {...register("address")}
-                            placeholder="Aadress"
-                            onChange={handleInputChange}
-                            value={inputValue}
-                            autoComplete="off"
-                        />
-                        <Suggestions
-                            isLoading={isLoading}
-                            suggestions={suggestions}
-                            showSuggestions={showSuggestions}
-                            inputValue={inputValue}
-                            setChosenSuggestion={setChosenSuggestion}
-                            setInputValue={setInputValue}
-                            id={id}
-                        />
-                        <p className="italic text-sm pl-1 pt-1 text-slate-700">Naide: Tamme 5</p>
+                {user.userType === "Eraisik" ? (
+                    <>
+                        <div className="mb-[22px]">
+                            <h2 className="font-medium text-lg">Isikuandmed</h2>
+                        </div>
+                        <div className="flex flex-col gap-[11px] leading-4">
+                            <Input disabled={true} placeholder={email} />
+                            <Input  {...register("first_name")} placeholder="Nimi" autoComplete="off" />
+                            {(errors as any).first_name && <p className="text-red-500">{(errors as any).first_name.message}</p>}
+                            <Input {...register("last_name")} placeholder="Perekonnanimi" autoComplete="off" />
+                            {(errors as any).last_name && <p className="text-red-500">{(errors as any).last_name.message}</p>}
+                            <Input {...register("address")} placeholder="Aadress" autoComplete="off" />
+                            {(errors as any).address && <p className="text-red-500">{(errors as any).address.message}</p>}
+                            <Input {...register("phone")} placeholder="Tel nr" />
+                            {errors.phone && <p className="text-red-500">{errors.phone.message}</p>}
+                        </div>
+                    </>
+                ) : (
+                    <div className="mb-[26px] md:mb-[52px]">
+                        <div className="mb-[29px] pl-[4px] md:pl-[0px] md:mb-[22px]">
+                            <h2 className="font-medium text-lg">Ettevõtte andmed</h2>
+                        </div>
+                        <div className="flex flex-col w-full gap-[5px] md:gap-[11px] md:w-[500px] md:pl-[75px] leading-4">
+                            <Input {...register("company_name")} placeholder="Ettevõtte nimi" autoComplete="off" />
+                            {(errors as any).company_name && <p className="text-red-500">{(errors as any).company_name.message}</p>}
+                            <Input {...register("registry_code")} placeholder="Registri kood" autoComplete="off" />
+                            {(errors as any).registry_code && <p className="text-red-500">{(errors as any).registry_code.message}</p>}
+                            <Input {...register("vat_number")} placeholder="KMKR (kui on)" autoComplete="off" />
+                            {(errors as any).vat_number && <p className="text-red-500">{(errors as any).vat_number.message}</p>}
+                            <Input {...register("phone")} placeholder="Tel nr" autoComplete="off" />
+                            {errors.phone && <p className="text-red-500">{errors.phone.message}</p>}
+                            <Input {...register("contact_person")} placeholder="Kontaktisik" autoComplete="off" />
+                            {(errors as any).contact_person && <p className="text-red-500">{(errors as any).contact_person.message}</p>}
+                        </div>
                     </div>
-                    {errors.address && <p className="text-red-500">{errors.address.message}</p>}
-                    <Input {...register("phone")} placeholder="Tel nr" />
-                    {errors.phone && <p className="text-red-500">{errors.phone.message}</p>}
-                </div>
+
+                )
+                }
             </div>
 
-            {/* {user.agreement ? "" : */}
             <div>
                 <div className="w-full">
                     <div className="mb-[32px]">
                         <h2 className="font-medium text-lg">Leping</h2>
                     </div>
                     <div className="w-full">
-                        <Contract />
+                        {user.userType === "Eraisik" ? (
+                            <Contract />
+                        ) : (
+                            <ContractCompany />
+                        )
+                        }
+
                     </div>
                 </div>
                 <div className="flex flex-col items-start pt-2 w-full mb-[78px]">
@@ -234,7 +211,6 @@ const UpdateForm = ({ user, email, id }: { user: TAccountInformationSchemaClient
                     </label>
                 </div>
             </div>
-            {/* } */}
             <div className="z-10 flex flex-col md:flex-row items-center gap-[20px] mb-[51px]">
                 <SubmitButton disabled={isSubmitting} className="bg-accent hover:bg-accent w-[150px] rounded-full lg:w-[150px] md:h-[45px] text-black cursor">
                     <h1 className={cn(isSubmitting ? " hidden " : "block")}>

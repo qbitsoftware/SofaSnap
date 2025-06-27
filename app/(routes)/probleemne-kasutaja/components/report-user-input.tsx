@@ -61,7 +61,7 @@ export function ReportUserInput() {
                                     <Textarea
                                         {...field}
                                         placeholder="Jäta meile teade..."
-                                        className="w-full h-[345px] text-base resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                                        className="w-full h-[245px] text-base resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0"
                                     />
                                 </FormControl>
                                 <FormMessage />

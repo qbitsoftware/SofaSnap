@@ -1,74 +1,64 @@
-interface Contract {
+
+export interface IContract {
     heading: string
     subHeadings: string[]
 }
 
 const Contract = () => {
-    const text: Contract[] = [
+    const text: IContract[] = [
         {
-            heading: "Teenuse Kirjeldus",
+            heading: "Lepingu ese",
             subHeadings: [
-                "Teenuse Põhieesmärk: Käesoleva lepingu objektiks on vahendusplatvormi Seatly teenuse pakkumine, kus kasutajad saavad reklaamida ja rentida või müüa mööblit.",
-                "Teenustasu: Kasutajad maksavad platvormile vahendustasu, mis moodustab 15% rendihinnast või müügihinnast iga tehingu kohta."
+                "Platvorm pakub veebipõhist teenust, mis võimaldab Kasutajal esitada kuulutusi mööbli rendiks või müügiks.",
+                "Platvorm ei osale rahalistes tehingutes Kasutaja ja kolmandate isikute vahel."
             ],
         },
         {
-            heading: "Vastutuse Piirangud",
+            heading: "Kasutajakonto",
             subHeadings: [
-                "Vahendusteenus: Platvorm toimib üksnes vahendajana ega võta endale vastutust renditavate või müüdavate objektide seisukorra, ohutuse, kvaliteedi ega kasutajate tegevuse eest.",
-                "Kasutajate Vastutus: Kasutajad vastutavad ise renditavate või müüdavate objektide seisukorra, ohutuse, kvaliteedi, reklaamide täpsuse ja kõigi vahendatud tehingute eest.",
-                "Tehnilised Tõrked: Platvorm ei vastuta tehniliste tõrgete või katkestuste eest, mis võivad takistada teenuse kasutamist, kui need tulenevad meist sõltumatutest asjaoludest (nt internetikatkestused, serveriprobleemid jms)."
+                "Kasutaja kohustub esitama registreerimisel tõesed andmed.",
+                "Kasutaja vastutab oma konto turvalisuse eest.",
+                "Kasutajal on keelatud jagada oma kontot kolmandate isikutega."
             ]
         },
         {
-            heading: "Tasud ja Arveldamine",
+            heading: "Teenustasu",
             subHeadings: [
-                "Vahendustasu: Kasutaja nõustub tasuma platvormile vahendustasu, mis on 15% rendi- või müügihinnast iga tehingu kohta.",
-                "Tasude Muutmine: Platvormil on õigus muuta vahendustasu protsenti, teavitades sellest kasutajaid ette vähemalt 14 päeva enne muudatuste jõustumist.",
-                "Tagasimaksed ja Tühistamised: Tagasimaksed ja tühistamised toimuvad vastavalt platvormi tühistamispoliitikale, mis on kättesaadav kasutajatingimustes."
+                "Kuulutuse lisamise tasu on 1 € iga kuulutuse kohta.",
+                "Tasu ei kuulu tagastamisele, v.a juhul, kui kuulutus ei ilmu tehnilistel põhjustel.",
+                "Platvormil on õigus muuta hinnakirja, teavitades Kasutajat vähemalt 14 päeva ette."
             ],
         },
         {
-            heading: "Registreerimine ja Konto Kasutamine",
+            heading: "Vastutus",
             subHeadings: [
-                "Konto Loomine: Kasutaja peab looma konto platvormil, esitades täielikud ja täpsed isikuandmed.",
-                "Konto Turvalisus: Kasutaja vastutab oma konto turvalisuse eest ja nõustub hoidma oma sisselogimisandmeid konfidentsiaalsena."
+                "Platvorm ei vastuta kuulutustes esitatud teabe, esemete seisukorra ega Kasutajatevaheliste tehingute eest.",
+                "Kasutaja kinnitab, et tal on õigus ja volitus pakutavaid esemeid rendile anda või müüa.",
+                "Kasutaja vastutab kõigi tegevuste eest, mis tehakse tema konto kaudu."
             ],
         },
         {
-            heading: "Kasutaja Kohustused",
+            heading: "Isikuandmete töötlemine",
             subHeadings: [
-                "Reklaamide Täpsus: Kasutaja kinnitab, et reklaamidel sisalduv teave on täpne ja täielik.",
-                "Seaduste Järgimine: Kasutaja kinnitab, et ta järgib kõiki asjakohaseid seadusi ja eeskirju renditavate või müüdavate objektide reklaamimisel ja tehingute tegemisel.",
-                "Maksukohustuste Täitmine: Kasutaja vastutab kõikide maksukohustuste täitmise eest, mis võivad kaasneda platvormi kasutamisega.",
+                "Platvorm töötleb Kasutaja isikuandmeid vastavalt kehtivale Euroopa Liidu isikuandmete kaitse üldmäärusele (GDPR).",
+                "Täpsem teave isikuandmete töötlemise kohta on kättesaadav Platvormi privaatsuspoliitikas.",
             ],
         },
         {
-            heading: "Lepingu Lõpetamine",
+            heading: "Lepingu kehtivus ja lõpetamine",
             subHeadings: [
-                ".Lepingu Lõpetamine: Mõlemad pooled võivad lepingu igal ajal lõpetada, teavitades sellest teist poolt ette vähemalt 7 päeva."
+                "Leping jõustub hetkest, mil Kasutaja registreerib konto.",
+                "Mõlemal poolel on õigus Leping igal ajal lõpetada, teavitades sellest teist poolt.",
+                "Konto kustutamise korral säilitatakse isikuandmeid vastavalt seadusest tulenevatele säilitustähtaegadele.",
             ],
         },
         {
-            heading: "Muud Tingimused",
+            heading: "Kohaldatav õigus ja vaidluste lahendamine",
             subHeadings: [
-                "Muudatused Lepingus: Platvormil on õigus muuta lepingut, teavitades sellest kasutajaid ette vähemalt 14 päeva enne muudatuste jõustumist.",
-                "Konfidentsiaalsus: Mõlemad pooled nõustuvad hoidma konfidentsiaalset teavet ja mitte avaldama seda kolmandatele isikutele.",
+                "Lepingule kohaldatakse Eesti Vabariigi seadusi.",
+                "Vaidlused lahendatakse esmalt läbirääkimiste teel, seejärel Harju Maakohtus.",
             ]
         },
-        {
-            heading: "Vaidluste Lahendamine ja Kohaldatav Seadus",
-            subHeadings: [
-                "Vaidluste Lahendamine: Kõik lepingu täitmisest tulenevad vaidlused lahendatakse läbirääkimiste teel. Kui kokkuleppele ei jõuta, lahendatakse vaidlused Harju Maakohtus Eesti seaduste alusel.",
-            ]
-        },
-        {
-            heading: "Andmekaitse ja Isikuandmed",
-            subHeadings: [
-                "Isikuandmete Kaitse: Platvorm töötleb kasutajate isikuandmeid vastavalt Euroopa Liidu isikuandmete kaitse üldmääruse (GDPR) nõuetele. Täpsem info andmekaitse kohta on saadaval platvormi privaatsuspoliitikas.",
-                "Kasutaja Nõusolek: Konto loomisel ja platvormi kasutamisel nõustub kasutaja platvormi privaatsustingimustega."
-            ]
-        }
     ]
     return (
         <div className="flex w-full bg-background overflow-y-auto py-[18px] px-[25px] shadow-inner-heavy no-scrollbar">
@@ -77,13 +67,16 @@ const Contract = () => {
                     Vahendusplatvormi Teenusleping
                 </h1>
                 <h1>
-                    Viimati uuendatud: 28.04.2025
+                    Viimati uuendatud: 26.06.2025
+                </h1>
+                <h1>
+                    {"Käesolev kasutajaleping (edaspidi „Leping“) sõlmitakse Seatly OÜ (edaspidi „Platvorm“) ja registreeruva kasutaja (edaspidi „Kasutaja“) vahel."}
                 </h1>
                 {text.map((t, key) => (
-                    <div key={key}>
+                    <div key={key} className="leading-10 mb-4">
                         <h2>{key + 1}. {t.heading}</h2>
                         {t.subHeadings.map((sub, key2) => (
-                            <div key={key2}>
+                            <div key={key2} className="ml-4">
                                 <h3>{key + 1}.{key2 + 1}. {sub}</h3>
                             </div>
                         ))}

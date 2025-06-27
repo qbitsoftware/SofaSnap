@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { GoogleMap, LoadScriptNext, Marker, Circle, InfoWindow, useLoadScript } from '@react-google-maps/api';
+import { GoogleMap, Marker, Circle, InfoWindow, useLoadScript } from '@react-google-maps/api';
 import Loader from './loader';
 import { ProductWithAddress } from '@/utils/supabase/supabase.types';
 import { useRouter } from 'next/navigation';
@@ -89,64 +89,62 @@ const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({ api, products, 
 
 
     return (
-        <LoadScriptNext googleMapsApiKey={api} loadingElement={<Loader />}>
-            <GoogleMap
-                mapContainerStyle={containerStyle}
-                center={center}
-                zoom={validProducts.length > 0 ? (showExactLocation ? 11 : 10) : 7}
-                options={{
-                    styles: [{ featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] }],
-                    disableDefaultUI: true,
-                    gestureHandling: "cooperative"
-                }}
-            >
-                {validProducts.map((product, idx) => {
-                    const position = showExactLocation ? {
-                        lat: product.address.location.y,
-                        lng: product.address.location.x
-                    } : getApproximateLocation(
-                        product.address.location.y,
-                        product.address.location.x
-                    );
+        <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={center}
+            zoom={validProducts.length > 0 ? (showExactLocation ? 11 : 10) : 7}
+            options={{
+                styles: [{ featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] }],
+                disableDefaultUI: true,
+                gestureHandling: "cooperative"
+            }}
+        >
+            {validProducts.map((product, idx) => {
+                const position = showExactLocation ? {
+                    lat: product.address.location.y,
+                    lng: product.address.location.x
+                } : getApproximateLocation(
+                    product.address.location.y,
+                    product.address.location.x
+                );
 
-                    return (
-                        <React.Fragment key={idx}>
-                            <Marker
+                return (
+                    <React.Fragment key={idx}>
+                        <Marker
+                            position={position}
+                            title={product.name}
+                            icon={showExactLocation ? exactMarkerConfig : approximateMarkerConfig}
+                            onClick={() => router.push(`/tooted/${product.category.name_slug}/${product.id}`)}
+                            onMouseOver={() => handleMouseOver(idx)}
+                            onMouseOut={handleMouseOut}
+                        />
+                        {hoveredMarker === idx && (
+                            <InfoWindow
                                 position={position}
-                                title={product.name}
-                                icon={showExactLocation ? exactMarkerConfig : approximateMarkerConfig}
-                                onClick={() => router.push(`/tooted/${product.category.name_slug}/${product.id}`)}
-                                onMouseOver={() => handleMouseOver(idx)}
-                                onMouseOut={handleMouseOut}
-                            />
-                            {hoveredMarker === idx && (
-                                <InfoWindow
-                                    position={position}
-                                    onCloseClick={handleMouseOut}
-                                    options={{
-                                        pixelOffset: new google.maps.Size(0, -30)
-                                    }}
-                                >
-                                    <div className="p-1 w-200px flex gap-2">
-                                        <Image src={product.preview_image} alt={product.name} width={100} height={100} className='rounded-md'/>
-                                        <div className='text-lg'>
-                                            <p className="font-medium">{product.name}</p>
-                                            <p className="text-gray-600 font-medium">{product.price}€ <span>{product.type == "rent" && "Päev"}</span></p>
-                                        </div>
+                                onCloseClick={handleMouseOut}
+                                options={{
+                                    pixelOffset: new google.maps.Size(0, -30)
+                                }}
+                            >
+                                <div className="p-1 w-200px flex gap-2">
+                                    <Image src={product.preview_image} alt={product.name} width={100} height={100} className='rounded-md' />
+                                    <div className='text-lg'>
+                                        <p className="font-medium">{product.name}</p>
+                                        <p className="text-gray-600 font-medium">{product.price}€ <span>{product.type == "rent" && "Päev"}</span></p>
                                     </div>
-                                </InfoWindow>
-                            )}
-                            {!showExactLocation && (
-                                <Circle
-                                    center={position}
-                                    options={circleOptions}
-                                />
-                            )}
-                        </React.Fragment>
-                    );
-                })}
-            </GoogleMap>
-        </LoadScriptNext>
+                                </div>
+                            </InfoWindow>
+                        )}
+                        {!showExactLocation && (
+                            <Circle
+                                center={position}
+                                options={circleOptions}
+                            />
+                        )}
+                    </React.Fragment>
+                );
+            })}
+        </GoogleMap>
     );
 }
 
