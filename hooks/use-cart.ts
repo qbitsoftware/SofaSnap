@@ -27,6 +27,7 @@ export const useCart = (): CartService => {
             if (createCartError) {
                 toast.error(createCartError)
             }
+            
             const { data: cartItemData, error: addItemError } = await addCartItemAction(
                 data.from,
                 data.to,
