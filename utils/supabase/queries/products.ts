@@ -3,11 +3,10 @@
 import db from '@/utils/supabase/db'
 import { category, category_join, product, address, address_join_product, review, product_review, order, order_item } from '@/utils/supabase/schema'
 import { eq, and, sql, desc, inArray, gte, asc, isNull, or } from 'drizzle-orm'
-import { alias, timestamp } from 'drizzle-orm/pg-core'
-import { AddressJoinProductTS, AddressTS, CategoryJoin, CategoryTS, Product, ProductRealTS, ProductReview, ProductReviewTS, ProductWithAddress } from '../supabase.types'
+import { alias } from 'drizzle-orm/pg-core'
+import { AddressTS, CategoryJoin, CategoryTS, Product, ProductRealTS, ProductReview, ProductReviewTS, ProductWithAddress } from '../supabase.types'
 import { Review, TProductServer } from '@/lib/product-validation'
 import { GetUserInfo } from '@/app/actions'
-import { error, time } from 'console'
 
 export const fetchProductsByCategories = async (categories: string[], page: number, sort: string | undefined, limit = 30) => {
     const offset = (page - 1) * limit
@@ -31,6 +30,7 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
                 material: product.material,
                 start_date: product.start_date,
                 end_date: product.end_date,
+                address: product.address,
                 all_img: product.all_img,
                 unique_id: product.unique_id,
                 total_clicks: product.total_clicks,
@@ -253,7 +253,8 @@ export const fetchProductsWithAddresses = async () => {
 
         const productsWithAddresses: ProductWithAddress[] = result.map((row) => ({
             ...row.product,
-            address: row.address,
+            // address: row.address,
+            address: row.product.address,
             category: row.category
         }));
 
@@ -300,7 +301,8 @@ export const fetchProductsByIds = async (productIDs: number[]) => {
 
         const productsWithAddresses: ProductWithAddress[] = result.map((row) => ({
             ...row.product,
-            address: row.address,
+            // address: row.address,
+            address: row.product.address,
             category: row.category
         }));
 
@@ -336,7 +338,8 @@ export const addProduct = async (prod: TProductServer) => {
         unique_id: prod.unique_id,
         status: "pending",
         all_img: prod.all_img,
-        deleted_at: null
+        deleted_at: null,
+        address: prod.address,
     }
 
     try {
@@ -365,6 +368,7 @@ export const addProduct = async (prod: TProductServer) => {
                         all_img: p.all_img,
                         start_date: p.start_date,
                         end_date: p.end_date,
+                        address: p.address,
                         updated_at: new Date().toISOString(),
                     }
                 })
@@ -404,53 +408,53 @@ export const addProduct = async (prod: TProductServer) => {
                 })
 
 
-            const ad: AddressTS = {
+            // const ad: AddressTS = {
 
-                full_address: prod.address.full_address!,
-                location: {
-                    x: prod.address.location![0],
-                    y: prod.address.location![1],
-                },
-                postal_code: prod.address.postal_code!,
-                address_number: prod.address.address_number!,
-                region: prod.address.region!,
-                country_code: prod.address.country_code!,
-                country_name: prod.address.country_name!,
-            }
+            //     full_address: prod.address.full_address!,
+            //     location: {
+            //         x: prod.address.location![0],
+            //         y: prod.address.location![1],
+            //     },
+            //     postal_code: prod.address.postal_code!,
+            //     address_number: prod.address.address_number!,
+            //     region: prod.address.region!,
+            //     country_code: prod.address.country_code!,
+            //     country_name: prod.address.country_name!,
+            // }
 
 
-            const insertedAddress = await tx.insert(address).
-                values(ad).
-                onConflictDoUpdate({
-                    target: address.full_address,
-                    set: {
-                        full_address: ad.full_address,
-                        location: ad.location,
-                        postal_code: ad.postal_code,
-                        address_number: ad.address_number,
-                        region: ad.region,
-                        country_code: ad.country_code,
-                        country_name: ad.country_name
-                    }
-                }).
-                returning({ id: address.id })
-            const addressId = insertedAddress[0].id
-            if (!addressId) {
-                throw new Error("Failed to insert product -> invalid address id")
-            }
+            // const insertedAddress = await tx.insert(address).
+            //     values(ad).
+            //     onConflictDoUpdate({
+            //         target: address.full_address,
+            //         set: {
+            //             full_address: ad.full_address,
+            //             location: ad.location,
+            //             postal_code: ad.postal_code,
+            //             address_number: ad.address_number,
+            //             region: ad.region,
+            //             country_code: ad.country_code,
+            //             country_name: ad.country_name
+            //         }
+            //     }).
+            //     returning({ id: address.id })
+            // const addressId = insertedAddress[0].id
+            // if (!addressId) {
+            //     throw new Error("Failed to insert product -> invalid address id")
+            // }
             //add address join
-            const adJoin: AddressJoinProductTS = {
-                product_id: productId,
-                address_id: addressId,
-            }
+            // const adJoin: AddressJoinProductTS = {
+            //     product_id: productId,
+            //     address_id: addressId,
+            // }
 
-            await tx.insert(address_join_product).values(adJoin).
-                onConflictDoUpdate({
-                    target: product.id,
-                    set: {
-                        address_id: adJoin.address_id,
-                    }
-                })
+            // await tx.insert(address_join_product).values(adJoin).
+            //     onConflictDoUpdate({
+            //         target: product.id,
+            //         set: {
+            //             address_id: adJoin.address_id,
+            //         }
+            //     })
         });
 
         return {
@@ -466,6 +470,70 @@ export const addProduct = async (prod: TProductServer) => {
     }
 };
 
+// export const fetchProduct = async (id: number) => {
+//     try {
+//         const user = await GetUserInfo();
+
+//         let statusCondition;
+//         if (user && user.data.user?.user_metadata.role !== 1) {
+//             statusCondition = eq(product.status, "accepted");
+//         }
+//         // Construct conditions for the query
+//         // const conditions = [
+//         //     eq(address_join_product.product_id, id),
+//         //     statusCondition
+//         // ].filter(Boolean);
+
+
+
+//         let anotherstatusCondition;
+//         if (user && user.data.user) {
+//             anotherstatusCondition = eq(product.user_id, user.data.user.id)
+//         }
+
+
+//         const result = await db
+//             .select({
+//                 product: product,
+//                 // address: address,
+//                 category: category
+//             })
+//             .from(category_join)
+//             // .where(or(
+//                 // and(...conditions, isNull(product.deleted_at)),
+//                 // and(eq(address_join_product.product_id, id), anotherstatusCondition, isNull(product.deleted_at))
+//             // ),
+//             // )
+//             // .innerJoin(category_join, eq(address_join_product.product_id, category_join.product_id))
+//             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
+//             .innerJoin(product, eq(address_join_product.product_id, product.id))
+//             // .innerJoin(address, eq(address_join_product.address_id, address.id));
+//         if (result.length == 0) {
+//             return {
+//                 data: undefined,
+//                 error: "No results found"
+//             }
+//         }
+//         const productWithAddress: ProductWithAddress = {
+//             ...result[0].product,
+//             address: result[0].product.address,
+//             // address: result[0].address,
+//             category: result[0].category
+//         };
+
+//         return {
+//             data: productWithAddress,
+//             error: undefined,
+//         };
+//     } catch (error) {
+//         void error;
+//         return {
+//             data: undefined,
+//             error: "Server error"
+//         }
+//     }
+// }
+
 export const fetchProduct = async (id: number) => {
     try {
         const user = await GetUserInfo();
@@ -474,45 +542,47 @@ export const fetchProduct = async (id: number) => {
         if (user && user.data.user?.user_metadata.role !== 1) {
             statusCondition = eq(product.status, "accepted");
         }
-        // Construct conditions for the query
-        const conditions = [
-            eq(address_join_product.product_id, id),
-            statusCondition
-        ].filter(Boolean);
-
-
 
         let anotherstatusCondition;
         if (user && user.data.user) {
             anotherstatusCondition = eq(product.user_id, user.data.user.id)
         }
 
+        let whereCondition;
+        if (statusCondition && anotherstatusCondition) {
+            // If user is not admin but owns the product, show it regardless of status
+            whereCondition = or(
+                and(eq(category_join.product_id, id), statusCondition, isNull(product.deleted_at)),
+                and(eq(category_join.product_id, id), anotherstatusCondition, isNull(product.deleted_at))
+            );
+        } else if (statusCondition) {
+            // Non-admin user, only show accepted products
+            whereCondition = and(eq(category_join.product_id, id), statusCondition, isNull(product.deleted_at));
+        } else {
+            // Admin user, show all products
+            whereCondition = and(eq(category_join.product_id, id), isNull(product.deleted_at));
+        }
 
         const result = await db
             .select({
                 product: product,
-                address: address,
                 category: category
             })
-            .from(address_join_product)
-            .where(or(
-                and(...conditions, isNull(product.deleted_at)),
-                and(eq(address_join_product.product_id, id), anotherstatusCondition, isNull(product.deleted_at))
-            ),
-            )
-            .innerJoin(category_join, eq(address_join_product.product_id, category_join.product_id))
+            .from(category_join)
+            .where(whereCondition)
             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
-            .innerJoin(product, eq(address_join_product.product_id, product.id))
-            .innerJoin(address, eq(address_join_product.address_id, address.id));
+            .innerJoin(product, eq(category_join.product_id, product.id));
+
         if (result.length == 0) {
             return {
                 data: undefined,
                 error: "No results found"
             }
         }
+
         const productWithAddress: ProductWithAddress = {
             ...result[0].product,
-            address: result[0].address,
+            address: result[0].product.address,
             category: result[0].category
         };
 
@@ -579,8 +649,8 @@ export const fetchUserProducts = async () => {
             .select()
             .from(category_join)
             .innerJoin(product, eq(category_join.product_id, product.id))
-            .innerJoin(address_join_product, eq(address_join_product.product_id, product.id))
-            .innerJoin(address, eq(address_join_product.address_id, address.id))
+            // .innerJoin(address_join_product, eq(address_join_product.product_id, product.id))
+            // .innerJoin(address, eq(address_join_product.address_id, address.id))
             .where(and(eq(product.user_id, user.data.user.id), isNull(product.deleted_at)))
             .execute() as ProductAndCategory[];
         if (result.length == 0) {

@@ -1,8 +1,6 @@
 import { sql } from "drizzle-orm";
-import { float } from "drizzle-orm/mysql-core";
 
 import { boolean, decimal, doublePrecision, integer, pgEnum, pgSchema, pgTable, point, real, serial, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
-import { number } from "zod";
 
 const authSchema = pgSchema('auth');
 
@@ -37,6 +35,7 @@ export const product = pgTable('products', {
     heigth: integer("heigth").notNull(),
     length: integer("length").notNull(),
     material: text("material").notNull(),
+    address: text("address").notNull().default(""),
     type: text("type"),
     start_date: timestamp("start_date", {
         withTimezone: true,

@@ -2,7 +2,6 @@ import React from 'react'
 import { ProductList } from './[...slug]/components/product-list'
 import { fetchProducts } from '@/app/actions'
 import { ChevronLeft } from 'lucide-react'
-import { MapButton } from '@/components/map-button'
 import Link from 'next/link'
 import { SortDropdown } from './[...slug]/components/sort-dropdown'
 import { ShoppingBag } from 'lucide-react'
@@ -31,7 +30,7 @@ const Page = async ({ searchParams }: { searchParams: { page?: string, sort?: st
         <div className={'lg:ml-[2%] xl:ml-[1%] md:hidden'}>
           <SortDropdown currentPage={currentPage} />
         </div>
-        <MapButton className='md:flex hidden' />
+        {/* <MapButton className='md:flex hidden' /> */}
       </div>
       <div className='md:px-10 mt-4 md:mt-10 mb-[100px] md:mb-0 md:max-w-[860px] lg:max-w-[1152px] xl:max-w-[1310px] sm:max-w-[540px] mx-auto'>
         <div className={'lg:ml-[2%] xl:ml-[1%] hidden md:flex'}>

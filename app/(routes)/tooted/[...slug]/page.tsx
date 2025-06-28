@@ -2,7 +2,6 @@ import React from 'react'
 import ProductPage from './components/product-page'
 import { CategoryNavigation } from './components/category-navigation'
 import { ChevronLeft } from 'lucide-react'
-import { MapButton } from '@/components/map-button'
 import { capitalize } from '@/utils/utils'
 import { ProductList } from './components/product-list'
 import { FetchProductsByCategories } from '@/app/actions'
@@ -78,7 +77,8 @@ const CategoryPage = async ({
             <ChevronLeft strokeWidth={1} className='ml-[-16px]' color='#000000' size={44} />
           </Link>
           <h2 className='md:text-5xl hidden md:block'>{capitalize(category_objects[category_objects.length - 1].name)}</h2>
-          <MapButton className='hidden md:flex' />
+          {/* <MapButton className='hidden md:flex' /> */}
+          <div></div>
         </div>
         <div className='md:px-10 mt-4 md:mt-10 mb-[100px] md:mb-0 md:max-w-[860px] lg:max-w-[1152px] xl:max-w-[1310px] sm:max-w-[540px] mx-auto'>
           <div className={'lg:ml-[2%] xl:ml-[1%]'}>

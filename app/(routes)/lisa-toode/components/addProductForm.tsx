@@ -2,7 +2,7 @@
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { ClipLoader } from 'react-spinners';
 import { useToast } from '@/components/hooks/use-toast';
@@ -11,10 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Map } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Address, TAddressSearchSchema } from '@/lib/search-validation';
-import { AddressProduct, Feature } from '@/lib/coordinates-validation';
-import { Suggestions } from '@/app/(auth-pages)/profiil/components/suggestions';
-import { capitalize, debounce } from 'lodash';
+import { capitalize } from 'lodash';
 import { AdvancedImageInput } from './uploadForm';
 import { AddressTS, Category } from '@/utils/supabase/supabase.types';
 import { SubmitButton } from '@/components/submit-button';
@@ -24,7 +21,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { TSignUpSchema } from '@/lib/register-validation';
 import { Listing } from '@/types';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import Link from 'next/link';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -39,10 +36,11 @@ interface ProductFormProps {
 export const AddProductForm = ({ id, categories, user_metadata, initialData, address }: ProductFormProps) => {
     const toast = useToast()
     const router = useRouter()
-    const [suggestions, setSuggestions] = useState<Address[]>([]);
-    const [chosenSuggestion, setChosenSuggestion] = useState<Feature>();
-    const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    void address
+    // const [suggestions, setSuggestions] = useState<Address[]>([]);
+    // const [chosenSuggestion, setChosenSuggestion] = useState<Feature>();
+    // const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
+    // const [isLoading, setIsLoading] = useState<boolean>(false)
     const [images, setImages] = useState<IImage[]>([])
 
     const form = useForm({
@@ -86,51 +84,51 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
     }, [form, categories]);
 
     useEffect(() => {
-        function suggestion() {
-            setTimeout(() => {
-                setShowSuggestions(false);
-            }, 200)
-        }
+        // function suggestion() {
+        //     setTimeout(() => {
+        //         setShowSuggestions(false);
+        //     }, 200)
+        // }
 
-        if (address) {
-            // set address
-            setChosenSuggestion({
-                type: "",
-                geometry: {
-                    type: "",
-                    coordinates: [address.location.x, address.location.y],
-                },
-                properties: {
-                    context: {
-                        country: {
-                            country_code: address.country_code,
-                            name: address.country_name,
-                        },
-                        region: {
-                            name: address.region,
-                        },
-                        postcode: {
-                            name: address.postal_code,
-                        },
-                        place: {
-                            name: "",
-                        },
-                        address: {
-                            address_number: address.address_number,
-                            street_name: "",
-                        },
-                    },
-                    coordinates: {
-                        latitude: address.location.x,
-                        longitude: address.location.y,
-                    },
-                    full_address: address.full_address,
-                    mapbox_id: "",
-                    place_formatted: address.full_address,
-                },
-            })
-            form.setValue("address", address.full_address)
-        }
+        // if (address) {
+        //     // set address
+        //     setChosenSuggestion({
+        //         type: "",
+        //         geometry: {
+        //             type: "",
+        //             coordinates: [address.location.x, address.location.y],
+        //         },
+        //         properties: {
+        //             context: {
+        //                 country: {
+        //                     country_code: address.country_code,
+        //                     name: address.country_name,
+        //                 },
+        //                 region: {
+        //                     name: address.region,
+        //                 },
+        //                 postcode: {
+        //                     name: address.postal_code,
+        //                 },
+        //                 place: {
+        //                     name: "",
+        //                 },
+        //                 address: {
+        //                     address_number: address.address_number,
+        //                     street_name: "",
+        //                 },
+        //             },
+        //             coordinates: {
+        //                 latitude: address.location.x,
+        //                 longitude: address.location.y,
+        //             },
+        //             full_address: address.full_address,
+        //             mapbox_id: "",
+        //             place_formatted: address.full_address,
+        //         },
+        //     })
+        //     form.setValue("address", address.full_address)
+        // }
         //set images
         if (initialData && initialData.all_img) {
             const imagesToAdd: IImage[] = []
@@ -143,28 +141,28 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             })
             setImages(imagesToAdd)
         }
-        document.addEventListener('mousedown', suggestion);
-        return () => {
-            document.removeEventListener('mousedown', suggestion);
-        };
-    }, [address, form, initialData]);
+        // document.addEventListener('mousedown', suggestion);
+        // return () => {
+        //     document.removeEventListener('mousedown', suggestion);
+        // };
+    }, [form, initialData]);
 
     const onSubmit = async (data: Listing) => {
-        let converted_address: AddressProduct = {}
-        if (chosenSuggestion) {
-            converted_address = {
-                full_address: chosenSuggestion.properties.full_address,
-                location: [chosenSuggestion.geometry.coordinates[0], chosenSuggestion.geometry.coordinates[1]],
-                postal_code: chosenSuggestion.properties.context.postcode.name,
-                address_number: chosenSuggestion.properties.context.address.address_number,
-                region: chosenSuggestion.properties.context.region.name,
-                country_code: chosenSuggestion.properties.context.country.country_code,
-                country_name: chosenSuggestion.properties.context.country.name,
-            }
-        }
+        // let converted_address: AddressProduct = {}
+        // if (chosenSuggestion) {
+        //     converted_address = {
+        //         full_address: chosenSuggestion.properties.full_address,
+        //         location: [chosenSuggestion.geometry.coordinates[0], chosenSuggestion.geometry.coordinates[1]],
+        //         postal_code: chosenSuggestion.properties.context.postcode.name,
+        //         address_number: chosenSuggestion.properties.context.address.address_number,
+        //         region: chosenSuggestion.properties.context.region.name,
+        //         country_code: chosenSuggestion.properties.context.country.country_code,
+        //         country_name: chosenSuggestion.properties.context.country.name,
+        //     }
+        // }
         const formData: TProductServer = {
             ...data,
-            address: converted_address,
+            // address: converted_address,
             start_date: data.start_date instanceof Date ? data.start_date.toISOString() : "",
             end_date: data.end_date instanceof Date ? data.end_date.toISOString() : "",
         };
@@ -294,45 +292,45 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
     }
 
 
-    const debouncedFetchSuggestions = debounce(async (value: string) => {
-        if (value.length === 0) {
-            setShowSuggestions(false);
-            return;
-        }
+    // const debouncedFetchSuggestions = debounce(async (value: string) => {
+    //     if (value.length === 0) {
+    //         setShowSuggestions(false);
+    //         return;
+    //     }
 
-        setShowSuggestions(true);
+    //     setShowSuggestions(true);
 
-        const data: TAddressSearchSchema = {
-            input: value,
-            user_id: form.getValues("user_id"),
-        };
+    //     const data: TAddressSearchSchema = {
+    //         input: value,
+    //         user_id: form.getValues("user_id"),
+    //     };
 
-        try {
-            const response = await fetch("/api/suggestion", {
-                method: "POST",
-                body: JSON.stringify(data),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
+    //     try {
+    //         const response = await fetch("/api/suggestion", {
+    //             method: "POST",
+    //             body: JSON.stringify(data),
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //         });
 
-            const responseData = await response.json();
+    //         const responseData = await response.json();
 
-            if (response.ok) {
-                setSuggestions(responseData.data);
-            }
-            setIsLoading(false);
-        } catch (error) {
-            console.error('Error fetching suggestions:', error);
-        }
-    }, 300);
+    //         if (response.ok) {
+    //             setSuggestions(responseData.data);
+    //         }
+    //         setIsLoading(false);
+    //     } catch (error) {
+    //         console.error('Error fetching suggestions:', error);
+    //     }
+    // }, 300);
 
-    const fetchSuggestions = useCallback(
-        (value: string) => {
-            debouncedFetchSuggestions(value);
-        },
-        [debouncedFetchSuggestions]
-    );
+    // const fetchSuggestions = useCallback(
+    //     (value: string) => {
+    //         debouncedFetchSuggestions(value);
+    //     },
+    //     [debouncedFetchSuggestions]
+    // );
 
     const handleDates = async (item: DateRange | undefined) => {
         form.setValue("start_date", item?.from);
@@ -340,23 +338,23 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
         await form.trigger(["start_date", "end_date"]);
     };
 
-    const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        setIsLoading(true)
-        if (value.length >= 2) {
-            fetchSuggestions(value);
-        } else {
-            setTimeout(() => {
-                setIsLoading(false)
-            }, 2000)
-        }
-        form.setValue("address", value)
-        await form.trigger("address")
-    };
+    // const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     const value = event.target.value;
+    //     setIsLoading(true)
+    //     if (value.length >= 2) {
+    //         fetchSuggestions(value);
+    //     } else {
+    //         setTimeout(() => {
+    //             setIsLoading(false)
+    //         }, 2000)
+    //     }
+    //     form.setValue("address", value)
+    //     await form.trigger("address")
+    // };
 
-    const setFormValue = (value: string) => {
-        form.setValue("address", value)
-    }
+    // const setFormValue = (value: string) => {
+    //     form.setValue("address", value)
+    // }
 
     const handleImages = async (value: string[]) => {
         form.setValue("all_img", value)
@@ -630,24 +628,28 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                             <FormLabel>
                                 <p className='flex items-center gap-1'>Aadress <span><Map /></span></p>
                             </FormLabel>
-                            <FormControl className='bg-white'>
-                                <Input placeholder="Aadress" {...field} onChange={handleInputChange} autoComplete='off' />
-                            </FormControl>
-                            <div className='relative'>
-                                <Suggestions
-                                    isLoading={isLoading}
-                                    suggestions={suggestions}
-                                    showSuggestions={showSuggestions}
-                                    inputValue={form.getValues("address")}
-                                    setChosenSuggestion={setChosenSuggestion}
-                                    setInputValue={setFormValue}
-                                    id={id}
-                                />
-                            </div>
+                            <Input placeholder='Aadress' {...field} autoComplete='off' onChange={(e) => {
+                                field.onChange(e.target.value);
+                            }} />
+                            {/* handleInputChange(e) */}
+                            {/* <FormControl className='bg-white'>
+                            //     <Input placeholder="Aadress" {...field} onChange={handleInputChange} autoComplete='off' />
+                            // </FormControl>
+                            // <div className='relative'>
+                            //     <Suggestions
+                            //         isLoading={isLoading}
+                            //         suggestions={suggestions}
+                            //         showSuggestions={showSuggestions}
+                            //         inputValue={form.getValues("address")}
+                            //         setChosenSuggestion={setChosenSuggestion}
+                            //         setInputValue={setFormValue}
+                            //         id={id}
+                            //     />
+                            // </div> */}
 
-                            <FormDescription>
+                            {/* <FormDescription>
                                 Näide: Tamme 5
-                            </FormDescription>
+                            </FormDescription> */}
                             <FormMessage />
                         </FormItem>
                     )}

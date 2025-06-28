@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import GoogleMapComponent from '@/components/map'
+// import GoogleMapComponent from '@/components/map'
 import { capitalize } from '@/utils/utils'
 import { Category, ProductWithAddress } from '@/utils/supabase/supabase.types'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -14,16 +14,18 @@ interface ClientMapPageProps {
 
 export const ClientMapPage: React.FC<ClientMapPageProps> = ({ initialProducts, categories, mapApiKey }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [displayedProducts, setDisplayedProducts] = useState(initialProducts)
+  void mapApiKey
+  // const [displayedProducts, setDisplayedProducts] = useState(initialProducts)
 
   const handleCategoryChange = (categoryName: string) => {
     if (categoryName === "all") {
       setSelectedCategory(null)
-      setDisplayedProducts(initialProducts)
+      // setDisplayedProducts(initialProducts)
     } else {
       setSelectedCategory(categoryName)
       const filteredProducts = initialProducts.filter(product => product.category.name === categoryName)
-      setDisplayedProducts(filteredProducts)
+      void filteredProducts
+      // setDisplayedProducts(filteredProducts)
     }
   }
 
@@ -64,7 +66,8 @@ export const ClientMapPage: React.FC<ClientMapPageProps> = ({ initialProducts, c
         </div>
       </div>
       <div className='w-full md:h-[848px] h-[80vh] md:my-[60px]'>
-        <GoogleMapComponent products={displayedProducts} api={mapApiKey} />
+        {/* <GoogleMapComponent products={displayedProducts} api={mapApiKey} /> */}
+        Tuleb peagi
       </div>
     </div>
   )

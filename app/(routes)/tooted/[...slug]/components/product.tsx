@@ -92,13 +92,14 @@ export const ProductComponent: React.FC<ProductProps> = ({ product }) => {
                         <p className='font-bold'>Materjal: <span className='font-light'>{product.material}</span></p>
                     </div>
                     <div>
-                      <p className='font-bold'>Mõõtmed: <span className='font-light'>{`${product.length} x ${product.width} x ${product.heigth}`}</span></p>
+                        <p className='font-bold'>Mõõtmed: <span className='font-light'>{`${product.length} x ${product.width} x ${product.heigth}`}</span></p>
+                    </div>
                 </div>
+                <div className=''>
+                    <p className='break-words overflow-wrap break-word whitespace-pre-line'>{product.description}</p>
+                </div>
+
             </div>
-            <div className=''>
-                <p className='break-words overflow-wrap break-word whitespace-pre-line'>{product.description}</p>
-            </div>
-        </div>
         </div >
     )
 }

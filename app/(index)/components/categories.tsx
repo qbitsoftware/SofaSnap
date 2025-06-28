@@ -1,7 +1,6 @@
 "use client"
 import { Button } from '@/components/ui/button';
 import { CategoryCarousel } from './category-carousel'
-import { MapButton } from '@/components/map-button';
 import { Category } from '@/utils/supabase/supabase.types';
 import { capitalize } from '@/utils/utils';
 import Image from 'next/image';
@@ -63,7 +62,7 @@ export const Categories: React.FC<CategoryProps> = ({ data, error }) => {
     <div className='relative bg-card w-full'>
       <div className='hidden md:flex md:h-[445px] lg:h-[550px] md:flex-col items-center justify-center'>
         <div className='absolute top-10 max-w-[1356px] w-full left-1/2 -translate-x-1/2 flex justify-end'>
-          <MapButton className='md:mr-16 lg:mr-[4%] 2xl:mr-0 gap-4' />
+          {/* <MapButton className='md:mr-16 lg:mr-[4%] 2xl:mr-0 gap-4' /> */}
         </div>
         <h2 className='text-[44px] font-medium max-w-[1360px] mx-auto w-[80%] xl:w-[83%] 2xl:w-[80%] text-left'>Kategooriad</h2>
         <CategoryCarousel Categories={data} className='py-12' />

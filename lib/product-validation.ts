@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { addressSchema } from "./coordinates-validation";
 import { ProductWithAddress } from "@/utils/supabase/supabase.types";
 
 export const productSchema = z
@@ -73,7 +72,8 @@ export const productSchemaServer = z.object({
     unique_id: z.string(),
     type: z.string({ message: "Valige kuulutuse tüüp" }).min(1),
     price: z.number({ message: "Sisestage sobiv hind" }).min(1, "Madalaim hind on 1 euro").max(1000000, "Hind ei saa olla suurem kui 1 miljon"),
-    address: addressSchema,
+    // address: addressSchema,
+    address: z.string().min(1, "Aadress on nõutud"),
     all_img: z.array(z.string(), { message: "Lisa vähemalt 1 pilt tootest" }).min(1).max(10, "9 pilti on maksimaalne kogus"),
     total_clicks: z.number().optional(),
 }).superRefine((value, ctx) => {
