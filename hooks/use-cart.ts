@@ -1,6 +1,6 @@
-import { CartItemTS, CartItemJoinProduct } from '@/utils/supabase/supabase.types';
+import { CartItemTS } from '@/utils/supabase/supabase.types';
 import { toast } from 'react-hot-toast';
-import { GetUserInfo, addCartItemAction, createCartAction, getCartAction, removeCartItemAction } from '@/app/actions';
+import { addCartItemAction, createCartAction, getCartAction, removeCartItemAction } from '@/app/actions';
 import { GetCartResult } from '@/utils/supabase/queries/cart';
 
 interface CartService {
