@@ -1,5 +1,3 @@
-import { z } from "zod"
-import { ProductWithAddress } from "./utils/supabase/supabase.types"
 
 export type Category = {
     id: number,

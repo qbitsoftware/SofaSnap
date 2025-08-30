@@ -4,7 +4,7 @@ import { redirect } from "next/navigation"
 import { TSignUpSchema } from "@/lib/register-validation"
 import { ChangePassword } from "./components/pwChangeForm"
 import { Suspense } from "react"
-import LoadingSpinner from "@/app/(routes)/kuulutused/components/loading-spinner"
+import LoadingSpinner from "@/app/(routes)/kuulutused/_components/loading-spinner"
 
 const BeforeProfiil = async () => {
     const user = await GetUserInfo()

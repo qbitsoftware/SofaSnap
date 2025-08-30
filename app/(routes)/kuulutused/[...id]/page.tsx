@@ -1,13 +1,13 @@
 import { fetchUserProduct } from '@/utils/supabase/queries/products';
 import { redirect } from 'next/navigation';
 import React from 'react';
-import { AddProductForm } from '../../lisa-toode/components/addProductForm';
+import { AddProductForm } from '../../lisa-toode/_components/addProductForm';
 import { GetUserInfo } from '@/app/actions';
 import { FetchCategories } from '@/utils/supabase/queries/categories';
 import { ServerError } from '@/components/server-error';
 import { TSignUpSchema } from '@/lib/register-validation';
 import { Listing } from '@/types';
-import { EditProduct } from './components/edit-product-form';
+import { EditProduct } from './_components/edit-product-form';
 
 
 

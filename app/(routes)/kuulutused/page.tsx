@@ -1,9 +1,9 @@
 import { fetchUserProducts } from '@/utils/supabase/queries/products'
 import React, { Suspense } from 'react'
-import UserListings from './components/user-listings'
+import UserListings from './_components/user-listings'
 import { GetUserInfo } from '@/app/actions'
 import { redirect } from 'next/navigation'
-import LoadingSpinner from './components/loading-spinner'
+import LoadingSpinner from './_components/loading-spinner'
 
 const UserProductsContent = async () => {
     const prods = await fetchUserProducts()

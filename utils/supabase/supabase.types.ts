@@ -1,5 +1,5 @@
 import { InferSelectModel } from "drizzle-orm";
-import { category, address, category_join, product, user, address_join_product, product_review, cart_item, cart, order, order_item } from "./schema";
+import { category, address, category_join, product, user, address_join_product, product_review, order, order_item, favorite } from "./schema";
 
 export type Product = InferSelectModel<typeof product>
 export type Category = InferSelectModel<typeof category>
@@ -9,6 +9,7 @@ export type Address = InferSelectModel<typeof address>
 export type AddressJoinProduct = InferSelectModel<typeof address_join_product>
 export type ProductReview = InferSelectModel<typeof product_review>
 export type Order = InferSelectModel<typeof order>
+export type Favorite = InferSelectModel<typeof favorite>
 
 export type ProductRealTS = Omit<Product, 'id' | 'created_at' | 'updated_at' | 'rating' | 'last_visited' | 'total_clicks'> & Partial<Pick<Product, 'start_date' | 'end_date'>>;
 export type CategoryTS = Omit<CategoryJoin, 'id'>
@@ -19,12 +20,8 @@ export type ProductWithAddress = Product & {
     // address: Address;
     address: string;
     category: Category
+    favorite: boolean
 };
-
-export type CartItem = InferSelectModel<typeof cart_item>
-export type CartItemTS = Omit<CartItem, "cart_id" | "id">
-export type CartItemJoinProduct = CartItem & Product
-export type Cart = InferSelectModel<typeof cart>
 
 export type OrderTS = Omit<Order, "id" | "created_at" | "updated_at">
 export type OrderItem = InferSelectModel<typeof order_item>

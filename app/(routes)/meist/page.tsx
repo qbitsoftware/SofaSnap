@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text } from './components/text'
+import { Text } from './_components/text'
 import Image from 'next/image'
 import { Breadcrumb } from '@/components/breadcrumb'
 

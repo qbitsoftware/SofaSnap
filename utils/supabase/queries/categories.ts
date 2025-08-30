@@ -21,6 +21,7 @@ export const CheckCategories = async (categories: string[]) => {
             error: undefined
         }
     } catch (error) {
+        console.error("Error checking categories:", error)
         return {
             isValid: false,
             error: "Server error"

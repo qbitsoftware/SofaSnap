@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 
-import { boolean, decimal, doublePrecision, integer, pgEnum, pgSchema, pgTable, point, real, serial, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
+import { boolean, doublePrecision, integer, pgSchema, pgTable, point, real, serial, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
 
 const authSchema = pgSchema('auth');
 
@@ -128,29 +128,14 @@ export const address_join_product = pgTable("address_join_products", {
     address_id: integer("address_id").references(() => address.id).notNull(),
 })
 
-
-export const cart = pgTable("cart", {
+export const favorite = pgTable("favorites", {
     id: serial("id").primaryKey().notNull().unique(),
     created_at: timestamp('created_at', {
         withTimezone: true,
         mode: 'string',
     }).defaultNow().notNull(),
-    updated_at: timestamp('updated_at', {
-        withTimezone: true,
-        mode: 'string',
-        precision: 3
-    }).defaultNow().notNull().$onUpdate(() => sql`NOW()`),
-    user_id: uuid("user_id").references(() => user.id, { onDelete: 'cascade' }).notNull()
-})
-
-export const cart_item = pgTable("cart_item", {
-    id: serial("id").primaryKey().notNull().unique(),
-    product_id: integer("product_id").references(() => product.id, { onUpdate: 'cascade', onDelete: 'cascade' }).notNull(),
-    cart_id: integer("cart_id").notNull()
-        .references(() => cart.id, { onDelete: 'cascade', onUpdate: 'cascade' })
-        .notNull(),
-    from: timestamp("from"),
-    to: timestamp("to")
+    user_id: uuid("user_id").references(() => user.id, { onDelete: 'cascade' }).notNull(),
+    product_id: integer("product_id").references(() => product.id, { onDelete: 'cascade' }).notNull(),
 })
 
 export const order = pgTable("orders", {

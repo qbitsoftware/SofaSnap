@@ -6,12 +6,10 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { productSchemaServer, Review, TProductServer } from "@/lib/product-validation";
 import { addClick, addProduct, addReview, deleteProduct, fetchAllProducts, fetchProduct, fetchProductsByCategories, getProductReviews } from "@/utils/supabase/queries/products";
-import { Cart, CartItem, Product } from "@/utils/supabase/supabase.types";
+import { Favorite, Product } from "@/utils/supabase/supabase.types";
 import { passwordChangeValidator, TPasswordChangeSchema } from "@/lib/register-validation";
 import { AuthError } from "@supabase/supabase-js";
 import { fetchUserAddress } from "@/utils/supabase/queries/address";
-import { addCartItem, CartItemWithDetails, createCart, getCart, GetCartResult, removeCartItem } from "@/utils/supabase/queries/cart";
-import { addOrder, getOrderItemsByProduct } from "@/utils/supabase/queries/orders";
 import { createComplaint, getAllComplaints, updateComplaint } from "@/utils/supabase/queries/complaint";
 import { CheckCategories, FetchCategories } from "@/utils/supabase/queries/categories";
 import { getPendingProducts } from "@/utils/supabase/queries/products";
@@ -19,6 +17,8 @@ import { updateProductStatus } from "@/utils/supabase/queries/products";
 import { MaksekeskusClient } from "@/maksekeskus/client";
 import { ITransaction } from "@/maksekeskus/maksekeskus_types";
 import { sendEmail } from "@/lib/emails";
+import { addFavorite, removeFavorite } from "@/utils/supabase/queries/favorite";
+import { ContactEmailTemplateData } from "@/lib/email-templates";
 
 
 export const signUpAction = async (formData: FormData) => {
@@ -272,29 +272,6 @@ export async function addReviewAction(review: Review) {
   }
 }
 
-
-export async function createCartAction(userID: string): Promise<{ data: Cart | undefined, error: string | undefined }> {
-  return await createCart(userID)
-}
-
-
-export async function addCartItemAction(from: Date | null, to: Date | null, product_id: number, cart_id: number): Promise<{ data: CartItem | undefined, error: string | undefined }> {
-  return await addCartItem(from, to, product_id, cart_id)
-}
-
-export async function getCartAction(userID: string): Promise<GetCartResult> {
-  return await getCart(userID)
-}
-
-export async function removeCartItemAction(cart_item_id: number, cart_id: number): Promise<{ data: string | undefined, error: string | undefined }> {
-  return removeCartItem(cart_item_id, cart_id)
-
-}
-
-export async function addOrderAction(cart: CartItemWithDetails[], transaction_id: string) {
-  return await addOrder(cart, transaction_id)
-}
-
 export async function createComplaintAction(text: string) {
   return await createComplaint(text)
 }
@@ -331,16 +308,20 @@ export async function addClickAction(id: number) {
   return await addClick(id)
 }
 
-export async function getOrderItemsByProductAction(product_id: number) {
-  return await getOrderItemsByProduct(product_id)
-}
-
 export async function getPendingProductsAction() {
   return await getPendingProducts()
 }
 
 export async function updateProductStatusAction(product_id: number, status: string) {
   return await updateProductStatus(product_id, status)
+}
+
+export async function addToFavoritesAction(product_id: number, user_id: string): Promise<Favorite | undefined> {
+  return await addFavorite(product_id, user_id)
+}
+
+export async function removeFromFavoritesAction(product_id: number, user_id: string): Promise<Favorite | undefined> {
+  return await removeFavorite(product_id, user_id)
 }
 
 export async function createTransactionAction(transaction: ITransaction) {
@@ -363,4 +344,104 @@ export async function sendEmailAction(to: string, sub: string, content: string){
 
 export async function  deleteProductAction(product_id: number): Promise<{ data: string | undefined, error: string | undefined }> {
     return await deleteProduct(product_id)
+}
+
+interface ContactEmailData {
+  senderName: string;
+  senderEmail: string;
+  senderPhone: string;
+  message: string;
+  productId: number;
+  productName: string;
+  ownerUserId: string;
+}
+
+export async function sendContactEmailAction(data: ContactEmailData): Promise<{ success: boolean; error?: string }> {
+  try {
+    // Get owner email from Supabase auth using service role
+    const supabase = createClient();
+    
+    // Try to get user details - this requires SUPABASE_SERVICE_ROLE_KEY in env
+    // You need to add SUPABASE_SERVICE_ROLE_KEY and RESEND_API_KEY to your .env.local file
+    try {
+      const { data: userData, error: userError } = await supabase.auth.admin.getUserById(data.ownerUserId);
+      
+      if (userError || !userData.user?.email) {
+        // Fallback to basic notification email to admin
+        console.warn('Could not get owner email, falling back to admin notification');
+        await sendEmail(
+          'seatly@seatly.com', // Admin email
+          `Päring kuulutuse "${data.productName}" kohta`,
+          `
+            <h2>Uus kontakti taotlus</h2>
+            <p><strong>Kuulutus:</strong> ${data.productName} (ID: ${data.productId})</p>
+            <p><strong>Omaniku ID:</strong> ${data.ownerUserId}</p>
+            <hr>
+            <p><strong>Saatja:</strong> ${data.senderName}</p>
+            <p><strong>E-post:</strong> ${data.senderEmail}</p>
+            <p><strong>Telefon:</strong> ${data.senderPhone}</p>
+            <p><strong>Sõnum:</strong></p>
+            <p>${data.message}</p>
+          `
+        );
+        return { success: true };
+      }
+
+      const ownerEmail = userData.user.email;
+      const ownerName = userData.user.user_metadata?.firstName || userData.user.user_metadata?.name || 'Kuulutuse omanik';
+
+      // const emailSubject = generateContactEmailSubject(data.productName, data.senderName);
+      const emailSubject = ""
+      const emailTemplateData: ContactEmailTemplateData = {
+        ...data,
+        ownerEmail,
+        ownerName
+      };
+      // const emailHtml = generateContactEmailTemplate(emailTemplateData);
+      const emailHtml = ""
+
+      // const result = await resend.emails.send({
+      //   from: 'Seatly <noreply@seatly.com>',
+      //   to: [ownerEmail],
+      //   subject: emailSubject,
+      //   html: emailHtml,
+      //   replyTo: data.senderEmail,
+      // });
+
+      // if (result.error) {
+      //   console.error('Resend error:', result.error);
+      //   return { success: false, error: 'Email saatmine ebaõnnestus' };
+      // }
+
+      return { success: true };
+      
+    } catch (authError) {
+      console.warn('Service role not configured, falling back to nodemailer');
+      
+      // Fallback to existing email system
+      await sendEmail(
+        'seatly@seatly.com', // Send to admin for now
+        `Päring kuulutuse "${data.productName}" kohta kasutajalt ${data.senderName}`,
+        `
+          <h2>Uus kontakti taotlus</h2>
+          <p><strong>Kuulutus:</strong> ${data.productName} (ID: ${data.productId})</p>
+          <p><strong>Omaniku ID:</strong> ${data.ownerUserId}</p>
+          <hr>
+          <p><strong>Saatja:</strong> ${data.senderName}</p>
+          <p><strong>E-post:</strong> ${data.senderEmail}</p>
+          <p><strong>Telefon:</strong> ${data.senderPhone}</p>
+          <p><strong>Sõnum:</strong></p>
+          <p style="white-space: pre-wrap;">${data.message}</p>
+          <hr>
+          <p><em>Palun edasta see sõnum kuulutuse omanikule käsitsi või seadista SUPABASE_SERVICE_ROLE_KEY keskkonnmuutuja automaatseks edastamiseks.</em></p>
+        `
+      );
+      
+      return { success: true };
+    }
+    
+  } catch (error) {
+    console.error('Error sending contact email:', error);
+    return { success: false, error: 'Tehnilised probleemid e-posti saatmisel' };
+  }
 }

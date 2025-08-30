@@ -1,11 +1,11 @@
 import React, { Suspense } from 'react'
-import { AddProductForm } from './components/addProductForm'
+import { AddProductForm } from './_components/addProductForm'
 import { GetUserInfo } from '@/app/actions'
 import { FetchCategories } from '@/utils/supabase/queries/categories'
 import { redirect } from 'next/navigation'
 import { ServerError } from '@/components/server-error'
 import { TSignUpSchema } from '@/lib/register-validation'
-import LoadingSpinner from '../kuulutused/components/loading-spinner'
+import LoadingSpinner from '../kuulutused/_components/loading-spinner'
 import { Breadcrumb } from '@/components/breadcrumb'
 
 

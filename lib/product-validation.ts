@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { ProductWithAddress } from "@/utils/supabase/supabase.types";
 
 export const productSchema = z
     .object({
@@ -146,11 +145,8 @@ export const RentFormSchema = z.object({
     }),
 });
 
-export type CartItemTS = z.infer<typeof RentFormSchema>
-export type CartItem = CartItemTS & ProductWithAddress
-
 export const reviewFormSchema = z.object({
-    user_id: z.string().optional(),
+    user_id: z.string(),
     product_id: z.number(),
     description: z.string().min(10, {
         message: "Description must be at least 10 characters.",

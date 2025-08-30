@@ -1,14 +1,14 @@
 import React from 'react'
-import ProductPage from './components/product-page'
-import { CategoryNavigation } from './components/category-navigation'
+import ProductPage from './_components/product-page'
+import { CategoryNavigation } from './_components/category-navigation'
 import { ChevronLeft } from 'lucide-react'
 import { capitalize } from '@/utils/utils'
-import { ProductList } from './components/product-list'
+import { ProductList } from './_components/product-list'
 import { FetchProductsByCategories } from '@/app/actions'
 import { redirect } from 'next/navigation'
 import { CheckCategories, FetchCategories } from '@/utils/supabase/queries/categories'
 import Link from 'next/link'
-import { SortDropdown } from './components/sort-dropdown'
+import { SortDropdown } from './_components/sort-dropdown'
 import { ShoppingBag } from 'lucide-react'
 
 const PRODUCTS_PER_PAGE = 30

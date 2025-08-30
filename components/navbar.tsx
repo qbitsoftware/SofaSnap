@@ -10,16 +10,14 @@ import { LogOut } from "./logout"
 import { FetchCategories } from "@/utils/supabase/queries/categories"
 import { GetUserInfo } from "@/app/actions"
 import Profile from "./nav-bar-profile"
-import { useCart } from "@/hooks/use-cart"
-import { MobileCart } from "./cart-mobile"
 import { TSignUpSchema } from "@/lib/register-validation"
+import { getFavoriteProducts } from "@/utils/supabase/queries/favorite"
 
 const NavBar = async () => {
 
-    const { getCartItems } = useCart()
     const user = await GetUserInfo()
-    const { data } = await getCartItems(user?.data.user?.id)
     const cateogries = await FetchCategories()
+    const favorites = await getFavoriteProducts(user.data?.user?.id || "")
 
     const userInfo = user.data?.user?.user_metadata as TSignUpSchema
 
@@ -54,20 +52,13 @@ const NavBar = async () => {
                     </div>
                 </div>
                 <div className="xl:w-[132px] hidden md:inline">
-                    <NavIcons user={userInfo} cartItems={data?.length} />
+                    <NavIcons user={userInfo} favorites={favorites?.length || 0} />
                 </div>
                 <div className="md:hidden">
                     {user.data.user ? (
                         <div className="">
 
                             <Profile user={userInfo} />
-                            {/* <Link href={"/ostukorv"} className='relative'>
-                                <ShoppingCart width={31} height={31} />
-                                {data && data.length > 0 &&
-                                    <div className='bg-accent absolute w-4 h-4 rounded-full top-0 right-[-5px] flex items-center justify-center'><span className='z-50 text-sm'>{data.length} </span></div>
-                                }
-                            </Link> */}
-                            <MobileCart cart_items={data} />
                         </div>
                     ) :
                         <div>

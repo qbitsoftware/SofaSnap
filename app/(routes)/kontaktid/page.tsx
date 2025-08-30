@@ -1,7 +1,7 @@
 import React from 'react'
 import { Breadcrumb } from '@/components/breadcrumb'
-import { Text } from './components/text'
-import { ReportUserInput } from '../probleemne-kasutaja/components/report-user-input'
+import { Text } from './_components/text'
+import { ReportUserInput } from '../probleemne-kasutaja/_components/report-user-input'
 
 const Page = () => {
     return (

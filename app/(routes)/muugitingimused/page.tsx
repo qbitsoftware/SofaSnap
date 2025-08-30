@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text } from './components/text'
+import { Text } from './_components/text'
 import { Breadcrumb } from '@/components/breadcrumb'
 
 const Page = () => {

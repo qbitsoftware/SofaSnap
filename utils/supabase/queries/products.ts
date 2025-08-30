@@ -1,10 +1,10 @@
 "server only"
 
 import db from '@/utils/supabase/db'
-import { category, category_join, product, address, address_join_product, review, product_review, order, order_item } from '@/utils/supabase/schema'
+import { category, category_join, product, address, address_join_product, review, product_review, favorite } from '@/utils/supabase/schema'
 import { eq, and, sql, desc, inArray, gte, asc, isNull, or } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
-import { AddressTS, CategoryJoin, CategoryTS, Product, ProductRealTS, ProductReview, ProductReviewTS, ProductWithAddress } from '../supabase.types'
+import { AddressTS, CategoryJoin, CategoryTS, Product, ProductRealTS, ProductReviewTS, ProductWithAddress } from '../supabase.types'
 import { Review, TProductServer } from '@/lib/product-validation'
 import { GetUserInfo } from '@/app/actions'
 
@@ -45,7 +45,7 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
 
 
         if (categories.length > 1) {
-            // @ts-ignore
+            // @ts-expect-error - Complex query with multiple joins
             query = query
                 .innerJoin(categoryJoinAlias, eq(category_join.product_id, categoryJoinAlias.product_id))
                 .where(
@@ -56,7 +56,7 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
                     )
                 );
         } else {
-            // @ts-ignore
+            // @ts-expect-error - Complex query with multiple joins
             query = query
                 .where(
                     and(
@@ -84,7 +84,7 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
             .innerJoin(product, eq(product.id, category_join.product_id));
 
         if (categories.length > 1) {
-            // @ts-ignore
+            // @ts-expect-error - Complex query with multiple joins
             countQuery = countQuery
                 .innerJoin(categoryJoinAlias, eq(category_join.product_id, categoryJoinAlias.product_id))
                 .where(
@@ -96,7 +96,7 @@ export const fetchProductsByCategories = async (categories: string[], page: numb
                     )
                 );
         } else {
-            // @ts-ignore
+            // @ts-expect-error - Complex query with multiple joins
             countQuery = countQuery
                 .where(eq(category_join.category_name_slug, categories[0]));
         }
@@ -174,6 +174,7 @@ export const fetchLastSeenProducts = async () => {
             error: undefined,
         }
     } catch (error) {
+        console.error("Error fetching last seen products:", error)
         return {
             data: undefined,
             error: "Failed to fetch products",
@@ -216,6 +217,7 @@ export const fetchPopularProducts = async () => {
             error: undefined,
         }
     } catch (error) {
+        console.error("Error fetching popular products:", error)
         return {
             data: undefined,
             error: "Failed to fetch products",
@@ -230,7 +232,8 @@ export const fetchProductsWithAddresses = async () => {
             .select({
                 product: product,
                 address: address,
-                category: category
+                category: category,
+                favorite: favorite
             })
             .from(address_join_product)
             .where(
@@ -242,7 +245,8 @@ export const fetchProductsWithAddresses = async () => {
             .innerJoin(category_join, eq(address_join_product.product_id, category_join.product_id))
             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
             .innerJoin(product, eq(address_join_product.product_id, product.id))
-            .innerJoin(address, eq(address_join_product.address_id, address.id));
+            .innerJoin(address, eq(address_join_product.address_id, address.id))
+            .innerJoin(favorite, eq(favorite.product_id, product.id));
 
         if (result.length === 0) {
             return {
@@ -255,7 +259,8 @@ export const fetchProductsWithAddresses = async () => {
             ...row.product,
             // address: row.address,
             address: row.product.address,
-            category: row.category
+            category: row.category,
+            favorite: row.favorite ? true : false,
         }));
 
         return {
@@ -277,7 +282,8 @@ export const fetchProductsByIds = async (productIDs: number[]) => {
             .select({
                 product: product,
                 address: address,
-                category: category
+                category: category,
+                favorite: favorite
             })
             .from(address_join_product)
             .where(
@@ -290,7 +296,8 @@ export const fetchProductsByIds = async (productIDs: number[]) => {
             .innerJoin(category_join, eq(address_join_product.product_id, category_join.product_id))
             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
             .innerJoin(product, eq(address_join_product.product_id, product.id))
-            .innerJoin(address, eq(address_join_product.address_id, address.id));
+            .innerJoin(address, eq(address_join_product.address_id, address.id))
+            .innerJoin(favorite, eq(favorite.product_id, product.id));
 
         if (result.length === 0) {
             return {
@@ -303,7 +310,8 @@ export const fetchProductsByIds = async (productIDs: number[]) => {
             ...row.product,
             // address: row.address,
             address: row.product.address,
-            category: row.category
+            category: row.category,
+            favorite: row.favorite ? true : false,
         }));
 
         return {
@@ -389,7 +397,7 @@ export const addProduct = async (prod: TProductServer) => {
                 product_id: productId,
             };
 
-            const result = await tx.insert(category_join)
+            await tx.insert(category_join)
                 .values(category).
                 onConflictDoUpdate({
                     target: [category_join.product_id, category_join.category_name_slug],
@@ -398,7 +406,7 @@ export const addProduct = async (prod: TProductServer) => {
                     }
                 })
 
-            const result2 = await tx.insert(category_join)
+            await tx.insert(category_join)
                 .values(sub_category).
                 onConflictDoUpdate({
                     target: [category_join.product_id, category_join.category_name_slug],
@@ -470,70 +478,6 @@ export const addProduct = async (prod: TProductServer) => {
     }
 };
 
-// export const fetchProduct = async (id: number) => {
-//     try {
-//         const user = await GetUserInfo();
-
-//         let statusCondition;
-//         if (user && user.data.user?.user_metadata.role !== 1) {
-//             statusCondition = eq(product.status, "accepted");
-//         }
-//         // Construct conditions for the query
-//         // const conditions = [
-//         //     eq(address_join_product.product_id, id),
-//         //     statusCondition
-//         // ].filter(Boolean);
-
-
-
-//         let anotherstatusCondition;
-//         if (user && user.data.user) {
-//             anotherstatusCondition = eq(product.user_id, user.data.user.id)
-//         }
-
-
-//         const result = await db
-//             .select({
-//                 product: product,
-//                 // address: address,
-//                 category: category
-//             })
-//             .from(category_join)
-//             // .where(or(
-//                 // and(...conditions, isNull(product.deleted_at)),
-//                 // and(eq(address_join_product.product_id, id), anotherstatusCondition, isNull(product.deleted_at))
-//             // ),
-//             // )
-//             // .innerJoin(category_join, eq(address_join_product.product_id, category_join.product_id))
-//             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
-//             .innerJoin(product, eq(address_join_product.product_id, product.id))
-//             // .innerJoin(address, eq(address_join_product.address_id, address.id));
-//         if (result.length == 0) {
-//             return {
-//                 data: undefined,
-//                 error: "No results found"
-//             }
-//         }
-//         const productWithAddress: ProductWithAddress = {
-//             ...result[0].product,
-//             address: result[0].product.address,
-//             // address: result[0].address,
-//             category: result[0].category
-//         };
-
-//         return {
-//             data: productWithAddress,
-//             error: undefined,
-//         };
-//     } catch (error) {
-//         void error;
-//         return {
-//             data: undefined,
-//             error: "Server error"
-//         }
-//     }
-// }
-
 export const fetchProduct = async (id: number) => {
     try {
         const user = await GetUserInfo();
@@ -566,12 +510,20 @@ export const fetchProduct = async (id: number) => {
         const result = await db
             .select({
                 product: product,
-                category: category
+                category: category,
+                favorite: favorite
             })
             .from(category_join)
             .where(whereCondition)
             .innerJoin(category, eq(category.name_slug, category_join.category_name_slug))
-            .innerJoin(product, eq(category_join.product_id, product.id));
+            .innerJoin(product, eq(category_join.product_id, product.id))
+            .leftJoin(
+                favorite,
+                and(
+                    eq(favorite.product_id, product.id),
+                    user && user.data.user ? eq(favorite.user_id, user.data.user.id) : undefined
+                )
+            );
 
         if (result.length == 0) {
             return {
@@ -583,7 +535,8 @@ export const fetchProduct = async (id: number) => {
         const productWithAddress: ProductWithAddress = {
             ...result[0].product,
             address: result[0].product.address,
-            category: result[0].category
+            category: result[0].category,
+            favorite: result[0].favorite ? true : false,
         };
 
         return {
@@ -682,6 +635,7 @@ export const fetchUserProducts = async () => {
         }
 
     } catch (error) {
+        console.error("Error fetching user product:", error)
         return {
             data: undefined,
             error,
@@ -743,6 +697,7 @@ export const fetchUserProduct = async (product_id: number) => {
             error: undefined,
         }
     } catch (error) {
+        console.error("Error adding review:", error)
         return {
             data: undefined,
             error,
@@ -752,20 +707,19 @@ export const fetchUserProduct = async (product_id: number) => {
 
 export const addReview = async (formData: Review) => {
     try {
-        // //add review
-        // const result = await db.insert(review).values({ rating: Number(formData.rating), feedback: formData.description }).returning({ id: review.id })
-        // //add to joingin table
-        // const joinTable: ProductReviewTS = {
-        //     review_id: result[0].id,
-        //     product_id: formData.product_id
-        // }
-        // await db.insert(product_review).values(joinTable)
+        const result = await db.insert(review).values({ rating: Number(formData.rating), feedback: formData.description }).returning({ id: review.id })
+        const joinTable: ProductReviewTS = {
+            user_id: formData.user_id,
+            review_id: result[0].id,
+            product_id: formData.product_id
+        }
+        await db.insert(product_review).values(joinTable)
         return {
             data: undefined,
             error: undefined
         }
     } catch (error: any) {
-        void error;
+        console.log(error)
         return {
             data: undefined,
             error: "Server error"
@@ -794,6 +748,7 @@ export const getProductReviews = async (product_id: number) => {
             error: undefined
         }
     } catch (error) {
+        console.error("Error getting product reviews:", error)
         return {
             data: undefined,
             error: "Server error"
@@ -817,6 +772,7 @@ export const getPendingProducts = async () => {
         }
 
     } catch (error) {
+        console.error("Error getting pending products:", error)
         return {
             data: undefined,
             error: "Server error"
@@ -841,6 +797,7 @@ export const updateProductStatus = async (product_id: number, status: string) =>
             error: 'Unauthorized',
         }
     } catch (error) {
+        console.error("Error updating product status:", error)
         return {
             data: undefined,
             error: "Server error"
@@ -894,6 +851,7 @@ export const deleteProduct = async (product_id: number) => {
         }
 
     } catch (error) {
+        console.error("Error deleting product:", error)
         return {
             data: undefined,
             error: "Server error"

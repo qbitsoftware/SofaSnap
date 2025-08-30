@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { CircleUser, Plus, ShoppingCart } from 'lucide-react'
+import { CircleUser, Plus, Star } from 'lucide-react'
 import Link from 'next/link'
 import Profile from './nav-bar-profile'
 import { motion } from 'framer-motion'
@@ -8,9 +8,9 @@ import { TSignUpSchema } from '@/lib/register-validation'
 
 interface NavIconsProps {
     user: TSignUpSchema | undefined
-    cartItems: number | undefined
+    favorites: number
 }
-const NavIcons = ({ user, cartItems }: NavIconsProps) => {
+const NavIcons = ({ user, favorites }: NavIconsProps) => {
 
     return (
         <div className="md:w-[100px] lg:w-[132px] flex justify-center  gap-[19px] py-[6px]">
@@ -39,10 +39,10 @@ const NavIcons = ({ user, cartItems }: NavIconsProps) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >
-                <Link href={"/ostukorv"} className='relative'>
-                    <ShoppingCart width={31} height={31} />
-                    {cartItems && cartItems > 0 &&
-                        <div className='bg-accent absolute w-4 h-4 rounded-full top-0 right-[-5px] flex items-center justify-center'><span className='z-50 text-sm'>{cartItems} </span></div>
+                <Link href={"/lemmikud"} className='relative'>
+                    <Star width={31} height={31} />
+                    {favorites > 0 &&
+                        <div className='bg-accent absolute w-4 h-4 rounded-full top-0 right-[-5px] flex items-center justify-center'><span className='z-50 text-sm'>{favorites} </span></div>
                     }
                 </Link>
 

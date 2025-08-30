@@ -24,15 +24,16 @@ import { useToast } from "@/components/hooks/use-toast"
 
 interface ReviewFormProps {
     product_id: number
+    user_id: string | undefined
 }
 
-export default function ReviewForm({ product_id }: ReviewFormProps) {
+export default function ReviewForm({ product_id, user_id}: ReviewFormProps) {
     const toast = useToast()
-    const form = useForm<Review>({
+    const form = useForm<Review>({  
         resolver: zodResolver(reviewFormSchema),
         defaultValues: {
             product_id: product_id,
-            user_id: "",
+            user_id: user_id,
             description: "",
         },
     })
@@ -42,6 +43,10 @@ export default function ReviewForm({ product_id }: ReviewFormProps) {
     }, [form, product_id])
 
     async function onSubmit(values: Review) {
+        if (!user_id) {
+            toast.toast({ title: "Palun logige sisse, et lisada hinnang" })
+            return
+        }
         try {
             await addReviewAction(values)
             form.reset()
@@ -53,7 +58,7 @@ export default function ReviewForm({ product_id }: ReviewFormProps) {
     }
 
     return (
-        <div className="flex justify-center md:min-h-[300px] w-full max-w-[1000px]">
+        <div className="flex justify-center md:min-h-[300px] w-full max-w-[1000px] py-4">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <FormField

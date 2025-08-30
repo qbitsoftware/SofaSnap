@@ -6,7 +6,7 @@ import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import React from 'react'
-import { ClientMapPage } from './components/client-map-page'
+import { ClientMapPage } from './_components/client-map-page'
 
 const MapPage = async () => {
   const { data: categories, error: categoriesError } = await FetchCategories()

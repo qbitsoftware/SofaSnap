@@ -1,6 +1,6 @@
 import React from 'react'
 import { Breadcrumb } from '@/components/breadcrumb'
-import { ReportUserInput } from './components/report-user-input'
+import { ReportUserInput } from './_components/report-user-input'
 
 const Page = () => {
     return (

@@ -1,9 +1,9 @@
 import React from 'react'
-import { ProductList } from './[...slug]/components/product-list'
+import { ProductList } from './[...slug]/_components/product-list'
 import { fetchProducts } from '@/app/actions'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
-import { SortDropdown } from './[...slug]/components/sort-dropdown'
+import { SortDropdown } from './[...slug]/_components/sort-dropdown'
 import { ShoppingBag } from 'lucide-react'
 
 const PRODUCTS_PER_PAGE = 30
