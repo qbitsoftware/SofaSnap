@@ -26,13 +26,20 @@ export default async function FavoritesPage() {
   }
 
   return (
-    <div>
-      {favoriteProducts.map(product => (
-        <FavoriteProduct
-          key={product.id}
-          product={product}
-          user_id={user.data.user?.id as string} />
-      ))}
+    <div className='w-full md:px-[64px] max-w-[1440px] md:mx-auto px-6'>
+      <div className='mb-8'>
+        <h1 className='md:text-4xl text-2xl font-semibold mb-2'>Teie lemmiktooted</h1>
+        <p className='text-muted-foreground'>Teil on {favoriteProducts.length} lemmikut</p>
+      </div>
+      
+      <div className='grid gap-6'>
+        {favoriteProducts.map(product => (
+          <FavoriteProduct
+            key={product.id}
+            product={product}
+            user_id={user.data.user?.id as string} />
+        ))}
+      </div>
     </div>
   )
 }

@@ -16,10 +16,6 @@ import { Mail } from 'lucide-react'
 import { sendContactEmailAction } from '@/app/actions'
 
 const contactSchema = z.object({
-    senderName: z
-        .string()
-        .min(2, { message: "Nimi peab olema vähemalt 2 tähemärki" })
-        .max(50, { message: "Nimi ei tohi ületada 50 tähemärki" }),
     senderEmail: z
         .string()
         .email({ message: "Palun sisestage kehtiv e-posti aadress" }),
@@ -27,7 +23,9 @@ const contactSchema = z.object({
         .string()
         .min(7, { message: "Telefoninumber peab olema vähemalt 7 numbrit" })
         .max(15, { message: "Telefoninumber ei tohi ületada 15 numbrit" })
-        .regex(/^[+]?[\d\s-()]+$/, { message: "Kehtetu telefoninumber" }),
+        .regex(/^[+]?[\d\s-()]+$/, { message: "Kehtetu telefoninumber" })
+        .optional()
+        .or(z.literal("")),
     message: z
         .string()
         .min(10, { message: "Sõnum peab sisaldama vähemalt 10 tähemärki" })
@@ -54,10 +52,9 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
     const form = useForm<ContactForm>({
         resolver: zodResolver(contactSchema),
         defaultValues: {
-            senderName: "",
             senderEmail: "",
             senderPhone: "",
-            message: `Tere, olen huvitatud teie kuulutusest "${productName}". Palun võtke minuga ühendust.`,
+            message: `Tere, olen huvitatud teie kuulutusest "${productName}".`,
         },
     })
 
@@ -68,7 +65,9 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                 ...data,
                 productId,
                 productName,
-                ownerUserId
+                ownerUserId,
+                senderName: "", // Remove sender name requirement
+                senderPhone: data.senderPhone || ""
             })
 
             if (result.success) {
@@ -109,47 +108,28 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                 <DialogHeader>
                     <DialogTitle>Võta ühendust kuulutuse omanikuga</DialogTitle>
                     <DialogDescription>
-                        Saada sõnum kuulutuse "{productName}" omanikule. Sinu kontaktandmed jäävad nähtavaks sõnumis.
+                        Saada sõnum kuulutuse &quot;{productName}&quot; omanikule. Sinu kontaktandmed jäävad nähtavaks sõnumis.
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <FormField
-                                control={form.control}
-                                name="senderName"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Teie nimi</FormLabel>
-                                        <FormControl>
-                                            <Input 
-                                                placeholder="Ees- ja perekonnanimi" 
-                                                {...field} 
-                                                disabled={isSubmitting}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="senderPhone"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Telefoninumber</FormLabel>
-                                        <FormControl>
-                                            <Input 
-                                                placeholder="+372 5xxxxxxx" 
-                                                {...field}
-                                                disabled={isSubmitting}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
+                        <FormField
+                            control={form.control}
+                            name="senderPhone"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Telefoninumber (valikuline)</FormLabel>
+                                    <FormControl>
+                                        <Input 
+                                            placeholder="Sinu telefon"
+                                            {...field}
+                                            disabled={isSubmitting}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <FormField
                             control={form.control}
                             name="senderEmail"
@@ -159,7 +139,7 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                                     <FormControl>
                                         <Input 
                                             type="email"
-                                            placeholder="teie.email@example.com" 
+                                            placeholder="Sinu e-mail" 
                                             {...field}
                                             disabled={isSubmitting}
                                         />

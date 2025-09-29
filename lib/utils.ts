@@ -1,16 +1,11 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Feature } from "./coordinates-validation";
-import { CartItemWithDetails } from "@/utils/supabase/queries/cart";
-import { differenceInCalendarDays } from "date-fns";
-import { round } from "@/utils/utils";
 import { Notification } from "@/maksekeskus/maksekeskus_types";
+import { generateContactEmailSubject, generateContactEmailTemplate } from "./email-templates";
+import { ContactEmailData, EmailContent, OwnerInfo } from "@/types/email";
 
-interface CartTotal {
-  price: number,
-  fee: number,
-  total: number
-}
+
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -78,23 +73,6 @@ export const fetchCoordinates = async (mapbox_id: string, session_token: string)
   }
 }
 
-export const calculatePrice = (cartItems: CartItemWithDetails[]): CartTotal => {
-  const totalPrice = cartItems.reduce((acc, item) => {
-    if (item.cart_item.to && item.cart_item.from) {
-      const daysDif = differenceInCalendarDays(item.cart_item.to, item.cart_item.from) + 1
-      const rentalDays = daysDif | 0;
-      return acc + (round(item.product.price * rentalDays));
-    } else {
-      return acc + (round(item.product.price));
-    }
-  }, 0);
-
-  return {
-    price: totalPrice,
-    fee: round(totalPrice * 0.15),
-    total: round(totalPrice + (totalPrice * 0.15)),
-  }
-}
 
 export const validateMAC = async (mac: string, json: Notification) => {
   if (!process.env.SECRET_KEY) {
@@ -123,4 +101,23 @@ function bufferToHex(buffer: ArrayBuffer): string {
   const hexArray = Array.from(new Uint8Array(buffer));
   return hexArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
 }
+
+export function prepareEmailContent(
+  data: ContactEmailData, 
+  owner: OwnerInfo
+): EmailContent {
+  const senderName = data.senderName || 'Huvitatud isik';
+  
+  return {
+    subject: generateContactEmailSubject(data.productName, senderName),
+    html: generateContactEmailTemplate({
+      ...data,
+      senderName,
+      senderPhone: data.senderPhone || "",
+      ownerEmail: owner.email,
+      ownerName: owner.name,
+    }),
+  };
+}
+
 

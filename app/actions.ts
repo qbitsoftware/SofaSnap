@@ -18,7 +18,9 @@ import { MaksekeskusClient } from "@/maksekeskus/client";
 import { ITransaction } from "@/maksekeskus/maksekeskus_types";
 import { sendEmail } from "@/lib/emails";
 import { addFavorite, removeFavorite } from "@/utils/supabase/queries/favorite";
-import { ContactEmailTemplateData } from "@/lib/email-templates";
+import { resend } from "@/lib/resend";
+import { ContactEmailData, EmailContent, EmailSendResult, OwnerInfo } from "@/types/email";
+import { prepareEmailContent } from "@/lib/utils";
 
 
 export const signUpAction = async (formData: FormData) => {
@@ -346,102 +348,86 @@ export async function  deleteProductAction(product_id: number): Promise<{ data: 
     return await deleteProduct(product_id)
 }
 
-interface ContactEmailData {
-  senderName: string;
-  senderEmail: string;
-  senderPhone: string;
-  message: string;
-  productId: number;
-  productName: string;
-  ownerUserId: string;
-}
-
-export async function sendContactEmailAction(data: ContactEmailData): Promise<{ success: boolean; error?: string }> {
+export async function sendContactEmailAction(
+  data: ContactEmailData
+): Promise<EmailSendResult> {
   try {
-    // Get owner email from Supabase auth using service role
-    const supabase = createClient();
+    const ownerInfo = await getOwnerInfo(data.ownerUserId);
     
-    // Try to get user details - this requires SUPABASE_SERVICE_ROLE_KEY in env
-    // You need to add SUPABASE_SERVICE_ROLE_KEY and RESEND_API_KEY to your .env.local file
-    try {
-      const { data: userData, error: userError } = await supabase.auth.admin.getUserById(data.ownerUserId);
-      
-      if (userError || !userData.user?.email) {
-        // Fallback to basic notification email to admin
-        console.warn('Could not get owner email, falling back to admin notification');
-        await sendEmail(
-          'seatly@seatly.com', // Admin email
-          `Päring kuulutuse "${data.productName}" kohta`,
-          `
-            <h2>Uus kontakti taotlus</h2>
-            <p><strong>Kuulutus:</strong> ${data.productName} (ID: ${data.productId})</p>
-            <p><strong>Omaniku ID:</strong> ${data.ownerUserId}</p>
-            <hr>
-            <p><strong>Saatja:</strong> ${data.senderName}</p>
-            <p><strong>E-post:</strong> ${data.senderEmail}</p>
-            <p><strong>Telefon:</strong> ${data.senderPhone}</p>
-            <p><strong>Sõnum:</strong></p>
-            <p>${data.message}</p>
-          `
-        );
-        return { success: true };
-      }
-
-      const ownerEmail = userData.user.email;
-      const ownerName = userData.user.user_metadata?.firstName || userData.user.user_metadata?.name || 'Kuulutuse omanik';
-
-      // const emailSubject = generateContactEmailSubject(data.productName, data.senderName);
-      const emailSubject = ""
-      const emailTemplateData: ContactEmailTemplateData = {
-        ...data,
-        ownerEmail,
-        ownerName
+    if (!ownerInfo) {
+      return {
+        success: false,
+        error: 'Ei saanud kuulutuse omaniku kontaktandmeid. Palun proovige hiljem uuesti.',
       };
-      // const emailHtml = generateContactEmailTemplate(emailTemplateData);
-      const emailHtml = ""
-
-      // const result = await resend.emails.send({
-      //   from: 'Seatly <noreply@seatly.com>',
-      //   to: [ownerEmail],
-      //   subject: emailSubject,
-      //   html: emailHtml,
-      //   replyTo: data.senderEmail,
-      // });
-
-      // if (result.error) {
-      //   console.error('Resend error:', result.error);
-      //   return { success: false, error: 'Email saatmine ebaõnnestus' };
-      // }
-
-      return { success: true };
-      
-    } catch (authError) {
-      console.warn('Service role not configured, falling back to nodemailer');
-      
-      // Fallback to existing email system
-      await sendEmail(
-        'seatly@seatly.com', // Send to admin for now
-        `Päring kuulutuse "${data.productName}" kohta kasutajalt ${data.senderName}`,
-        `
-          <h2>Uus kontakti taotlus</h2>
-          <p><strong>Kuulutus:</strong> ${data.productName} (ID: ${data.productId})</p>
-          <p><strong>Omaniku ID:</strong> ${data.ownerUserId}</p>
-          <hr>
-          <p><strong>Saatja:</strong> ${data.senderName}</p>
-          <p><strong>E-post:</strong> ${data.senderEmail}</p>
-          <p><strong>Telefon:</strong> ${data.senderPhone}</p>
-          <p><strong>Sõnum:</strong></p>
-          <p style="white-space: pre-wrap;">${data.message}</p>
-          <hr>
-          <p><em>Palun edasta see sõnum kuulutuse omanikule käsitsi või seadista SUPABASE_SERVICE_ROLE_KEY keskkonnmuutuja automaatseks edastamiseks.</em></p>
-        `
-      );
-      
-      return { success: true };
     }
-    
+
+    const emailContent = prepareEmailContent(data, ownerInfo);
+    const emailSent = await sendEmailWithFallback(ownerInfo.email, emailContent, data.senderEmail);
+
+    return emailSent
+      ? { success: true }
+      : { success: false, error: 'Email saatmine ebaõnnestus. Palun proovige hiljem uuesti.' };
+      
   } catch (error) {
     console.error('Error sending contact email:', error);
-    return { success: false, error: 'Tehnilised probleemid e-posti saatmisel' };
+    return { 
+      success: false, 
+      error: 'Tehnilised probleemid e-posti saatmisel' 
+    };
+  }
+}
+
+async function getOwnerInfo(userId: string): Promise<OwnerInfo | null> {
+  try {
+    const supabase = createClient();
+    const { data: userData, error } = await supabase.auth.admin.getUserById(userId);
+
+    if (error || !userData.user?.email) {
+      console.error('Failed to get owner info:', error);
+      return null;
+    }
+
+    return {
+      email: userData.user.email,
+      name: userData.user.user_metadata?.firstName || 
+            userData.user.user_metadata?.name || 
+            'Kuulutuse omanik',
+    };
+  } catch (error) {
+    console.error('Auth admin API error:', error);
+    return null;
+  }
+}
+
+async function sendEmailWithFallback(
+  to: string,
+  content: EmailContent,
+  replyTo: string
+): Promise<boolean> {
+  try {
+    const result = await resend.emails.send({
+      from: 'Seatly <noreply@seatly.com>',
+      to: [to],
+      subject: content.subject,
+      html: content.html,
+      replyTo,
+    });
+
+    if (result.error) {
+      throw new Error('Resend failed');
+    }
+
+    return true;
+  } catch (resendError) {
+    console.warn('Resend failed, trying nodemailer fallback...', resendError);
+  }
+
+  // Fallback to nodemailer
+  try {
+    await sendEmail(to, content.subject, content.html);
+    return true;
+  } catch (nodemailerError) {
+    console.error('Both email services failed:', { nodemailerError });
+    return false;
   }
 }

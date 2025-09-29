@@ -29,7 +29,6 @@ export default async function ProductPage({ product_id, categories }: ProductPag
 
   const { data, error } = await fetchProduct(product_id)
 
-
   if (error && error == "Server error") {
     console.log(error)
     return (
