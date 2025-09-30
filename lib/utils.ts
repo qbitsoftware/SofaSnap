@@ -1,6 +1,8 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Feature } from "./coordinates-validation";
+import { differenceInCalendarDays } from "date-fns";
+import { round } from "@/utils/utils";
 import { Notification } from "@/maksekeskus/maksekeskus_types";
 import { generateContactEmailSubject, generateContactEmailTemplate } from "./email-templates";
 import { ContactEmailData, EmailContent, OwnerInfo } from "@/types/email";
@@ -73,29 +75,46 @@ export const fetchCoordinates = async (mapbox_id: string, session_token: string)
   }
 }
 
+// export const calculatePrice = (cartItems: CartItemWithDetails[]): CartTotal => {
+//   const totalPrice = cartItems.reduce((acc, item) => {
+//     if (item.cart_item.to && item.cart_item.from) {
+//       const daysDif = differenceInCalendarDays(item.cart_item.to, item.cart_item.from) + 1
+//       const rentalDays = daysDif | 0;
+//       return acc + (round(item.product.price * rentalDays));
+//     } else {
+//       return acc + (round(item.product.price));
+//     }
+//   }, 0);
 
-export const validateMAC = async (mac: string, json: Notification) => {
-  if (!process.env.SECRET_KEY) {
-    return;
-  }
+//   return {
+//     price: totalPrice,
+//     fee: round(totalPrice * 0.15),
+//     total: round(totalPrice + (totalPrice * 0.15)),
+//   }
+// }
 
-  const jsonString = JSON.stringify(json);
+// export const validateMAC = async (mac: string, json: Notification) => {
+//   if (!process.env.SECRET_KEY) {
+//     return;
+//   }
 
-  const data = jsonString + process.env.SECRET_KEY;
+//   const jsonString = JSON.stringify(json);
 
-  const encoder = new TextEncoder();
-  const encodedData = encoder.encode(data);
+//   const data = jsonString + process.env.SECRET_KEY;
 
-  const hashBuffer = await crypto.subtle.digest("SHA-512", encodedData);
+//   const encoder = new TextEncoder();
+//   const encodedData = encoder.encode(data);
 
-  const hashHexUpperCase = bufferToHex(hashBuffer).toUpperCase();
+//   const hashBuffer = await crypto.subtle.digest("SHA-512", encodedData);
 
-  if (hashHexUpperCase === mac) {
-    return true
-  } else {
-    return false
-  }
-};
+//   const hashHexUpperCase = bufferToHex(hashBuffer).toUpperCase();
+
+//   if (hashHexUpperCase === mac) {
+//     return true
+//   } else {
+//     return false
+//   }
+// };
 
 function bufferToHex(buffer: ArrayBuffer): string {
   const hexArray = Array.from(new Uint8Array(buffer));

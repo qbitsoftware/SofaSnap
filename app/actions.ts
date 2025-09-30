@@ -21,6 +21,8 @@ import { addFavorite, removeFavorite } from "@/utils/supabase/queries/favorite";
 import { resend } from "@/lib/resend";
 import { ContactEmailData, EmailContent, EmailSendResult, OwnerInfo } from "@/types/email";
 import { prepareEmailContent } from "@/lib/utils";
+import type { Stripe } from "stripe";
+import { stripe } from "@/lib/stripe";
 
 
 export const signUpAction = async (formData: FormData) => {
@@ -334,18 +336,18 @@ export async function createTransactionAction(transaction: ITransaction) {
   const paymentClient = new MaksekeskusClient(apiKey!)
 
   return await paymentClient.createTransaction(transaction)
-} 
+}
 
-export async function sendEmailAction(to: string, sub: string, content: string){
+export async function sendEmailAction(to: string, sub: string, content: string) {
   try {
-   await sendEmail(to, sub, content)
+    await sendEmail(to, sub, content)
   } catch (error) {
     console.error(error)
   }
 }
 
-export async function  deleteProductAction(product_id: number): Promise<{ data: string | undefined, error: string | undefined }> {
-    return await deleteProduct(product_id)
+export async function deleteProductAction(product_id: number): Promise<{ data: string | undefined, error: string | undefined }> {
+  return await deleteProduct(product_id)
 }
 
 export async function sendContactEmailAction(
@@ -431,3 +433,87 @@ async function sendEmailWithFallback(
     return false;
   }
 }
+
+export async function createCheckoutSession(): Promise<{ url: string | null }> {
+  const origin: string = headers().get("origin") as string;
+
+  const checkoutSession: Stripe.Checkout.Session =
+    await stripe.checkout.sessions.create({
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: "EUR",
+            product_data: {
+              name: "Custom amount donation",
+            },
+            unit_amount: 100,
+          },
+        },
+      ],
+      mode: "payment",
+      success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/?canceled=true`,
+    });
+
+  return {
+    url: checkoutSession.url,
+  };
+}
+
+export async function createPaymentIntent(
+  data: FormData,
+): Promise<{ client_secret: string }> {
+  const paymentIntent: Stripe.PaymentIntent =
+    await stripe.paymentIntents.create({
+      amount: 100,
+      automatic_payment_methods: { enabled: true },
+      currency: "EUR",
+    });
+
+  return { client_secret: paymentIntent.client_secret as string };
+}
+
+// export async function createCheckoutSession(data: { amount: number, productName: string }) {
+
+
+
+// export async function createCheckoutSession(): Promise<{ url: string | null }> {
+//   const origin: string = headers().get("origin") as string;
+
+//   const checkoutSession: Stripe.Checkout.Session =
+//     await stripe.checkout.sessions.create({
+//       line_items: [
+//         {
+//           quantity: 1,
+//           price_data: {
+//             currency: "EUR",
+//             product_data: {
+//               name: "Custom amount donation",
+//             },
+//             unit_amount: 100,
+//           },
+//         },
+//       ],
+//       mode: "payment",
+//       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
+//       cancel_url: `${origin}/?canceled=true`,
+//     });
+
+//   return {
+//     url: checkoutSession.url,
+//   };
+// }
+
+// export async function createPaymentIntent(
+//   data: FormData,
+// ): Promise<{ client_secret: string }> {
+//   const paymentIntent: Stripe.PaymentIntent =
+//     await stripe.paymentIntents.create({
+//       amount: 100,
+//       automatic_payment_methods: { enabled: true },
+//       currency: "EUR",
+//     });
+
+//   return { client_secret: paymentIntent.client_secret as string };
+// }

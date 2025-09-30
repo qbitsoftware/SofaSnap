@@ -1,14 +1,14 @@
-import { deleteProductAction } from "@/app/actions"
+import { createCheckoutSession, deleteProductAction } from "@/app/actions"
 import { useToast } from "@/components/hooks/use-toast"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { ProductAndCategories } from "@/utils/supabase/queries/products"
-import { Edit, Trash, Eye } from "lucide-react"
+import { Edit, Trash, Eye, DollarSign } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 import { useState } from "react"
 
 export default function ListingCard({ listing }: { listing: ProductAndCategories }) {
@@ -17,6 +17,14 @@ export default function ListingCard({ listing }: { listing: ProductAndCategories
     const toast = useToast()
 
     const router = useRouter()
+
+    const handlePay = async () => {
+        const { url } = await createCheckoutSession()
+        // console.log(url)
+        if (url) {
+            router.push(url)
+        }
+    }
 
     const handleDelete = async (product_id: number) => {
         try {
@@ -63,12 +71,17 @@ export default function ListingCard({ listing }: { listing: ProductAndCategories
                                             Eelvaade
                                         </Button>
                                     </Link>
+
                                     <Link href={`/kuulutused/${listing.product.id}`} onClick={(e) => e.stopPropagation()}>
                                         <Button variant="outline" size="sm">
                                             <Edit className="h-4 w-4 mr-2" />
                                             Muuda
                                         </Button>
                                     </Link>
+                                    <Button variant="outline" className="bg-green-300" size="sm" onClick={() => handlePay()}>
+                                        <DollarSign className="h-4 w-4 mr-2" />
+                                        Maksa
+                                    </Button>
                                     <Button onClick={() => setIsOpen(true)} variant={"destructive"}>
                                         <Trash className="h-4 w-4 mr-2" />
                                         Kustuta

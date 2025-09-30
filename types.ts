@@ -32,5 +32,14 @@ export type Listing = {
     address: string;
     all_img: string[];
     unique_id: string;
+    status: EProductStatus;
+}
+
+export enum EProductStatus {
+    NOT_PAID = "not_paid",
+    PAID = "paid",
+    PENDING = "pending",
+    REJECTED = "rejected",
+    ACCEPTED = "accepted",
 }
 

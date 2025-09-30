@@ -68,6 +68,7 @@ const Page = async ({ params }: PageProps): Promise<JSX.Element> => {
             type: prod.type || "",
             price: prod.price,
             address: "",
+            status: prod.status ? prod.status : "not_paid",
             all_img: prod.all_img || [],
             unique_id: prod.unique_id,
         }

@@ -84,51 +84,6 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
     }, [form, categories]);
 
     useEffect(() => {
-        // function suggestion() {
-        //     setTimeout(() => {
-        //         setShowSuggestions(false);
-        //     }, 200)
-        // }
-
-        // if (address) {
-        //     // set address
-        //     setChosenSuggestion({
-        //         type: "",
-        //         geometry: {
-        //             type: "",
-        //             coordinates: [address.location.x, address.location.y],
-        //         },
-        //         properties: {
-        //             context: {
-        //                 country: {
-        //                     country_code: address.country_code,
-        //                     name: address.country_name,
-        //                 },
-        //                 region: {
-        //                     name: address.region,
-        //                 },
-        //                 postcode: {
-        //                     name: address.postal_code,
-        //                 },
-        //                 place: {
-        //                     name: "",
-        //                 },
-        //                 address: {
-        //                     address_number: address.address_number,
-        //                     street_name: "",
-        //                 },
-        //             },
-        //             coordinates: {
-        //                 latitude: address.location.x,
-        //                 longitude: address.location.y,
-        //             },
-        //             full_address: address.full_address,
-        //             mapbox_id: "",
-        //             place_formatted: address.full_address,
-        //         },
-        //     })
-        //     form.setValue("address", address.full_address)
-        // }
         //set images
         if (initialData && initialData.all_img) {
             const imagesToAdd: IImage[] = []
@@ -141,28 +96,11 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             })
             setImages(imagesToAdd)
         }
-        // document.addEventListener('mousedown', suggestion);
-        // return () => {
-        //     document.removeEventListener('mousedown', suggestion);
-        // };
-    }, [form, initialData]);
+            }, [form, initialData]);
 
     const onSubmit = async (data: Listing) => {
-        // let converted_address: AddressProduct = {}
-        // if (chosenSuggestion) {
-        //     converted_address = {
-        //         full_address: chosenSuggestion.properties.full_address,
-        //         location: [chosenSuggestion.geometry.coordinates[0], chosenSuggestion.geometry.coordinates[1]],
-        //         postal_code: chosenSuggestion.properties.context.postcode.name,
-        //         address_number: chosenSuggestion.properties.context.address.address_number,
-        //         region: chosenSuggestion.properties.context.region.name,
-        //         country_code: chosenSuggestion.properties.context.country.country_code,
-        //         country_name: chosenSuggestion.properties.context.country.name,
-        //     }
-        // }
         const formData: TProductServer = {
             ...data,
-            // address: converted_address,
             start_date: data.start_date instanceof Date ? data.start_date.toISOString() : "",
             end_date: data.end_date instanceof Date ? data.end_date.toISOString() : "",
         };
@@ -291,70 +229,11 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
         }
     }
 
-
-    // const debouncedFetchSuggestions = debounce(async (value: string) => {
-    //     if (value.length === 0) {
-    //         setShowSuggestions(false);
-    //         return;
-    //     }
-
-    //     setShowSuggestions(true);
-
-    //     const data: TAddressSearchSchema = {
-    //         input: value,
-    //         user_id: form.getValues("user_id"),
-    //     };
-
-    //     try {
-    //         const response = await fetch("/api/suggestion", {
-    //             method: "POST",
-    //             body: JSON.stringify(data),
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //         });
-
-    //         const responseData = await response.json();
-
-    //         if (response.ok) {
-    //             setSuggestions(responseData.data);
-    //         }
-    //         setIsLoading(false);
-    //     } catch (error) {
-    //         console.error('Error fetching suggestions:', error);
-    //     }
-    // }, 300);
-
-    // const fetchSuggestions = useCallback(
-    //     (value: string) => {
-    //         debouncedFetchSuggestions(value);
-    //     },
-    //     [debouncedFetchSuggestions]
-    // );
-
     const handleDates = async (item: DateRange | undefined) => {
         form.setValue("start_date", item?.from);
         form.setValue("end_date", item?.to);
         await form.trigger(["start_date", "end_date"]);
     };
-
-    // const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     const value = event.target.value;
-    //     setIsLoading(true)
-    //     if (value.length >= 2) {
-    //         fetchSuggestions(value);
-    //     } else {
-    //         setTimeout(() => {
-    //             setIsLoading(false)
-    //         }, 2000)
-    //     }
-    //     form.setValue("address", value)
-    //     await form.trigger("address")
-    // };
-
-    // const setFormValue = (value: string) => {
-    //     form.setValue("address", value)
-    // }
 
     const handleImages = async (value: string[]) => {
         form.setValue("all_img", value)
@@ -631,25 +510,6 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                             <Input placeholder='Aadress' {...field} autoComplete='off' onChange={(e) => {
                                 field.onChange(e.target.value);
                             }} />
-                            {/* handleInputChange(e) */}
-                            {/* <FormControl className='bg-white'>
-                            //     <Input placeholder="Aadress" {...field} onChange={handleInputChange} autoComplete='off' />
-                            // </FormControl>
-                            // <div className='relative'>
-                            //     <Suggestions
-                            //         isLoading={isLoading}
-                            //         suggestions={suggestions}
-                            //         showSuggestions={showSuggestions}
-                            //         inputValue={form.getValues("address")}
-                            //         setChosenSuggestion={setChosenSuggestion}
-                            //         setInputValue={setFormValue}
-                            //         id={id}
-                            //     />
-                            // </div> */}
-
-                            {/* <FormDescription>
-                                Näide: Tamme 5
-                            </FormDescription> */}
                             <FormMessage />
                         </FormItem>
                     )}

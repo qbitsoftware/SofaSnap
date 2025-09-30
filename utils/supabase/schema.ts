@@ -1,3 +1,4 @@
+import { EProductStatus } from "@/types";
 import { sql } from "drizzle-orm";
 
 import { boolean, doublePrecision, integer, pgSchema, pgTable, point, real, serial, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
@@ -52,7 +53,7 @@ export const product = pgTable('products', {
         mode: 'string',
         precision: 3
     }).$onUpdate(() => sql`NOW()`).defaultNow(),
-    status: text("status").default("pending"),
+    status: text("status").default(EProductStatus.NOT_PAID),
 })
 
 export const category = pgTable('categories', {
@@ -171,7 +172,7 @@ export const order_item = pgTable("order_items", {
         precision: 3
     }).defaultNow().notNull().$onUpdate(() => sql`NOW()`),
     product_id: integer("product_id").references(() => product.id).notNull(),
-    order_id: integer("order_id").references(() => order.id, {onDelete: "cascade", onUpdate: "cascade"}).notNull(),
+    order_id: integer("order_id").references(() => order.id, { onDelete: "cascade", onUpdate: "cascade" }).notNull(),
     from: timestamp("from"),
     to: timestamp("to"),
 })

@@ -1,8 +1,6 @@
-import { PaymentMethods } from "@/maksekeskus/maksekeskus_types";
 import { format } from "date-fns";
 import { et } from "date-fns/locale";
 import { redirect } from "next/navigation";
-import { Card, Banklink } from "@/maksekeskus/maksekeskus_types";
 
 /**
  * Redirects to a specified path with an encoded message as a query parameter.
@@ -46,50 +44,50 @@ export function toUTCDate(date: Date | null): Date | null {
   return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
 }
 
-type GroupedMethod = {
-  name: string;
-  displayName: string;
-  methods: (Card | Banklink)[];
-};
+// type GroupedMethod = {
+//   name: string;
+//   displayName: string;
+//   methods: (Card | Banklink)[];
+// };
 
-export function groupPaymentMethods(paymentMethods: PaymentMethods): GroupedMethod[] {
-  const creditCards: GroupedMethod = {
-    name: 'credit_cards',
-    displayName: 'Krediitkaart',
-    methods: [{
-      name: 'visa_mastercard',
-      display_name: 'Visa / Mastercard',
-      url: '',
-      logo_url: '',
-      channel: 'card',
-      max_amount: 0,
-    }],
-  };
+// export function groupPaymentMethods(paymentMethods: PaymentMethods): GroupedMethod[] {
+//   const creditCards: GroupedMethod = {
+//     name: 'credit_cards',
+//     displayName: 'Krediitkaart',
+//     methods: [{
+//       name: 'visa_mastercard',
+//       display_name: 'Visa / Mastercard',
+//       url: '',
+//       logo_url: '',
+//       channel: 'card',
+//       max_amount: 0,
+//     }],
+//   };
 
-  const bankLinks: GroupedMethod = {
-    name: 'bank_links',
-    displayName: 'Pangalink',
-    methods: [],
-  };
+//   const bankLinks: GroupedMethod = {
+//     name: 'bank_links',
+//     displayName: 'Pangalink',
+//     methods: [],
+//   };
 
-  paymentMethods.cards.forEach(card => {
-    if (card.name.toLowerCase().includes('visa') || card.name.toLowerCase().includes('mastercard')) {
-      const combinedCard = creditCards.methods[0] as Card;
-      if (!combinedCard.url) {
-        combinedCard.url = card.url;
-      }
-      combinedCard.max_amount = Math.max(combinedCard.max_amount, card.max_amount);
-    } else {
-      bankLinks.methods.push(card);
-    }
-  });
+//   paymentMethods.cards.forEach(card => {
+//     if (card.name.toLowerCase().includes('visa') || card.name.toLowerCase().includes('mastercard')) {
+//       const combinedCard = creditCards.methods[0] as Card;
+//       if (!combinedCard.url) {
+//         combinedCard.url = card.url;
+//       }
+//       combinedCard.max_amount = Math.max(combinedCard.max_amount, card.max_amount);
+//     } else {
+//       bankLinks.methods.push(card);
+//     }
+//   });
 
-  paymentMethods.banklinks.forEach(banklink => {
-    const existingMethod = bankLinks.methods.find(m => m.url === banklink.url);
-    if (!existingMethod) {
-      bankLinks.methods.push(banklink);
-    }
-  });
+//   paymentMethods.banklinks.forEach(banklink => {
+//     const existingMethod = bankLinks.methods.find(m => m.url === banklink.url);
+//     if (!existingMethod) {
+//       bankLinks.methods.push(banklink);
+//     }
+//   });
 
-  return [creditCards, bankLinks].filter(group => group.methods.length > 0);
-}
+//   return [creditCards, bankLinks].filter(group => group.methods.length > 0);
+// }
