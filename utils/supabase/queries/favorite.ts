@@ -29,6 +29,10 @@ export const removeFavorite = async (product_id: number, user_id: string): Promi
 
 export const getFavoriteProducts = async (user_id: string): Promise<Product[]> => {
     try {
+        if (!user_id) {
+            return []
+        }
+
         const favoritesProducts = await db.select().from(favorite).innerJoin(product, eq(favorite.product_id, product.id)).where(eq(favorite.user_id, user_id))
         
         const products: Product[] = favoritesProducts.map(item => item.products)

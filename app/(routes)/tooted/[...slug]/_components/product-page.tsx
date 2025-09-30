@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { ProductImage } from './product-image'
 import { GetUserInfo } from '@/app/actions'
+import { User } from '@/utils/supabase/supabase.types'
 
 interface ProductPageProps {
   product_id: number
@@ -22,10 +23,6 @@ interface ProductPageProps {
 export default async function ProductPage({ product_id, categories }: ProductPageProps) {
 
   const user = await GetUserInfo()
-
-  if (!user.data.user) {
-    redirect("/login")
-  }
 
   const { data, error } = await fetchProduct(product_id)
 
@@ -53,7 +50,7 @@ export default async function ProductPage({ product_id, categories }: ProductPag
           </Link>
         </div>
         <div className='mt-8'>
-          {<ProductComponent product={data} user={user.data.user} />}
+          {<ProductComponent product={data} user={user.data.user as User} />}
         </div>
 
       </div>

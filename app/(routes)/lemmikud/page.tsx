@@ -2,10 +2,15 @@ import { GetUserInfo } from "@/app/actions"
 import { getFavoriteProducts } from "@/utils/supabase/queries/favorite"
 import { FavoriteProduct } from "./_components/favourite"
 import { Button } from "@/components/ui/button"
+import { redirect } from "next/navigation"
 import Link from "next/link"
 
 export default async function FavoritesPage() {
   const user = await GetUserInfo()
+
+  if (!user.data.user) {
+    redirect("/login")
+  }
 
   const favoriteProducts = await getFavoriteProducts(user.data.user?.id as string)
 

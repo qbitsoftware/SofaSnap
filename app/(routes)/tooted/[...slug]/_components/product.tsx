@@ -109,20 +109,22 @@ export const ProductComponent: React.FC<ProductProps> = ({ product, user }) => {
                 </div>
             </div>
             <div className='flex-col justify-center md:justify-start md:gap-[28px] md:w-[40%] gap-4 flex p-4'>
-                <div className='flex items-center justify-start gap-2'>
-                    <button
-                        onClick={handleToggleFavorite}
-                        className={`p-2 rounded-full transition-colors 
+                {user && (
+                    <div className='flex items-center justify-start gap-2'>
+                        <button
+                            onClick={handleToggleFavorite}
+                            className={`p-2 rounded-full transition-colors 
                             ${isFavorite ? 'text-yellow-400 hover:text-yellow-400' : 'text-gray-400 hover:text-yellow-500'}`}
-                        aria-label={isFavorite ? 'Eemalda lemmikutest' : 'Lisa lemmikuks'}
-                    >
-                        <StarIcon
-                            fill={isFavorite ? 'currentColor' : 'none'}
-                            color={isFavorite ? 'currentColor' : 'black'}
-                        />
-                    </button>
-                    <span className='text-muted-foreground'>{isFavorite ? 'Eemalda lemmikutest' : 'Lisa lemmikuks'}</span>
-                </div>
+                            aria-label={isFavorite ? 'Eemalda lemmikutest' : 'Lisa lemmikuks'}
+                        >
+                            <StarIcon
+                                fill={isFavorite ? 'currentColor' : 'none'}
+                                color={isFavorite ? 'currentColor' : 'black'}
+                            />
+                        </button>
+                        <span className='text-muted-foreground'>{isFavorite ? 'Eemalda lemmikutest' : 'Lisa lemmikuks'}</span>
+                    </div>
+                )}
                 <div className='flex md:items-start flex-wrap xl:flex-row gap-4 items-center'>
                     <h1 className='md:text-4xl text-[20px] xl:max-w-[60%] font-medium md:font-semibold m-0 p-0'>{product.name}</h1>
                     <div className='bg-accent py-2 flex items-center max-h-[40px] px-3 rounded-full'>
@@ -145,7 +147,7 @@ export const ProductComponent: React.FC<ProductProps> = ({ product, user }) => {
                     <p className='break-words overflow-wrap break-word whitespace-pre-line'>{product.description}</p>
                 </div>
                 <div className='mt-6'>
-                    <ContactOwnerForm 
+                    <ContactOwnerForm
                         productId={product.id}
                         productName={product.name}
                         ownerUserId={product.user_id}
