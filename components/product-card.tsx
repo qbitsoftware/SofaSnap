@@ -3,16 +3,16 @@
 import React from 'react'
 import { Card, CardContent } from './ui/card'
 import Image from 'next/image'
-import { Star } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Product } from '@/utils/supabase/supabase.types'
 
 interface ProductCardProps {
     product: Product
     className: string
+    category?: string
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ product, className, category }) => {
 
     return (
         <Card className={cn("border-0 p-0 bg-transparent rounded-tr-[76px] md:rounded-tr-[155px] hover:cursor-pointer  drop-shadow-md", className)}>
@@ -28,11 +28,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                 </div>
                 <div className="flex h-[38%] flex-shrink-0 z-10 w-full bottom-0 flex-col bg-background p-[10px] justify-between">
                     <div className="flex flex-col gap-1">
-                        <div className="flex justify-between items-center text-base md:text-lg font-semibold">
-                            <p className='leading-5 max-w-[80%] whitespace-nowrap md:whitespace-normal overflow-hidden overflow-ellipsis'>{product.name}</p>
-                            <span className="flex">5<Star className="w-8" color="" fill="#FE9F73" /></span>
+                        <div className="flex justify-between items-start text-base md:text-lg font-semibold gap-2">
+                            <p className='leading-5 flex-1 overflow-hidden overflow-ellipsis line-clamp-2'>{product.name}</p>
+                            {category && (
+                                <span className="text-xs px-2 py-1 bg-accent/20 rounded-md text-foreground/70 capitalize whitespace-nowrap shrink-0">
+                                    {category}
+                                </span>
+                            )}
                         </div>
-                        <p className="hidden sm:block text-base md:[18px] md:leading-6 xl:leading-7 font-normal max-h-[50px] xl:max-h-[60px] md:max-h-[50px] max-w-[100%] overflow-hidden overflow-ellipsis">{product.description}</p>
+                        <p className="hidden sm:block text-base md:[18px] md:leading-6 xl:leading-7 font-normal max-w-[100%] overflow-hidden text-ellipsis whitespace-nowrap">
+                            {product.description && product.description.length > 30
+                                ? `${product.description.substring(0, 30)}...`
+                                : product.description}
+                        </p>
                     </div>
                     <span className="text-sm md:text-lg font-semibold ">{product.price}€ {product.type == "rent" ? "päev" : ""}</span>
                 </div>

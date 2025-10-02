@@ -344,7 +344,7 @@ export const addProduct = async (prod: TProductServer) => {
         start_date: prod.start_date!,
         end_date: prod.end_date!,
         unique_id: prod.unique_id,
-        status: "pending",
+        status: "not_paid",
         all_img: prod.all_img,
         deleted_at: null,
         address: prod.address,
@@ -658,10 +658,9 @@ export const fetchUserProduct = async (product_id: number) => {
             .select()
             .from(category_join)
             .innerJoin(product, eq(category_join.product_id, product.id))
-            .innerJoin(address_join_product, eq(address_join_product.product_id, product.id))
-            .innerJoin(address, eq(address_join_product.address_id, address.id))
             .where(and(eq(product.id, product_id), isNull(product.deleted_at)))
-            .execute() as ProductAndCategory[];
+            .execute() as { products: typeof product.$inferSelect, category_join: typeof category_join.$inferSelect }[];
+
         if (result.length == 0) {
             return {
                 data: undefined,
@@ -678,12 +677,20 @@ export const fetchUserProduct = async (product_id: number) => {
 
         const productMap = new Map<number, ProductAndCategories>()
 
-        result.forEach(({ products, category_join, addresses }) => {
+        result.forEach(({ products, category_join }) => {
             if (!productMap.has(products.id)) {
                 productMap.set(products.id, {
                     product: products,
                     categories: [category_join],
-                    address: addresses,
+                    address: {
+                        full_address: products.address || "",
+                        location: { x: 0, y: 0 },
+                        postal_code: "",
+                        address_number: "",
+                        region: "",
+                        country_code: "",
+                        country_name: ""
+                    },
                 })
             } else {
                 productMap.get(products.id)?.categories.push(category_join)
@@ -855,6 +862,59 @@ export const deleteProduct = async (product_id: number) => {
         return {
             data: undefined,
             error: "Server error"
+        }
+    }
+}
+
+export const fetchSimilarProducts = async (category_slug: string, current_product_id: number, limit = 8) => {
+    try {
+        const result = await db
+            .select({
+                id: product.id,
+                name: product.name,
+                created_at: product.created_at,
+                updated_at: product.updated_at,
+                description: product.description,
+                user_id: product.user_id,
+                preview_image: product.preview_image,
+                price: product.price,
+                width: product.width,
+                heigth: product.heigth,
+                length: product.length,
+                type: product.type,
+                material: product.material,
+                start_date: product.start_date,
+                end_date: product.end_date,
+                address: product.address,
+                all_img: product.all_img,
+                unique_id: product.unique_id,
+                total_clicks: product.total_clicks,
+                last_visited: product.last_visited,
+                deleted_at: product.deleted_at,
+                status: product.status,
+            })
+            .from(category_join)
+            .innerJoin(product, eq(product.id, category_join.product_id))
+            .where(
+                and(
+                    eq(category_join.category_name_slug, category_slug),
+                    eq(product.status, "accepted"),
+                    isNull(product.deleted_at),
+                    sql`${product.id} != ${current_product_id}`
+                )
+            )
+            .orderBy(desc(product.total_clicks))
+            .limit(limit)
+
+        return {
+            data: result as Product[],
+            error: undefined
+        }
+    } catch (error) {
+        console.error("Error fetching similar products:", error)
+        return {
+            data: undefined,
+            error: "Failed to fetch similar products"
         }
     }
 }

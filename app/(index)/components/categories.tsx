@@ -4,8 +4,8 @@ import { CategoryCarousel } from './category-carousel'
 import { Category } from '@/utils/supabase/supabase.types';
 import { capitalize } from '@/utils/utils';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { MontserratAlternates } from '@/fonts';
 import { useRouter } from 'next/navigation';
@@ -17,37 +17,7 @@ interface CategoryProps {
 
 export const Categories: React.FC<CategoryProps> = ({ data, error }) => {
   const router = useRouter()
-  const [showTopButton, setShowTopButton] = useState(false)
-  const [showBottomButton, setShowBottomButton] = useState(true)
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (scrollContainerRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current
-        setShowTopButton(scrollTop > 0)
-        setShowBottomButton(scrollTop + clientHeight < scrollHeight)
-      }
-    }
-
-    const scrollContainer = scrollContainerRef.current
-    if (scrollContainer) {
-      scrollContainer.addEventListener('scroll', handleScroll)
-    }
-
-    return () => {
-      if (scrollContainer) {
-        scrollContainer.removeEventListener('scroll', handleScroll)
-      }
-    }
-  }, [])
-
-  const scrollTo = (direction: 'up' | 'down') => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = direction === 'up' ? -200 : 200
-      scrollContainerRef.current.scrollBy({ top: scrollAmount, behavior: 'smooth' })
-    }
-  }
+  const [showAll, setShowAll] = useState(false)
 
   if (!data || error) {
     return (
@@ -68,55 +38,48 @@ export const Categories: React.FC<CategoryProps> = ({ data, error }) => {
         <CategoryCarousel Categories={data} className='py-12' />
       </div>
 
-      <div className='md:hidden'>
-        <div className='relative'>
-          {showTopButton && (
-            <Button
-              className='absolute top-3 left-1/2 -translate-x-1/2 z-10'
-              onClick={() => scrollTo('up')}
-            >
-              <ChevronUp className="h-4 w-4" />
-            </Button>
-          )}
-          <div
-            ref={scrollContainerRef}
-            className='max-h-[calc(100vh-320px)] overflow-y-auto'>
-            {data.map((category, index) => (
-
-              (category.sub_categories?.length != 0 &&
-
-                <div
-                  key={index}
-                  className='relative w-full'
-                  onClick={() => router.push(`/tooted/${category.name_slug}`)}
-                >
-                  <div className='relative h-[200px]'>
-
-                    <Image
-                      src={category.image}
-                      alt={category.name}
-                      fill
-                      style={{ objectFit: "cover" }}
-                    />
-                    <div className='absolute inset-0 flex items-end justify-center'>
-                      <div className='bg-white bg-opacity-30 backdrop-blur-lg w-full py-[20px] pl-[25px]'>
-                        <h3 className={cn('text-xl font-semibold', MontserratAlternates.className)} >{capitalize(category.name)}</h3>
-                      </div>
-                    </div>
+      <div className='md:hidden px-4 py-6'>
+        <h2 className='text-2xl font-semibold mb-4'>Kategooriad</h2>
+        <div className='grid grid-cols-2 gap-3'>
+          {data
+            .filter(category => category.sub_categories?.length !== 0)
+            .slice(0, showAll ? undefined : 4)
+            .map((category, index) => (
+              <div
+                key={index}
+                className='relative overflow-hidden rounded-lg shadow-md cursor-pointer'
+                onClick={() => router.push(`/tooted/${category.name_slug}`)}
+              >
+                <div className='relative h-[140px] sm:h-[160px]'>
+                  <Image
+                    src={category.image}
+                    alt={category.name}
+                    fill
+                    style={{ objectFit: "cover" }}
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                  />
+                  <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent' />
+                  <div className='absolute bottom-0 left-0 right-0 p-3'>
+                    <h3 className={cn('text-sm sm:text-base font-semibold text-white line-clamp-2', MontserratAlternates.className)}>
+                      {capitalize(category.name)}
+                    </h3>
                   </div>
                 </div>
-              )
+              </div>
             ))}
-          </div>
-          {showBottomButton && (
-            <Button
-              className='absolute bottom-3 left-1/2 -translate-x-1/2 z-10'
-              onClick={() => scrollTo('down')}
-            >
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-          )}
         </div>
+        {data.filter(category => category.sub_categories?.length !== 0).length > 4 && (
+          <div className='mt-4 flex justify-center'>
+            <Button
+              onClick={() => setShowAll(!showAll)}
+              variant="outline"
+              className='gap-2'
+            >
+              {showAll ? 'Näita vähem' : 'Näita rohkem'}
+              <ChevronDown className={cn('h-4 w-4 transition-transform', showAll && 'rotate-180')} />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   )

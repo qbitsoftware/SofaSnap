@@ -42,48 +42,57 @@ export default function ListingCard({ listing }: { listing: ProductAndCategories
 
     return (
         <div>
-            <Card className="overflow-hidden border border-gray-200 hover:border-gray-300 transition-all duration-300 ease-in-out bg-white">
+            <Card className="overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ease-in-out bg-white border-0">
                 <CardContent className="p-0">
                     <div className="flex flex-col md:flex-row" >
-                        <div className="relative w-full md:w-64 h-48">
+                        <div className="relative w-full md:w-72 h-48 md:h-auto">
                             <Image
                                 src={listing.product.preview_image}
                                 alt={listing.product.name}
                                 layout="fill"
                                 style={{ objectFit: 'cover' }}
-                                sizes="(max-width: 768px) 100vw, 256px"
+                                sizes="(max-width: 768px) 100vw, 288px"
+                                className="rounded-t-lg md:rounded-l-lg md:rounded-tr-none"
                             />
                         </div>
-                        <div className="p-6 flex-1">
-                            <div className="flex justify-between items-start mb-4">
-                                <h2 className="text-2xl font-semibold">{listing.product.name}</h2>
-                                <Badge variant="outline" className="capitalize">
-                                    {listing.product.type == "sell" ? "müük" : "rent"}
-                                </Badge>
+                        <div className="p-5 md:p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <div className="flex justify-between items-start mb-2 gap-3">
+                                    <h2 className="text-lg md:text-xl font-semibold text-gray-900">{listing.product.name}</h2>
+                                    <Badge variant="outline" className="capitalize text-xs shrink-0 border-gray-300">
+                                        {listing.product.type == "sell" ? "Müük" : "Rent"}
+                                    </Badge>
+                                </div>
+                                <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                                    {listing.product.description}
+                                </p>
                             </div>
-                            <p className="text-muted-foreground  md:max-w-[500px] mb-4 line-clamp-2 overflow-hidden text-ellipsis whitespace-nowrap">{listing.product.description}</p>
-                            <div className="flex justify-between items-center mb-4">
-                                <span className="text-2xl font-bold">${listing.product.price.toFixed(2)}</span>
-                                <div className="flex space-x-2">
+                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                                <span className="text-xl md:text-2xl font-bold text-gray-900">
+                                    {listing.product.price.toFixed(2)}€
+                                </span>
+                                <div className="flex flex-wrap gap-2">
                                     <Link href={`/tooted/${listing.product.id}`} onClick={(e) => e.stopPropagation()}>
-                                        <Button variant="outline" size="sm">
-                                            <Eye className="h-4 w-4 mr-2" />
+                                        <Button variant="outline" size="sm" className="text-xs">
+                                            <Eye className="h-3.5 w-3.5 mr-1.5" />
                                             Eelvaade
                                         </Button>
                                     </Link>
 
                                     <Link href={`/kuulutused/${listing.product.id}`} onClick={(e) => e.stopPropagation()}>
-                                        <Button variant="outline" size="sm">
-                                            <Edit className="h-4 w-4 mr-2" />
+                                        <Button variant="outline" size="sm" className="text-xs">
+                                            <Edit className="h-3.5 w-3.5 mr-1.5" />
                                             Muuda
                                         </Button>
                                     </Link>
-                                    <Button variant="outline" className="bg-green-300" size="sm" onClick={() => handlePay()}>
-                                        <DollarSign className="h-4 w-4 mr-2" />
-                                        Maksa
-                                    </Button>
-                                    <Button onClick={() => setIsOpen(true)} variant={"destructive"}>
-                                        <Trash className="h-4 w-4 mr-2" />
+                                    {listing.product.status !== "accepted" && (
+                                        <Button variant="outline" size="sm" className="bg-green-50 hover:bg-green-100 border-green-300 text-green-700 text-xs" onClick={() => handlePay()}>
+                                            <DollarSign className="h-3.5 w-3.5 mr-1.5" />
+                                            Maksa
+                                        </Button>
+                                    )}
+                                    <Button onClick={() => setIsOpen(true)} variant="destructive" size="sm" className="text-xs">
+                                        <Trash className="h-3.5 w-3.5 mr-1.5" />
                                         Kustuta
                                     </Button>
                                 </div>

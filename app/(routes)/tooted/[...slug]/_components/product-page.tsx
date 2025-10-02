@@ -1,4 +1,4 @@
-import { addClick, fetchProduct } from '@/utils/supabase/queries/products'
+import { addClick, fetchProduct, fetchSimilarProducts } from '@/utils/supabase/queries/products'
 import { redirect } from 'next/navigation'
 import React from 'react'
 import { ProductComponent } from './product'
@@ -7,7 +7,7 @@ import { ChevronLeft } from 'lucide-react'
 import { ServerError } from '@/components/server-error'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-import { ProductImage } from './product-image'
+import { SimilarProducts } from './similar-products'
 import { GetUserInfo } from '@/app/actions'
 import { User } from '@/utils/supabase/supabase.types'
 
@@ -39,6 +39,9 @@ export default async function ProductPage({ product_id, categories }: ProductPag
     redirect("/404")
   }
 
+  // Fetch similar products from the same category
+  const categorySlug = data.category?.name_slug || categories[0]?.name_slug
+  const { data: similarProducts } = await fetchSimilarProducts(categorySlug, product_id, 8)
 
   return (
     <div className='md:min-h-screen w-full'>
@@ -55,7 +58,9 @@ export default async function ProductPage({ product_id, categories }: ProductPag
 
       </div>
       <div className={cn('md:mt-[100px] mt-[50px]')}>
-        <ProductImage product={data} />
+        {similarProducts && similarProducts.length > 0 && (
+          <SimilarProducts products={similarProducts} />
+        )}
       </div>
     </div >
   )

@@ -30,8 +30,9 @@ const Page = async ({ params }: PageProps): Promise<JSX.Element> => {
     }
 
     const userInfo = user.data.user.user_metadata as TSignUpSchema
-    if (Number(params.id) >= 0) {
-        const prods = await fetchUserProduct(Number(params.id));
+    const productId = params.id?.[0] ? Number(params.id[0]) : NaN
+    if (!isNaN(productId) && productId >= 0) {
+        const prods = await fetchUserProduct(productId);
 
         if (prods.error || !prods.data) {
             redirect("/404")

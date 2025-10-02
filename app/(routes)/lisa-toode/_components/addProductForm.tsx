@@ -207,19 +207,16 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                         </>
                     ),
                 })
+                router.push("/kuulutused")
             } else {
                 toast.toast({
                     title: "Kuulutus on edukalt lisatud.",
-                    description: (
-                        <>
-                            Kuulutusi saab hallata{' '}
-                            <Link href="/kuulutused" className="underline font-medium">
-                                siit
-                            </Link>
-                            .
-                        </>
-                    ),
+                    description: "Suunatakse kuulutuste haldamise lehele..."
                 })
+                // Redirect to listings page with the "Tasumist vajavad" tab
+                setTimeout(() => {
+                    router.push("/kuulutused?tab=not_paid")
+                }, 1500)
             }
         }
         if (!initialData) {
