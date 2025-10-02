@@ -470,6 +470,7 @@ export async function createPaymentIntent(
       automatic_payment_methods: { enabled: true },
       currency: "EUR",
     });
+    void data
 
   return { client_secret: paymentIntent.client_secret as string };
 }

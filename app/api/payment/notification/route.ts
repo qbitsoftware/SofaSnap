@@ -1,6 +1,5 @@
-import { validateMAC } from "@/lib/utils";
 import { Notification } from "@/maksekeskus/maksekeskus_types";
-import { changeOrderStatus, completeOrder } from "@/utils/supabase/queries/orders";
+import { changeOrderStatus} from "@/utils/supabase/queries/orders";
 import { NextResponse } from "next/server";
 import { sendEmailAction } from "@/app/actions";
 
@@ -8,28 +7,26 @@ import { sendEmailAction } from "@/app/actions";
 export async function POST(req: Request) {
     try {
         const contentType = req.headers.get('content-type');
-        let mac;
         if (contentType === 'application/x-www-form-urlencoded; charset=UTF-8') {
             const text = await req.text();
             const params = new URLSearchParams(text);
             const jsonString = params.get('json');
-            mac = params.get('mac')
 
             if (!jsonString) {
                 throw new Error('Missing "json" parameter in the body');
             }
 
             const body: Notification = JSON.parse(jsonString);
-            if (mac && !await validateMAC(mac, body)) {
-                return NextResponse.json({ success: false }, { status: 401 });
-            }
+            // if (mac && !await validateMAC(mac, body)) {
+            //     return NextResponse.json({ success: false }, { status: 401 });
+            // }
 
             if (body.status == "COMPLETED") {
                 try {
-                    const res = await completeOrder("", body.transaction)
-                    if (!res.data) {
-                        return NextResponse.json({ success: false }, { status: 500 });
-                    }
+                    // const res = await completeOrder("", body.transaction)
+                    // if (!res.data) {
+                    //     return NextResponse.json({ success: false }, { status: 500 });
+                    // }
                     await sendEmailAction("37612a@gmail.com", "Ostukinnitus", "<h1>Suurait2h et te ostsiste mei kaest nori manti, tulge homme jalle</h1>")
                 } catch (error) {
                     console.error(error)

@@ -8,7 +8,7 @@ import { ProductAndCategories } from "@/utils/supabase/queries/products"
 import { Edit, Trash, Eye, DollarSign } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { redirect, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 export default function ListingCard({ listing }: { listing: ProductAndCategories }) {

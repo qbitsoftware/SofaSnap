@@ -1,9 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Feature } from "./coordinates-validation";
-import { differenceInCalendarDays } from "date-fns";
-import { round } from "@/utils/utils";
-import { Notification } from "@/maksekeskus/maksekeskus_types";
 import { generateContactEmailSubject, generateContactEmailTemplate } from "./email-templates";
 import { ContactEmailData, EmailContent, OwnerInfo } from "@/types/email";
 
@@ -116,17 +113,17 @@ export const fetchCoordinates = async (mapbox_id: string, session_token: string)
 //   }
 // };
 
-function bufferToHex(buffer: ArrayBuffer): string {
-  const hexArray = Array.from(new Uint8Array(buffer));
-  return hexArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
-}
+// function bufferToHex(buffer: ArrayBuffer): string {
+//   const hexArray = Array.from(new Uint8Array(buffer));
+//   return hexArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+// }
 
 export function prepareEmailContent(
-  data: ContactEmailData, 
+  data: ContactEmailData,
   owner: OwnerInfo
 ): EmailContent {
   const senderName = data.senderName || 'Huvitatud isik';
-  
+
   return {
     subject: generateContactEmailSubject(data.productName, senderName),
     html: generateContactEmailTemplate({
