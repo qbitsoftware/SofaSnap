@@ -13,6 +13,7 @@ export function cn(...inputs: ClassValue[]) {
 //use user_id as session token
 export const fetchSuggestions = async (search_input: string, session_token: string) => {
   const suggestUrl = "https://api.mapbox.com/search/searchbox/v1/suggest?"
+  console.log("test")
 
   const params = {
     q: search_input,
