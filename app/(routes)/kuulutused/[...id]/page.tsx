@@ -6,7 +6,7 @@ import { GetUserInfo } from '@/app/actions';
 import { FetchCategories } from '@/utils/supabase/queries/categories';
 import { ServerError } from '@/components/server-error';
 import { TSignUpSchema } from '@/lib/register-validation';
-import { Listing } from '@/types';
+import { EProductStatus, Listing } from '@/types';
 import { EditProduct } from './_components/edit-product-form';
 
 
@@ -68,7 +68,7 @@ const Page = async ({ params }: PageProps): Promise<JSX.Element> => {
             type: prod.type || "",
             price: prod.price,
             address: "",
-            status: prod.status ? prod.status : "not_paid",
+            status: prod.status ? prod.status as EProductStatus : EProductStatus.NOT_PAID,
             all_img: prod.all_img || [],
             unique_id: prod.unique_id,
         }
