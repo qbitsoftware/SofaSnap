@@ -24,6 +24,7 @@ export async function POST(req: Request) {
         } else {
             throw new Error('Unsupported content type');
         }
+        console.log('test')
 
         // const validMac = await validateMAC(mac!, body)
         // if (!validMac) {
