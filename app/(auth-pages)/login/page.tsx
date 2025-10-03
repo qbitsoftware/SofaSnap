@@ -1,6 +1,6 @@
 import { GetUserInfo, signInAction } from "@/app/actions";
 import { Auth } from "@/components/auth";
-import { FormMessage, Message } from "@/components/form-message";
+import { FormMessage } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-export default async function Login({ searchParams }: { searchParams: Message }) {
+export default async function Login({ searchParams }: { searchParams: any }) {
   const user = await GetUserInfo()
   if (user.data.user) {
     redirect("/profiil")
