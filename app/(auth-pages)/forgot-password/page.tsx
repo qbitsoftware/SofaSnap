@@ -1,5 +1,5 @@
 import { forgotPasswordAction } from "@/app/actions";
-import { FormMessage, Message } from "@/components/form-message";
+import { FormMessage } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,7 +9,7 @@ import { Mail } from "lucide-react";
 export default function ForgotPassword({
   searchParams,
 }: {
-  searchParams: Message;
+  searchParams: any;
 }) {
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
