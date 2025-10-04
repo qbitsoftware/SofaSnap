@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 
         const filePaths: string[] = new Array(files.length);
 
-        const supabase = createClient()
+        const supabase = await createClient()
         const uploadPromises = files.map(async (file, index) => {
             const filename = `${uuidv4()}-${file.name}`.replaceAll(" ", "");
             const { data, error } = await supabase.storage

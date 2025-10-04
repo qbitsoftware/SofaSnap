@@ -6,7 +6,10 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const origin = headers().get("origin");
+        // const origin = headers().get("origin");
+        const headersList = await headers();
+        const origin = headersList.get("origin");
+
 
 
         const result = registerValidator.safeParse(body);
@@ -21,7 +24,7 @@ export async function POST(request: Request) {
         }
 
         if (result.data) {
-            const supabase = createClient();
+            const supabase = await createClient();
             let data;
             if (result.data.userType === 'Eraisik') {
                 data = {

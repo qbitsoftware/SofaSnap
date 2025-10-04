@@ -9,10 +9,11 @@ import { ShoppingBag } from 'lucide-react'
 const PRODUCTS_PER_PAGE = 30
 export const dynamic = 'force-dynamic';
 
-const Page = async ({ searchParams }: { searchParams: { page?: string, sort?: string } }) => {
-  const currentPage = searchParams.page ? parseInt(searchParams.page, 10) : 1
+const Page = async ({ searchParams }: { searchParams: Promise<{ page?: string, sort?: string }> }) => {
+  const resolvedSearchParams = await searchParams;
+  const currentPage = resolvedSearchParams.page ? parseInt(resolvedSearchParams.page, 10) : 1
 
-  const { data, error, totalCount } = await fetchProducts(currentPage, searchParams.sort)
+  const { data, error, totalCount } = await fetchProducts(currentPage, resolvedSearchParams.sort)
 
   if (error) {
     console.error("Error fetching products:", error)
@@ -49,7 +50,7 @@ const Page = async ({ searchParams }: { searchParams: { page?: string, sort?: st
               currentPage={currentPage}
               type={"product"}
               categories={undefined}
-              currentSort={searchParams.sort}
+              currentSort={resolvedSearchParams.sort}
             />
           }
         </div>

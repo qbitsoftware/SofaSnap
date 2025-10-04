@@ -4,7 +4,7 @@ import { createClient } from "./server";
 
 export const updateSession = async (request: NextRequest) => {
 
-  const supabase = createClient()
+  const supabase = await createClient()
 
   try {
     const user = await supabase.auth.getUser();

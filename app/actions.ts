@@ -28,8 +28,9 @@ import { stripe } from "@/lib/stripe";
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
-  const supabase = createClient();
-  const origin = headers().get("origin");
+  const supabase = await createClient();
+  const headersList = await headers();
+  const origin = headersList.get("origin");
 
   if (!email || !password) {
     return { error: "Email and password are required" };
@@ -58,7 +59,7 @@ export const signUpAction = async (formData: FormData) => {
 export const signInAction = async (formData: FormData) => {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
@@ -74,8 +75,9 @@ export const signInAction = async (formData: FormData) => {
 
 export const forgotPasswordAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
-  const supabase = createClient();
-  const origin = headers().get("origin");
+  const supabase = await createClient();
+  const headersList = await headers();
+  const origin = headersList.get("origin");
   const callbackUrl = formData.get("callbackUrl")?.toString();
 
   if (!email) {
@@ -107,7 +109,7 @@ export const forgotPasswordAction = async (formData: FormData) => {
 };
 
 export const resetPasswordAction = async (formData: FormData) => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
@@ -144,19 +146,19 @@ export const resetPasswordAction = async (formData: FormData) => {
 };
 
 export const signOutAction = async () => {
-  const supabase = createClient();
+  const supabase = await createClient();
   await supabase.auth.signOut();
   return redirect("/login");
 };
 
 export const GetUserInfo = async () => {
-  const supabase = createClient();
+  const supabase = await createClient();
   const user = await supabase.auth.getUser()
   return user
 }
 
 export const GetUserAddress = async () => {
-  const supabase = createClient()
+  const supabase = await createClient()
   const user = await supabase.auth.getUser()
   if (user.data.user) {
     const user_address = await fetchUserAddress(user.data.user.id)
@@ -220,7 +222,7 @@ export async function changePasswordAction(pw: TPasswordChangeSchema): Promise<{
       }
     }
 
-    const supabase = createClient();
+    const supabase = await createClient();
 
     const { data: user, error: userError } = await supabase.auth.getUser();
 
@@ -355,7 +357,7 @@ export async function sendContactEmailAction(
 ): Promise<EmailSendResult> {
   try {
     const ownerInfo = await getOwnerInfo(data.ownerUserId);
-    
+
     if (!ownerInfo) {
       return {
         success: false,
@@ -369,19 +371,19 @@ export async function sendContactEmailAction(
     return emailSent
       ? { success: true }
       : { success: false, error: 'Email saatmine ebaõnnestus. Palun proovige hiljem uuesti.' };
-      
+
   } catch (error) {
     console.error('Error sending contact email:', error);
-    return { 
-      success: false, 
-      error: 'Tehnilised probleemid e-posti saatmisel' 
+    return {
+      success: false,
+      error: 'Tehnilised probleemid e-posti saatmisel'
     };
   }
 }
 
 async function getOwnerInfo(userId: string): Promise<OwnerInfo | null> {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: userData, error } = await supabase.auth.admin.getUserById(userId);
 
     if (error || !userData.user?.email) {
@@ -391,9 +393,9 @@ async function getOwnerInfo(userId: string): Promise<OwnerInfo | null> {
 
     return {
       email: userData.user.email,
-      name: userData.user.user_metadata?.firstName || 
-            userData.user.user_metadata?.name || 
-            'Kuulutuse omanik',
+      name: userData.user.user_metadata?.firstName ||
+        userData.user.user_metadata?.name ||
+        'Kuulutuse omanik',
     };
   } catch (error) {
     console.error('Auth admin API error:', error);
@@ -435,7 +437,8 @@ async function sendEmailWithFallback(
 }
 
 export async function createCheckoutSession(): Promise<{ url: string | null }> {
-  const origin: string = headers().get("origin") as string;
+  const headersList = await headers();
+  const origin: string = headersList.get("origin") as string;
 
   const checkoutSession: Stripe.Checkout.Session =
     await stripe.checkout.sessions.create({
@@ -470,7 +473,7 @@ export async function createPaymentIntent(
       automatic_payment_methods: { enabled: true },
       currency: "EUR",
     });
-    void data
+  void data
 
   return { client_secret: paymentIntent.client_secret as string };
 }

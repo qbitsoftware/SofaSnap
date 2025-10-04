@@ -12,12 +12,13 @@ import { EditProduct } from './_components/edit-product-form';
 
 
 interface PageProps {
-    params: {
+    params: Promise<{
         id?: string[];
-    };
+    }>;
 }
 
 const Page = async ({ params }: PageProps): Promise<JSX.Element> => {
+    const resolvedParams = await params;
     const user = await GetUserInfo()
     const { data, error } = await FetchCategories()
     if (error == "Server error") {
@@ -30,7 +31,7 @@ const Page = async ({ params }: PageProps): Promise<JSX.Element> => {
     }
 
     const userInfo = user.data.user.user_metadata as TSignUpSchema
-    const productId = params.id?.[0] ? Number(params.id[0]) : NaN
+    const productId = resolvedParams.id?.[0] ? Number(resolvedParams.id[0]) : NaN
     if (!isNaN(productId) && productId >= 0) {
         const prods = await fetchUserProduct(productId);
 

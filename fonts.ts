@@ -1,4 +1,4 @@
-import { Inter, Montserrat_Alternates, Poppins } from '@next/font/google';
+import { Inter, Montserrat_Alternates, Poppins } from 'next/font/google';
 
 
 export const MontserratAlternates = Montserrat_Alternates({

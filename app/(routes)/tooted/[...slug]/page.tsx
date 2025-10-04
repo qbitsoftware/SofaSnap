@@ -17,17 +17,19 @@ const CategoryPage = async ({
   params,
   searchParams,
 }: {
-  params: { slug: string[] }
-  searchParams: { [key: string]: string | string[] | undefined, sort?: string }
+  params: Promise<{ slug: string[] }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined, sort?: string }>
 }) => {
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
 
   let page = 1
-  if (searchParams && searchParams.page) {
-    page = Number(searchParams.page)
+  if (resolvedSearchParams && resolvedSearchParams.page) {
+    page = Number(resolvedSearchParams.page)
   }
 
-  const categories = params.slug.slice(0, params.slug.length);
-  const isProductPage = Number(params.slug[params.slug.length - 1]);
+  const categories = resolvedParams.slug.slice(0, resolvedParams.slug.length);
+  const isProductPage = Number(resolvedParams.slug[resolvedParams.slug.length - 1]);
   const { data, error: category_error } = await FetchCategories()
 
   if (category_error || !data) {
@@ -51,9 +53,9 @@ const CategoryPage = async ({
   });
 
 
-  if (isProductPage && params.slug.length >= 1) {
+  if (isProductPage && resolvedParams.slug.length >= 1) {
     return (
-      <ProductPage product_id={Number(params.slug[params.slug.length - 1])} slugs={params.slug} categories={category_objects} />
+      <ProductPage product_id={Number(resolvedParams.slug[resolvedParams.slug.length - 1])} slugs={resolvedParams.slug} categories={category_objects} />
     )
   } else {
 
@@ -62,7 +64,7 @@ const CategoryPage = async ({
       redirect('/404')
     }
 
-    const { data: productData, error: productError, totalCount } = await FetchProductsByCategories(categories, page, searchParams.sort)
+    const { data: productData, error: productError, totalCount } = await FetchProductsByCategories(categories, page, resolvedSearchParams.sort)
     if (!productData || productError) {
       redirect('/404')
     }
@@ -91,7 +93,7 @@ const CategoryPage = async ({
               currentPage={page}
               type='category'
               categories={categories}
-              currentSort={searchParams.sort}
+              currentSort={resolvedSearchParams.sort}
             />
             {productData.length == 0 &&
               <div className="flex flex-col items-center justify-center p-8 text-center">
