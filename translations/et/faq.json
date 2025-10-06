@@ -1,0 +1,66 @@
+{
+  "faq": {
+    "breadcrumb": "Korduma Kippuvad Küsimused",
+    "title": "Korduma Kippuvad Küsimused (KKK)",
+    "questions": {
+      "1": {
+        "question": "Mis on Seatly?",
+        "answer": "Seatly on platvorm, kus saad lisada mööblit kuulutustena, et neid rentida või müüa. Platvorm ei vahenda makseid ega sekku tehingusse – Sina suhtled huvilisega otse ja lepid tingimused ise kokku."
+      },
+      "2": {
+        "question": "Kui palju maksab kuulutuse lisamine?",
+        "answer": "Iga kuulutuse lisamine maksab 1 €. Kuulutus on aktiivne seni, kuni sa selle ise eemaldad (nt peale rendile andmist või müüki)."
+      },
+      "3": {
+        "question": "Kas Seatly võtab tehingu pealt vahendustasu?",
+        "answer": "Ei. Seatly ei võta tehingutelt vahendustasu. Platvorm teenib vaid 1 € kuulutustasu."
+      },
+      "4": {
+        "question": "Kas kuulutustasu makstakse igal kuul?",
+        "answer": "Ei. Tegu ei ole kuupõhise tasuga. 1 € makstakse iga kord, kui kuulutus lisatakse. Kui kuulutus on eemaldatud ja soovid hiljem uuesti sama eset pakkuda, lisad uue kuulutuse ja maksad uuesti 1 €."
+      },
+      "5": {
+        "question": "Kuidas kuulutusi lisada?",
+        "steps": [
+          "Registreeri kasutajaks.",
+          "Vali \"Lisa kuulutus\".",
+          "Täida info: esemekirjeldus, mõõdud, hind (rent või müük), fotod.",
+          "Tasudes 1 €, ilmub kuulutus platvormil nähtavale."
+        ]
+      },
+      "6": {
+        "question": "Kuidas saan maksta kuulutuse eest?",
+        "answer": "Maksmine toimub turvalise makselingi kaudu (nt Stripe või pangalink). Pärast tasumist saad kinnituse e-posti teel."
+      },
+      "7": {
+        "question": "Kes maksab rendi või ostu eest?",
+        "answer": "Kokkulepe ja makse toimuvad otse kasutajate vahel. Seatly ei kogu ega vahenda raha."
+      },
+      "8": {
+        "question": "Kuidas lepingut sõlmida?",
+        "answer": "Soovitame sul allkirjastada lihtne rendileping või ostu-müügileping koos teise osapoolega."
+      },
+      "9": {
+        "question": "Kas ma pean eseme kindlustama?",
+        "answer": "See pole kohustuslik, kuid soovitame. Kui annad väärtuslikku mööblit rendile, tasub kindlustada see kodukindlustuse kaudu või sõlmida eraldi kaitsekokkulepe rentijaga."
+      },
+      "10": {
+        "question": "Kas keegi kontrollib kuulutuste sisu?",
+        "answer": "Seatly meeskond võib kuulutusi modereerida, et need vastaksid reeglitele. Kui kuulutus rikub platvormi tingimusi (nt ebaaus teave, sobimatud pildid), on Seatlyl õigus see eemaldada."
+      },
+      "11": {
+        "question": "Mida teha, kui keegi ei vasta kuulutusele?",
+        "answer": "Proovi parandada pilte, täiendada kirjeldust või langetada hinda. Platvorm on uus ja nähtavus kasvab ajas – head kuulutused tõmbavad rohkem tähelepanu."
+      },
+      "12": {
+        "question": "Kuidas saan kuulutuse eemaldada?",
+        "answer": "Logi sisse, mine \"Minu kuulutused\" ja vali \"Eemalda\". Kui ese on renditud või müüdud, palume kuulutus eemaldada kohe pärast tehingut."
+      },
+      "13": {
+        "question": "Kas ma saan tagastada 1 € kuulutustasu?",
+        "answer": "Tasu tagastatakse vaid juhul, kui tehnilise vea tõttu ei õnnestu kuulutust üles panna või see ei ilmu platvormil korrektselt. Muudel juhtudel kuulutustasu ei tagastata."
+      }
+    },
+    "conclusion": "Nii saad hõlpsalt oma mööbli välja rentida või müüa ja aidata kaasa ringmajandusele, andes seisma jäänud esemetele uue elu!"
+  }
+}

@@ -1,50 +1,54 @@
+"use client"
+
 import React from 'react'
 import Image from 'next/image'
 import { FooterMenu } from './footer-menu'
 import { FooterMenuProps } from './footer-menu'
 import Link from 'next/link'
+import { useTranslation } from '@/lib/i18n/i18n-provider'
 
 const Footer = () => {
+    const { t } = useTranslation()
 
     const menu_1: FooterMenuProps = {
-        title: "Rentimine",
+        title: t('footer.menu1.title'),
         items: [
             {
-                title: "Kuidas kasutada",
+                title: t('footer.menu1.items.howToUse'),
                 url: "/kuidas-see-tootab",
             },
             {
-                title: "Vastutustundlik rentija",
+                title: t('footer.menu1.items.responsibleRenter'),
                 url: "/vastutustundlik-rentija"
             },
             {
-                title: "Müügitingimused",
+                title: t('footer.menu1.items.termsOfSale'),
                 url: "/muugitingimused"
             },
             {
-                title: "Privaatsuspoliitika",
+                title: t('footer.menu1.items.privacyPolicy'),
                 url: "/privaatsuspoliitika"
             }
         ]
     }
 
     const menu_2: FooterMenuProps = {
-        title: "Tugi",
+        title: t('footer.menu2.title'),
         items: [
             {
-                title: "Kontaktid",
+                title: t('footer.menu2.items.contact'),
                 url: "/kontaktid",
             },
             {
-                title: "Tühistamisvõimalus",
+                title: t('footer.menu2.items.cancellationPolicy'),
                 url: "/tuhistamise-poliitika"
             },
             {
-                title: "Teata probleemsest kasutajast",
+                title: t('footer.menu2.items.reportUser'),
                 url: "/probleemne-kasutaja"
             },
             {
-                title: "KKK",
+                title: t('footer.menu2.items.faq'),
                 url: "/kkk"
             }
         ]
@@ -64,13 +68,13 @@ const Footer = () => {
                     </div>
                     <div className='hidden md:flex  items-center justify-center'>
                         <Link href={"/"}>
-                            <Image alt='footer-logo' width={110} height={107} src={"/branding/logo-white.svg"} />
+                            <Image alt={t('footer.logoAlt')} width={110} height={107} src={"/branding/logo-white.svg"} />
                         </Link>
                     </div>
                 </div>
                 <div className='flex items-center justify-center md:hidden py-[35px] pb-[45px]'>
                     <Link href={"/"}>
-                        <Image alt='footer-logo' width={110} height={107} src={"/branding/logo-white.svg"} />
+                        <Image alt={t('footer.logoAlt')} width={110} height={107} src={"/branding/logo-white.svg"} />
                     </Link>
                 </div>
             </div>

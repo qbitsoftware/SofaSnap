@@ -1,0 +1,29 @@
+{
+  "navbar": {
+    "about_us": "Meist",
+    "how_it_works": "Kuidas see töötab?",
+    "all_categories": "Kõik kategooriad",
+    "furniture": "Mööbel",
+    "slugs": {
+      "kook": "Köök",
+      "esik": "Esik",
+      "elutuba": "Elutuba",
+      "lastetuba": "Lastetuba",
+      "magamistuba": "Magamistuba",
+      "vannituba": "Vannituba",
+      "saun": "Saun",
+      "oues": "Õues",
+      "garaaz": "Garaaž",
+      "kontor": "Kontor"
+    },
+    "profile": {
+      "profile": "Profiil",
+      "myListings": "Minu kuulutused",
+      "addListing": "Lisa kuulutus",
+      "favorites": "Lemmikud",
+      "admin": "Admin",
+      "logout": "Logi välja",
+      "logoutSuccess": "Edukalt välja logitud"
+    }
+  }
+}

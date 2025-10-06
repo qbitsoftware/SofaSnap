@@ -10,11 +10,13 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { useTranslation } from "@/lib/i18n/i18n-provider"
 
 export default function ListingCard({ listing }: { listing: ProductAndCategories }) {
 
     const [isOpen, setIsOpen] = useState(false)
     const toast = useToast()
+    const { t } = useTranslation()
 
     const router = useRouter()
 
@@ -36,7 +38,7 @@ export default function ListingCard({ listing }: { listing: ProductAndCategories
 
         } catch (error) {
             void error;
-            toast.toast({ title: "Midagi läks valesti" })
+            toast.toast({ title: t('listings.card.errorMessage') })
         }
     }
 
@@ -60,7 +62,7 @@ export default function ListingCard({ listing }: { listing: ProductAndCategories
                                 <div className="flex justify-between items-start mb-2 gap-3">
                                     <h2 className="text-lg md:text-xl font-semibold text-gray-900">{listing.product.name}</h2>
                                     <Badge variant="outline" className="capitalize text-xs shrink-0 border-gray-300">
-                                        {listing.product.type == "sell" ? "Müük" : "Rent"}
+                                        {listing.product.type == "sell" ? t('listings.card.sale') : t('listings.card.rent')}
                                     </Badge>
                                 </div>
                                 <p className="text-sm text-gray-600 mb-4 line-clamp-2">
@@ -75,25 +77,25 @@ export default function ListingCard({ listing }: { listing: ProductAndCategories
                                     <Link href={`/tooted/${listing.product.id}`} onClick={(e) => e.stopPropagation()}>
                                         <Button variant="outline" size="sm" className="text-xs">
                                             <Eye className="h-3.5 w-3.5 mr-1.5" />
-                                            Eelvaade
+                                            {t('listings.card.preview')}
                                         </Button>
                                     </Link>
 
                                     <Link href={`/kuulutused/${listing.product.id}`} onClick={(e) => e.stopPropagation()}>
                                         <Button variant="outline" size="sm" className="text-xs">
                                             <Edit className="h-3.5 w-3.5 mr-1.5" />
-                                            Muuda
+                                            {t('listings.card.edit')}
                                         </Button>
                                     </Link>
                                     {listing.product.status !== "accepted" && (
                                         <Button variant="outline" size="sm" className="bg-green-50 hover:bg-green-100 border-green-300 text-green-700 text-xs" onClick={() => handlePay()}>
                                             <DollarSign className="h-3.5 w-3.5 mr-1.5" />
-                                            Maksa
+                                            {t('listings.card.pay')}
                                         </Button>
                                     )}
                                     <Button onClick={() => setIsOpen(true)} variant="destructive" size="sm" className="text-xs">
                                         <Trash className="h-3.5 w-3.5 mr-1.5" />
-                                        Kustuta
+                                        {t('listings.card.delete')}
                                     </Button>
                                 </div>
                             </div>
@@ -104,13 +106,13 @@ export default function ListingCard({ listing }: { listing: ProductAndCategories
             <Dialog open={isOpen} onOpenChange={() => setIsOpen(false)}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Kas olete kindel, et soovite kuulutuse kustutada?</DialogTitle>
+                        <DialogTitle>{t('listings.card.deleteDialog.title')}</DialogTitle>
                         <DialogDescription>
-                            Peale kuulutuse eemaldamist ei ole võimalik kuulutust taastada.
+                            {t('listings.card.deleteDialog.description')}
                         </DialogDescription>
                         <Button className="!mt-4" onClick={() => handleDelete(listing.product.id)} variant={"destructive"}>
                             <Trash className="h-4 w-4 mr-2" />
-                            Kustuta
+                            {t('listings.card.delete')}
                         </Button>
                     </DialogHeader>
                 </DialogContent>

@@ -1,0 +1,57 @@
+{
+  "howItWorks": {
+    "breadcrumb": "How does it work?",
+    "title": "Using the Furniture Rental Platform",
+    "step1": {
+      "title": "1. Register and create an account",
+      "description": "First, register as a user on the platform by filling in the required information. Creating an account gives you access to all platform features.",
+      "imageAlt": "How does it work?"
+    },
+    "step2": {
+      "title": "2. Add a listing",
+      "items": [
+        "Choose the item you want to rent out or sell – it can be any piece of furniture, such as a sofa, table, or shelf.",
+        "Describe the item clearly: what it's suitable for, its condition, and dimensions (width, depth, height).",
+        "Specify whether you want to only rent, sell, or offer both options."
+      ]
+    },
+    "step3": {
+      "title": "3. Add good photos",
+      "items": [
+        "Take multiple pictures of the item from different angles and in good lighting.",
+        "Also show signs of wear or other details that help assess the condition.",
+        "At the same time, keep the visuals attractive – good presentation increases interest."
+      ],
+      "imageAlt": "Item description"
+    },
+    "step4": {
+      "title": "4. Optionally insure the item",
+      "description": "Although the platform does not offer insurance itself, we recommend insuring the furniture against damage. This protects both you and the renter.",
+      "imageAlt": "Item insurance"
+    },
+    "step5": {
+      "title": "5. Communicate and agree",
+      "items": [
+        "When someone is interested, they will contact you through the listing.",
+        "Communicate directly and agree on the terms, including handover."
+      ]
+    },
+    "step6": {
+      "title": "6. Listing fee and visibility",
+      "items": [
+        "Adding a listing costs €1.",
+        "After the transaction, please remove the listing.",
+        "Want a new transaction? Add a new listing – again €1."
+      ]
+    },
+    "step7": {
+      "title": "7. Item handover",
+      "description": "Agree with the interested party on how and where the item will be handed over – at home, at a neutral location, or using a transport service."
+    },
+    "step8": {
+      "title": "8. Completing the transaction and feedback",
+      "description": "We recommend leaving feedback – it helps the platform operate reliably and provides information about user trustworthiness."
+    },
+    "conclusion": "This way, you can easily rent out or sell your furniture and contribute to the circular economy by giving unused items a new life!"
+  }
+}

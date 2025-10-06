@@ -1,120 +1,125 @@
 "use client"
 
+import { useTranslation } from '@/lib/i18n/i18n-provider'
+
 export default function PrivacyPolicy() {
+    const { t } = useTranslation()
 
     return (
         <div className='px-6 md:px-[64px] max-w-[1440px] mx-auto'>
             <div className=" mx-auto bg-background rounded-lg md:mt-20 mt-10">
-                <h1 className="text-3xl font-bold mb-6 text-gray-800">Privaatsuspoliitika</h1>
-                <p className="text-sm text-gray-600 mb-6">Viimati uuendatud: 18.11.2024</p>
+                <h1 className="text-3xl font-bold mb-6 text-gray-800">{t('privacyPolicy.title')}</h1>
+                <p className="text-sm text-gray-600 mb-6">{t('privacyPolicy.lastUpdated')}</p>
                 <p className="mb-6 text-gray-700">
-                    Seatly OÜ (edaspidi &quot;Platvorm&quot; või &quot;Seatly&quot;) austab teie privaatsust ja on pühendunud teie isikuandmete kaitsmisele. Käesolev privaatsuspoliitika selgitab, kuidas me kogume, kasutame, jagame ja hoiame teie isikuandmeid, kui kasutate meie veebilehte ja teenuseid.
+                    {t('privacyPolicy.intro')}
                 </p>
                 <section id="data-collection" className="mb-8">
-                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">1. Milliseid andmeid me kogume?</h2>
-                    <p className="mb-4 text-gray-700">Kogume teie kohta järgmisi andmeid:</p>
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">{t('privacyPolicy.section1.title')}</h2>
+                    <p className="mb-4 text-gray-700">{t('privacyPolicy.section1.intro')}</p>
                     <div className="space-y-4">
                         <div>
-                            <h3 className="text-lg font-medium mb-2 text-gray-800">1.1. Konto loomisel:</h3>
+                            <h3 className="text-lg font-medium mb-2 text-gray-800">{t('privacyPolicy.section1.subsection1.title')}</h3>
                             <ul className="list-disc pl-6 text-gray-700">
-                                <li>Teie nimi, e-posti aadress, telefoninumber ja parool.</li>
-                                <li>Asukohaandmed (näiteks linn või piirkond), kui otsustate need jagada.</li>
+                                {t('privacyPolicy.section1.subsection1.items').split('|COL|').map((item: string, i: number) => (
+                                    <li key={i}>{item}</li>
+                                ))}
                             </ul>
                         </div>
                         <div>
-                            <h3 className="text-lg font-medium mb-2 text-gray-800">1.2. Kuulutuste lisamisel:</h3>
+                            <h3 className="text-lg font-medium mb-2 text-gray-800">{t('privacyPolicy.section1.subsection2.title')}</h3>
                             <ul className="list-disc pl-6 text-gray-700">
-                                <li>Esemete kirjeldused, fotod ja asukoht (vajadusel).</li>
-                                <li>Hind ja tingimused (rendiks või müügiks).</li>
+                                {t('privacyPolicy.section1.subsection2.items').split('|COL|').map((item: string, i: number) => (
+                                    <li key={i}>{item}</li>
+                                ))}
                             </ul>
                         </div>
                         <div>
-                            <h3 className="text-lg font-medium mb-2 text-gray-800">1.3. Tehingute ja suhtluse ajal:</h3>
+                            <h3 className="text-lg font-medium mb-2 text-gray-800">{t('privacyPolicy.section1.subsection3.title')}</h3>
                             <ul className="list-disc pl-6 text-gray-700">
-                                <li>Renditehingutega seotud andmed (kuupäevad, summad, makseviis).</li>
-                                <li>Suhtlus kuulutaja ja rentija vahel meie platvormi kaudu.</li>
+                                {t('privacyPolicy.section1.subsection3.items').split('|COL|').map((item: string, i: number) => (
+                                    <li key={i}>{item}</li>
+                                ))}
                             </ul>
                         </div>
                         <div>
-                            <h3 className="text-lg font-medium mb-2 text-gray-800">1.4. Tehnilised andmed:</h3>
+                            <h3 className="text-lg font-medium mb-2 text-gray-800">{t('privacyPolicy.section1.subsection4.title')}</h3>
                             <ul className="list-disc pl-6 text-gray-700">
-                                <li>IP-aadress, seadme tüüp, brauseri versioon ja küpsiste teave.</li>
+                                {t('privacyPolicy.section1.subsection4.items').split('|COL|').map((item: string, i: number) => (
+                                    <li key={i}>{item}</li>
+                                ))}
                             </ul>
                         </div>
                     </div>
                 </section>
 
                 <section id="data-usage" className="mb-8">
-                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">2. Kuidas me teie andmeid kasutame?</h2>
-                    <p className="mb-4 text-gray-700">Kasutame teie andmeid järgmistel eesmärkidel:</p>
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">{t('privacyPolicy.section2.title')}</h2>
+                    <p className="mb-4 text-gray-700">{t('privacyPolicy.section2.intro')}</p>
                     <ul className="list-disc pl-6 text-gray-700">
-                        <li>Teenuste pakkumiseks (nt kuulutuste lisamine ja broneerimiste haldamine).</li>
-                        <li>Kasutajakonto loomise ja haldamise jaoks.</li>
-                        <li>Tehingute turvalisuse tagamiseks ja pettuste vältimiseks.</li>
-                        <li>Klienditoe pakkumiseks ja teie küsimustele vastamiseks.</li>
-                        <li>Teenuste parandamiseks ja isikupärastamiseks (nt soovitused).</li>
-                        <li>Juriidiliste nõuete täitmiseks ja vaidluste lahendamiseks.</li>
+                        {t('privacyPolicy.section2.items').split('|COL|').map((item: string, i: number) => (
+                            <li key={i}>{item}</li>
+                        ))}
                     </ul>
                 </section>
 
                 <section id="data-sharing" className="mb-8">
-                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">3. Kuidas andmeid jagatakse?</h2>
-                    <p className="mb-4 text-gray-700">Jagame teie andmeid ainult vajaduse korral ja piiratud ulatuses:</p>
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">{t('privacyPolicy.section3.title')}</h2>
+                    <p className="mb-4 text-gray-700">{t('privacyPolicy.section3.intro')}</p>
                     <ul className="list-disc pl-6 text-gray-700">
-                        <li>Teiste kasutajatega: Näiteks kuulutuste juures kuvatakse teie nimi (või kasutajanimi), kuulutuse andmed ja suhtluseks vajalikud andmed (nt kontaktid, kui seda valite).</li>
-                        <li>Teenusepakkujatega: Kolmandad osapooled, kes pakuvad makseteenuseid, pilvesalvestust või analüütikat.</li>
-                        <li>Õiguskaitseasutustega: Kui see on seadusest tulenev nõue või meie teenusetingimuste rikkumise uurimiseks.</li>
+                        {t('privacyPolicy.section3.items').split('|COL|').map((item: string, i: number) => (
+                            <li key={i}>{item}</li>
+                        ))}
                     </ul>
                 </section>
 
                 <section id="cookies" className="mb-8">
-                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">4. Küpsised ja jälgimistehnoloogiad</h2>
-                    <p className="mb-4 text-gray-700">Kasutame küpsiseid ja sarnaseid tehnoloogiaid, et:</p>
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">{t('privacyPolicy.section4.title')}</h2>
+                    <p className="mb-4 text-gray-700">{t('privacyPolicy.section4.intro')}</p>
                     <ul className="list-disc pl-6 text-gray-700">
-                        <li>Mäletada teie eelistusi ja seadeid.</li>
-                        <li>Pakkuda asjakohaseid reklaame ja analüüsida meie veebisaidi kasutamist.</li>
-                        <li>Küpsiste kohta saate rohkem lugeda meie [Küpsiste Poliitikast].</li>
+                        {t('privacyPolicy.section4.items').split('|COL|').map((item: string, i: number) => (
+                            <li key={i}>{item}</li>
+                        ))}
                     </ul>
                 </section>
 
                 <section id="data-retention" className="mb-8">
-                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">5. Andmete säilitamine</h2>
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">{t('privacyPolicy.section5.title')}</h2>
                     <p className="text-gray-700">
-                        Säilitame teie andmeid seni, kuni need on vajalikud teenuste pakkumiseks, või seadusega ettenähtud aja jooksul. Kui sulgete oma konto, kustutame teie andmed mõistliku aja jooksul, välja arvatud juhul, kui seadus nõuab nende säilitamist.
+                        {t('privacyPolicy.section5.content')}
                     </p>
                 </section>
 
                 <section id="your-rights" className="mb-8">
-                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">6. Teie õigused</h2>
-                    <p className="mb-4 text-gray-700">Teil on järgmised õigused seoses oma isikuandmetega:</p>
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">{t('privacyPolicy.section6.title')}</h2>
+                    <p className="mb-4 text-gray-700">{t('privacyPolicy.section6.intro')}</p>
                     <ul className="list-disc pl-6 text-gray-700">
-                        <li>Ligipääs: Võite taotleda koopia oma isikuandmetest.</li>
-                        <li>Parandamine: Kui andmed on ebatäpsed, saate neid parandada.</li>
-                        <li>Kustutamine: Võite taotleda oma andmete kustutamist, välja arvatud juhul, kui seadus nõuab nende säilitamist.</li>
-                        <li>Protestimine ja piiramine: Võite vaidlustada oma andmete töötlemise või piirata nende kasutamist teatud olukordades.</li>
+                        {t('privacyPolicy.section6.items').split('|COL|').map((item: string, i: number) => (
+                            <li key={i}>{item}</li>
+                        ))}
                     </ul>
                 </section>
 
                 <section id="data-security" className="mb-8">
-                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">7. Andmete turvalisus</h2>
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">{t('privacyPolicy.section7.title')}</h2>
                     <p className="text-gray-700">
-                        Kaitseme teie andmeid, kasutades asjakohaseid turvameetmeid, näiteks andmete krüpteerimist ja juurdepääsupiiranguid. Samas tuleb meeles pidada, et ükski internetipõhine süsteem pole täielikult turvaline.
+                        {t('privacyPolicy.section7.content')}
                     </p>
                 </section>
 
                 <section id="contact" className="mb-8">
-                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">8. Kontaktandmed ja kaebused</h2>
-                    <p className="mb-4 text-gray-700">Kui teil on küsimusi või muresid seoses oma isikuandmetega, võtke meiega ühendust:</p>
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">{t('privacyPolicy.section8.title')}</h2>
+                    <p className="mb-4 text-gray-700">{t('privacyPolicy.section8.intro')}</p>
                     <ul className="list-disc pl-6 text-gray-700">
-                        <li>E-post: seatly@seatly.com</li>
-                        <li>Postiaadress: Seatly OÜ, Harju maakond, Tallinn, Haabersti linnaosa, Vabaõhumuuseumi tee 4a-20, 13522</li>
+                        {t('privacyPolicy.section8.items').split('|COL|').map((item: string, i: number) => (
+                            <li key={i}>{item}</li>
+                        ))}
                     </ul>
                 </section>
 
                 <section id="changes" className="mb-8">
-                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">9. Muudatused privaatsuspoliitikas</h2>
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">{t('privacyPolicy.section9.title')}</h2>
                     <p className="text-gray-700">
-                        Võime seda privaatsuspoliitikat aeg-ajalt uuendada. Soovitame teil regulaarselt külastada meie veebilehte, et tutvuda viimaste muudatustega.
+                        {t('privacyPolicy.section9.content')}
                     </p>
                 </section>
             </div>

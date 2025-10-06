@@ -1,13 +1,17 @@
+"use client"
 import React from 'react'
 import { Text, Text2, TextWithImage, TextWithImage2 } from './_components/text'
 import { Breadcrumb } from '@/components/breadcrumb'
+import { useTranslation } from '@/lib/i18n/i18n-provider'
 
 const Page = () => {
+    const { t } = useTranslation();
+
     return (
         <div>
             <div className='flex flex-col justify-center xl:max-w-[1440px] w-full px-4 lg:px-[56px] pt-[30px] mx-auto'>
                 <div className='mb-[38px]'>
-                    <Breadcrumb text='Kuidas töötab?' link='/' />
+                    <Breadcrumb text={t('howItWorks.breadcrumb')} link='/' />
                 </div>
                 <div className='lg:ml-[60px] xl:ml-[135px] mb-[69px]'>
                     <Text />

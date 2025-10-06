@@ -1,0 +1,18 @@
+{
+  "reviews": {
+    "items": {
+      "0": {
+        "name": "Kristjan",
+        "text": "Väga meelldiv suhtlus ja heas korras mööbel."
+      },
+      "1": {
+        "name": "Kaisa",
+        "text": "Suurepärane teenus – platvorm pakub stiilset mööblit nii rentimiseks kui ka ostmiseks"
+      },
+      "2": {
+        "name": "Jüri",
+        "text": "Mugav ja usaldusväärne viis kiiresti kvaliteetset mööblit leida ja seda eelarvesõbralikult kasutada."
+      }
+    }
+  }
+}

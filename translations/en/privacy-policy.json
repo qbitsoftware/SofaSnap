@@ -1,0 +1,64 @@
+{
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: November 18, 2024",
+    "intro": "Seatly OÜ (hereinafter \"Platform\" or \"Seatly\") respects your privacy and is committed to protecting your personal data. This privacy policy explains how we collect, use, share, and store your personal data when you use our website and services.",
+    "section1": {
+      "title": "1. What data do we collect?",
+      "intro": "We collect the following data about you:",
+      "subsection1": {
+        "title": "1.1. When creating an account:",
+        "items": "Your name, email address, phone number, and password.|COL|Location data (such as city or region) if you choose to share it."
+      },
+      "subsection2": {
+        "title": "1.2. When adding listings:",
+        "items": "Item descriptions, photos, and location (if needed).|COL|Price and terms (for rent or sale)."
+      },
+      "subsection3": {
+        "title": "1.3. During transactions and communication:",
+        "items": "Rental transaction data (dates, amounts, payment method).|COL|Communication between advertiser and renter through our platform."
+      },
+      "subsection4": {
+        "title": "1.4. Technical data:",
+        "items": "IP address, device type, browser version, and cookie information."
+      }
+    },
+    "section2": {
+      "title": "2. How do we use your data?",
+      "intro": "We use your data for the following purposes:",
+      "items": "To provide services (e.g., adding listings and managing bookings).|COL|To create and manage user accounts.|COL|To ensure transaction security and prevent fraud.|COL|To provide customer support and answer your questions.|COL|To improve and personalize services (e.g., recommendations).|COL|To comply with legal requirements and resolve disputes."
+    },
+    "section3": {
+      "title": "3. How is data shared?",
+      "intro": "We share your data only when necessary and to a limited extent:",
+      "items": "With other users: For example, your name (or username), listing data, and contact information necessary for communication are displayed with listings (if you choose).|COL|With service providers: Third parties who provide payment services, cloud storage, or analytics.|COL|With law enforcement: If required by law or to investigate violations of our terms of service."
+    },
+    "section4": {
+      "title": "4. Cookies and tracking technologies",
+      "intro": "We use cookies and similar technologies to:",
+      "items": "Remember your preferences and settings.|COL|Provide relevant advertisements and analyze our website usage.|COL|You can read more about cookies in our [Cookie Policy]."
+    },
+    "section5": {
+      "title": "5. Data retention",
+      "content": "We retain your data as long as necessary to provide services or as required by law. If you close your account, we will delete your data within a reasonable time, unless the law requires us to retain it."
+    },
+    "section6": {
+      "title": "6. Your rights",
+      "intro": "You have the following rights regarding your personal data:",
+      "items": "Access: You can request a copy of your personal data.|COL|Correction: If the data is inaccurate, you can correct it.|COL|Deletion: You can request deletion of your data, unless the law requires us to retain it.|COL|Objection and restriction: You can object to the processing of your data or restrict its use in certain situations."
+    },
+    "section7": {
+      "title": "7. Data security",
+      "content": "We protect your data using appropriate security measures, such as data encryption and access restrictions. However, it should be noted that no internet-based system is completely secure."
+    },
+    "section8": {
+      "title": "8. Contact information and complaints",
+      "intro": "If you have questions or concerns about your personal data, please contact us:",
+      "items": "Email: seatly@seatly.eu|COL|Postal address: Seatly OÜ, Harju County, Tallinn, Haabersti District, Vabaõhumuuseumi tee 4a-20, 13522"
+    },
+    "section9": {
+      "title": "9. Changes to the privacy policy",
+      "content": "We may update this privacy policy from time to time. We recommend that you regularly visit our website to review the latest changes."
+    }
+  }
+}

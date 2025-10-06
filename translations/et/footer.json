@@ -1,0 +1,23 @@
+{
+  "footer": {
+    "logoAlt": "footer-logo",
+    "menu1": {
+      "title": "Rentimine",
+      "items": {
+        "howToUse": "Kuidas kasutada",
+        "responsibleRenter": "Vastutustundlik rentija",
+        "termsOfSale": "Müügitingimused",
+        "privacyPolicy": "Privaatsuspoliitika"
+      }
+    },
+    "menu2": {
+      "title": "Tugi",
+      "items": {
+        "contact": "Kontaktid",
+        "cancellationPolicy": "Tühistamisvõimalus",
+        "reportUser": "Teata probleemsest kasutajast",
+        "faq": "KKK"
+      }
+    }
+  }
+}

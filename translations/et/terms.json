@@ -1,0 +1,79 @@
+{
+  "terms": {
+    "breadcrumb": "Müügitingimused",
+    "lastUpdated": "Viimati uuendatud: 24.10.2024",
+    "intro": "Käesolevad müügitingimused reguleerivad Seatly OÜ (edaspidi \"Platvorm\") teenuste kasutamist ja on siduvad kõigile kasutajatele. Kasutades Seatly platvormi, nõustute alljärgnevate tingimustega.",
+    "section1": {
+      "title": "1. Üldtingimused",
+      "items": {
+        "1": "1.1. Teenuse eesmärk: Platvorm võimaldab kasutajatel lisada mööbli rendi- ja müügikuulutusi ning sõlmida omavahelisi tehinguid.",
+        "2": "1.2. Vahendaja roll: Seatly on vahendaja ja ei osale rendi- ega müügitehingutes otseselt. Vastutus eseme seisukorra, kvaliteedi ja müügitehingu täitmise eest lasub kasutajatel.",
+        "3": "1.3. Vanus ja õiguslik seisund: Teenust saavad kasutada vähemalt 18-aastased isikud, kellel on õigus sõlmida siduvaid lepinguid."
+      }
+    },
+    "section2": {
+      "title": "2. Kuulutuste lisamine",
+      "items": {
+        "1": "2.1. Eseme kirjeldus: Müüja vastutab kuulutuse täpse ja ausa sisestamise eest, sealhulgas eseme seisukorra, mõõtmete ja muu olulise info lisamise eest.",
+        "2": "2.2. Fotod: Eseme fotod peavad olema selged ja andma objektiivse ülevaate mööblist. Valeandmete esitamine on keelatud.",
+        "3": "2.3. Hind: Müüja määrab eseme hinna ise, kuid Platvormil on õigus eemaldada ilmselgelt eksitavaid või ebaõiglasi kuulutusi.",
+        "4": "2.4. Kestus: Kuulutus jääb aktiivseks, kuni müüja otsustab selle eemaldada või kuni tehing on lõpule viidud."
+      }
+    },
+    "section3": {
+      "title": "3. Tehingute tegemine",
+      "items": {
+        "1": "3.1. Müügi teostamine: Müüja ja ostja lepivad müügitingimustes kokku otse Platvormi sõnumisüsteemi kaudu. Platvorm soovitab kokku leppida ka üleandmise tingimused (asukoht, transport, aeg).",
+        "2": "3.2. Maksmine: Kõik maksed toimuvad Platvormi kaudu, mis lisab tehingule turvalisuse. Müüja saab tasu pärast tehingu edukat lõpetamist ja ostja kinnitust.",
+        "3": "3.3. Vahendustasu: Seatly võtab iga müügitehingu pealt vahendustasu 15%."
+      }
+    },
+    "section4": {
+      "title": "4. Transport ja üleandmine",
+      "items": {
+        "1": "4.1. Kohustused: Müüja ja ostja vastutavad ühiselt eseme üleandmise ja transpordi korraldamise eest.",
+        "2": "4.2. Eseme üleandmine: Eseme seisukord peab vastama kuulutuses kirjeldatule. Soovitame osapooltel teha üleandmise käigus fotod, et vältida võimalikke vaidlusi."
+      }
+    },
+    "section5": {
+      "title": "5. Tagastused ja vaidlused",
+      "items": {
+        "1": "5.1. Tagastamispoliitika: Müügitehingud on lõplikud, välja arvatud juhul, kui müüja ja ostja lepivad omavahel kokku teisiti.",
+        "2": "5.2. Vaidluste lahendamine: Kui ostja leiab, et ese ei vasta kirjeldatule, tuleb probleemist teavitada Platvormi kliendituge 48 tunni jooksul pärast eseme kättesaamist. Platvorm aitab osapooltel leida kompromissi, kuid ei vastuta otseselt vaidluste lahendamise eest."
+      }
+    },
+    "section6": {
+      "title": "6. Vastutus ja garantiid",
+      "items": {
+        "1": "6.1. Müüja vastutus: Müüja vastutab eseme kvaliteedi ja vastavuse eest kuulutusele.",
+        "2": "6.2. Ostja vastutus: Ostja vastutab tehingu ja eseme vastuvõtmise eest.",
+        "3": "6.3. Platvormi vastutuse piirangud: Seatly ei vastuta kasutajate vahel sõlmitud tehingute ega võimalike kahjude eest, mis tulenevad platvormi kasutamisest."
+      }
+    },
+    "section7": {
+      "title": "7. Kasutaja konto ja tegevused",
+      "items": {
+        "1": "7.1. Konto loomine: Kasutaja peab registreerima konto ja tagama, et esitatud info on õige ja ajakohane.",
+        "2": "7.2. Keelatud tegevused: Kuulutuste lisamine, mis sisaldavad valeteavet, pettust või rikuvad seadusi, on keelatud. Sellised kuulutused eemaldatakse ja kontod võidakse blokeerida."
+      }
+    },
+    "section8": {
+      "title": "8. Andmekaitse ja privaatsus",
+      "description": "Seatly töötleb kasutajate isikuandmeid vastavalt [privaatsuspoliitikale]."
+    },
+    "section9": {
+      "title": "9. Muud tingimused",
+      "items": {
+        "1": "9.1. Tingimuste muudatused: Seatly jätab endale õiguse muuta käesolevaid müügitingimusi, teavitades kasutajaid ette.",
+        "2": "9.2. Kohaldatav seadus: Müügitingimustele kohaldatakse Eesti Vabariigi seadusi."
+      }
+    },
+    "section10": {
+      "title": "10. Kontaktinfo",
+      "description": "Kui teil on küsimusi või probleeme, võtke ühendust meie klienditoega:",
+      "email": "E-post: seatly@seatly.eu",
+      "phone": "Telefon: +372 58090777"
+    },
+    "conclusion": "Nii saad hõlpsalt oma mööbli välja rentida või müüa ja aidata kaasa ringmajandusele, andes seisma jäänud esemetele uue elu!"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "responsibleRenter": {
+    "breadcrumb": "Responsible Renter",
+    "rules": {
+      "1": "Proper use of furniture as intended.",
+      "2": "Keeping it in good condition and clean.",
+      "3": "Renter is responsible for furniture damage, except normal wear and tear.",
+      "4": "Renter is obliged to compensate for all damages caused.",
+      "5": "Renter is required to obtain insurance against furniture damage."
+    }
+  }
+}

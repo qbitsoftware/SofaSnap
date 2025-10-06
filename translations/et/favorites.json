@@ -1,0 +1,9 @@
+{
+  "favorites": {
+    "title": "Teie lemmiktooted",
+    "emptyTitle": "Sinu lemmiktooted puuduvad",
+    "count": "Teil on {count} lemmikut",
+    "viewProducts": "Vaata tooteid",
+    "goHome": "Mine kodulehele"
+  }
+}

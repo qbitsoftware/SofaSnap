@@ -1,0 +1,22 @@
+{
+  "cancellationPolicy": {
+    "breadcrumb": "Tühistamise poliitika",
+    "owners": {
+      "title": "OMANIKUD:",
+      "content": "Pange tähele, et kui te omanikuna tühistate broneeringu, saab rentnik raha täies ulatuses tagasi."
+    },
+    "renters": {
+      "title": "RENTIJAD:",
+      "content": "Pange tähele, et kui te tühistate broneeringu, kehtivad järgmised tühistamistingimused:"
+    },
+    "conditions": {
+      "1": "- Tühistamisel hiljemalt 2 päeva enne rendiperioodi algust tagastatakse 100% renditasust.",
+      "2": "- Kui tühistatakse päev enne rendiperioodi algust, tagastatakse 50% renditasust.",
+      "3": "- Kui rendiperioodi alguse päeval tühistatakse, ei tagastata raha."
+    },
+    "example": {
+      "title": "Näide:",
+      "content": "Te rendite oma diivani neljapäevaks. Kui laenutaja tühistab rendi kolmapäeval, saab ta 50% raha tagasi. Kui laenutaja tühistab laenutuse teisipäeval või varem, saab ta raha tagasi täies ulatuses."
+    }
+  }
+}

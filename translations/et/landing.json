@@ -1,0 +1,11 @@
+{
+  "landing": {
+    "hero": {
+      "title": "Anna mööblile uus elu - teenid sina, võidab loodus!",
+      "cta": "Vaata tooteid"
+    },
+    "search": {
+      "placeholder": "Otsi tooteid..."
+    }
+  }
+}

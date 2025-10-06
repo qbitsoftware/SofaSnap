@@ -14,25 +14,24 @@ import { ClipLoader } from 'react-spinners'
 import { useToast } from '@/components/hooks/use-toast'
 import { Mail } from 'lucide-react'
 import { sendContactEmailAction } from '@/app/actions'
+import { useTranslation } from '@/lib/i18n/i18n-provider'
 
-const contactSchema = z.object({
+const createContactSchema = (t: (key: string) => string) => z.object({
     senderEmail: z
         .string()
-        .email({ message: "Palun sisestage kehtiv e-posti aadress" }),
+        .email({ message: t('products.detail.contact.validation.emailInvalid') }),
     senderPhone: z
         .string()
-        .min(7, { message: "Telefoninumber peab olema vähemalt 7 numbrit" })
-        .max(15, { message: "Telefoninumber ei tohi ületada 15 numbrit" })
-        .regex(/^[+]?[\d\s-()]+$/, { message: "Kehtetu telefoninumber" })
+        .min(7, { message: t('products.detail.contact.validation.phoneMin') })
+        .max(15, { message: t('products.detail.contact.validation.phoneMax') })
+        .regex(/^[+]?[\d\s-()]+$/, { message: t('products.detail.contact.validation.phoneInvalid') })
         .optional()
         .or(z.literal("")),
     message: z
         .string()
-        .min(10, { message: "Sõnum peab sisaldama vähemalt 10 tähemärki" })
-        .max(1000, { message: "Sõnum ei tohi ületada 1000 tähemärki" }),
+        .min(10, { message: t('products.detail.contact.validation.messageMin') })
+        .max(1000, { message: t('products.detail.contact.validation.messageMax') }),
 })
-
-type ContactForm = z.infer<typeof contactSchema>
 
 interface ContactOwnerFormProps {
     productId: number
@@ -40,21 +39,25 @@ interface ContactOwnerFormProps {
     ownerUserId: string
 }
 
-export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({ 
-    productId, 
-    productName, 
-    ownerUserId 
+export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
+    productId,
+    productName,
+    ownerUserId
 }) => {
     const [isOpen, setIsOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const toast = useToast()
+    const { t } = useTranslation()
+
+    const contactSchema = createContactSchema(t)
+    type ContactForm = z.infer<typeof contactSchema>
 
     const form = useForm<ContactForm>({
         resolver: zodResolver(contactSchema),
         defaultValues: {
             senderEmail: "",
             senderPhone: "",
-            message: `Tere, olen huvitatud teie kuulutusest "${productName}".`,
+            message: t('products.detail.contact.defaultMessage').replace('{productName}', productName),
         },
     })
 
@@ -71,23 +74,23 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
             })
 
             if (result.success) {
-                toast.toast({ 
-                    title: "Sõnum saadetud!", 
-                    description: "Kuulutuse omanik saab teie sõnumi e-postile."
+                toast.toast({
+                    title: t('products.detail.contact.successTitle'),
+                    description: t('products.detail.contact.successDescription')
                 })
                 form.reset()
                 setIsOpen(false)
             } else {
-                toast.toast({ 
-                    title: "Viga sõnumi saatmisel", 
-                    description: result.error || "Proovige hiljem uuesti."
+                toast.toast({
+                    title: t('products.detail.contact.errorTitle'),
+                    description: result.error || t('products.detail.contact.errorDescription')
                 })
             }
         } catch (error) {
             console.error('Error sending contact email:', error)
-            toast.toast({ 
-                title: "Viga sõnumi saatmisel", 
-                description: "Tehniliste probleemide tõttu ei õnnestunud sõnumit saata."
+            toast.toast({
+                title: t('products.detail.contact.errorTitle'),
+                description: t('products.detail.contact.errorTechnical')
             })
         } finally {
             setIsSubmitting(false)
@@ -97,18 +100,18 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button 
+                <Button
                     className="w-full bg-primary text-white hover:bg-primary/90 rounded-full px-6 py-3 flex items-center gap-2"
                 >
                     <Mail className="h-4 w-4" />
-                    Võta ühendust
+                    {t('products.detail.contact.button')}
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[525px]">
                 <DialogHeader>
-                    <DialogTitle>Võta ühendust kuulutuse omanikuga</DialogTitle>
+                    <DialogTitle>{t('products.detail.contact.dialogTitle')}</DialogTitle>
                     <DialogDescription>
-                        Saada sõnum kuulutuse &quot;{productName}&quot; omanikule. Sinu kontaktandmed jäävad nähtavaks sõnumis.
+                        {t('products.detail.contact.dialogDescription').replace('{productName}', productName)}
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -118,10 +121,10 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                             name="senderPhone"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Telefoninumber (valikuline)</FormLabel>
+                                    <FormLabel>{t('products.detail.contact.phoneLabel')}</FormLabel>
                                     <FormControl>
-                                        <Input 
-                                            placeholder="Sinu telefon"
+                                        <Input
+                                            placeholder={t('products.detail.contact.phonePlaceholder')}
                                             {...field}
                                             disabled={isSubmitting}
                                         />
@@ -135,11 +138,11 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                             name="senderEmail"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>E-posti aadress</FormLabel>
+                                    <FormLabel>{t('products.detail.contact.emailLabel')}</FormLabel>
                                     <FormControl>
-                                        <Input 
+                                        <Input
                                             type="email"
-                                            placeholder="Sinu e-mail" 
+                                            placeholder={t('products.detail.contact.emailPlaceholder')}
                                             {...field}
                                             disabled={isSubmitting}
                                         />
@@ -153,10 +156,10 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                             name="message"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Sõnum</FormLabel>
+                                    <FormLabel>{t('products.detail.contact.messageLabel')}</FormLabel>
                                     <FormControl>
                                         <Textarea
-                                            placeholder="Kirjutage oma sõnum siia..."
+                                            placeholder={t('products.detail.contact.messagePlaceholder')}
                                             className="resize-none h-[120px]"
                                             {...field}
                                             disabled={isSubmitting}
@@ -174,7 +177,7 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                                 disabled={isSubmitting}
                                 className="flex-1"
                             >
-                                Tühista
+                                {t('products.detail.contact.cancel')}
                             </Button>
                             <SubmitButton
                                 type="submit"
@@ -182,7 +185,7 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                                 className="flex-1 bg-primary text-white hover:bg-primary/90"
                             >
                                 <span className={isSubmitting ? "hidden" : "block"}>
-                                    Saada sõnum
+                                    {t('products.detail.contact.send')}
                                 </span>
                                 {isSubmitting && (
                                     <ClipLoader

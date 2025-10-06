@@ -1,0 +1,50 @@
+{
+  "products": {
+    "sale": "MÜÜK",
+    "rent": "RENT",
+    "noProducts": "Tooted puuduvad",
+    "noProductsInCategory": "Selles kategoorias puuduvad hetkel tooted",
+    "errorLoading": "Error loading products. Please try again later.",
+    "sortLabel": "Sort products",
+    "sortByDate": "Kuupäeva järgi",
+    "sortByPriceAsc": "Hinna järgi kasvavalt",
+    "sortByPriceDesc": "Hinna järgi kahanevalt",
+    "sortByPopularity": "Populaarsemad",
+    "perDay": "/ päev",
+    "detail": {
+      "addToFavorites": "Lisa lemmikuks",
+      "removeFromFavorites": "Eemalda lemmikutest",
+      "day": "Päev",
+      "material": "Materjal:",
+      "dimensions": "Mõõtmed:",
+      "similarProducts": "Sarnased tooted",
+      "contact": {
+        "button": "Võta ühendust",
+        "dialogTitle": "Võta ühendust kuulutuse omanikuga",
+        "dialogDescription": "Saada sõnum kuulutuse \"{productName}\" omanikule. Sinu kontaktandmed jäävad nähtavaks sõnumis.",
+        "phoneLabel": "Telefoninumber (valikuline)",
+        "phonePlaceholder": "Sinu telefon",
+        "emailLabel": "E-posti aadress",
+        "emailPlaceholder": "Sinu e-mail",
+        "messageLabel": "Sõnum",
+        "messagePlaceholder": "Kirjutage oma sõnum siia...",
+        "defaultMessage": "Tere, olen huvitatud teie kuulutusest \"{productName}\".",
+        "cancel": "Tühista",
+        "send": "Saada sõnum",
+        "successTitle": "Sõnum saadetud!",
+        "successDescription": "Kuulutuse omanik saab teie sõnumi e-postile.",
+        "errorTitle": "Viga sõnumi saatmisel",
+        "errorDescription": "Proovige hiljem uuesti.",
+        "errorTechnical": "Tehniliste probleemide tõttu ei õnnestunud sõnumit saata.",
+        "validation": {
+          "emailInvalid": "Palun sisestage kehtiv e-posti aadress",
+          "phoneMin": "Telefoninumber peab olema vähemalt 7 numbrit",
+          "phoneMax": "Telefoninumber ei tohi ületada 15 numbrit",
+          "phoneInvalid": "Kehtetu telefoninumber",
+          "messageMin": "Sõnum peab sisaldama vähemalt 10 tähemärki",
+          "messageMax": "Sõnum ei tohi ületada 1000 tähemärki"
+        }
+      }
+    }
+  }
+}

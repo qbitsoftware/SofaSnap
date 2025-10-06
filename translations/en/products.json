@@ -1,0 +1,50 @@
+{
+  "products": {
+    "sale": "SALE",
+    "rent": "RENT",
+    "noProducts": "No products available",
+    "noProductsInCategory": "No products in this category at the moment",
+    "errorLoading": "Error loading products. Please try again later.",
+    "sortLabel": "Sort products",
+    "sortByDate": "By date",
+    "sortByPriceAsc": "Price: Low to High",
+    "sortByPriceDesc": "Price: High to Low",
+    "sortByPopularity": "Most popular",
+    "perDay": "/ day",
+    "detail": {
+      "addToFavorites": "Add to Favorites",
+      "removeFromFavorites": "Remove from Favorites",
+      "day": "Day",
+      "material": "Material:",
+      "dimensions": "Dimensions:",
+      "similarProducts": "Similar Products",
+      "contact": {
+        "button": "Contact Owner",
+        "dialogTitle": "Contact the listing owner",
+        "dialogDescription": "Send a message to the owner of the listing \"{productName}\". Your contact information will be visible in the message.",
+        "phoneLabel": "Phone number (optional)",
+        "phonePlaceholder": "Your phone",
+        "emailLabel": "Email address",
+        "emailPlaceholder": "Your email",
+        "messageLabel": "Message",
+        "messagePlaceholder": "Write your message here...",
+        "defaultMessage": "Hello, I am interested in your listing \"{productName}\".",
+        "cancel": "Cancel",
+        "send": "Send Message",
+        "successTitle": "Message sent!",
+        "successDescription": "The listing owner will receive your message by email.",
+        "errorTitle": "Error sending message",
+        "errorDescription": "Please try again later.",
+        "errorTechnical": "Failed to send message due to technical issues.",
+        "validation": {
+          "emailInvalid": "Please enter a valid email address",
+          "phoneMin": "Phone number must be at least 7 digits",
+          "phoneMax": "Phone number must not exceed 15 digits",
+          "phoneInvalid": "Invalid phone number",
+          "messageMin": "Message must contain at least 10 characters",
+          "messageMax": "Message must not exceed 1000 characters"
+        }
+      }
+    }
+  }
+}

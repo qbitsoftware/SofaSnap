@@ -6,6 +6,7 @@ import NavBar from "@/components/navbar";
 import ToastProvider from "@/providers/toast-provider";
 import CookieBanner from "@/components/cookie-banner";
 import CSPostHogProvider from "@/providers/posthog-provider";
+import { I18nProvider } from "@/lib/i18n/i18n-provider";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -24,23 +25,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.className} >
+    <html lang="et" className={inter.className} >
       <CSPostHogProvider>
         <body className="no-scrollbar min-w-[300px] w-full h-full">
-          <ToastProvider />
-          <div>
-            <NavBar />
-          </div>
-          <div className="min-h-screen" >
-            {children}
-          </div>
-          <div>
-            <Footer />
-          </div>
-          <div>
-            <Toaster />
-          </div>
-          <CookieBanner />
+          <I18nProvider>
+            <ToastProvider />
+            <div>
+              <NavBar />
+            </div>
+            <div className="min-h-screen" >
+              {children}
+            </div>
+            <div>
+              <Footer />
+            </div>
+            <div>
+              <Toaster />
+            </div>
+            <CookieBanner />
+          </I18nProvider>
         </body>
       </CSPostHogProvider>
     </html>

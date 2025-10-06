@@ -1,0 +1,64 @@
+{
+  "privacyPolicy": {
+    "title": "Privaatsuspoliitika",
+    "lastUpdated": "Viimati uuendatud: 18.11.2024",
+    "intro": "Seatly OÜ (edaspidi \"Platvorm\" või \"Seatly\") austab teie privaatsust ja on pühendunud teie isikuandmete kaitsmisele. Käesolev privaatsuspoliitika selgitab, kuidas me kogume, kasutame, jagame ja hoiame teie isikuandmeid, kui kasutate meie veebilehte ja teenuseid.",
+    "section1": {
+      "title": "1. Milliseid andmeid me kogume?",
+      "intro": "Kogume teie kohta järgmisi andmeid:",
+      "subsection1": {
+        "title": "1.1. Konto loomisel:",
+        "items": "Teie nimi, e-posti aadress, telefoninumber ja parool.|COL|Asukohaandmed (näiteks linn või piirkond), kui otsustate need jagada."
+      },
+      "subsection2": {
+        "title": "1.2. Kuulutuste lisamisel:",
+        "items": "Esemete kirjeldused, fotod ja asukoht (vajadusel).|COL|Hind ja tingimused (rendiks või müügiks)."
+      },
+      "subsection3": {
+        "title": "1.3. Tehingute ja suhtluse ajal:",
+        "items": "Renditehingutega seotud andmed (kuupäevad, summad, makseviis).|COL|Suhtlus kuulutaja ja rentija vahel meie platvormi kaudu."
+      },
+      "subsection4": {
+        "title": "1.4. Tehnilised andmed:",
+        "items": "IP-aadress, seadme tüüp, brauseri versioon ja küpsiste teave."
+      }
+    },
+    "section2": {
+      "title": "2. Kuidas me teie andmeid kasutame?",
+      "intro": "Kasutame teie andmeid järgmistel eesmärkidel:",
+      "items": "Teenuste pakkumiseks (nt kuulutuste lisamine ja broneerimiste haldamine).|COL|Kasutajakonto loomise ja haldamise jaoks.|COL|Tehingute turvalisuse tagamiseks ja pettuste vältimiseks.|COL|Klienditoe pakkumiseks ja teie küsimustele vastamiseks.|COL|Teenuste parandamiseks ja isikupärastamiseks (nt soovitused).|COL|Juriidiliste nõuete täitmiseks ja vaidluste lahendamiseks."
+    },
+    "section3": {
+      "title": "3. Kuidas andmeid jagatakse?",
+      "intro": "Jagame teie andmeid ainult vajaduse korral ja piiratud ulatuses:",
+      "items": "Teiste kasutajatega: Näiteks kuulutuste juures kuvatakse teie nimi (või kasutajanimi), kuulutuse andmed ja suhtluseks vajalikud andmed (nt kontaktid, kui seda valite).|COL|Teenusepakkujatega: Kolmandad osapooled, kes pakuvad makseteenuseid, pilvesalvestust või analüütikat.|COL|Õiguskaitseasutustega: Kui see on seadusest tulenev nõue või meie teenusetingimuste rikkumise uurimiseks."
+    },
+    "section4": {
+      "title": "4. Küpsised ja jälgimistehnoloogiad",
+      "intro": "Kasutame küpsiseid ja sarnaseid tehnoloogiaid, et:",
+      "items": "Mäletada teie eelistusi ja seadeid.|COL|Pakkuda asjakohaseid reklaame ja analüüsida meie veebisaidi kasutamist.|COL|Küpsiste kohta saate rohkem lugeda meie [Küpsiste Poliitikast]."
+    },
+    "section5": {
+      "title": "5. Andmete säilitamine",
+      "content": "Säilitame teie andmeid seni, kuni need on vajalikud teenuste pakkumiseks, või seadusega ettenähtud aja jooksul. Kui sulgete oma konto, kustutame teie andmed mõistliku aja jooksul, välja arvatud juhul, kui seadus nõuab nende säilitamist."
+    },
+    "section6": {
+      "title": "6. Teie õigused",
+      "intro": "Teil on järgmised õigused seoses oma isikuandmetega:",
+      "items": "Ligipääs: Võite taotleda koopia oma isikuandmetest.|COL|Parandamine: Kui andmed on ebatäpsed, saate neid parandada.|COL|Kustutamine: Võite taotleda oma andmete kustutamist, välja arvatud juhul, kui seadus nõuab nende säilitamist.|COL|Protestimine ja piiramine: Võite vaidlustada oma andmete töötlemise või piirata nende kasutamist teatud olukordades."
+    },
+    "section7": {
+      "title": "7. Andmete turvalisus",
+      "content": "Kaitseme teie andmeid, kasutades asjakohaseid turvameetmeid, näiteks andmete krüpteerimist ja juurdepääsupiiranguid. Samas tuleb meeles pidada, et ükski internetipõhine süsteem pole täielikult turvaline."
+    },
+    "section8": {
+      "title": "8. Kontaktandmed ja kaebused",
+      "intro": "Kui teil on küsimusi või muresid seoses oma isikuandmetega, võtke meiega ühendust:",
+      "items": "E-post: seatly@seatly.eu|COL|Postiaadress: Seatly OÜ, Harju maakond, Tallinn, Haabersti linnaosa, Vabaõhumuuseumi tee 4a-20, 13522"
+    },
+    "section9": {
+      "title": "9. Muudatused privaatsuspoliitikas",
+      "content": "Võime seda privaatsuspoliitikat aeg-ajalt uuendada. Soovitame teil regulaarselt külastada meie veebilehte, et tutvuda viimaste muudatustega."
+    }
+  }
+}

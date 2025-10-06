@@ -90,7 +90,7 @@ export default function CookieBanner() {
               <h3 className="font-semibold mb-2">Kuidas küpsiste kasutamist hallata?</h3>
               <p className="mb-4">Teil on õigus küpsised igal ajal blokeerida või kustutada, kasutades oma veebibrauseri seadeid. Siiski võib teatud küpsiste keelamine mõjutada Seatly veebilehe funktsionaalsust.</p>
               <h3 className="font-semibold mb-2">Lisateave</h3>
-              <p>Loe täpsemalt meie privaatsuspoliitikast või võta küsimuste korral ühendust: seatly@seatly.com.</p>
+              <p>Loe täpsemalt meie privaatsuspoliitikast või võta küsimuste korral ühendust: seatly@seatly.eu.</p>
             </CardContent>
             <CardFooter className="flex justify-end">
               <Button onClick={() => setShowPolicy(false)}>Tagasi</Button>

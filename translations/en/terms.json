@@ -1,0 +1,79 @@
+{
+  "terms": {
+    "breadcrumb": "Terms of Sale",
+    "lastUpdated": "Last updated: 24.10.2024",
+    "intro": "These terms of sale govern the use of Seatly OÜ (hereinafter \"Platform\") services and are binding on all users. By using the Seatly platform, you agree to the following terms.",
+    "section1": {
+      "title": "1. General Terms",
+      "items": {
+        "1": "1.1. Purpose of Service: The Platform allows users to add furniture rental and sale listings and enter into transactions with each other.",
+        "2": "1.2. Intermediary Role: Seatly is an intermediary and does not directly participate in rental or sales transactions. Responsibility for the condition, quality, and fulfillment of the sales transaction rests with the users.",
+        "3": "1.3. Age and Legal Status: The service may be used by persons at least 18 years of age who have the right to enter into binding contracts."
+      }
+    },
+    "section2": {
+      "title": "2. Adding Listings",
+      "items": {
+        "1": "2.1. Item Description: The seller is responsible for accurate and honest entry of the listing, including adding information about the item's condition, dimensions, and other important information.",
+        "2": "2.2. Photos: Item photos must be clear and provide an objective overview of the furniture. Providing false information is prohibited.",
+        "3": "2.3. Price: The seller sets the item price themselves, but the Platform has the right to remove obviously misleading or unfair listings.",
+        "4": "2.4. Duration: The listing remains active until the seller decides to remove it or until the transaction is completed."
+      }
+    },
+    "section3": {
+      "title": "3. Making Transactions",
+      "items": {
+        "1": "3.1. Conducting Sale: The seller and buyer agree on sales terms directly through the Platform's messaging system. The Platform recommends also agreeing on handover terms (location, transport, time).",
+        "2": "3.2. Payment: All payments are made through the Platform, which adds security to the transaction. The seller receives payment after successful completion of the transaction and buyer confirmation.",
+        "3": "3.3. Commission: Seatly takes a 15% commission on each sales transaction."
+      }
+    },
+    "section4": {
+      "title": "4. Transport and Handover",
+      "items": {
+        "1": "4.1. Obligations: The seller and buyer are jointly responsible for organizing the handover and transport of the item.",
+        "2": "4.2. Item Handover: The condition of the item must match what is described in the listing. We recommend that parties take photos during the handover to avoid possible disputes."
+      }
+    },
+    "section5": {
+      "title": "5. Returns and Disputes",
+      "items": {
+        "1": "5.1. Return Policy: Sales transactions are final, unless the seller and buyer agree otherwise.",
+        "2": "5.2. Dispute Resolution: If the buyer finds that the item does not match the description, the problem must be reported to Platform customer support within 48 hours of receiving the item. The Platform helps parties find a compromise but is not directly responsible for resolving disputes."
+      }
+    },
+    "section6": {
+      "title": "6. Liability and Warranties",
+      "items": {
+        "1": "6.1. Seller's Liability: The seller is responsible for the quality and conformity of the item to the listing.",
+        "2": "6.2. Buyer's Liability: The buyer is responsible for the transaction and receipt of the item.",
+        "3": "6.3. Platform Liability Limitations: Seatly is not responsible for transactions concluded between users or for any damages arising from the use of the platform."
+      }
+    },
+    "section7": {
+      "title": "7. User Account and Activities",
+      "items": {
+        "1": "7.1. Account Creation: The user must register an account and ensure that the information provided is accurate and up-to-date.",
+        "2": "7.2. Prohibited Activities: Adding listings that contain false information, fraud, or violate laws is prohibited. Such listings will be removed and accounts may be blocked."
+      }
+    },
+    "section8": {
+      "title": "8. Data Protection and Privacy",
+      "description": "Seatly processes users' personal data in accordance with the [privacy policy]."
+    },
+    "section9": {
+      "title": "9. Other Terms",
+      "items": {
+        "1": "9.1. Changes to Terms: Seatly reserves the right to change these terms of sale, notifying users in advance.",
+        "2": "9.2. Applicable Law: The terms of sale are governed by the laws of the Republic of Estonia."
+      }
+    },
+    "section10": {
+      "title": "10. Contact Information",
+      "description": "If you have questions or problems, please contact our customer support:",
+      "email": "Email: seatly@seatly.eu",
+      "phone": "Phone: +372 58090777"
+    },
+    "conclusion": "This way you can easily rent or sell your furniture and contribute to the circular economy, giving idle items a new life!"
+  }
+}

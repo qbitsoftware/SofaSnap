@@ -1,0 +1,25 @@
+{
+  "contact": {
+    "breadcrumb": "Kontaktid",
+    "companyInfo": {
+      "companyName": "Seatly OÜ",
+      "address": "Aadress:",
+      "addressValue": "Harju maakond, Tallinn, Haabersti linnaosa, Vabaõhumuuseumi tee 4a-20, 13522",
+      "regCode": "Reg kood:",
+      "regCodeValue": "17091136",
+      "contact": "Kontakt:",
+      "contactValue": "+372 58090777",
+      "email": "E-mail:",
+      "emailValue": "seatly@seatly.eu"
+    },
+    "form": {
+      "placeholder": "Jäta meile teade...",
+      "minLengthError": "Sõnum peab sisaldama vähemalt 10 tähemärki",
+      "maxLengthError": "Sõnum ei tohi ületada 500 tähemärki",
+      "successMessage": "Sõnum saadeti edukalt",
+      "errorMessage": "Sõnumi saatmisel tekkis tõrge",
+      "cancel": "Tühista",
+      "send": "Saada"
+    }
+  }
+}

@@ -1,33 +1,35 @@
+"use client"
 import { Review } from "@/types"
 import { ReviewCarousel } from "./review-carousel"
-
-const reviews: Review[] = [
-  {
-    id: 1,
-    name: 'Kristjan',
-    image: '/images/profile.svg',
-    rating: 5,
-    text: 'Väga meelldiv suhtlus ja heas korras mööbel.'
-  },
-  {
-    id: 2,
-    name: 'Kaisa',
-    image: '/images/profile.svg',
-    rating: 4,
-    text: 'Suurepärane teenus – platvorm pakub stiilset mööblit nii rentimiseks kui ka ostmiseks'
-  },
-  {
-    id: 3,
-    name: 'Jüri',
-    image: '/images/profile.svg',
-    rating: 5,
-    text: 'Mugav ja usaldusväärne viis kiiresti kvaliteetset mööblit leida ja seda eelarvesõbralikult kasutada.'
-  }
-]
-
-
+import { useTranslation } from '@/lib/i18n/i18n-provider'
 
 export const Reviews = () => {
+  const { t } = useTranslation();
+
+  const reviews: Review[] = [
+    {
+      id: 1,
+      name: t('reviews.items.0.name'),
+      image: '/images/profile.svg',
+      rating: 5,
+      text: t('reviews.items.0.text')
+    },
+    {
+      id: 2,
+      name: t('reviews.items.1.name'),
+      image: '/images/profile.svg',
+      rating: 4,
+      text: t('reviews.items.1.text')
+    },
+    {
+      id: 3,
+      name: t('reviews.items.2.name'),
+      image: '/images/profile.svg',
+      rating: 5,
+      text: t('reviews.items.2.text')
+    }
+  ]
+
   return (
     <div className="md:min-h-[600px] flex items-center relative">
       <ReviewCarousel Reviews={reviews} />

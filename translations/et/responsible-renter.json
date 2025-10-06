@@ -1,0 +1,12 @@
+{
+  "responsibleRenter": {
+    "breadcrumb": "Vastutustundlik rentija",
+    "rules": {
+      "1": "Mööbli heaperemehelik kasutamine.",
+      "2": "Hoidmine heas korras ja puhtana.",
+      "3": "Rentija vastutab mööbli kahjustuste eest, välja arvatud normaalne kulumine.",
+      "4": "Rendija kohustub hüvitama kõik tekitatud kahjud.",
+      "5": "Rentijal on kohustus hankida kindlustus mööbli kahjustuste vastu."
+    }
+  }
+}

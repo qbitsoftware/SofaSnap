@@ -1,0 +1,38 @@
+{
+  "listings": {
+    "title": "Sinu Kuulutused",
+    "noActiveListings": "Aktiivsed kuulutused puuduvad.",
+    "tabs": {
+      "rejected": "Tagasilükatud",
+      "accepted": "Aktiivsed",
+      "notPaid": "Tasumist vajavad"
+    },
+    "alerts": {
+      "rejected": {
+        "title": "Tagasilükatud kuulutused",
+        "description": "Need kuulutused ei vastanud meie tingimustele ja on tagasi lükatud. Võite kuulutust redigeerida ja uuesti esitada või kustutada."
+      },
+      "accepted": {
+        "title": "Aktiivsed kuulutused",
+        "description": "Need kuulutused on kinnitatud ja nähtavad kõigile kasutajatele. Saate neid igal ajal muuta või kustutada."
+      },
+      "notPaid": {
+        "title": "Tasumist vajavad kuulutused",
+        "description": "Need kuulutused vajavad tasumist, et muutuda aktiivseks. Klikkige \"Maksa\" nupul, et lõpetada makseprotsess ja avaldada oma kuulutus. Kuulutuse avalikustamine maksab 1 euro."
+      }
+    },
+    "card": {
+      "sale": "Müük",
+      "rent": "Üür",
+      "preview": "Eelvaade",
+      "edit": "Muuda",
+      "pay": "Maksa",
+      "delete": "Kustuta",
+      "deleteDialog": {
+        "title": "Kas olete kindel, et soovite kuulutuse kustutada?",
+        "description": "Peale kuulutuse eemaldamist ei ole võimalik kuulutust taastada."
+      },
+      "errorMessage": "Midagi läks valesti"
+    }
+  }
+}

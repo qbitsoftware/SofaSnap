@@ -8,6 +8,7 @@ import { addToFavoritesAction, removeFromFavoritesAction } from '@/app/actions'
 import { User } from '@/utils/supabase/supabase.types'
 import { ContactOwnerForm } from './contact-owner-form'
 import { useRouter } from 'next/navigation'
+import { useTranslation } from '@/lib/i18n/i18n-provider'
 
 interface ProductProps {
     product: ProductWithAddress
@@ -18,6 +19,7 @@ export const ProductComponent: React.FC<ProductProps> = ({ product, user }) => {
     const [currentImage, setCurrentImage] = useState(0)
     const [isFavorite, setIsFavorite] = useState(product.favorite ? true : false)
     const router = useRouter()
+    const { t } = useTranslation()
 
     useEffect(() => {
         setIsFavorite(Boolean(product.favorite))
@@ -113,16 +115,16 @@ export const ProductComponent: React.FC<ProductProps> = ({ product, user }) => {
                     <div className='flex items-center justify-start gap-2'>
                         <button
                             onClick={handleToggleFavorite}
-                            className={`p-2 rounded-full transition-colors 
+                            className={`p-2 rounded-full transition-colors
                             ${isFavorite ? 'text-yellow-400 hover:text-yellow-400' : 'text-gray-400 hover:text-yellow-500'}`}
-                            aria-label={isFavorite ? 'Eemalda lemmikutest' : 'Lisa lemmikuks'}
+                            aria-label={isFavorite ? t('products.detail.removeFromFavorites') : t('products.detail.addToFavorites')}
                         >
                             <StarIcon
                                 fill={isFavorite ? 'currentColor' : 'none'}
                                 color={isFavorite ? 'currentColor' : 'black'}
                             />
                         </button>
-                        <span className='text-muted-foreground'>{isFavorite ? 'Eemalda lemmikutest' : 'Lisa lemmikuks'}</span>
+                        <span className='text-muted-foreground'>{isFavorite ? t('products.detail.removeFromFavorites') : t('products.detail.addToFavorites')}</span>
                     </div>
                 )}
                 <div className='flex md:items-start flex-wrap xl:flex-row gap-4 items-center'>
@@ -131,16 +133,16 @@ export const ProductComponent: React.FC<ProductProps> = ({ product, user }) => {
                         <p className='text-[14px] font-semibold md:text-lg flex'>
                             {product.price}
                             <span className=''>€</span>
-                            {product.type == "rent" && <span className='font-normal pl-2 md:pl-4'>Päev</span>}
+                            {product.type == "rent" && <span className='font-normal pl-2 md:pl-4'>{t('products.detail.day')}</span>}
                         </p>
                     </div>
                 </div>
                 <div className='font-light text-md'>
                     <div className='flex'>
-                        <p className='font-bold'>Materjal: <span className='font-light'>{product.material}</span></p>
+                        <p className='font-bold'>{t('products.detail.material')} <span className='font-light'>{product.material}</span></p>
                     </div>
                     <div>
-                        <p className='font-bold'>Mõõtmed: <span className='font-light'>{`${product.length} x ${product.width} x ${product.heigth}`}</span></p>
+                        <p className='font-bold'>{t('products.detail.dimensions')} <span className='font-light'>{`${product.length} x ${product.width} x ${product.heigth}`}</span></p>
                     </div>
                 </div>
                 <div className=''>

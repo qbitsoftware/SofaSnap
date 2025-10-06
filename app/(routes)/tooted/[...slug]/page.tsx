@@ -9,7 +9,7 @@ import { redirect } from 'next/navigation'
 import { CheckCategories, FetchCategories } from '@/utils/supabase/queries/categories'
 import Link from 'next/link'
 import { SortDropdown } from './_components/sort-dropdown'
-import { ShoppingBag } from 'lucide-react'
+import { EmptyState } from './_components/empty-state'
 
 const PRODUCTS_PER_PAGE = 30
 
@@ -87,19 +87,17 @@ const CategoryPage = async ({
             <SortDropdown currentPage={page} />
           </div>
           <div className='md:mt-10 mt-4'>
-            <ProductList
-              initialProducts={productData}
-              totalPages={totalPages}
-              currentPage={page}
-              type='category'
-              categories={categories}
-              currentSort={resolvedSearchParams.sort}
-            />
-            {productData.length == 0 &&
-              <div className="flex flex-col items-center justify-center p-8 text-center">
-                <ShoppingBag className="w-12 h-12 text-gray-400 mb-4" />
-                <p className="text-lg font-medium text-gray-600">Selles kategoorias puuduvad hetkel tooted</p>
-              </div>
+            {productData.length == 0 ?
+              <EmptyState message="noProductsInCategory" />
+              :
+              <ProductList
+                initialProducts={productData}
+                totalPages={totalPages}
+                currentPage={page}
+                type='category'
+                categories={categories}
+                currentSort={resolvedSearchParams.sort}
+              />
             }
           </div>
         </div>

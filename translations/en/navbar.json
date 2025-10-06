@@ -1,0 +1,29 @@
+{
+  "navbar": {
+    "about_us": "About Us",
+    "how_it_works": "How it works?",
+    "furniture": "Furniture",
+    "all_categories": "All Categories",
+    "slugs": {
+      "kook": "Kitchen",
+      "esik": "Hallway",
+      "elutuba": "Living Room",
+      "lastetuba": "Children's Room",
+      "magamistuba": "Bedroom",
+      "vannituba": "Bathroom",
+      "saun": "Sauna",
+      "oues": "Outside",
+      "garaaz": "Garage",
+      "kontor": "Office"
+    },
+    "profile": {
+      "profile": "Profile",
+      "myListings": "My Listings",
+      "addListing": "Add Listing",
+      "favorites": "Favorites",
+      "admin": "Admin",
+      "logout": "Log Out",
+      "logoutSuccess": "Successfully logged out"
+    }
+  }
+}

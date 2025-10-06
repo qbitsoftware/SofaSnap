@@ -11,12 +11,14 @@ import { SearchButton } from './search-button'
 import Link from 'next/link'
 import { Product } from '@/utils/supabase/supabase.types'
 import { useRouter } from 'next/navigation'
+import { useTranslation } from '@/lib/i18n/i18n-provider'
 
 interface Props {
     products: Product[] | undefined
 }
 
 export const LandingPage = ({ products }: Props) => {
+    const { t } = useTranslation();
     const [inputValue, setInputValue] = useState<string>('');
     const [filteredSuggestions, setFilteredSuggestions] = useState<Product[]>([]);
     const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
@@ -91,12 +93,12 @@ export const LandingPage = ({ products }: Props) => {
             <div className='flex flex-col md:flex-row md:justify-between w-full'>
                 <div className="md:ml-16 flex md:flex flex-col md:items-start mt-[20px] md:mt-[83px]">
                     <div className='md:relative md:h-[150px] lg:h-[250px]'>
-                        <h1 className={cn('hidden md:block md:text-4xl lg:text-6xl md:w-[50vw] md:max-w-[553px] h-full font-semibold absolute z-10 text-start', MontserratAlternates.className)}>Anna mööblile uus elu -<br></br>teenid sina, võidab loodus!<br className='lg:hidden' /> </h1>
-                        <h1 className={cn('md:hidden text-center text-2xl sm:text-4xl font-semibold', MontserratAlternates.className)}>Anna mööblile uus elu -<br></br>teenid sina, võidab loodus!</h1>
+                        <h1 className={cn('hidden md:block md:text-4xl lg:text-6xl md:w-[50vw] md:max-w-[553px] h-full font-semibold absolute z-10 text-start', MontserratAlternates.className)}>{t('landing.hero.title')}<br className='lg:hidden' /> </h1>
+                        <h1 className={cn('md:hidden text-center text-2xl sm:text-4xl font-semibold', MontserratAlternates.className)}>{t('landing.hero.title')}</h1>
                     </div>
                     <Link className='mx-auto z-10' href={"/tooted"} >
                         <Button className='bg-accent text-foreground hover:bg-accent/90 rounded-full w-[200px] h-[50px] md:w-[180px] md:h-[60px] mt-5 md:mt-0 font-semibold text-base shadow-md hover:shadow-lg transition-all'>
-                            Vaata tooteid
+                            {t('landing.hero.cta')}
                         </Button>
                     </Link>
                 </div>
@@ -135,7 +137,7 @@ export const LandingPage = ({ products }: Props) => {
                                 }}
                             >
                                 <div className='flex justify-between'>
-                                    <p>{product.type == "sell" ? "MÜÜK" : "RENT"}: {product.name}</p>
+                                    <p>{product.type == "sell" ? t('products.sale') : t('products.rent')}: {product.name}</p>
                                     <p>{product.price}€</p>
                                 </div>
                             </li>

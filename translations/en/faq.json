@@ -1,0 +1,66 @@
+{
+  "faq": {
+    "breadcrumb": "Frequently Asked Questions",
+    "title": "Frequently Asked Questions (FAQ)",
+    "questions": {
+      "1": {
+        "question": "What is Seatly?",
+        "answer": "Seatly is a platform where you can add furniture as listings to rent or sell. The platform does not mediate payments or interfere with transactions – You communicate directly with interested parties and agree on terms yourself."
+      },
+      "2": {
+        "question": "How much does adding a listing cost?",
+        "answer": "Each listing costs 1 €. The listing remains active until you remove it yourself (e.g., after renting or selling)."
+      },
+      "3": {
+        "question": "Does Seatly take a commission on transactions?",
+        "answer": "No. Seatly does not take commissions on transactions. The platform only earns the 1 € listing fee."
+      },
+      "4": {
+        "question": "Is the listing fee charged monthly?",
+        "answer": "No. It is not a monthly fee. The 1 € is paid each time a listing is added. If the listing is removed and you want to offer the same item again later, you add a new listing and pay 1 € again."
+      },
+      "5": {
+        "question": "How to add listings?",
+        "steps": [
+          "Register as a user.",
+          "Select \"Add listing\".",
+          "Fill in the information: item description, measurements, price (rent or sale), photos.",
+          "After paying 1 €, the listing appears on the platform."
+        ]
+      },
+      "6": {
+        "question": "How can I pay for the listing?",
+        "answer": "Payment is made through a secure payment link (e.g., Stripe or bank link). After payment, you will receive confirmation via email."
+      },
+      "7": {
+        "question": "Who pays for the rent or purchase?",
+        "answer": "The agreement and payment occur directly between users. Seatly does not collect or mediate money."
+      },
+      "8": {
+        "question": "How to enter into a contract?",
+        "answer": "We recommend that you sign a simple rental agreement or purchase-sale agreement with the other party."
+      },
+      "9": {
+        "question": "Do I need to insure the item?",
+        "answer": "It is not mandatory, but we recommend it. If you are renting out valuable furniture, it's worth insuring it through home insurance or entering into a separate protection agreement with the renter."
+      },
+      "10": {
+        "question": "Does anyone check the content of listings?",
+        "answer": "The Seatly team may moderate listings to ensure they comply with the rules. If a listing violates the platform's terms (e.g., dishonest information, inappropriate images), Seatly has the right to remove it."
+      },
+      "11": {
+        "question": "What to do if no one responds to the listing?",
+        "answer": "Try to improve photos, add more description, or lower the price. The platform is new and visibility grows over time – good listings attract more attention."
+      },
+      "12": {
+        "question": "How can I remove a listing?",
+        "answer": "Log in, go to \"My listings\" and select \"Remove\". If the item is rented or sold, please remove the listing immediately after the transaction."
+      },
+      "13": {
+        "question": "Can I get a refund of the 1 € listing fee?",
+        "answer": "The fee is refunded only if a technical error prevents the listing from being posted or it does not appear correctly on the platform. In other cases, the listing fee is not refunded."
+      }
+    },
+    "conclusion": "This way you can easily rent or sell your furniture and contribute to the circular economy, giving idle items a new life!"
+  }
+}

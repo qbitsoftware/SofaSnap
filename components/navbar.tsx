@@ -12,6 +12,7 @@ import { GetUserInfo } from "@/app/actions"
 import Profile from "./nav-bar-profile"
 import { TSignUpSchema } from "@/lib/register-validation"
 import { getFavoriteProducts } from "@/utils/supabase/queries/favorite"
+import { LanguageSwitcher } from "./language-switcher"
 
 const NavBar = async () => {
 
@@ -33,7 +34,7 @@ const NavBar = async () => {
                 </Link>
             </div>
             <div className="flex md:gap-[5px] lg:gap-[21px] items-center">
-                <div className="hidden md:flex lg:w-[540px] xl:w-[530px] items-center py-[4px] justify-between">
+                                <div className="hidden md:flex lg:w-[540px] xl:w-[530px] items-center py-[4px] justify-between">
                     <div className="md:gap-[50px]">
                         <NavLinks categories={cateogries.data} />
                     </div>
@@ -44,17 +45,22 @@ const NavBar = async () => {
                             <div>
                                 <Link href={"/login"}>
                                     <Button className="rounded-full bg-accent text-bg-foreground px-[25px] lg:py-[11px] lg:px-[25px] xl:p-[11px] xl:px-[40px] shadow-xl">
-                                        Logi sisse
+                                    Logi sisse
                                     </Button>
                                 </Link>
                             </div>
                         }
                     </div>
                 </div>
+               
                 <div className="xl:w-[132px] hidden md:inline">
                     <NavIcons user={userInfo} favorites={favorites?.length || 0} />
                 </div>
-                <div className="md:hidden">
+                 <div className="hidden md:flex items-center gap-4">
+                    <LanguageSwitcher />
+                </div>
+
+                <div className="md:hidden flex items-center gap-2">
                     {user.data.user ? (
                         <div className="">
 

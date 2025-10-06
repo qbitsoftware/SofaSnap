@@ -1,0 +1,38 @@
+{
+  "listings": {
+    "title": "Your Listings",
+    "noActiveListings": "No active listings.",
+    "tabs": {
+      "rejected": "Rejected",
+      "accepted": "Active",
+      "notPaid": "Pending Payment"
+    },
+    "alerts": {
+      "rejected": {
+        "title": "Rejected listings",
+        "description": "These listings did not meet our requirements and have been rejected. You can edit the listing and resubmit or delete it."
+      },
+      "accepted": {
+        "title": "Active listings",
+        "description": "These listings are confirmed and visible to all users. You can edit or delete them at any time."
+      },
+      "notPaid": {
+        "title": "Listings pending payment",
+        "description": "These listings require payment to become active. Click the \"Pay\" button to complete the payment process and publish your listing. Publishing a listing costs 1 euro."
+      }
+    },
+    "card": {
+      "sale": "Sale",
+      "rent": "Rent",
+      "preview": "Preview",
+      "edit": "Edit",
+      "pay": "Pay",
+      "delete": "Delete",
+      "deleteDialog": {
+        "title": "Are you sure you want to delete this listing?",
+        "description": "After removing the listing, it cannot be restored."
+      },
+      "errorMessage": "Something went wrong"
+    }
+  }
+}

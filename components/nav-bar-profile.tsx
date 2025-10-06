@@ -13,6 +13,7 @@ import { useToast } from './hooks/use-toast'
 import { createClient } from '@/utils/supabase/client'
 import { getURL } from 'next/dist/shared/lib/utils'
 import { TSignUpSchema } from '@/lib/register-validation'
+import { useTranslation } from '@/lib/i18n/i18n-provider'
 
 interface ProfileProps {
     user: TSignUpSchema | undefined
@@ -21,6 +22,7 @@ export default function Profile({ user }: ProfileProps) {
 
     const router = useRouter()
     const toast = useToast()
+    const { t } = useTranslation()
 
     async function logout() {
         const supabase = createClient();
@@ -30,17 +32,17 @@ export default function Profile({ user }: ProfileProps) {
         router.push(currentPage)
         router.refresh()
         toast.toast({
-            title: "Edukalt välja logitud",
+            title: t('navbar.profile.logoutSuccess'),
         })
     }
     const menuItems = [
-        { label: 'Profiil', href: '/profiil', protected: false },
-        { label: 'Minu kuulutused', href: '/kuulutused', protected: false },
-        { label: 'Lisa kuulutus', href: '/lisa-toode', protected: false },
-        { label: 'Lemmikud', href: '/lemmikud', protected: false },
+        { label: t('navbar.profile.profile'), href: '/profiil', protected: false },
+        { label: t('navbar.profile.myListings'), href: '/kuulutused', protected: false },
+        { label: t('navbar.profile.addListing'), href: '/lisa-toode', protected: false },
+        { label: t('navbar.profile.favorites'), href: '/lemmikud', protected: false },
         // { label: 'Sõnumid', href: '/messages', protected: false },
-        { label: 'Admin', href: '/admin', protected: true },
-        { label: 'Logi välja', action: logout },
+        { label: t('navbar.profile.admin'), href: '/admin', protected: true },
+        { label: t('navbar.profile.logout'), action: logout },
     ]
 
     return (

@@ -13,18 +13,21 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { FormMessage } from '@/components/ui/form'
 import { createComplaintAction } from '@/app/actions'
 import { useToast } from '@/components/hooks/use-toast'
-
-const feedbackSchema = z.object({
-    message: z
-        .string()
-        .min(10, { message: "Sõnum peab sisaldama vähemalt 10 tähemärki" })
-        .max(500, { message: "Sõnum ei tohi ületada 500 tähemärki" }),
-})
-
-type FeedBack = z.infer<typeof feedbackSchema>
+import { useTranslation } from '@/lib/i18n/i18n-provider'
 
 export function ReportUserInput() {
+    const { t } = useTranslation()
     const toast = useToast()
+
+    const feedbackSchema = z.object({
+        message: z
+            .string()
+            .min(10, { message: t('contact.form.minLengthError') })
+            .max(500, { message: t('contact.form.maxLengthError') }),
+    })
+
+    type FeedBack = z.infer<typeof feedbackSchema>
+
     const form = useForm<FeedBack>({
         resolver: zodResolver(feedbackSchema),
         defaultValues: {
@@ -39,9 +42,9 @@ export function ReportUserInput() {
         setIsSubmitting(true)
         try {
             await createComplaintAction(message.message)
-            toast.toast({ title: "Sõnum saadeti edukalt" })
+            toast.toast({ title: t('contact.form.successMessage') })
         } catch (error) {
-            toast.toast({ title: "Sõnumi saatmisel tekkis tõrge" })
+            toast.toast({ title: t('contact.form.errorMessage') })
             console.error(error)
         }
         form.reset()
@@ -60,7 +63,7 @@ export function ReportUserInput() {
                                 <FormControl>
                                     <Textarea
                                         {...field}
-                                        placeholder="Jäta meile teade..."
+                                        placeholder={t('contact.form.placeholder')}
                                         className="w-full h-[245px] text-base resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0"
                                     />
                                 </FormControl>
@@ -76,7 +79,7 @@ export function ReportUserInput() {
                         className="bg-card hover:bg-accent w-[220px] rounded-full md:w-[202px] md:h-[55px] text-black"
                     >
                         <h1 className={isSubmitting ? "hidden" : "block"}>
-                            Tühista
+                            {t('contact.form.cancel')}
                         </h1>
                     </Button>
                     <SubmitButton
@@ -84,7 +87,7 @@ export function ReportUserInput() {
                         className="bg-accent hover:bg-accent w-[220px] rounded-full md:w-[202px] md:h-[55px] text-black"
                     >
                         <h1 className={isSubmitting ? "hidden" : "block"}>
-                            {"Saada"}
+                            {t('contact.form.send')}
                         </h1>
                         {isSubmitting && (
                             <ClipLoader

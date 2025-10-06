@@ -1,0 +1,25 @@
+{
+  "contact": {
+    "breadcrumb": "Contact",
+    "companyInfo": {
+      "companyName": "Seatly OÜ",
+      "address": "Address:",
+      "addressValue": "Harju County, Tallinn, Haabersti District, Vabaõhumuuseumi tee 4a-20, 13522",
+      "regCode": "Reg code:",
+      "regCodeValue": "17091136",
+      "contact": "Contact:",
+      "contactValue": "+372 58090777",
+      "email": "E-mail:",
+      "emailValue": "seatly@seatly.eu"
+    },
+    "form": {
+      "placeholder": "Leave us a message...",
+      "minLengthError": "Message must contain at least 10 characters",
+      "maxLengthError": "Message must not exceed 500 characters",
+      "successMessage": "Message sent successfully",
+      "errorMessage": "An error occurred while sending the message",
+      "cancel": "Cancel",
+      "send": "Send"
+    }
+  }
+}

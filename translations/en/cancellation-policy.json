@@ -1,0 +1,22 @@
+{
+  "cancellationPolicy": {
+    "breadcrumb": "Cancellation Policy",
+    "owners": {
+      "title": "OWNERS:",
+      "content": "Please note that if you as an owner cancel a booking, the renter will receive a full refund."
+    },
+    "renters": {
+      "title": "RENTERS:",
+      "content": "Please note that if you cancel a booking, the following cancellation terms apply:"
+    },
+    "conditions": {
+      "1": "- Cancellation at least 2 days before the rental period starts: 100% refund of the rental fee.",
+      "2": "- Cancellation one day before the rental period starts: 50% refund of the rental fee.",
+      "3": "- Cancellation on the day the rental period starts: no refund."
+    },
+    "example": {
+      "title": "Example:",
+      "content": "You rent out your sofa for Thursday. If the renter cancels on Wednesday, they will receive a 50% refund. If the renter cancels on Tuesday or earlier, they will receive a full refund."
+    }
+  }
+}

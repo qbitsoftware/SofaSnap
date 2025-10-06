@@ -5,6 +5,7 @@ import { Card, CardContent } from './ui/card'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { Product } from '@/utils/supabase/supabase.types'
+import { useTranslation } from '@/lib/i18n/i18n-provider'
 
 interface ProductCardProps {
     product: Product
@@ -13,6 +14,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, className, category }) => {
+    const { t } = useTranslation()
 
     return (
         <Card className={cn("border-0 p-0 bg-transparent rounded-tr-[76px] md:rounded-tr-[155px] hover:cursor-pointer  drop-shadow-md", className)}>
@@ -42,7 +44,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, ca
                                 : product.description}
                         </p>
                     </div>
-                    <span className="text-sm md:text-lg font-semibold ">{product.price}€ {product.type == "rent" ? "päev" : ""}</span>
+                    <span className="text-sm md:text-lg font-semibold ">{product.price}€ {product.type == "rent" ? t('products.perDay') : ""}</span>
                 </div>
             </CardContent>
         </Card>

@@ -1,0 +1,9 @@
+{
+  "favorites": {
+    "title": "Your favorite products",
+    "emptyTitle": "You have no favorite products",
+    "count": "You have {count} favorites",
+    "viewProducts": "View products",
+    "goHome": "Go to homepage"
+  }
+}

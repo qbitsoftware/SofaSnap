@@ -3,10 +3,10 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { Menu, X, ChevronLeft, ChevronRight, Loader } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { capitalize } from '@/utils/utils';
 import { usePathname } from 'next/navigation';
 import { Category } from '@/utils/supabase/supabase.types';
-
+import { useTranslation } from '@/lib/i18n/i18n-provider'
+import { LanguageSwitcher } from './language-switcher'
 // interface Category {
 //     name: string;
 //     name_slug: string;
@@ -21,6 +21,7 @@ function MobileNav({ categories }: NavLinksProps) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const { t } = useTranslation();
     // const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
     const pathname = usePathname()
@@ -118,18 +119,21 @@ function MobileNav({ categories }: NavLinksProps) {
                                     }}
                                 >
                                     <motion.li variants={itemVariants}>
-                                        <Link href="/meist" onClick={toggleMenu}>Meist</Link>
+                                        <Link href="/meist" onClick={toggleMenu}>{t('navbar.about_us')}</Link>
                                     </motion.li>
                                     <motion.li variants={itemVariants}>
-                                        <Link href="/kuidas-see-tootab" onClick={toggleMenu}>Kuidas see töötab?</Link>
+                                        <Link href="/kuidas-see-tootab" onClick={toggleMenu}>{t('navbar.how_it_works')}</Link>
                                     </motion.li>
                                     <motion.li variants={itemVariants}>
                                         <div onClick={toggleCategories} className="text-black flex gap-[75px] items-center w-full cursor-pointer">
                                             <div>
-                                                Mööbel
+                                               {t('navbar.furniture')}
                                             </div>
                                             <ChevronRight />
                                         </div>
+                                    </motion.li>
+                                    <motion.li variants={itemVariants} className="pt-4 border-t border-gray-200">
+                                        <LanguageSwitcher />
                                     </motion.li>
                                 </motion.ul>
                             </nav>
@@ -173,7 +177,7 @@ function MobileNav({ categories }: NavLinksProps) {
                                                     onClick={handleLinkClick}
                                                     className="text-black text-lg flex items-center justify-between"
                                                 >
-                                                    {capitalize(category.name)}
+                                                    {t(`navbar.slugs.${category.name_slug}`)}
                                                     {isLoading && (
                                                         <motion.div
                                                             variants={loadingVariants}

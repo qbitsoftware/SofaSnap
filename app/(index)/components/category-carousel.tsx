@@ -11,10 +11,10 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Image from "next/image"
-import { capitalize } from "@/utils/utils"
 import { cn } from "@/lib/utils"
 import { useRouter } from "next/navigation"
 import { Category } from "@/utils/supabase/supabase.types"
+import { useTranslation } from "@/lib/i18n/i18n-provider"
 
 interface CategoryCarouselProps {
   Categories: Category[] | null
@@ -24,6 +24,7 @@ interface CategoryCarouselProps {
 export const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ Categories, className }) => {
 
   const router = useRouter()
+  const { t } = useTranslation();
 
   return (
     <Carousel
@@ -41,7 +42,7 @@ export const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ Categories, 
                 <CardContent className="relative flex aspect-[250/225] w-[25vw] xl:w-[20vw] max-w-[300px] items-center justify-center p-6 rounded-3xl">
                   <Image className="absolute rounded-3xl" style={{ objectFit: "cover" }} src={category.image} alt={category.name} sizes="(max-width: 1024px) 200px, 255px" fill />
                   <div className="flex absolute lg:h-20 md:h-16 backdrop-blur-md bg-background/40 z-10 w-full bottom-0 rounded-b-3xl items-center justify-center">
-                    <span className="text-lg font-medium">{capitalize(category.name)}</span>
+                    <span className="text-lg font-medium">{t(`navbar.slugs.${category.name_slug}`)}</span>
                   </div>
                 </CardContent>
               </Card>

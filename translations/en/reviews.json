@@ -1,0 +1,18 @@
+{
+  "reviews": {
+    "items": {
+      "0": {
+        "name": "Kristjan",
+        "text": "Very pleasant communication and furniture in good condition."
+      },
+      "1": {
+        "name": "Kaisa",
+        "text": "Excellent service – the platform offers stylish furniture for both rent and purchase"
+      },
+      "2": {
+        "name": "Jüri",
+        "text": "A convenient and reliable way to quickly find quality furniture and use it in a budget-friendly manner."
+      }
+    }
+  }
+}

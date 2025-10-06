@@ -1,0 +1,57 @@
+{
+  "howItWorks": {
+    "breadcrumb": "Kuidas töötab?",
+    "title": "Mööblirendi Platvormi Kasutamine",
+    "step1": {
+      "title": "1. Registreeru ja loo konto",
+      "description": "Esmalt registreeri end platvormil kasutajaks, täites vajalikud andmed. Konto loomine annab sulle ligipääsu kõigile platvormi võimalustele.",
+      "imageAlt": "Kuidas see töötab?"
+    },
+    "step2": {
+      "title": "2. Lisa kuulutus",
+      "items": [
+        "Vali ese, mida soovid välja rentida või müüa – see võib olla ükskõik milline mööbliese, nagu näiteks diivan, laud või riiul.",
+        "Kirjelda eset selgelt: milleks see sobib, milline on selle seisukord ja mõõtmed (laius, sügavus, kõrgus).",
+        "Määra, kas soovid eset ainult rentida, müüa või pakkuda mõlemat võimalust."
+      ]
+    },
+    "step3": {
+      "title": "3. Lisa head fotod",
+      "items": [
+        "Tee esemest mitu pilti erinevatest nurkadest ja heas valguses.",
+        "Näita ka kulumisjälgi või muid detaile, mis aitavad hinnata seisukorda.",
+        "Samas hoia visuaal atraktiivne – hea esitlus suurendab huvi."
+      ],
+      "imageAlt": "Eseme kirjeldus"
+    },
+    "step4": {
+      "title": "4. Soovi korral kindlusta ese",
+      "description": "Kuigi platvorm ei paku ise kindlustust, soovitame mööbli kindlustada kahjude vastu. See kaitseb nii sind kui rentijat.",
+      "imageAlt": "Eseme kindlustamine"
+    },
+    "step5": {
+      "title": "5. Suhtle ja lepi kokku",
+      "items": [
+        "Kui keegi tunneb huvi, saab ta sinuga ühendust kuulutuse kaudu.",
+        "Suhelge otse ja leppige kokku tingimustes, sh üleandmine."
+      ]
+    },
+    "step6": {
+      "title": "6. Kuulutustasu ja nähtavus",
+      "items": [
+        "Kuulutuse lisamine maksab 1 €.",
+        "Pärast tehingut palume kuulutus eemaldada.",
+        "Soovid uut tehingut? Lisa uus kuulutus – taas 1 €."
+      ]
+    },
+    "step7": {
+      "title": "7. Eseme üleandmine",
+      "description": "Lepi huvilisega kokku, kuidas ja kus ese üle antakse – kodus, neutraalsel pinnal või kasutades transporditeenust."
+    },
+    "step8": {
+      "title": "8. Tehingu lõpetamine ja tagasiside",
+      "description": "Soovitame jätta tagasisidet – see aitab platvormil toimida usaldusväärselt ja annab infot kasutaja usaldusväärsuse kohta."
+    },
+    "conclusion": "Nii saad hõlpsalt oma mööbli välja rentida või müüa ja aidata kaasa ringmajandusele, andes seisma jäänud esemetele uue elu!"
+  }
+}

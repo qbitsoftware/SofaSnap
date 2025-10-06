@@ -4,9 +4,9 @@ import Link from 'next/link'
 import React, { useRef, useState, useEffect } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { Category } from '@/utils/supabase/supabase.types'
-import { capitalize } from '@/utils/utils'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from '@/lib/i18n/i18n-provider'
 
 interface NavLinksProps {
   categories: Category[] | undefined
@@ -19,6 +19,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ categories }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingCategory, setLoadingCategory] = useState<string | null>(null);
   const pathname = usePathname()
+  const { t } = useTranslation()
 
   const openDialog = () => {
     setIsDialogOpen(!isDialogOpen)
@@ -80,7 +81,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ categories }) => {
         whileTap={{ scale: 0.95 }}
       >
         <Link href={"/meist"}>
-          <h1>Meist</h1>
+          <h1>{t('navbar.about_us')}</h1>
         </Link>
       </motion.div>
       <motion.div
@@ -89,7 +90,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ categories }) => {
         whileTap={{ scale: 0.95 }}
       >
         <Link href={"/kuidas-see-tootab"}>
-          <h1>Kuidas see töötab</h1>
+          <h1>{t('navbar.how_it_works')}</h1>
         </Link>
       </motion.div>
       <motion.div
@@ -99,7 +100,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ categories }) => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        <h1>Mööbel</h1>
+        <h1>{t('navbar.furniture')}</h1>
         <motion.div
           animate={{ rotate: isDialogOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}
@@ -119,7 +120,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ categories }) => {
             transition={{ duration: 0.3 }}
           >
             <div className="relative mt-[70px] px-[39px] pb-[143px] max-w-[937px] w-full max-h-[533px] h-full before:absolute before:inset-0 before:bg-cover before:bg-center before:bg-[url('/images/navbar-background.png')] before:mix-blend-overlay before:content-[''] before:pointer-events-none">
-              <h1 className="text-xl pt-[46px] pb-[24px]">Kõik kategooriad</h1>
+              <h1 className="text-xl pt-[46px] pb-[24px]">{t('navbar.all_categories')}</h1>
               <motion.div
                 className='grid grid-cols-2 gap-y-[4px] gap-x-[300px]'
                 initial="hidden"
@@ -151,7 +152,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ categories }) => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        {capitalize(category.name)}
+                        {t(`navbar.slugs.${category.name_slug}`)}
                         {isLoading && loadingCategory === category.name_slug && (
                           <motion.span
                             className="ml-2 inline-block w-1.5 h-1.5 bg-primary rounded-full"

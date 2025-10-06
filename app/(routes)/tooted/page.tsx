@@ -1,26 +1,53 @@
-import React from 'react'
+"use client"
+
+import React, { useEffect, useState, Suspense } from 'react'
 import { ProductList } from './[...slug]/_components/product-list'
 import { fetchProducts } from '@/app/actions'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { SortDropdown } from './[...slug]/_components/sort-dropdown'
-import { ShoppingBag } from 'lucide-react'
+import { EmptyState } from './[...slug]/_components/empty-state'
+import { useTranslation } from '@/lib/i18n/i18n-provider'
+import { useSearchParams } from 'next/navigation'
 
 const PRODUCTS_PER_PAGE = 30
-export const dynamic = 'force-dynamic';
 
-const Page = async ({ searchParams }: { searchParams: Promise<{ page?: string, sort?: string }> }) => {
-  const resolvedSearchParams = await searchParams;
-  const currentPage = resolvedSearchParams.page ? parseInt(resolvedSearchParams.page, 10) : 1
+function ProductsContent() {
+  const { t } = useTranslation()
+  const searchParams = useSearchParams()
+  const [products, setProducts] = useState<any[]>([])
+  const [totalPages, setTotalPages] = useState(0)
+  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-  const { data, error, totalCount } = await fetchProducts(currentPage, resolvedSearchParams.sort)
+  const currentPage = searchParams.get('page') ? parseInt(searchParams.get('page')!, 10) : 1
+  const sort = searchParams.get('sort') || undefined
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      setIsLoading(true)
+      const { data, error, totalCount } = await fetchProducts(currentPage, sort)
+
+      if (error) {
+        console.error("Error fetching products:", error)
+        setError(error)
+      } else {
+        setProducts(data || [])
+        setTotalPages(Math.ceil(totalCount / PRODUCTS_PER_PAGE))
+      }
+      setIsLoading(false)
+    }
+
+    loadProducts()
+  }, [currentPage, sort])
 
   if (error) {
-    console.error("Error fetching products:", error)
-    return <div>Error loading products. Please try again later.</div>
+    return <div>{t('products.errorLoading')}</div>
   }
 
-  const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE)
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
 
   return (
     <div className="md:mx-auto px-6 md:px-[64px] max-w-[1440px]">
@@ -38,19 +65,16 @@ const Page = async ({ searchParams }: { searchParams: Promise<{ page?: string, s
           <SortDropdown currentPage={currentPage} />
         </div>
         <div className='mt-4 md:mt-10'>
-          {!data || data?.length == 0 ?
-            <div className="flex flex-col items-center justify-center p-8 text-center">
-              <ShoppingBag className="w-12 h-12 text-gray-400 mb-4" />
-              <p className="text-lg font-medium text-gray-600">Tooted puuduvad</p>
-            </div>
+          {!products || products.length === 0 ?
+            <EmptyState message="noProducts" />
             :
             <ProductList
-              initialProducts={data || []}
+              initialProducts={products}
               totalPages={totalPages}
               currentPage={currentPage}
               type={"product"}
               categories={undefined}
-              currentSort={resolvedSearchParams.sort}
+              currentSort={sort}
             />
           }
         </div>
@@ -59,4 +83,10 @@ const Page = async ({ searchParams }: { searchParams: Promise<{ page?: string, s
   )
 }
 
-export default Page
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProductsContent />
+    </Suspense>
+  )
+}

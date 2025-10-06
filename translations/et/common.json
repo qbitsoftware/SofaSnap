@@ -1,0 +1,12 @@
+{
+  "common": {
+    "loading": "Laen...",
+    "error": "Viga",
+    "submit": "Saada",
+    "cancel": "Tühista",
+    "save": "Salvesta",
+    "delete": "Kustuta",
+    "edit": "Muuda",
+    "search": "Otsi"
+  }
+}

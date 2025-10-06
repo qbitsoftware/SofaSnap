@@ -14,6 +14,7 @@ import { Contract } from "./contract"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { ContractCompany } from "./contract-company"
+import { useTranslation } from "@/lib/i18n/i18n-provider"
 
 type UserType = "Eraisik" | "Äriklient";
 
@@ -21,6 +22,7 @@ const RegisterForm = () => {
 
     const router = useRouter()
     const toast = useToast()
+    const { t } = useTranslation()
 
     const [userType, setUserType] = useState<UserType>("Eraisik");
 
@@ -58,12 +60,12 @@ const RegisterForm = () => {
             const { code } = responseData
             if (code == "user_already_exists") {
                 toast.toast({
-                    title: "Kasutaja selle emailiga on juba registreeritud.",
+                    title: t('auth.register.errorUserExists'),
                 })
                 return
             }
             toast.toast({
-                title: "Registreerimine ebaõnnestus. Proovige hiljem uuesti.",
+                title: t('auth.register.errorGeneric'),
             })
             return;
         }
@@ -151,7 +153,7 @@ const RegisterForm = () => {
 
         if (responseData.success) {
             toast.toast({
-                title: "Kasutaja edukalt loodud",
+                title: t('auth.register.successMessage'),
             })
             router.push("/")
             router.refresh()
@@ -174,7 +176,7 @@ const RegisterForm = () => {
                                 : "bg-[#D9D9D9] text-black hover:bg-[#C0C0C0]"
                         )}
                     >
-                        Eraisik
+                        {t('auth.register.userTypes.individual')}
                     </Button>
                     <Button
                         type="button"
@@ -186,7 +188,7 @@ const RegisterForm = () => {
                                 : "bg-[#D9D9D9] text-black hover:bg-[#C0C0C0]"
                         )}
                     >
-                        Äriklient
+                        {t('auth.register.userTypes.business')}
                     </Button>
                 </div>
             </div>
@@ -195,29 +197,29 @@ const RegisterForm = () => {
                 <>
                     <div className="mb-[26px] md:mb-[52px]">
                         <div className="mb-[29px] pl-[4px] md:pl-[0px] md:mb-[22px]">
-                            <h2 className="font-medium text-lg">Isikuandmed</h2>
+                            <h2 className="font-medium text-lg">{t('auth.register.personalData')}</h2>
                         </div>
                         <div className="flex flex-col w-full gap-[5px] md:gap-[11px] md:w-[500px] md:pl-[75px] leading-4">
-                            <Input {...register("first_name")} placeholder="Nimi" autoComplete="off" />
+                            <Input {...register("first_name")} placeholder={t('auth.register.firstName')} autoComplete="off" />
                             {(errors as any).first_name && <p className="text-red-500">{(errors as any).first_name.message}</p>}
-                            <Input {...register("last_name")} placeholder="Perekonnanimi" autoComplete="off" />
+                            <Input {...register("last_name")} placeholder={t('auth.register.lastName')} autoComplete="off" />
                             {(errors as any).last_name && <p className="text-red-500">{(errors as any).last_name.message}</p>}
-                            <Input {...register("address")} placeholder="Aadress" autoComplete="off" />
+                            <Input {...register("address")} placeholder={t('auth.register.address')} autoComplete="off" />
                             {(errors as any).address && <p className="text-red-500">{(errors as any).address.message}</p>}
-                            <Input {...register("phone")} placeholder="Tel nr" autoComplete="off" />
+                            <Input {...register("phone")} placeholder={t('auth.register.phone')} autoComplete="off" />
                             {errors.phone && <p className="text-red-500">{errors.phone.message}</p>}
                         </div>
                     </div>
                     <div className="mb-[46px]">
                         <div className="pl-[4px] md:pl-[0px] mb-[26px]">
-                            <h2 className="font-medium text-lg">Kasutaja info</h2>
+                            <h2 className="font-medium text-lg">{t('auth.register.userInfo')}</h2>
                         </div>
                         <div className="flex flex-col w-full gap-[5px] md:gap-[11px] md:w-[500px] md:pl-[75px] leading-4">
-                            <Input {...register("email")} placeholder="Meiliaadress" autoComplete="off" />
+                            <Input {...register("email")} placeholder={t('auth.register.email')} autoComplete="off" />
                             {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-                            <Input {...register("password")} placeholder="Parool" type="password" autoComplete="off" />
+                            <Input {...register("password")} placeholder={t('auth.register.password')} type="password" autoComplete="off" />
                             {errors.password && <p className="text-red-500">{errors.password.message}</p>}
-                            <Input {...register("confirm_password")} placeholder="Parool veel kord" type="password" autoComplete="off" />
+                            <Input {...register("confirm_password")} placeholder={t('auth.register.confirmPassword')} type="password" autoComplete="off" />
                             {errors.confirm_password && <p className="text-red-500">{errors.confirm_password.message}</p>}
                         </div>
                     </div>
@@ -226,31 +228,31 @@ const RegisterForm = () => {
                 <>
                     <div className="mb-[26px] md:mb-[52px]">
                         <div className="mb-[29px] pl-[4px] md:pl-[0px] md:mb-[22px]">
-                            <h2 className="font-medium text-lg">Ettevõtte andmed</h2>
+                            <h2 className="font-medium text-lg">{t('auth.register.companyData')}</h2>
                         </div>
                         <div className="flex flex-col w-full gap-[5px] md:gap-[11px] md:w-[500px] md:pl-[75px] leading-4">
-                            <Input {...register("company_name")} placeholder="Ettevõtte nimi" autoComplete="off" />
+                            <Input {...register("company_name")} placeholder={t('auth.register.companyName')} autoComplete="off" />
                             {(errors as any).company_name && <p className="text-red-500">{(errors as any).company_name.message}</p>}
-                            <Input {...register("registry_code")} placeholder="Registri kood" autoComplete="off" />
+                            <Input {...register("registry_code")} placeholder={t('auth.register.registryCode')} autoComplete="off" />
                             {(errors as any).registry_code && <p className="text-red-500">{(errors as any).registry_code.message}</p>}
-                            <Input {...register("vat_number")} placeholder="KMKR (kui on)" autoComplete="off" />
+                            <Input {...register("vat_number")} placeholder={t('auth.register.vatNumber')} autoComplete="off" />
                             {(errors as any).vat_number && <p className="text-red-500">{(errors as any).vat_number.message}</p>}
-                            <Input {...register("phone")} placeholder="Tel nr" autoComplete="off" />
+                            <Input {...register("phone")} placeholder={t('auth.register.phone')} autoComplete="off" />
                             {errors.phone && <p className="text-red-500">{errors.phone.message}</p>}
-                            <Input {...register("email")} placeholder="Email" autoComplete="off" />
+                            <Input {...register("email")} placeholder={t('auth.register.email')} autoComplete="off" />
                             {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-                            <Input {...register("contact_person")} placeholder="Kontaktisik" autoComplete="off" />
+                            <Input {...register("contact_person")} placeholder={t('auth.register.contactPerson')} autoComplete="off" />
                             {(errors as any).contact_person && <p className="text-red-500">{(errors as any).contact_person.message}</p>}
                         </div>
                     </div>
                     <div className="mb-[46px]">
                         <div className="pl-[4px] md:pl-[0px] mb-[26px]">
-                            <h2 className="font-medium text-lg">Kasutaja info</h2>
+                            <h2 className="font-medium text-lg">{t('auth.register.userInfo')}</h2>
                         </div>
                         <div className="flex flex-col w-full gap-[5px] md:gap-[11px] md:w-[500px] md:pl-[75px] leading-4">
-                            <Input {...register("password")} placeholder="Parool" type="password" autoComplete="off" />
+                            <Input {...register("password")} placeholder={t('auth.register.password')} type="password" autoComplete="off" />
                             {errors.password && <p className="text-red-500">{errors.password.message}</p>}
-                            <Input {...register("confirm_password")} placeholder="Parool veel kord" type="password" autoComplete="off" />
+                            <Input {...register("confirm_password")} placeholder={t('auth.register.confirmPassword')} type="password" autoComplete="off" />
                             {errors.confirm_password && <p className="text-red-500">{errors.confirm_password.message}</p>}
                         </div>
                     </div>
@@ -259,7 +261,7 @@ const RegisterForm = () => {
 
             <div className="w-full md:mb-[54px]">
                 <div className="mb-[10px] md:mb-[32px]">
-                    <h2 className="font-medium text-lg pl-[10px]">Leping</h2>
+                    <h2 className="font-medium text-lg pl-[10px]">{t('auth.register.contract')}</h2>
                 </div>
                 <div className="w-full">
                     {userType === "Eraisik" ? (
@@ -280,7 +282,7 @@ const RegisterForm = () => {
                     </div>
                     <div className="w-[26px] h-[26px] bg-[#FCC9B9] peer-checked:hidden shadow-inner-light flex items-center justify-center">
                     </div>
-                    <h2 className="font-medium text-base w-[90%]">Olen tutvunud lepingu tingimustega ja nõustun käesoleva lepinguga.</h2>
+                    <h2 className="font-medium text-base w-[90%]">{t('auth.register.agreementText')}</h2>
                 </label>
             </div>
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-end gap-[20px] md:mr-[70px] md:mb-[51px]">
@@ -288,11 +290,11 @@ const RegisterForm = () => {
                     e.preventDefault()
                     router.push("/")
                 }} className="order-2 md:order-1 w-[226px] h-[42px] rounded-full md:rounded-lg md:w-[202px] md:h-[75px] bg-[#D9D9D9] hover:text-white text-black">
-                    Tühista
+                    {t('auth.register.cancel')}
                 </Button>
                 <SubmitButton disabled={isSubmitting} className="bg-accent w-[226px] h-[42px] rounded-full md:rounded-lg hover:bg-accent md:w-[202px] md:h-[75px] text-black cursor">
                     <h1 className={cn(isSubmitting ? " hidden " : "block")}>
-                        Kinnita
+                        {t('auth.register.confirm')}
                     </h1>
                     <ClipLoader
                         color={"#ffffff"}

@@ -1,0 +1,23 @@
+{
+  "footer": {
+    "logoAlt": "footer-logo",
+    "menu1": {
+      "title": "Rental",
+      "items": {
+        "howToUse": "How to use",
+        "responsibleRenter": "Responsible renter",
+        "termsOfSale": "Terms of sale",
+        "privacyPolicy": "Privacy policy"
+      }
+    },
+    "menu2": {
+      "title": "Support",
+      "items": {
+        "contact": "Contact",
+        "cancellationPolicy": "Cancellation policy",
+        "reportUser": "Report a problematic user",
+        "faq": "FAQ"
+      }
+    }
+  }
+}

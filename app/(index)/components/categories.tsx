@@ -2,13 +2,13 @@
 import { Button } from '@/components/ui/button';
 import { CategoryCarousel } from './category-carousel'
 import { Category } from '@/utils/supabase/supabase.types';
-import { capitalize } from '@/utils/utils';
 import Image from 'next/image';
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { MontserratAlternates } from '@/fonts';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from '@/lib/i18n/i18n-provider';
 
 interface CategoryProps {
   data: Category[] | undefined
@@ -16,6 +16,7 @@ interface CategoryProps {
 }
 
 export const Categories: React.FC<CategoryProps> = ({ data, error }) => {
+  const { t } = useTranslation();
   const router = useRouter()
   const [showAll, setShowAll] = useState(false)
 
@@ -23,7 +24,7 @@ export const Categories: React.FC<CategoryProps> = ({ data, error }) => {
     return (
       <div className='relative md:h-[645px] bg-card w-full flex md:flex-col items-center justify-center'>
         <h1>
-          No Categories Found
+          {t('categories.noCategories')}
         </h1>
       </div>
     )
@@ -34,12 +35,12 @@ export const Categories: React.FC<CategoryProps> = ({ data, error }) => {
         <div className='absolute top-10 max-w-[1356px] w-full left-1/2 -translate-x-1/2 flex justify-end'>
           {/* <MapButton className='md:mr-16 lg:mr-[4%] 2xl:mr-0 gap-4' /> */}
         </div>
-        <h2 className='text-[44px] font-medium max-w-[1360px] mx-auto w-[80%] xl:w-[83%] 2xl:w-[80%] text-left'>Kategooriad</h2>
+        <h2 className='text-[44px] font-medium max-w-[1360px] mx-auto w-[80%] xl:w-[83%] 2xl:w-[80%] text-left'>{t('categories.title')}</h2>
         <CategoryCarousel Categories={data} className='py-12' />
       </div>
 
       <div className='md:hidden px-4 py-6'>
-        <h2 className='text-2xl font-semibold mb-4'>Kategooriad</h2>
+        <h2 className='text-2xl font-semibold mb-4'>{t('categories.title')}</h2>
         <div className='grid grid-cols-2 gap-3'>
           {data
             .filter(category => category.sub_categories?.length !== 0)
@@ -61,7 +62,7 @@ export const Categories: React.FC<CategoryProps> = ({ data, error }) => {
                   <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent' />
                   <div className='absolute bottom-0 left-0 right-0 p-3'>
                     <h3 className={cn('text-sm sm:text-base font-semibold text-white line-clamp-2', MontserratAlternates.className)}>
-                      {capitalize(category.name)}
+                      {t(`navbar.slugs.${category.name_slug}`)}
                     </h3>
                   </div>
                 </div>
@@ -75,7 +76,7 @@ export const Categories: React.FC<CategoryProps> = ({ data, error }) => {
               variant="outline"
               className='gap-2'
             >
-              {showAll ? 'Näita vähem' : 'Näita rohkem'}
+              {showAll ? t('categories.showLess') : t('categories.showMore')}
               <ChevronDown className={cn('h-4 w-4 transition-transform', showAll && 'rotate-180')} />
             </Button>
           </div>
