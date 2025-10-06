@@ -5,7 +5,7 @@ import Image from 'next/image'
 
 export const Text = () => {
     return (
-        <div className={cn('text-justify md:text-left flex flex-col gap-6', poppins.className)}>
+        <div className={cn('text-justify md:text-left flex flex-col gap-6 px-4 md:px-0', poppins.className)}>
             <p className='text-lg'>
                 <strong>Mööblirendi Platvormi Kasutamine</strong>
             </p>
@@ -85,7 +85,7 @@ export const TextWithImage2 = () => {
 
 export const Text2 = () => {
     return (
-        <div className='flex flex-col pt-16 lg:pt-48 gap-4 lg:gap-16'>
+        <div className='flex flex-col pt-16 lg:pt-48 gap-4 lg:gap-16 px-4 md:px-0'>
             {/* Punkt 5 */}
             <div>
                 <p className='font-bold lg:pb-10'>5. Suhtle ja lepi kokku</p>

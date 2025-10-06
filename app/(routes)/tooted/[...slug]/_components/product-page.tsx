@@ -39,7 +39,6 @@ export default async function ProductPage({ product_id, categories }: ProductPag
     redirect("/404")
   }
 
-  // Fetch similar products from the same category
   const categorySlug = data.category?.name_slug || categories[0]?.name_slug
   const { data: similarProducts } = await fetchSimilarProducts(categorySlug, product_id, 8)
 
