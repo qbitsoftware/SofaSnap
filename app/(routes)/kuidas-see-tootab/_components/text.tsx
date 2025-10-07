@@ -82,11 +82,11 @@ export const TextWithImage2 = () => {
                         alt={t('howItWorks.step4.imageAlt')}
                         width={700}
                         height={340}
-                        className='mx-auto w-full max-w-[500px] lg:max-w-[860px] h-auto transform lg:translate-y-1/2'
+                        className='mx-auto w-full max-w-[500px] lg:max-w-[860px] h-auto transform lg:translate-y-1/4'
                     />
                 </div>
             </div>
-            <div className='lg:h-[200px]'></div>
+            {/* <div className='lg:h-[200px]'></div> */}
         </>
     )
 }

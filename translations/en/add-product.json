@@ -1,5 +1,39 @@
 {
   "addProduct": {
-    "breadcrumb": "Add product"
+    "breadcrumb": "Add Product",
+    "errors": {
+      "input": "Invalid input!",
+      "accept_terms": "You must accept our terms to add a listing!",
+      "accept_terms_desc": "Please accept our terms  ",
+      "here": "here",
+      "img_upload": "Image upload failed. Please try again.",
+      "generic": "Something went wrong. Please try again.",
+      "same_img": "You cannot upload the same image twice",
+      "unknown_file": "This file type is not allowed. Only JPG, JPEG, or PNG are allowed.",
+      "max_size": "is too large! Maximum file size is 10MB"
+    },
+    "toasts": {
+      "edit_success": "Ad was successfully edited.",
+      "description": "Ads can be managed",
+      "success": "Ad was successfully added."
+    },
+    "category": "Category",
+    "category_placeholder": "Select category",
+    "second_placeholder": "What product is this",
+    "description": "Product Description",
+    "name_placeholder": "Name",
+    "width": "Width (cm)",
+    "height": "Height (cm)",
+    "length": "Length (cm)",
+    "material_placeholder": "Material",
+    "description_placeholder": "Description",
+    "rent": "Rent",
+    "rent_desc": "€ / Day",
+    "sell": "Sell",
+    "address": "Address",
+    "save_changes": "Save changes",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "add_img": "Add Images"
   }
 }

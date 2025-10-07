@@ -24,6 +24,7 @@ import { Listing } from '@/types';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import Link from 'next/link';
 import { Textarea } from '@/components/ui/textarea';
+import { useTranslation } from '@/lib/i18n/i18n-provider';
 
 interface ProductFormProps {
     id: string
@@ -37,10 +38,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
     const toast = useToast()
     const router = useRouter()
     void address
-    // const [suggestions, setSuggestions] = useState<Address[]>([]);
-    // const [chosenSuggestion, setChosenSuggestion] = useState<Feature>();
-    // const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
-    // const [isLoading, setIsLoading] = useState<boolean>(false)
+    const { t } = useTranslation()
     const [images, setImages] = useState<IImage[]>([])
 
     const form = useForm({
@@ -96,7 +94,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             })
             setImages(imagesToAdd)
         }
-            }, [form, initialData]);
+    }, [form, initialData]);
 
     const onSubmit = async (data: Listing) => {
         const formData: TProductServer = {
@@ -108,19 +106,19 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
         const validationResult = productSchemaServer.safeParse(formData);
         if (validationResult.error) {
             toast.toast({
-                title: "Sisend on vigane!",
+                title: t("addProduct.errors.input"),
             })
             return
         }
 
         if (user_metadata.agreement == undefined || !user_metadata.agreement) {
             toast.toast({
-                title: "Kuulutuse lisamiseks peate nõustuma meie teenuse tingimustega!",
+                title: t("addProduct.errors.accept_terms"),
                 description: (
                     <>
-                        Noustuge meie tingimustega {' '}
+                        {t('addProduct.errors.accept_terms_desc')} {' '}
                         <Link href="/profiil" className="underline font-medium">
-                            siin
+                            {t('addProduct.errors.here')}
                         </Link>
                         .
                     </>
@@ -167,7 +165,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
 
         if (!uploadResp.ok) {
             toast.toast({
-                title: "Pildi üleslaadimine ebaõnnestus. Proovige hiljem uuesti",
+                title: t("addProduct.errors.img_upload"),
             })
             return;
         }
@@ -183,25 +181,23 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
         const response = await createProductAction(formData)
         if (response.status === 400) {
             toast.toast({
-                title: "Midagi laks valesti :(",
-                description: "Proovige hiljem uuesti!"
+                title: t("addProduct.errors.generic"),
             })
             return
         } else if (response.status === 500) {
             toast.toast({
-                title: "Midagi laks valesti :(",
-                description: "Proovige hiljem uuesti!"
+                title: t("addProduct.errors.generic"),
             })
             return
         } else if (response.status === 200) {
             if (initialData) {
                 toast.toast({
-                    title: "Kuulutuse muutmine oli edukas.",
+                    title: t("addProduct.toasts.edit_success"),
                     description: (
                         <>
-                            Kuulutusi saab hallata{' '}
+                            {t('addProduct.toasts.description')}{' '}
                             <Link href="/kuulutused" className="underline font-medium">
-                                siit
+                                {t("addProduct.errors.here")}
                             </Link>
                             .
                         </>
@@ -210,13 +206,12 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                 router.push("/kuulutused")
             } else {
                 toast.toast({
-                    title: "Kuulutus on edukalt lisatud.",
-                    description: "Suunatakse kuulutuste haldamise lehele..."
+                    title: t("addProduct.toasts.success"),
                 })
                 // Redirect to listings page with the "Tasumist vajavad" tab
                 setTimeout(() => {
                     router.push("/kuulutused?tab=not_paid")
-                }, 1500)
+                }, 1000)
             }
         }
         if (!initialData) {
@@ -262,11 +257,11 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                         name="category"
                         render={({ field }) => (
                             <FormItem >
-                                <FormLabel>Kategooria</FormLabel>
+                                <FormLabel>{t("addProduct.category")}</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl className='bg-white'>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Valige kategooria" />
+                                            <SelectValue placeholder={t("addProduct.category_placeholder")} />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent className=''>
@@ -290,7 +285,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                     defaultValue={field.value}>
                                     <FormControl className='bg-white'>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Mis tootega on tegemist" />
+                                            <SelectValue placeholder={t("addProduct.second_placeholder")} />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent >
@@ -306,14 +301,14 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                         )}
                     />
                 </div>
-                <h2 className="font-medium text-lg">Toote kirjeldus</h2>
+                <h2 className="font-medium text-lg">{t('addProduct.description')}</h2>
                 <FormField
                     control={form.control}
                     name="name"
                     render={({ field }) => (
                         <FormItem>
                             <FormControl className='bg-white'>
-                                <Input placeholder="Nimi" {...field} autoComplete='off' />
+                                <Input placeholder={t("addProduct.name_placeholder")} {...field} autoComplete='off' />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -326,7 +321,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                             name="width"
                             render={({ field }) => (
                                 <FormItem className='flex flex-col items-center w-[100px] md:w-[125px]'>
-                                    <FormLabel>Laius (cm)</FormLabel>
+                                    <FormLabel>{t("addProduct.width")}</FormLabel>
                                     <FormControl className='bg-white text-center'>
                                         <Input type="text" inputMode='numeric' pattern='[0-9]*' {...field} onChange={e => handleInputChangeSize(e, field.onChange, "width")} />
                                     </FormControl>
@@ -340,7 +335,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                             name="heigth"
                             render={({ field }) => (
                                 <FormItem className='flex flex-col items-center w-[100px] md:w-[125px]'>
-                                    <FormLabel>Kõrgus (cm)</FormLabel>
+                                    <FormLabel>{t("addProduct.height")}</FormLabel>
                                     <FormControl className='bg-white text-center'>
                                         <Input type="text" inputMode='numeric' pattern='[0-9]*' {...field} onChange={e => handleInputChangeSize(e, field.onChange, "heigth")} />
                                     </FormControl>
@@ -354,7 +349,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                             name="length"
                             render={({ field }) => (
                                 <FormItem className='flex flex-col items-center w-[100px] md:w-[125px]'>
-                                    <FormLabel>Pikkus (cm)</FormLabel>
+                                    <FormLabel>{t("addProduct.length")}</FormLabel>
                                     <FormControl className='bg-white text-center'>
                                         <Input type="text" inputMode='numeric' pattern='[0-9]*' {...field} onChange={e => handleInputChangeSize(e, field.onChange, "length")} />
                                     </FormControl>
@@ -381,7 +376,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                     render={({ field }) => (
                         <FormItem>
                             <FormControl className='bg-white'>
-                                <Input {...field} placeholder='Materjal' autoComplete='off' />
+                                <Input {...field} placeholder={t('addProduct.material_placeholder')} autoComplete='off' />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -394,7 +389,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                         <FormItem>
                             <FormControl className='bg-white'>
                                 <Textarea
-                                    placeholder='Kirjeldus'
+                                    placeholder={t('addProduct.description_placeholder')}
                                     autoComplete='off'
                                     {...field}
                                     className='resize-none h-[150px]'
@@ -416,7 +411,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                     className="flex flex-col space-y-4"
                                 >
                                     <FormItem className="flex items-center space-x-3 h-[40px] space-y-0">
-                                        <FormLabel className="font-normal w-[50px]">Rendi</FormLabel>
+                                        <FormLabel className="font-normal w-[50px]">{t("addProduct.rent")}</FormLabel>
                                         <FormControl className='bg-white'>
                                             <RadioGroupItem value="rent" />
                                         </FormControl>
@@ -430,7 +425,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                                                             <Input type="text" inputMode='numeric' pattern='[0-9]*' {...field} onChange={e => handleInputChangeSize(e, field.onChange, "price")} />
                                                         </FormControl>
                                                         <div className='flex flex-row'>
-                                                            € / Päev
+                                                            {t("addProduct.rent_desc")}
                                                         </div>
                                                     </FormItem>
                                                 )}
@@ -439,7 +434,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
 
                                     </FormItem>
                                     <FormItem className="flex items-center space-x-3 h-[40px] space-y-0">
-                                        <FormLabel className="font-normal w-[50px] ">Müü</FormLabel>
+                                        <FormLabel className="font-normal w-[50px] ">{t("addProduct.sell")}</FormLabel>
                                         <FormControl className='bg-white'>
                                             <RadioGroupItem value="sell" />
                                         </FormControl>
@@ -502,9 +497,9 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>
-                                <p className='flex items-center gap-1'>Aadress <span><Map /></span></p>
+                                <p className='flex items-center gap-1'>{t('addProduct.address')}<span><Map /></span></p>
                             </FormLabel>
-                            <Input placeholder='Aadress' {...field} autoComplete='off' onChange={(e) => {
+                            <Input placeholder={t('addProduct.address')} {...field} autoComplete='off' onChange={(e) => {
                                 field.onChange(e.target.value);
                             }} />
                             <FormMessage />
@@ -528,7 +523,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                 <div className="flex flex-col gap-[10px] items-center justify-center">
                     <SubmitButton onClick={() => { }} disabled={form.formState.isSubmitting} className="bg-accent hover:bg-accent w-[220px] rounded-full md:w-[202px] md:h-[55px] text-black cursor" type="submit">
                         <h1 className={cn(form.formState.isSubmitting ? " hidden " : "block")}>
-                            {initialData ? "Salvesta muudatused" : "Kinnita"}
+                            {initialData ? t("addProduct.save_changes") : t("addProduct.confirm")}
                         </h1>
                         <ClipLoader
                             color={"#ffffff"}
@@ -547,7 +542,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                         }
                     }} disabled={form.formState.isSubmitting} className="bg-card hover:bg-accent w-[220px] rounded-full md:w-[202px] md:h-[55px] text-black cursor">
                         <h1 className={cn(form.formState.isSubmitting ? " hidden " : "block")}>
-                            Tühista
+                            {t("addProduct.cancel")}
                         </h1>
                     </Button>
                 </div>

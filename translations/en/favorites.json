@@ -2,8 +2,12 @@
   "favorites": {
     "title": "Your favorite products",
     "emptyTitle": "You have no favorite products",
-    "count": "You have {count} favorites",
+    "count": "You have",
+    "count_second": "favorites",
     "viewProducts": "View products",
-    "goHome": "Go to homepage"
+    "goHome": "Go to homepage",
+    "rentPeriod": "Rent period",
+    "material": "Material: ",
+    "size": "Size: "
   }
 }

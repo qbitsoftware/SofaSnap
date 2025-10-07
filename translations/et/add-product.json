@@ -1,5 +1,39 @@
 {
   "addProduct": {
-    "breadcrumb": "Lisa toode"
+    "breadcrumb": "Lisa toode",
+    "errors": {
+      "input": "Sisend on vigane!",
+      "accept_terms": "Kuulutuse lisamiseks peate nõustuma meie tingimustega!",
+      "accept_terms_desc": "Noustuge meie tingimustega  ",
+      "here": "siin",
+      "img_upload": "Pildi üleslaadimine ebaõnnestus. Proovige uuesti.",
+      "generic": "Midagi läks valesti. Proovige uuesti.",
+      "same_img": "Sama pilti ei saa 2 korda laadida",
+      "unknown_file": "ei voimalda sellist failitüüpi. Ainult JPG, JPEG või PNG",
+      "max_size": "on liiga suur! Maksimaalne failisuurus on 10MB"
+    },
+    "toasts": {
+      "edit_success": "Kuulutuse muutmine oli edukas.",
+      "description": "Kuulutusi saab hallata",
+      "success": "Kuulutus on edukalt lisatud."
+    },
+    "category": "Kategooria",
+    "category_placeholder": "Valige kategooria",
+    "second_placeholder": "Mis tootega on tegemist",
+    "description": "Toote kirjeldus",
+    "name_placeholder": "Nimi",
+    "width": "Laius (cm)",
+    "height": "Kõrgus (cm)",
+    "length": "Pikkus (cm)",
+    "material_placeholder": "Materjal",
+    "description_placeholder": "Kirjeldus",
+    "rent": "Rendi",
+    "rent_desc": "€ / Päev",
+    "sell": "Müü",
+    "address": "Aadress",
+    "save_changes": "Salvesta muudatused",
+    "confirm": "Kinnita",
+    "cancel": "Tühista",
+    "add_img": "Lisa pildid" 
   }
 }

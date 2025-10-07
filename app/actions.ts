@@ -1,7 +1,7 @@
 "use server";
 
 import { encodedRedirect } from "@/utils/utils";
-import { createClient } from "@/utils/supabase/server";
+import { createClient, supabaseAdminClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { productSchemaServer, Review, TProductServer } from "@/lib/product-validation";
@@ -383,7 +383,7 @@ export async function sendContactEmailAction(
 
 async function getOwnerInfo(userId: string): Promise<OwnerInfo | null> {
   try {
-    const supabase = await createClient();
+    const supabase = await supabaseAdminClient()
     const { data: userData, error } = await supabase.auth.admin.getUserById(userId);
 
     if (error || !userData.user?.email) {

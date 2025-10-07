@@ -1,6 +1,5 @@
 import Image from "next/image"
 import React from 'react'
-import { Button } from "./ui/button"
 import { NavLinks } from "./nav-links"
 import { NavIcons } from "./nav-icons"
 import Link from 'next/link'
@@ -13,6 +12,7 @@ import Profile from "./nav-bar-profile"
 import { TSignUpSchema } from "@/lib/register-validation"
 import { getFavoriteProducts } from "@/utils/supabase/queries/favorite"
 import { LanguageSwitcher } from "./language-switcher"
+import LoginButton from "./login-button"
 
 const NavBar = async () => {
 
@@ -42,13 +42,7 @@ const NavBar = async () => {
                         {user.data.user ? (
                             <LogOut />
                         ) :
-                            <div>
-                                <Link href={"/login"}>
-                                    <Button className="rounded-full bg-accent text-bg-foreground px-[25px] lg:py-[11px] lg:px-[25px] xl:p-[11px] xl:px-[40px] shadow-xl">
-                                    Logi sisse
-                                    </Button>
-                                </Link>
-                            </div>
+                        <LoginButton />
                         }
                     </div>
                 </div>

@@ -6,6 +6,7 @@ import { XIcon } from 'lucide-react'
 import { IImage } from '@/lib/product-validation'
 import NextImage from 'next/image'
 import { debounce } from 'lodash'
+import { useTranslation } from '@/lib/i18n/i18n-provider'
 
 interface ImageInputProps {
   images: IImage[],
@@ -17,6 +18,7 @@ function AdvancedImageInput({ images, setImages, baseValue }: ImageInputProps) {
   const [draggedItem, setDraggedItem] = useState<IImage | null>(null)
   const [dragOverItem, setDragOverItem] = useState<IImage | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { t } = useTranslation()
 
 
   const isFirstRender = useRef(0)
@@ -48,17 +50,17 @@ function AdvancedImageInput({ images, setImages, baseValue }: ImageInputProps) {
         let duplicateCheck = true
         images.map((img) => {
           if (img.name == file.name) {
-            alert(`${file.name} sama pilti ei saa 2 korda laadida`)
+            alert(`${file.name} ${t('addProduct.errors.same_img')}`)
             duplicateCheck = false;
           }
         })
 
         if (!isValidType) {
-          alert(`${file.name} ei voimalda sellist failitüüpi. Ainult JPG, JPEG või PNG`);
+          alert(`${file.name} ${t('addProduct.errors.unknown_file')}`);
         }
 
         if (!isValidSize) {
-          alert(`${file.name} on liiga suur! Maksimaalne failisuurus on 10MB`);
+          alert(`${file.name} ${t('addProduct.errors.max_size')}`);
         }
 
         return isValidType && isValidSize && duplicateCheck;
@@ -192,7 +194,7 @@ function AdvancedImageInput({ images, setImages, baseValue }: ImageInputProps) {
           onClick={handleButtonClick}
           className="p-4 md:p-7 w-[150px] md:w-[206px] bg-accent text-black rounded-3xl"
         >
-          Lisa pildid
+          {t("addProduct.add_img")}
         </Button>
         <Input
           id="images"

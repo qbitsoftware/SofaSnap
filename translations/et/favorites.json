@@ -2,8 +2,12 @@
   "favorites": {
     "title": "Teie lemmiktooted",
     "emptyTitle": "Sinu lemmiktooted puuduvad",
-    "count": "Teil on {count} lemmikut",
+    "count": "Teil on",
+    "count_second": "lemmikut",
     "viewProducts": "Vaata tooteid",
-    "goHome": "Mine kodulehele"
+    "goHome": "Mine kodulehele",
+    "rentPeriod": "Rendiperiood",
+    "material": "Materjal: ",
+    "size": "Mõõtmed: "
   }
 }

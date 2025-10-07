@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import React from 'react'
 import { removeFromFavoritesAction } from '@/app/actions'
 import Link from 'next/link'
+import { useTranslation } from '@/lib/i18n/i18n-provider'
 
 interface FavoriteProps {
   product: Product
@@ -16,6 +17,7 @@ interface FavoriteProps {
 
 export const FavoriteProduct: React.FC<FavoriteProps> = ({ product, user_id }) => {
   const router = useRouter()
+  const { t } = useTranslation()
 
   const handleRemoveItem = async (product_id: number, user_id: string) => {
     try {
@@ -61,7 +63,7 @@ export const FavoriteProduct: React.FC<FavoriteProps> = ({ product, user_id }) =
             </div>
             {product.type == "rent" && product.start_date && product.end_date && (
               <div className='bg-gray-50 rounded-lg p-3'>
-                <p className='text-sm text-gray-600 mb-1'>Rendiperiood:</p>
+                <p className='text-sm text-gray-600 mb-1'>{t("favorites.rentPeriod")}</p>
                 <p className='text-sm font-medium'>
                   {`${formatDate(new Date(product.start_date))} - ${formatDate(new Date(product.end_date))}`}
                 </p>
@@ -69,9 +71,9 @@ export const FavoriteProduct: React.FC<FavoriteProps> = ({ product, user_id }) =
             )}
 
             <div className='flex flex-wrap gap-2 text-xs text-gray-500'>
-              <span>Materjal: {product.material}</span>
+              <span>{t("favorites.material")} {product.material}</span>
               <span>•</span>
-              <span>Mõõtmed: {product.length}×{product.width}×{product.heigth}cm</span>
+              <span>{t("favorites.size")} {product.length}×{product.width}×{product.heigth}cm</span>
             </div>
           </div>
         </div>
