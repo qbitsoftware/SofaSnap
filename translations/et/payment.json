@@ -1,0 +1,18 @@
+{
+  "payment": {
+    "loading": "Laadimine...",
+    "successful": "Makse õnnestus!",
+    "successfulMessage": "Teie makse on edukalt töödeldud.",
+    "details": "Makse üksikasjad",
+    "amount": "Summa",
+    "email": "E-post",
+    "goToListings": "Mine kuulutustele",
+    "backToHome": "Tagasi avalehele",
+    "emailSent": "Saate peagi kinnitusmeili.",
+    "failed": "Makse tühistatud",
+    "failedMessage": "Teie makse ei olnud lõpetatud. Palun proovige uuesti.",
+    "whatHappened": "Mis juhtus?",
+    "whatHappenedMessage": "Makseprotsess tühistati või ebaõnnestus. Teie kontole ei tehtud mingeid makseid.",
+    "needHelp": "Vajate abi? Kontaktige meie tugimeeskonda"
+  }
+}

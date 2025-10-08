@@ -1,69 +1,69 @@
-import { Notification } from "@/maksekeskus/maksekeskus_types";
-import { changeOrderStatus} from "@/utils/supabase/queries/orders";
 import { NextResponse } from "next/server";
-import { sendEmailAction } from "@/app/actions";
+import { stripe } from "@/lib/stripe";
+import Stripe from "stripe";
+import { changeProductStatus } from "@/utils/supabase/queries/products";
 
 
 export async function POST(req: Request) {
+    let event: Stripe.Event;
     try {
-        const contentType = req.headers.get('content-type');
-        if (contentType === 'application/x-www-form-urlencoded; charset=UTF-8') {
-            const text = await req.text();
-            const params = new URLSearchParams(text);
-            const jsonString = params.get('json');
-
-            if (!jsonString) {
-                throw new Error('Missing "json" parameter in the body');
-            }
-
-            const body: Notification = JSON.parse(jsonString);
-            // if (mac && !await validateMAC(mac, body)) {
-            //     return NextResponse.json({ success: false }, { status: 401 });
-            // }
-
-            if (body.status == "COMPLETED") {
-                try {
-                    // const res = await completeOrder("", body.transaction)
-                    // if (!res.data) {
-                    //     return NextResponse.json({ success: false }, { status: 500 });
-                    // }
-                    await sendEmailAction("37612a@gmail.com", "Ostukinnitus", "<h1>Suurait2h et te ostsiste mei kaest nori manti, tulge homme jalle</h1>")
-                } catch (error) {
-                    console.error(error)
-                    return NextResponse.json({ success: false }, { status: 500 });
-                }
-            } else {
-                try {
-                    const res = await changeOrderStatus("", body.transaction, body.status)
-                    if (!res.data) {
-                        return NextResponse.json({ success: false }, { status: 500 });
-                    }
-                } catch (error) {
-                    console.error(error)
-                    return NextResponse.json({ success: false }, { status: 500 });
-                }
-            }
-        }
-        return NextResponse.json({ success: true }, { status: 200 });
-    } catch (error) {
-        console.error('Error reading request body:', error);
-        return NextResponse.json({ success: false }, { status: 500 });
+        event = stripe.webhooks.constructEvent(
+            await (await req.blob()).text(),
+            req.headers.get("stripe-signature") as string,
+            process.env.STRIPE_WEBHOOK_SECRET as string,
+        );
+    } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Unknown error";
+        // On error, log and return the error message.
+        console.log("error meesssage", errorMessage)
+        if (!(err instanceof Error)) console.log(err);
+        console.log(`❌ Error message: ${errorMessage}`);
+        return NextResponse.json(
+            { message: `Webhook Error: ${errorMessage}` },
+            { status: 400 },
+        );
     }
+
+    console.log("✅ Success:", event.id);
+
+    const permittedEvents: string[] = [
+        "checkout.session.completed",
+        "payment_intent.succeeded",
+        "payment_intent.payment_failed",
+    ];
+
+    if (permittedEvents.includes(event.type)) {
+        let data;
+
+        try {
+            switch (event.type) {
+                case "checkout.session.completed":
+                    data = event.data.object as Stripe.Checkout.Session;
+                    console.log("completed", data)
+                    changeProductStatus(parseInt(data.metadata?.product_id || "0"), "accepted")
+                    console.log(`💰 CheckoutSession status: ${data.payment_status}`);
+                    break;
+                case "payment_intent.payment_failed":
+                    data = event.data.object as Stripe.PaymentIntent;
+                    console.log(`❌ Payment failed: ${data.last_payment_error?.message}`);
+                    break;
+                case "payment_intent.succeeded":
+                    data = event.data.object as Stripe.PaymentIntent;
+                    console.log(`💰 PaymentIntent status: ${data.status}`);
+                    break;
+                default:
+                    throw new Error(`Unhandled event: ${event.type}`);
+            }
+        } catch (error) {
+            console.log(error);
+            return NextResponse.json(
+                { message: "Webhook handler failed" },
+                { status: 500 },
+            );
+        }
+    }
+    return NextResponse.json(
+        { message: `Success` },
+        { status: 200 },
+    );
 }
-
-
-// {
-//     amount: '52.5',
-//     currency: 'EUR',
-//     customer_name: 'Tõõger Leõpäöld',
-//     merchant_data: null,
-//     message_time: '2024-12-04T08:32:58+0000',
-//     message_type: 'payment_return',
-//     reference: null,
-//     shop: 'e3dcd8e4-a4d2-4659-99dc-4b2ec79dbd7f',
-//     signature: '7BB21984C695AE44E0B1B21528366BB7B63CA0C7FEB141D77FBAEB2A40D1EF1A24396550C20B39C72DF847E6371CC3A6E7A16C3F37145ED25DC53A753067E7C6',
-//     status: 'COMPLETED',
-//     transaction: '70786723-a296-490e-80aa-c24d3b94d1f5'
-//   }
-
-

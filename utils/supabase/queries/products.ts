@@ -763,6 +763,22 @@ export const getProductReviews = async (product_id: number) => {
     }
 }
 
+export const changeProductStatus = async (product_id: number, status: string) => {
+    try {
+        const result = await db.update(product).set({ status: status }).where(eq(product.id, product_id)).returning();
+        return {
+            data: result,
+            error: undefined,
+        }
+    } catch (error) {
+        console.error("Error changing product status:", error)
+        return {
+            data: undefined,
+            error: "Server error"
+        }
+    }
+}
+
 export const getPendingProducts = async () => {
     try {
         const user = await GetUserInfo()

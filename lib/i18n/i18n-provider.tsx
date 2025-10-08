@@ -11,6 +11,7 @@ import etHowItWorks from '@/translations/et/how-it-works.json';
 import etAuth from '@/translations/et/auth.json';
 import etFaq from '@/translations/et/faq.json';
 import etContact from '@/translations/et/contact.json';
+import etPayment from '@/translations/et/payment.json';
 import etAbout from '@/translations/et/about.json';
 import etMap from '@/translations/et/map.json';
 import etListings from '@/translations/et/listings.json';
@@ -34,6 +35,7 @@ import enAuth from '@/translations/en/auth.json';
 import enFaq from '@/translations/en/faq.json';
 import enContact from '@/translations/en/contact.json';
 import enAbout from '@/translations/en/about.json';
+import enPayment from '@/translations/en/payment.json';
 import enMap from '@/translations/en/map.json';
 import enListings from '@/translations/en/listings.json';
 import enFavorites from '@/translations/en/favorites.json';
@@ -63,8 +65,8 @@ const mergeTranslations = (...sources: any[]) => {
 };
 
 const translations: Record<Locale, any> = {
-  et: mergeTranslations(etCommon, etLanding, etCategories, etProducts, etReviews, etHowItWorks, etAuth, etFaq, etContact, etAbout, etMap, etListings, etFavorites, etAddProduct, etTerms, etNavbar, etFooter, etResponsibleRenter, etPrivacyPolicy, etCancellationPolicy, etReportUser),
-  en: mergeTranslations(enCommon, enLanding, enCategories, enProducts, enReviews, enHowItWorks, enAuth, enFaq, enContact, enAbout, enMap, enListings, enFavorites, enAddProduct, enTerms, enNavbar, enFooter, enResponsibleRenter, enPrivacyPolicy, enCancellationPolicy, enReportUser),
+  et: mergeTranslations(etCommon, etLanding, etCategories, etProducts, etReviews, etHowItWorks, etAuth, etFaq, etContact, etAbout, etMap, etListings, etFavorites, etAddProduct, etTerms, etNavbar, etFooter, etResponsibleRenter, etPrivacyPolicy, etCancellationPolicy, etReportUser, etPayment),
+  en: mergeTranslations(enCommon, enLanding, enCategories, enProducts, enReviews, enHowItWorks, enAuth, enFaq, enContact, enAbout, enMap, enListings, enFavorites, enAddProduct, enTerms, enNavbar, enFooter, enResponsibleRenter, enPrivacyPolicy, enCancellationPolicy, enReportUser, enPayment),
 };
 
 export function I18nProvider({ children }: { children: ReactNode }) {

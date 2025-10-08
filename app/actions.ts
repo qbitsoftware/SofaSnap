@@ -18,7 +18,6 @@ import { MaksekeskusClient } from "@/maksekeskus/client";
 import { ITransaction } from "@/maksekeskus/maksekeskus_types";
 import { sendEmail } from "@/lib/emails";
 import { addFavorite, removeFavorite } from "@/utils/supabase/queries/favorite";
-import { resend } from "@/lib/resend";
 import { ContactEmailData, EmailContent, EmailSendResult, OwnerInfo } from "@/types/email";
 import { prepareEmailContent } from "@/lib/utils";
 import type { Stripe } from "stripe";
@@ -408,23 +407,24 @@ async function sendEmailWithFallback(
   content: EmailContent,
   replyTo: string
 ): Promise<boolean> {
-  try {
-    const result = await resend.emails.send({
-      from: 'Seatly <noreply@seatly.com>',
-      to: [to],
-      subject: content.subject,
-      html: content.html,
-      replyTo,
-    });
+  void replyTo;
+  // try {
+  //   const result = await resend.emails.send({
+  //     from: 'Seatly <noreply@seatly.com>',
+  //     to: [to],
+  //     subject: content.subject,
+  //     html: content.html,
+  //     replyTo,
+  //   });
 
-    if (result.error) {
-      throw new Error('Resend failed');
-    }
+  //   if (result.error) {
+  //     throw new Error('Resend failed');
+  //   }
 
-    return true;
-  } catch (resendError) {
-    console.warn('Resend failed, trying nodemailer fallback...', resendError);
-  }
+  //   return true;
+  // } catch (resendError) {
+  //   console.warn('Resend failed, trying nodemailer fallback...', resendError);
+  // }
 
   // Fallback to nodemailer
   try {
@@ -436,7 +436,7 @@ async function sendEmailWithFallback(
   }
 }
 
-export async function createCheckoutSession(): Promise<{ url: string | null }> {
+export async function createCheckoutSession(product_id: number): Promise<{ url: string | null }> {
   const headersList = await headers();
   const origin: string = headersList.get("origin") as string;
 
@@ -448,7 +448,7 @@ export async function createCheckoutSession(): Promise<{ url: string | null }> {
           price_data: {
             currency: "EUR",
             product_data: {
-              name: "Custom amount donation",
+              name: "Product listing fee",
             },
             unit_amount: 100,
           },
@@ -456,7 +456,11 @@ export async function createCheckoutSession(): Promise<{ url: string | null }> {
       ],
       mode: "payment",
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/?canceled=true`,
+      cancel_url: `${origin}/cancel?canceled=true`,
+      metadata: {
+        product_id: product_id.toString(),
+        type: "product_listing",
+      }
     });
 
   return {
@@ -477,47 +481,3 @@ export async function createPaymentIntent(
 
   return { client_secret: paymentIntent.client_secret as string };
 }
-
-// export async function createCheckoutSession(data: { amount: number, productName: string }) {
-
-
-
-// export async function createCheckoutSession(): Promise<{ url: string | null }> {
-//   const origin: string = headers().get("origin") as string;
-
-//   const checkoutSession: Stripe.Checkout.Session =
-//     await stripe.checkout.sessions.create({
-//       line_items: [
-//         {
-//           quantity: 1,
-//           price_data: {
-//             currency: "EUR",
-//             product_data: {
-//               name: "Custom amount donation",
-//             },
-//             unit_amount: 100,
-//           },
-//         },
-//       ],
-//       mode: "payment",
-//       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-//       cancel_url: `${origin}/?canceled=true`,
-//     });
-
-//   return {
-//     url: checkoutSession.url,
-//   };
-// }
-
-// export async function createPaymentIntent(
-//   data: FormData,
-// ): Promise<{ client_secret: string }> {
-//   const paymentIntent: Stripe.PaymentIntent =
-//     await stripe.paymentIntents.create({
-//       amount: 100,
-//       automatic_payment_methods: { enabled: true },
-//       currency: "EUR",
-//     });
-
-//   return { client_secret: paymentIntent.client_secret as string };
-// }

@@ -1,0 +1,18 @@
+{
+  "payment": {
+    "loading": "Loading...",
+    "successful": "Payment successful!",
+    "successfulMessage": "Your payment has been processed successfully.",
+    "details": "Payment Details",
+    "amount": "Amount",
+    "email": "Email",
+    "goToListings": "Go to Listings",
+    "backToHome": "Back to Home",
+    "emailSent": "You will receive a confirmation email shortly.",
+    "failed": "Payment Canceled",
+    "failedMessage": "Your payment was not completed. Please try again.",
+    "whatHappened": "What happened?",
+    "whatHappenedMessage": "The payment process was canceled or failed. No charges were made to your account.",
+    "needHelp": "Need help? Contact our support team"
+  }
+}
