@@ -408,24 +408,6 @@ async function sendEmailWithFallback(
   replyTo: string
 ): Promise<boolean> {
   void replyTo;
-  // try {
-  //   const result = await resend.emails.send({
-  //     from: 'Seatly <noreply@seatly.com>',
-  //     to: [to],
-  //     subject: content.subject,
-  //     html: content.html,
-  //     replyTo,
-  //   });
-
-  //   if (result.error) {
-  //     throw new Error('Resend failed');
-  //   }
-
-  //   return true;
-  // } catch (resendError) {
-  //   console.warn('Resend failed, trying nodemailer fallback...', resendError);
-  // }
-
   // Fallback to nodemailer
   try {
     await sendEmail(to, content.subject, content.html);

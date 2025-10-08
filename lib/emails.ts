@@ -13,7 +13,7 @@ export const sendEmail = async (to: string, subject: string, htmlContent: string
   });
 
   const mailOptions = {
-    from: "Seatly",
+    from: "Seatly <" + process.env.EMAIL_USER + ">",
     to,
     subject,
     html: htmlContent,
