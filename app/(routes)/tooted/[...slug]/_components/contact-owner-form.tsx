@@ -16,7 +16,7 @@ import { Mail } from 'lucide-react'
 import { sendContactEmailAction } from '@/app/actions'
 import { useTranslation } from '@/lib/i18n/i18n-provider'
 
-const createContactSchema = (t: (key: string) => string) => z.object({
+const createContactSchema = (t: (key: string) => string, productType: string | null) => z.object({
     senderEmail: z
         .string()
         .email({ message: t('products.detail.contact.validation.emailInvalid') }),
@@ -31,25 +31,33 @@ const createContactSchema = (t: (key: string) => string) => z.object({
         .string()
         .min(10, { message: t('products.detail.contact.validation.messageMin') })
         .max(1000, { message: t('products.detail.contact.validation.messageMax') }),
+    startDate: productType === 'rent' ? z
+        .string()
+        .min(1, { message: t('products.detail.contact.validation.startDateRequired') }) : z.string().optional(),
+    endDate: productType === 'rent' ? z
+        .string()
+        .min(1, { message: t('products.detail.contact.validation.endDateRequired') }) : z.string().optional(),
 })
 
 interface ContactOwnerFormProps {
     productId: number
     productName: string
     ownerUserId: string
+    productType: string | null
 }
 
 export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
     productId,
     productName,
-    ownerUserId
+    ownerUserId,
+    productType,
 }) => {
     const [isOpen, setIsOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const toast = useToast()
     const { t } = useTranslation()
 
-    const contactSchema = createContactSchema(t)
+    const contactSchema = createContactSchema(t, productType)
     type ContactForm = z.infer<typeof contactSchema>
 
     const form = useForm<ContactForm>({
@@ -58,6 +66,8 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
             senderEmail: "",
             senderPhone: "",
             message: t('products.detail.contact.defaultMessage').replace('{productName}', productName),
+            startDate: "",
+            endDate: "",
         },
     })
 
@@ -70,7 +80,9 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                 productName,
                 ownerUserId,
                 senderName: "", // Remove sender name requirement
-                senderPhone: data.senderPhone || ""
+                senderPhone: data.senderPhone || "",
+                startDate: data.startDate || "",
+                endDate: data.endDate || ""
             })
 
             if (result.success) {
@@ -151,6 +163,44 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                                 </FormItem>
                             )}
                         />
+                        {productType === 'rent' && (
+                            <>
+                                <FormField
+                                    control={form.control}
+                                    name="startDate"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{t('products.detail.contact.startDateLabel')}</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="date"
+                                                    {...field}
+                                                    disabled={isSubmitting}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="endDate"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{t('products.detail.contact.endDateLabel')}</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="date"
+                                                    {...field}
+                                                    disabled={isSubmitting}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </>
+                        )}
                         <FormField
                             control={form.control}
                             name="message"

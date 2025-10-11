@@ -21,7 +21,7 @@ export default function ListingCard({ listing }: { listing: ProductAndCategories
     const router = useRouter()
 
     const handlePay = async () => {
-        const { url } = await createCheckoutSession(listing.product.id)
+        const { url } = await createCheckoutSession(listing.product)
         // console.log(url)
         if (url) {
             router.push(url)

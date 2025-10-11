@@ -11,9 +11,19 @@ import { Separator } from "@/components/ui/separator";
 import { useTranslation } from "@/lib/i18n/i18n-provider";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export function LoginForm({ searchParams }: { searchParams: any }) {
+export function LoginForm() {
   const { t } = useTranslation();
+  const searchParams = useSearchParams();
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  useEffect(() => {
+    if (searchParams.get("error") != "") {
+      setErrorMsg("Kasutajanimi või parool on vale");
+    }
+  }, [searchParams])
+  console.log("erormsg", errorMsg);
 
   return (
     <div className="flex justify-center items-center w-full flex-col md:min-h-[80vh] pb-20">
@@ -38,8 +48,10 @@ export function LoginForm({ searchParams }: { searchParams: any }) {
               placeholder={t('auth.login.passwordPlaceholder')}
               required
             />
+
+            <FormMessage message={{ error: errorMsg }} />
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col justify-between items-center">
             <Link
               className="text-base text-accent-foreground font-normal underline"
               href="/forgot-password"
@@ -55,7 +67,6 @@ export function LoginForm({ searchParams }: { searchParams: any }) {
               {t('auth.login.registerButton')}
             </Button>
           </Link>
-          <FormMessage message={searchParams} />
         </div>
       </form>
     </div>

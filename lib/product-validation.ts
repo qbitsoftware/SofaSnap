@@ -19,38 +19,6 @@ export const productSchema = z
         address: z.string().min(1, "Aadress on nõutud"),
         status: z.string().optional(),
         all_img: z.array(z.string(), { message: "Lisa vähemalt 1 pilt tootest" }).min(1, "Lisa vähemalt 1 pilt tootest").max(10, "10 pilti on maksimaalne kogus"),
-    }).superRefine((value, ctx) => {
-
-        const today = new Date();
-        if (value.type === "rent") {
-            if (!value.start_date) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: "Alguskuupäev on nõutav",
-                    path: ["start_date"],
-                });
-            } else if (value.start_date < today) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: "Alguskuupäev ei tohi olla minevikus",
-                    path: ["start_date"],
-                });
-            }
-
-            if (!value.end_date) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: "Lõppkuupäev on nõutav",
-                    path: ["end_date"],
-                });
-            } else if (value.end_date < today) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: "Lõppkuupäev ei tohi olla minevikus",
-                    path: ["end_date"],
-                });
-            }
-        }
     });
 
 
@@ -75,43 +43,6 @@ export const productSchemaServer = z.object({
     address: z.string().min(1, "Aadress on nõutud"),
     all_img: z.array(z.string(), { message: "Lisa vähemalt 1 pilt tootest" }).min(1).max(10, "9 pilti on maksimaalne kogus"),
     total_clicks: z.number().optional(),
-}).superRefine((value, ctx) => {
-    const today = new Date();
-    if (value.type === "rent") {
-        if (value.start_date) {
-            const startDate = new Date(value.start_date);
-            if (startDate < today) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: "Alguskuupäev ei tohi olla minevikus",
-                    path: ["start_date"],
-                });
-            }
-        } else {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: "Alguskuupäev on nõutav",
-                path: ["start_date"],
-            });
-        }
-        if (value.end_date) {
-            const endDate = new Date(value.end_date);
-            if (endDate < today) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: "Lõppkuupäev ei tohi olla minevikus",
-                    path: ["end_date"],
-                });
-            }
-        } else {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: "Lõppkuupäev on nõutav",
-                path: ["end_date"],
-            });
-        }
-
-    }
 });
 
 export type TProductClient = z.infer<typeof productSchema>

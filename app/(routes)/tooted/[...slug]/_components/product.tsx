@@ -153,6 +153,7 @@ export const ProductComponent: React.FC<ProductProps> = ({ product, user }) => {
                         productId={product.id}
                         productName={product.name}
                         ownerUserId={product.user_id}
+                        productType={product.type}
                     />
                 </div>
             </div>

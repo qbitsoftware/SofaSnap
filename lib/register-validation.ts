@@ -33,6 +33,8 @@ export const registerValidator = z.discriminatedUnion('userType', [
     path: ['confirm_password'],
 });
 export type TSignUpSchema = z.infer<typeof registerValidator>
+export type Eraklient = z.infer<typeof eraisikSchema>
+export type Ariklient = z.infer<typeof ariklientSchema>
 
 export type TPasswordChangeSchema = z.infer<typeof passwordChangeValidator>
 

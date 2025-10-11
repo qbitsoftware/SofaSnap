@@ -19,6 +19,8 @@
       "dimensions": "Dimensions:",
       "similarProducts": "Similar Products",
       "contact": {
+        "startDateLabel": "Rental Start Date",
+        "endDateLabel": "Rental End Date",
         "button": "Contact Owner",
         "dialogTitle": "Contact the listing owner",
         "dialogDescription": "Send a message to the owner of the listing \"{productName}\". Your contact information will be visible in the message.",
@@ -42,7 +44,9 @@
           "phoneMax": "Phone number must not exceed 15 digits",
           "phoneInvalid": "Invalid phone number",
           "messageMin": "Message must contain at least 10 characters",
-          "messageMax": "Message must not exceed 1000 characters"
+          "messageMax": "Message must not exceed 1000 characters",
+          "startDateRequired": "Start date is required",
+          "endDateRequired": "End date is required"
         }
       }
     }

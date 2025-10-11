@@ -11,6 +11,8 @@ export type EmailContent = {
     productId: number;
     productName: string;
     ownerUserId: string;
+    startDate?: string;
+    endDate?: string
   }
   
   export type EmailSendResult = {

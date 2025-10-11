@@ -4,7 +4,7 @@ import { useToast } from "@/components/hooks/use-toast"
 import { SubmitButton } from "@/components/submit-button"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { registerValidator, TSignUpSchema } from "@/lib/register-validation"
+import { Eraklient, registerValidator, TSignUpSchema } from "@/lib/register-validation"
 import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Check } from "lucide-react"
@@ -15,6 +15,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { ContractCompany } from "./contract-company"
 import { useTranslation } from "@/lib/i18n/i18n-provider"
+import { sendRegistrationEmailAction } from "@/app/actions"
 
 type UserType = "Eraisik" | "Äriklient";
 
@@ -152,6 +153,15 @@ const RegisterForm = () => {
         }
 
         if (responseData.success) {
+            switch (userType) {
+                case "Eraisik":
+                    const newData = data as Eraklient
+                    await sendRegistrationEmailAction(data.email, newData.first_name + " " + newData.last_name)
+                    break
+                case "Äriklient":
+                    await sendRegistrationEmailAction(data.email, data.email)
+                    break
+            }
             toast.toast({
                 title: t('auth.register.successMessage'),
             })

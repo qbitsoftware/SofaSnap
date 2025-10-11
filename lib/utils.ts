@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Feature } from "./coordinates-validation";
-import { generateContactEmailSubject, generateContactEmailTemplate } from "./email-templates";
+import { generateContactEmailSubject, generateContactEmailTemplate, generateInvoiceSubject, generateInvoiceTemplate, generateSignupSubject, generateSignupTemplate, InvoiceEmailTemplateData } from "./email-templates";
 import { ContactEmailData, EmailContent, OwnerInfo } from "@/types/email";
 
 
@@ -13,7 +13,6 @@ export function cn(...inputs: ClassValue[]) {
 //use user_id as session token
 export const fetchSuggestions = async (search_input: string, session_token: string) => {
   const suggestUrl = "https://api.mapbox.com/search/searchbox/v1/suggest?"
-  console.log("test")
 
   const params = {
     q: search_input,
@@ -137,4 +136,21 @@ export function prepareEmailContent(
   };
 }
 
+export function prepareSignupEmail(
+  email: string,
+  name: string
+): EmailContent {
+  return {
+    subject: generateSignupSubject(),
+    html: generateSignupTemplate(email, name)
+  };
+}
 
+export function prepareInvoiceEmail(
+  data: InvoiceEmailTemplateData
+): EmailContent {
+  return {
+    subject: generateInvoiceSubject(data.invoiceNumber),
+    html: generateInvoiceTemplate(data)
+  }
+}

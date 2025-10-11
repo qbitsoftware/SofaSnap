@@ -19,7 +19,7 @@ import { ITransaction } from "@/maksekeskus/maksekeskus_types";
 import { sendEmail } from "@/lib/emails";
 import { addFavorite, removeFavorite } from "@/utils/supabase/queries/favorite";
 import { ContactEmailData, EmailContent, EmailSendResult, OwnerInfo } from "@/types/email";
-import { prepareEmailContent } from "@/lib/utils";
+import { prepareEmailContent, prepareSignupEmail } from "@/lib/utils";
 import type { Stripe } from "stripe";
 import { stripe } from "@/lib/stripe";
 
@@ -351,6 +351,23 @@ export async function deleteProductAction(product_id: number): Promise<{ data: s
   return await deleteProduct(product_id)
 }
 
+export async function sendRegistrationEmailAction(to: string, name: string) {
+  try {
+    const emailContent = prepareSignupEmail(to, name)
+    const emailSent = await sendEmailWithFallback(to, emailContent)
+    return emailSent
+      ? { success: true }
+      : { success: false, error: 'Email saatmine ebaõnnestus. Palun proovige hiljem uuesti.' };
+  } catch (error) {
+    console.error('Error sending registration email:', error);
+    return {
+      success: false,
+      error: 'Tehnilised probleemid e-posti saatmisel'
+    };
+  }
+
+}
+
 export async function sendContactEmailAction(
   data: ContactEmailData
 ): Promise<EmailSendResult> {
@@ -365,7 +382,7 @@ export async function sendContactEmailAction(
     }
 
     const emailContent = prepareEmailContent(data, ownerInfo);
-    const emailSent = await sendEmailWithFallback(ownerInfo.email, emailContent, data.senderEmail);
+    const emailSent = await sendEmailWithFallback(ownerInfo.email, emailContent);
 
     return emailSent
       ? { success: true }
@@ -402,12 +419,10 @@ async function getOwnerInfo(userId: string): Promise<OwnerInfo | null> {
   }
 }
 
-async function sendEmailWithFallback(
+export async function sendEmailWithFallback(
   to: string,
   content: EmailContent,
-  replyTo: string
 ): Promise<boolean> {
-  void replyTo;
   // Fallback to nodemailer
   try {
     await sendEmail(to, content.subject, content.html);
@@ -418,9 +433,10 @@ async function sendEmailWithFallback(
   }
 }
 
-export async function createCheckoutSession(product_id: number): Promise<{ url: string | null }> {
+export async function createCheckoutSession(product: Product): Promise<{ url: string | null }> {
   const headersList = await headers();
   const origin: string = headersList.get("origin") as string;
+  const user = await GetUserInfo()
 
   const checkoutSession: Stripe.Checkout.Session =
     await stripe.checkout.sessions.create({
@@ -440,8 +456,10 @@ export async function createCheckoutSession(product_id: number): Promise<{ url: 
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/cancel?canceled=true`,
       metadata: {
-        product_id: product_id.toString(),
+        product_id: product.id.toString(),
         type: "product_listing",
+        product_name: product.name,
+        user_email: user.data.user?.email || "",
       }
     });
 

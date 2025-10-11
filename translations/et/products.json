@@ -19,6 +19,8 @@
       "dimensions": "Mõõtmed:",
       "similarProducts": "Sarnased tooted",
       "contact": {
+        "startDateLabel": "Rendi alguskuupäev",
+        "endDateLabel": "Rendi lõppkuupäev",
         "button": "Võta ühendust",
         "dialogTitle": "Võta ühendust kuulutuse omanikuga",
         "dialogDescription": "Saada sõnum kuulutuse \"{productName}\" omanikule. Sinu kontaktandmed jäävad nähtavaks sõnumis.",
@@ -42,7 +44,9 @@
           "phoneMax": "Telefoninumber ei tohi ületada 15 numbrit",
           "phoneInvalid": "Kehtetu telefoninumber",
           "messageMin": "Sõnum peab sisaldama vähemalt 10 tähemärki",
-          "messageMax": "Sõnum ei tohi ületada 1000 tähemärki"
+          "messageMax": "Sõnum ei tohi ületada 1000 tähemärki",
+          "startDateRequired": "Alguskuupäev on kohustuslik",
+          "endDateRequired": "Lõppkuupäev on kohustuslik"
         }
       }
     }

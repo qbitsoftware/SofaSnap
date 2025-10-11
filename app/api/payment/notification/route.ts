@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import Stripe from "stripe";
 import { changeProductStatus } from "@/utils/supabase/queries/products";
+import { prepareInvoiceEmail } from "@/lib/utils";
+import { InvoiceEmailTemplateData } from "@/lib/email-templates";
+import { sendEmailWithFallback } from "@/app/actions";
 
 
 export async function POST(req: Request) {
@@ -42,6 +45,26 @@ export async function POST(req: Request) {
                     console.log("completed", data)
                     changeProductStatus(parseInt(data.metadata?.product_id || "0"), "accepted")
                     console.log(`💰 CheckoutSession status: ${data.payment_status}`);
+                    if (data.metadata && data.metadata.user_email != "") {
+                        console.log("sending email")
+                        const emailData: InvoiceEmailTemplateData = {
+                            transactionId: data.id,
+                            invoiceNumber: data.metadata?.product_id || "0",
+                            customerEmail: data.metadata ? data.metadata.user_email : "",
+                            adDuration: "Piiramatu",
+                            productName: data.metadata ? data.metadata.product_name : "Toode",
+                            invoiceDate: new Date().toLocaleDateString("et-EE"),
+                            amount: data.amount_total ? (data.amount_total / 100).toFixed(2) + " EUR" : "0 EUR",
+                            paymentMethod: data.payment_method_types ? data.payment_method_types[0] : "N/A",
+                        }
+                        const emailContent = prepareInvoiceEmail(emailData)
+                        const emailSent = await sendEmailWithFallback(data.metadata?.user_email, emailContent)
+                        if (emailSent) {
+                            console.log("Invoice email sent to:", data.metadata?.user_email);
+                        }
+                    } else {
+                        console.log("No customer email found in the session.")
+                    }
                     break;
                 case "payment_intent.payment_failed":
                     data = event.data.object as Stripe.PaymentIntent;

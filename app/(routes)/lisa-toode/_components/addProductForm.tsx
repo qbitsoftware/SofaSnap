@@ -9,13 +9,11 @@ import { useToast } from '@/components/hooks/use-toast';
 import { IImage, productSchema, productSchemaServer, TProductServer } from '@/lib/product-validation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Map } from 'lucide-react';
-import { DateRange } from 'react-day-picker';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { capitalize } from 'lodash';
 import { AdvancedImageInput } from './uploadForm';
 import { AddressTS, Category } from '@/utils/supabase/supabase.types';
 import { SubmitButton } from '@/components/submit-button';
-import { Calender } from '@/components/calender';
 import { createProductAction } from '@/app/actions';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -221,11 +219,11 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
         }
     }
 
-    const handleDates = async (item: DateRange | undefined) => {
-        form.setValue("start_date", item?.from);
-        form.setValue("end_date", item?.to);
-        await form.trigger(["start_date", "end_date"]);
-    };
+    // const handleDates = async (item: DateRange | undefined) => {
+    //     form.setValue("start_date", item?.from);
+    //     form.setValue("end_date", item?.to);
+    //     await form.trigger(["start_date", "end_date"]);
+    // };
 
     const handleImages = async (value: string[]) => {
         form.setValue("all_img", value)
@@ -465,7 +463,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                         </FormItem>
                     )}
                 />
-                {
+                {/* {
                     form.watch("type") === "rent" && <div className='md:h-[180px] md:pt-[50px]'>
                         <FormField
                             control={form.control}
@@ -489,7 +487,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                         />
 
                     </div>
-                }
+                } */}
 
                 < FormField
                     control={form.control}
@@ -512,6 +510,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                     render={() => (
                         <FormItem className=''>
                             <AdvancedImageInput
+                                form={form}
                                 images={images}
                                 setImages={setImages}
                                 baseValue={handleImages}
