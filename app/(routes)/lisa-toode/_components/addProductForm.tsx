@@ -65,6 +65,10 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
     const [subCategories, setSubCategories] = useState<string[] | null>([]);
 
     useEffect(() => {
+        form.trigger("all_img")
+    }, [images])
+
+    useEffect(() => {
         const initialCategory = form.getValues("category");
 
         const selectedCategory = categories.find(c => c.name_slug.toLowerCase() === initialCategory.replaceAll("ö", "o").replaceAll("ä", "a").replaceAll("ü", "u").replaceAll("õ", "o").replaceAll("ž", "z"));
@@ -510,7 +514,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                     render={() => (
                         <FormItem className=''>
                             <AdvancedImageInput
-                                form={form}
+                                // form={form}
                                 images={images}
                                 setImages={setImages}
                                 baseValue={handleImages}

@@ -7,22 +7,18 @@ import { IImage } from '@/lib/product-validation'
 import NextImage from 'next/image'
 import { debounce } from 'lodash'
 import { useTranslation } from '@/lib/i18n/i18n-provider'
-import { UseFormReturn } from 'react-hook-form'
-import { Listing } from '@/types'
 
 interface ImageInputProps {
   images: IImage[],
   setImages: React.Dispatch<React.SetStateAction<IImage[]>>,
   baseValue: (value: string[]) => void
-  form: UseFormReturn<Listing, any, Listing>
 }
 
-function AdvancedImageInput({ images, setImages, baseValue, form }: ImageInputProps) {
+function AdvancedImageInput({ images, setImages, baseValue }: ImageInputProps) {
   const [draggedItem, setDraggedItem] = useState<IImage | null>(null)
   const [dragOverItem, setDragOverItem] = useState<IImage | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { t } = useTranslation()
-
 
   const isFirstRender = useRef(0)
   const debouncedBaseValue = useRef(
@@ -88,7 +84,6 @@ function AdvancedImageInput({ images, setImages, baseValue, form }: ImageInputPr
           // baseValue(baseValueInput)
           return updated
         });
-        form.trigger("all_img")
       }
     }
   };
@@ -112,7 +107,6 @@ function AdvancedImageInput({ images, setImages, baseValue, form }: ImageInputPr
       return updatedImages
     });
 
-    form.trigger("all_img")
   };
 
 
