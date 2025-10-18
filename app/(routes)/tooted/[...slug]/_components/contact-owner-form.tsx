@@ -119,29 +119,30 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                     {t('products.detail.contact.button')}
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[525px] max-h-[90vh] overflow-y-auto max-w-[90vw]">
-                <DialogHeader>
-                    <DialogTitle>{t('products.detail.contact.dialogTitle')}</DialogTitle>
-                    <DialogDescription>
+            <DialogContent className="contact-dialog-content sm:max-w-[425px] max-h-[100dvh] max-w-[95vw] p-2 sm:p-4 overflow-y-auto !rounded-2xl">
+                <DialogHeader className="mb-2">
+                    <DialogTitle className="text-lg sm:text-xl leading-tight">{t('products.detail.contact.dialogTitle')}</DialogTitle>
+                    <DialogDescription className="text-xs sm:text-sm">
                         {t('products.detail.contact.dialogDescription').replace('{productName}', productName)}
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-h-[70vh] overflow-y-auto px-1">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 max-h-[70dvh] overflow-y-auto px-0 sm:px-1">
                         <FormField
                             control={form.control}
                             name="senderPhone"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{t('products.detail.contact.phoneLabel')}</FormLabel>
+                                <FormItem className="mb-1">
+                                    <FormLabel className="text-xs">{t('products.detail.contact.phoneLabel')}</FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder={t('products.detail.contact.phonePlaceholder')}
                                             {...field}
                                             disabled={isSubmitting}
+                                            className="h-9 text-sm px-2"
                                         />
                                     </FormControl>
-                                    <FormMessage />
+                                    <FormMessage className="text-xs" />
                                 </FormItem>
                             )}
                         />
@@ -149,17 +150,18 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                             control={form.control}
                             name="senderEmail"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{t('products.detail.contact.emailLabel')}</FormLabel>
+                                <FormItem className="mb-1">
+                                    <FormLabel className="text-xs">{t('products.detail.contact.emailLabel')}</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="email"
                                             placeholder={t('products.detail.contact.emailPlaceholder')}
                                             {...field}
                                             disabled={isSubmitting}
+                                            className="h-9 text-sm px-2"
                                         />
                                     </FormControl>
-                                    <FormMessage />
+                                    <FormMessage className="text-xs" />
                                 </FormItem>
                             )}
                         />
@@ -169,16 +171,17 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                                     control={form.control}
                                     name="startDate"
                                     render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>{t('products.detail.contact.startDateLabel')}</FormLabel>
+                                        <FormItem className="mb-1">
+                                            <FormLabel className="text-xs">{t('products.detail.contact.startDateLabel')}</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="date"
                                                     {...field}
                                                     disabled={isSubmitting}
+                                                    className="h-9 text-sm px-2"
                                                 />
                                             </FormControl>
-                                            <FormMessage />
+                                            <FormMessage className="text-xs" />
                                         </FormItem>
                                     )}
                                 />
@@ -186,16 +189,17 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                                     control={form.control}
                                     name="endDate"
                                     render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>{t('products.detail.contact.endDateLabel')}</FormLabel>
+                                        <FormItem className="mb-1">
+                                            <FormLabel className="text-xs">{t('products.detail.contact.endDateLabel')}</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="date"
                                                     {...field}
                                                     disabled={isSubmitting}
+                                                    className="h-9 text-sm px-2"
                                                 />
                                             </FormControl>
-                                            <FormMessage />
+                                            <FormMessage className="text-xs" />
                                         </FormItem>
                                     )}
                                 />
@@ -205,34 +209,34 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                             control={form.control}
                             name="message"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{t('products.detail.contact.messageLabel')}</FormLabel>
+                                <FormItem className="mb-1">
+                                    <FormLabel className="text-xs">{t('products.detail.contact.messageLabel')}</FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder={t('products.detail.contact.messagePlaceholder')}
-                                            className="resize-none h-[120px]"
+                                            className="resize-none h-[80px] text-sm px-2"
                                             {...field}
                                             disabled={isSubmitting}
                                         />
                                     </FormControl>
-                                    <FormMessage />
+                                    <FormMessage className="text-xs" />
                                 </FormItem>
                             )}
                         />
-                        <div className="flex gap-3 pt-4">
+                        <div className="flex gap-2 pt-2">
                             <Button
                                 type="button"
                                 variant="outline"
                                 onClick={() => setIsOpen(false)}
                                 disabled={isSubmitting}
-                                className="flex-1"
+                                className="flex-1 h-9 text-sm"
                             >
                                 {t('products.detail.contact.cancel')}
                             </Button>
                             <SubmitButton
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="flex-1 bg-primary text-white hover:bg-primary/90"
+                                className="flex-1 h-9 text-sm bg-primary text-white hover:bg-primary/90"
                             >
                                 <span className={isSubmitting ? "hidden" : "block"}>
                                     {t('products.detail.contact.send')}
@@ -241,7 +245,7 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                                     <ClipLoader
                                         color={"#ffffff"}
                                         loading={isSubmitting}
-                                        size={20}
+                                        size={18}
                                         aria-label="Loading Spinner"
                                     />
                                 )}
@@ -252,4 +256,31 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
             </DialogContent>
         </Dialog>
     )
+}
+
+// Add viewport-fit and scroll support for mobile/tablet
+if (typeof window !== 'undefined') {
+    document.documentElement.style.setProperty('viewport-fit', 'cover');
+}
+
+// Custom styles for dialog on mobile
+if (typeof window !== 'undefined') {
+    const styleId = 'contact-dialog-content-style';
+    if (!document.getElementById(styleId)) {
+        const style = document.createElement('style');
+        style.id = styleId;
+        style.innerHTML = `
+        @media (max-width: 767px) {
+            .contact-dialog-content {
+                top: 0 !important;
+                margin-top: 12px !important;
+                max-width: 80vw !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                border-radius: 18px !important;
+            }
+        }
+        `;
+        document.head.appendChild(style);
+    }
 }
