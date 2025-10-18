@@ -65,7 +65,10 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
     const [subCategories, setSubCategories] = useState<string[] | null>([]);
 
     useEffect(() => {
-        form.trigger("all_img")
+        console.log("images changed", images)
+        if (images) {
+            form.setValue("all_img", images.map(img => img.name))
+        }
     }, [images])
 
     useEffect(() => {
@@ -99,6 +102,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
     }, [form, initialData]);
 
     const onSubmit = async (data: Listing) => {
+        form.trigger("all_img")
         const formData: TProductServer = {
             ...data,
             start_date: data.start_date instanceof Date ? data.start_date.toISOString() : "",

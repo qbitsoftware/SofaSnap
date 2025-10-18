@@ -41,7 +41,7 @@ export function generateContactEmailTemplate(data: ContactEmailTemplateData): st
           overflow: hidden;
         }
         .header { 
-          background: linear-gradient(135deg, #f07162 0%, #e55e50 100%);
+          background: linear-gradient(135deg, hsl(16, 88%, 80%) 0%, hsl(16, 88%, 80%) 100%);
           color: white;
           padding: 32px 24px;
           text-align: center;
@@ -68,7 +68,7 @@ export function generateContactEmailTemplate(data: ContactEmailTemplateData): st
           margin-bottom: 24px;
         }
         .product-name { 
-          color: #f07162; 
+          color: hsl(16, 88%, 80%); 
           font-weight: 700; 
           font-size: 18px;
           margin-bottom: 8px;
@@ -76,7 +76,7 @@ export function generateContactEmailTemplate(data: ContactEmailTemplateData): st
         }
         .rental-period {
           background: #fef3f2;
-          border: 1px solid #fecaca;
+          border: 1px solid hsl(16, 88%, 80%);
           border-radius: 8px;
           padding: 12px 16px;
           margin: 16px 0;
@@ -89,7 +89,7 @@ export function generateContactEmailTemplate(data: ContactEmailTemplateData): st
           font-size: 16px;
         }
         .rental-dates {
-          color: #dc2626;
+          color: hsl(16, 88%, 80%);
           font-weight: 600;
         }
         .contact-section {
@@ -101,7 +101,7 @@ export function generateContactEmailTemplate(data: ContactEmailTemplateData): st
           color: #1e293b;
           margin-bottom: 16px;
           padding-bottom: 8px;
-          border-bottom: 2px solid #f07162;
+          border-bottom: 2px solid hsl(16, 88%, 80%);
           display: inline-block;
         }
         .contact-info { 
@@ -139,7 +139,7 @@ export function generateContactEmailTemplate(data: ContactEmailTemplateData): st
           background: linear-gradient(135deg, #fefefe 0%, #f8fafc 100%);
           border: 1px solid #e2e8f0;
           border-radius: 12px;
-          border-left: 4px solid #f07162;
+          border-left: 4px solid hsl(16, 88%, 80%);
           font-size: 15px;
           line-height: 1.7;
           color: #334155;
@@ -153,7 +153,7 @@ export function generateContactEmailTemplate(data: ContactEmailTemplateData): st
         }
         .cta-button {
           display: inline-block;
-          background: linear-gradient(135deg, #f07162 0%, #e55e50 100%);
+          background: linear-gradient(135deg, hsl(16, 88%, 80%) 0%, hsl(16, 88%, 80%) 100%);
           color: white;
           text-decoration: none;
           padding: 12px 24px;
@@ -175,7 +175,7 @@ export function generateContactEmailTemplate(data: ContactEmailTemplateData): st
           margin-bottom: 8px;
         }
         .logo {
-          color: #f07162;
+          color: hsl(16, 88%, 80%);
           font-weight: 700;
           font-size: 16px;
         }
@@ -237,7 +237,7 @@ export function generateContactEmailTemplate(data: ContactEmailTemplateData): st
         
         <div class="footer">
           <p>Saate vastata otse sellele e-kirjale või võtta ühendust ülaltoodud kontaktandmete kaudu.</p>
-          <p>See kiri on saadetud <span class="logo">SofaSnap</span> platvormi kaudu.</p>
+          <p>See kiri on saadetud <span class="logo">Seatly</span> platvormi kaudu.</p>
         </div>
       </div>
     </body>
@@ -246,7 +246,7 @@ export function generateContactEmailTemplate(data: ContactEmailTemplateData): st
 }
 
 export function generateSignupSubject(): string {
-  return `Tere tulemast SofaSnap perekonda! 🎉`;
+  return `Tere tulemast Seatly perekonda! 🎉`;
 }
 
 export function generateSignupTemplate(email: string, name: string): string {
@@ -256,7 +256,7 @@ export function generateSignupTemplate(email: string, name: string): string {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Tere tulemast SofaSnap platvormile</title>
+      <title>Tere tulemast Seatly platvormile</title>
       <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -275,7 +275,7 @@ export function generateSignupTemplate(email: string, name: string): string {
           overflow: hidden;
         }
         .header { 
-          background: linear-gradient(135deg, #f07162 0%, #e55e50 100%);
+          background: linear-gradient(135deg, hsl(16, 88%, 80%) 0%, hsl(16, 88%, 80%) 100%);
           color: white;
           padding: 40px 24px;
           text-align: center;
@@ -304,7 +304,7 @@ export function generateSignupTemplate(email: string, name: string): string {
           margin-bottom: 32px;
         }
         .user-name {
-          color: #f07162;
+          color: hsl(16, 88%, 80%);
           font-weight: 700;
           font-size: 20px;
         }
@@ -323,7 +323,7 @@ export function generateSignupTemplate(email: string, name: string): string {
           color: #1e293b;
           margin-bottom: 20px;
           padding-bottom: 8px;
-          border-bottom: 2px solid #f07162;
+          border-bottom: 2px solid hsl(16, 88%, 80%);
           display: inline-block;
         }
         .features-grid {
@@ -356,13 +356,13 @@ export function generateSignupTemplate(email: string, name: string): string {
         }
         .next-steps {
           background: linear-gradient(135deg, #fef3f2 0%, #fef2f2 100%);
-          border: 1px solid #fecaca;
+          border: 1px solid hsl(16, 88%, 80%);
           border-radius: 12px;
           padding: 24px;
           margin-bottom: 32px;
         }
         .next-steps h3 {
-          color: #dc2626;
+          color: hsl(16, 88%, 80%);
           font-size: 18px;
           font-weight: 700;
           margin-bottom: 16px;
@@ -383,7 +383,7 @@ export function generateSignupTemplate(email: string, name: string): string {
           font-weight: 500;
         }
         .step-number {
-          background: #dc2626;
+          background: hsl(16, 88%, 80%);
           color: white;
           width: 24px;
           height: 24px;
@@ -412,7 +412,7 @@ export function generateSignupTemplate(email: string, name: string): string {
         }
         .cta-button {
           display: inline-block;
-          background: linear-gradient(135deg, #f07162 0%, #e55e50 100%);
+          background: linear-gradient(135deg, hsl(16, 88%, 80%) 0%, hsl(16, 88%, 80%) 100%);
           color: white;
           text-decoration: none;
           padding: 16px 32px;
@@ -447,7 +447,7 @@ export function generateSignupTemplate(email: string, name: string): string {
           margin-bottom: 12px;
         }
         .support-contact {
-          color: #f07162;
+          color: hsl(16, 88%, 80%);
           text-decoration: none;
           font-weight: 600;
         }
@@ -463,7 +463,7 @@ export function generateSignupTemplate(email: string, name: string): string {
           margin-bottom: 8px;
         }
         .logo {
-          color: #f07162;
+          color: hsl(16, 88%, 80%);
           font-weight: 700;
           font-size: 18px;
         }
@@ -487,7 +487,7 @@ export function generateSignupTemplate(email: string, name: string): string {
       <div class="email-container">
         <div class="header">
           <span class="welcome-emoji">🎉</span>
-          <h1>Tere tulemast SofaSnap perekonda!</h1>
+          <h1>Tere tulemast Seatly perekonda!</h1>
           <p>Sinu konto on edukalt loodud</p>
         </div>
         
@@ -495,7 +495,7 @@ export function generateSignupTemplate(email: string, name: string): string {
           <div class="welcome-section">
             <p class="welcome-text">
               Tere, <span class="user-name">${name}</span>!<br>
-              Täname, et liitusid meie kogukonnaga. Oleme põnevil sind SofaSnap perekonnas näha!
+              Täname, et liitusid meie kogukonnaga. Oleme põnevil sind Seatly perekonnas näha!
             </p>
           </div>
 
@@ -566,7 +566,7 @@ export function generateSignupTemplate(email: string, name: string): string {
         </div>
         
         <div class="footer">
-          <p>Täname, et valisid <span class="logo">SofaSnap</span> platvormi!</p>
+          <p>Täname, et valisid <span class="logo">Seatly</span> platvormi!</p>
           <p>Sinu e-post: ${email}</p>
           <div class="social-links">
             <a href="https://www.seatly.eu/muugitingimused">Kasutustingimused</a>
@@ -592,7 +592,7 @@ export interface InvoiceEmailTemplateData {
 }
 
 export function generateInvoiceSubject(invoiceNumber: string): string {
-  return `SofaSnap arve ${invoiceNumber} - Reklaami makse`;
+  return `Seatly arve ${invoiceNumber} - Reklaami makse`;
 }
 
 export function generateInvoiceTemplate(data: InvoiceEmailTemplateData): string {
@@ -602,7 +602,7 @@ export function generateInvoiceTemplate(data: InvoiceEmailTemplateData): string 
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>SofaSnap Arve</title>
+      <title>Seatly Arve</title>
       <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -621,7 +621,7 @@ export function generateInvoiceTemplate(data: InvoiceEmailTemplateData): string 
           overflow: hidden;
         }
         .header { 
-          background: linear-gradient(135deg, #f07162 0%, #e55e50 100%);
+          background: linear-gradient(135deg, hsl(16, 88%, 80%) 0%, hsl(16, 88%, 80%) 100%);
           color: white;
           padding: 32px 24px;
           text-align: center;
@@ -655,7 +655,7 @@ export function generateInvoiceTemplate(data: InvoiceEmailTemplateData): string 
           margin-bottom: 8px;
         }
         .invoice-number {
-          color: #f07162;
+          color: hsl(16, 88%, 80%);
           font-weight: 600;
           font-size: 18px;
         }
@@ -676,7 +676,7 @@ export function generateInvoiceTemplate(data: InvoiceEmailTemplateData): string 
           color: #1e293b;
           margin-bottom: 12px;
           padding-bottom: 6px;
-          border-bottom: 2px solid #f07162;
+          border-bottom: 2px solid hsl(16, 88%, 80%);
           display: inline-block;
         }
         .customer-details p {
@@ -710,7 +710,7 @@ export function generateInvoiceTemplate(data: InvoiceEmailTemplateData): string 
         }
         .total-section {
           background: linear-gradient(135deg, #fef3f2 0%, #fef2f2 100%);
-          border: 1px solid #fecaca;
+          border: 1px solid hsl(16, 88%, 80%);
           border-radius: 12px;
           padding: 20px;
           margin-bottom: 24px;
@@ -730,7 +730,7 @@ export function generateInvoiceTemplate(data: InvoiceEmailTemplateData): string 
         .total-amount {
           font-size: 20px;
           font-weight: 700;
-          color: #dc2626;
+          color: hsl(16, 88%, 80%);
         }
         .payment-info {
           background: #f8fafc;
@@ -786,7 +786,7 @@ export function generateInvoiceTemplate(data: InvoiceEmailTemplateData): string 
           margin-bottom: 8px;
         }
         .logo {
-          color: #f07162;
+          color: hsl(16, 88%, 80%);
           font-weight: 700;
           font-size: 16px;
         }
@@ -874,15 +874,15 @@ export function generateInvoiceTemplate(data: InvoiceEmailTemplateData): string 
 
           <div class="thank-you-section">
             <h3>🎉 Täname teid!</h3>
-            <p>Teie reklaam on nüüd aktiivsena nähtav SofaSnap platvormil. Soovime edukat müüki!</p>
+            <p>Teie reklaam on nüüd aktiivsena nähtav Seatly platvormil. Soovime edukat müüki!</p>
           </div>
         </div>
         
         <div class="footer">
-          <p>See arve on genereeritud automaatselt <span class="logo">SofaSnap</span> süsteemi poolt.</p>
-          <p>Küsimuste korral võtke meiega ühendust: <a href="mailto:seatly@seatly.eu" style="color: #f07162;">seatly@seatly.eu</a></p>
+          <p>See arve on genereeritud automaatselt <span class="logo">Seatly</span> süsteemi poolt.</p>
+          <p>Küsimuste korral võtke meiega ühendust: <a href="mailto:seatly@seatly.eu" style="color: hsl(16, 88%, 80%);">seatly@seatly.eu</a></p>
           <div class="support-info">
-            <p>SofaSnap - Jätkusuutlik mööbli müük ja rent</p>
+            <p>Seatly - Jätkusuutlik mööbli müük ja rent</p>
           </div>
         </div>
       </div>

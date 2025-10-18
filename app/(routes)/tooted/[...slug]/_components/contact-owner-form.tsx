@@ -119,7 +119,7 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                     {t('products.detail.contact.button')}
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[525px]">
+            <DialogContent className="sm:max-w-[525px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>{t('products.detail.contact.dialogTitle')}</DialogTitle>
                     <DialogDescription>
@@ -127,7 +127,7 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-h-[70vh] overflow-y-auto px-1">
                         <FormField
                             control={form.control}
                             name="senderPhone"
