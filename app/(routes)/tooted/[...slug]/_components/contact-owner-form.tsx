@@ -119,7 +119,7 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                     {t('products.detail.contact.button')}
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[525px] max-h-[90vh] overflow-y-auto">
+            <DialogContent className="sm:max-w-[525px] max-h-[90vh] overflow-y-auto max-w-[90vw]">
                 <DialogHeader>
                     <DialogTitle>{t('products.detail.contact.dialogTitle')}</DialogTitle>
                     <DialogDescription>
