@@ -23,7 +23,6 @@ export function LoginForm() {
       setErrorMsg("Kasutajanimi või parool on vale");
     }
   }, [searchParams])
-  console.log("erormsg", errorMsg);
 
   return (
     <div className="flex justify-center items-center w-full flex-col md:min-h-[80vh] pb-20">

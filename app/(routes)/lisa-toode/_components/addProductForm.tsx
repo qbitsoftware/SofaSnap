@@ -65,7 +65,6 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
     const [subCategories, setSubCategories] = useState<string[] | null>([]);
 
     useEffect(() => {
-        console.log("images changed", images)
         if (images) {
             form.setValue("all_img", images.map(img => img.name))
         }
