@@ -160,20 +160,26 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             maxSizeMB: 4,
             useWebWorker: true,
         }
-        images.forEach(async (img) => {
-            if (img.file) {
-                const compressedFile = await imageCompression(img.file, options);
-                console.log('compressedFile instanceof Blob', compressedFile instanceof Blob);
-                console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`);
 
-                imgData.append('images', compressedFile)
-            }
-        });
+        await Promise.all(
+            images.map(async (img) => {
+                if (img.file) {
+                    try {
+                        const compressedFile = await imageCompression(img.file, options);
+                        imgData.append('images', compressedFile);
+                    } catch (error) {
+                        console.log("error", error);
+                    }
+                }
+            })
+        );
+
 
         const uploadResp = await fetch('/api/upload', {
             method: 'POST',
             body: imgData,
         });
+
 
         const uploadData = await uploadResp.json();
 
