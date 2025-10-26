@@ -10,7 +10,7 @@
       "generic": "Something went wrong. Please try again.",
       "same_img": "You cannot upload the same image twice",
       "unknown_file": "This file type is not allowed. Only JPG, JPEG, or PNG are allowed.",
-      "max_size": "is too large! Maximum file size is 10MB"
+      "max_size": "is too large! Maximum file size is 20MB"
     },
     "toasts": {
       "edit_success": "Ad was successfully edited.",

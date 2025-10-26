@@ -23,6 +23,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import Link from 'next/link';
 import { Textarea } from '@/components/ui/textarea';
 import { useTranslation } from '@/lib/i18n/i18n-provider';
+import imageCompression from 'browser-image-compression';
 
 interface ProductFormProps {
     id: string
@@ -155,9 +156,17 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                 })
             }
         }
-        images.forEach((img) => {
+        const options = {
+            maxSizeMB: 4,
+            useWebWorker: true,
+        }
+        images.forEach(async (img) => {
             if (img.file) {
-                imgData.append('images', img.file)
+                const compressedFile = await imageCompression(img.file, options);
+                console.log('compressedFile instanceof Blob', compressedFile instanceof Blob);
+                console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`);
+
+                imgData.append('images', compressedFile)
             }
         });
 
