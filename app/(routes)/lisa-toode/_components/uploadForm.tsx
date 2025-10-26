@@ -39,7 +39,7 @@ function AdvancedImageInput({ images, setImages, baseValue }: ImageInputProps) {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const allowedFileTypes = ["image/jpeg", "image/png", "image/jpg"];
-    const maxFileSizeMB = 10;
+    const maxFileSizeMB = 20;
     const maxFileSizeBytes = maxFileSizeMB * 1024 * 1024;
 
     if (event.target.files) {

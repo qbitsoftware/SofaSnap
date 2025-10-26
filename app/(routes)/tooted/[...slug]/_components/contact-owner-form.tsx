@@ -4,10 +4,8 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { SubmitButton } from '@/components/submit-button'
 import { ClipLoader } from 'react-spinners'
@@ -52,7 +50,6 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
     ownerUserId,
     productType,
 }) => {
-    const [isOpen, setIsOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const toast = useToast()
     const { t } = useTranslation()
@@ -91,7 +88,6 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                     description: t('products.detail.contact.successDescription')
                 })
                 form.reset()
-                setIsOpen(false)
             } else {
                 toast.toast({
                     title: t('products.detail.contact.errorTitle'),
@@ -110,29 +106,15 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
     }
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-                <Button
-                    className="w-full bg-primary text-white hover:bg-primary/90 rounded-full px-6 py-3 flex items-center gap-2"
-                >
-                    <Mail className="h-4 w-4" />
-                    {t('products.detail.contact.button')}
-                </Button>
-            </DialogTrigger>
-            <DialogContent className="contact-dialog-content sm:max-w-[425px] max-h-[100dvh] max-w-[95vw] p-2 sm:p-4 overflow-y-auto !rounded-2xl">
-                <DialogHeader className="mb-2">
-                    <DialogTitle className="text-lg sm:text-xl leading-tight">{t('products.detail.contact.dialogTitle')}</DialogTitle>
-                    <DialogDescription className="text-xs sm:text-sm">
-                        {t('products.detail.contact.dialogDescription').replace('{productName}', productName)}
-                    </DialogDescription>
-                </DialogHeader>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 max-h-[70dvh] overflow-y-auto px-0 sm:px-1">
+        <>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 max-h-[70dvh] overflow-y-auto px-0 sm:px-1">
+                    <div className='flex w-full gap-2 flex-col xl:flex-row'>
                         <FormField
                             control={form.control}
                             name="senderPhone"
                             render={({ field }) => (
-                                <FormItem className="mb-1">
+                                <FormItem className="mb-1 w-full">
                                     <FormLabel className="text-xs">{t('products.detail.contact.phoneLabel')}</FormLabel>
                                     <FormControl>
                                         <Input
@@ -150,7 +132,7 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                             control={form.control}
                             name="senderEmail"
                             render={({ field }) => (
-                                <FormItem className="mb-1">
+                                <FormItem className="mb-1 w-full">
                                     <FormLabel className="text-xs">{t('products.detail.contact.emailLabel')}</FormLabel>
                                     <FormControl>
                                         <Input
@@ -165,122 +147,139 @@ export const ContactOwnerForm: React.FC<ContactOwnerFormProps> = ({
                                 </FormItem>
                             )}
                         />
-                        {productType === 'rent' && (
-                            <>
-                                <FormField
-                                    control={form.control}
-                                    name="startDate"
-                                    render={({ field }) => (
-                                        <FormItem className="mb-1">
-                                            <FormLabel className="text-xs">{t('products.detail.contact.startDateLabel')}</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="date"
-                                                    {...field}
-                                                    disabled={isSubmitting}
-                                                    className="h-9 text-sm px-2"
-                                                />
-                                            </FormControl>
-                                            <FormMessage className="text-xs" />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="endDate"
-                                    render={({ field }) => (
-                                        <FormItem className="mb-1">
-                                            <FormLabel className="text-xs">{t('products.detail.contact.endDateLabel')}</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="date"
-                                                    {...field}
-                                                    disabled={isSubmitting}
-                                                    className="h-9 text-sm px-2"
-                                                />
-                                            </FormControl>
-                                            <FormMessage className="text-xs" />
-                                        </FormItem>
-                                    )}
-                                />
-                            </>
-                        )}
-                        <FormField
-                            control={form.control}
-                            name="message"
-                            render={({ field }) => (
-                                <FormItem className="mb-1">
-                                    <FormLabel className="text-xs">{t('products.detail.contact.messageLabel')}</FormLabel>
-                                    <FormControl>
-                                        <Textarea
-                                            placeholder={t('products.detail.contact.messagePlaceholder')}
-                                            className="resize-none h-[80px] text-sm px-2"
-                                            {...field}
-                                            disabled={isSubmitting}
-                                        />
-                                    </FormControl>
-                                    <FormMessage className="text-xs" />
-                                </FormItem>
-                            )}
-                        />
-                        <div className="flex gap-2 pt-2">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => setIsOpen(false)}
-                                disabled={isSubmitting}
-                                className="flex-1 h-9 text-sm"
-                            >
-                                {t('products.detail.contact.cancel')}
-                            </Button>
-                            <SubmitButton
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="flex-1 h-9 text-sm bg-primary text-white hover:bg-primary/90"
-                            >
-                                <span className={isSubmitting ? "hidden" : "block"}>
-                                    {t('products.detail.contact.send')}
-                                </span>
-                                {isSubmitting && (
-                                    <ClipLoader
-                                        color={"#ffffff"}
-                                        loading={isSubmitting}
-                                        size={18}
-                                        aria-label="Loading Spinner"
-                                    />
+                    </div>
+                    {productType === 'rent' && (
+                        <>
+                            <FormField
+                                control={form.control}
+                                name="startDate"
+                                render={({ field }) => (
+                                    <FormItem className="mb-1">
+                                        <FormLabel className="text-xs">{t('products.detail.contact.startDateLabel')}</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="date"
+                                                {...field}
+                                                disabled={isSubmitting}
+                                                className="h-9 text-sm px-2"
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-xs" />
+                                    </FormItem>
                                 )}
-                            </SubmitButton>
-                        </div>
-                    </form>
-                </Form>
-            </DialogContent>
-        </Dialog>
+                            />
+                            <FormField
+                                control={form.control}
+                                name="endDate"
+                                render={({ field }) => (
+                                    <FormItem className="mb-1">
+                                        <FormLabel className="text-xs">{t('products.detail.contact.endDateLabel')}</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="date"
+                                                {...field}
+                                                disabled={isSubmitting}
+                                                className="h-9 text-sm px-2"
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-xs" />
+                                    </FormItem>
+                                )}
+                            />
+                        </>
+                    )}
+                    <FormField
+                        control={form.control}
+                        name="message"
+                        render={({ field }) => (
+                            <FormItem className="mb-1">
+                                <FormLabel className="text-xs">{t('products.detail.contact.messageLabel')}</FormLabel>
+                                <FormControl>
+                                    <Textarea
+                                        placeholder={t('products.detail.contact.messagePlaceholder')}
+                                        className="resize-none h-[80px] text-sm px-2"
+                                        {...field}
+                                        disabled={isSubmitting}
+                                    />
+                                </FormControl>
+                                <FormMessage className="text-xs" />
+                            </FormItem>
+                        )}
+                    />
+                    <div className="flex gap-2 pt-2">
+                        {/* <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setIsOpen(false)}
+                            disabled={isSubmitting}
+                            className="flex-1 h-9 text-sm"
+                        >
+                            {t('products.detail.contact.cancel')}
+                        </Button>
+                        <SubmitButton
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="flex-1 h-9 text-sm bg-primary text-white hover:bg-primary/90"
+                        >
+                            <span className={isSubmitting ? "hidden" : "block"}>
+                                {t('products.detail.contact.send')}
+                            </span>
+                            {isSubmitting && (
+                                <ClipLoader
+                                    color={"#ffffff"}
+                                    loading={isSubmitting}
+                                    size={18}
+                                    aria-label="Loading Spinner"
+                                />
+                            )}
+                        </SubmitButton> */}
+                        <SubmitButton
+                            className="w-full bg-primary text-white hover:bg-primary/90 rounded-full px-6 py-3 flex items-center gap-2"
+                            disabled={isSubmitting}
+                        >
+                            {t('products.detail.contact.button')}
+                            {isSubmitting ? (
+                                <ClipLoader
+                                    color={"#ffffff"}
+                                    loading={isSubmitting}
+                                    size={18}
+                                    aria-label="Loading Spinner"
+                                />
+                            ) :
+                                <Mail className="h-4 w-4" />
+                            }
+                        </SubmitButton>
+                    </div>
+                </form>
+            </Form>
+
+        </>
     )
 }
 
 // Add viewport-fit and scroll support for mobile/tablet
-if (typeof window !== 'undefined') {
-    document.documentElement.style.setProperty('viewport-fit', 'cover');
-}
+// if (typeof window !== 'undefined') {
+//     document.documentElement.style.setProperty('viewport-fit', 'cover');
+// }
 
-// Custom styles for dialog on mobile
-if (typeof window !== 'undefined') {
-    const styleId = 'contact-dialog-content-style';
-    if (!document.getElementById(styleId)) {
-        const style = document.createElement('style');
-        style.id = styleId;
-        style.innerHTML = `
-        @media (max-width: 767px) {
-            .contact-dialog-content {
-                top: 0 !important;
-                margin-top: 12px !important;
-                max-width: 80vw !important;
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-                border-radius: 18px !important;
-            }
-        }
-        `;
-        document.head.appendChild(style);
-    }
-}
+// // Custom styles for dialog on mobile
+// if (typeof window !== 'undefined') {
+//     const styleId = 'contact-dialog-content-style';
+//     if (!document.getElementById(styleId)) {
+//         const style = document.createElement('style');
+//         style.id = styleId;
+//         style.innerHTML = `
+//         @media (max-width: 767px) {
+//             .contact-dialog-content {
+//                 top: 0 !important;
+//                 margin-top: 12px !important;
+//                 max-width: 80vw !important;
+//                 left: 50% !important;
+//                 transform: translateX(-50%) !important;
+//                 border-radius: 18px !important;
+//             }
+//         }
+//         `;
+//         document.head.appendChild(style);
+//     }
+// }

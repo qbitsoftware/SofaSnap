@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
+import sharp from 'sharp';
 
 export async function POST(req: Request) {
     try {
@@ -10,7 +11,7 @@ export async function POST(req: Request) {
 
         for (const [, value] of formData.entries()) {
             if (value instanceof File) {
-                if (value.size > 10 * 1024 * 1024) {
+                if (value.size > 20 * 1024 * 1024) {
                     return NextResponse.json({ error: 'Fail on liiga suur' }, { status: 400 });
                 }
 
@@ -30,12 +31,28 @@ export async function POST(req: Request) {
 
         const supabase = await createClient()
         const uploadPromises = files.map(async (file, index) => {
+            const uploadFile = file;
+            let uploadBuffer: Buffer | undefined = undefined;
+            if (['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)) {
+                const arrayBuffer = await file.arrayBuffer();
+                const inputBuffer = Buffer.from(arrayBuffer);
+                let sharpInstance = sharp(inputBuffer);
+                sharpInstance = sharpInstance.resize({ width: 1600, withoutEnlargement: true });
+                if (file.type === 'image/png') {
+                    sharpInstance = sharpInstance.png({ quality: 80, compressionLevel: 8 });
+                } else {
+                    sharpInstance = sharpInstance.jpeg({ quality: 80 });
+                }
+                uploadBuffer = await sharpInstance.toBuffer();
+            }
             const filename = `${uuidv4()}-${file.name}`.replaceAll(" ", "");
+            const uploadData = uploadBuffer ? uploadBuffer : uploadFile;
             const { data, error } = await supabase.storage
                 .from("resources")
-                .upload(`/products/${filename}`, file, {
+                .upload(`/products/${filename}`, uploadData, {
                     cacheControl: "3600",
                     upsert: false,
+                    contentType: file.type,
                 });
 
 

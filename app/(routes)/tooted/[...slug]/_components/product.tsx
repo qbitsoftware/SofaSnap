@@ -9,6 +9,7 @@ import { User } from '@/utils/supabase/supabase.types'
 import { ContactOwnerForm } from './contact-owner-form'
 import { useRouter } from 'next/navigation'
 import { useTranslation } from '@/lib/i18n/i18n-provider'
+import { Separator } from '@/components/ui/separator'
 
 interface ProductProps {
     product: ProductWithAddress
@@ -148,7 +149,8 @@ export const ProductComponent: React.FC<ProductProps> = ({ product, user }) => {
                 <div className=''>
                     <p className='break-words overflow-wrap break-word whitespace-pre-line'>{product.description}</p>
                 </div>
-                <div className='mt-6'>
+                <Separator className='w-full mt-6' />
+                <div className=''>
                     <ContactOwnerForm
                         productId={product.id}
                         productName={product.name}
