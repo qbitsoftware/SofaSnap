@@ -14,7 +14,7 @@ import { capitalize } from 'lodash';
 import { AdvancedImageInput } from './uploadForm';
 import { AddressTS, Category } from '@/utils/supabase/supabase.types';
 import { SubmitButton } from '@/components/submit-button';
-import { createProductAction } from '@/app/actions';
+import { createProductAction, generatePresignedUrls } from '@/app/actions';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { TSignUpSchema } from '@/lib/register-validation';
@@ -23,7 +23,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import Link from 'next/link';
 import { Textarea } from '@/components/ui/textarea';
 import { useTranslation } from '@/lib/i18n/i18n-provider';
-import imageCompression from 'browser-image-compression';
 
 interface ProductFormProps {
     id: string
@@ -102,7 +101,6 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
     }, [form, initialData]);
 
     const onSubmit = async (data: Listing) => {
-        form.trigger("all_img")
         const formData: TProductServer = {
             ...data,
             start_date: data.start_date instanceof Date ? data.start_date.toISOString() : "",
@@ -156,47 +154,92 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                 })
             }
         }
-        const options = {
-            maxSizeMB: 4,
-            useWebWorker: true,
-        }
 
-        await Promise.all(
-            images.map(async (img) => {
-                if (img.file) {
-                    try {
-                        const compressedFile = await imageCompression(img.file, options);
-                        imgData.append('images', compressedFile);
-                    } catch (error) {
-                        console.log("error", error);
+        const filesToUpload = images.filter(img => img.file);
+        const uploadedKeys: string[] = [];
+
+        // Sanitize file names to prevent issues with special characters
+        const sanitizeFileName = (fileName: string): string => {
+            const extension = fileName.substring(fileName.lastIndexOf('.'));
+            const nameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
+
+            // Remove special characters, keep only alphanumeric, hyphens, and underscores
+            const sanitized = nameWithoutExt
+                .toLowerCase()
+                .replace(/[^a-z0-9-_]/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '');
+
+            return `${sanitized}${extension.toLowerCase()}`;
+        };
+
+        if (filesToUpload.length > 0) {
+            try {
+                const presignedData = await generatePresignedUrls(
+                    filesToUpload.map(img => sanitizeFileName(img.name)),
+                    id
+                );
+
+                await Promise.all(
+                    presignedData.map(async ({ url, key }, index) => {
+                        const file = filesToUpload[index].file!;
+
+                        const response = await fetch(url, {
+                            method: 'PUT',
+                            body: file,
+                            headers: {
+                                'Content-Type': file.type,
+                            },
+                        });
+
+                        if (response.ok) {
+                            uploadedKeys.push(key);
+                            // const data = await response.json()
+                            // console.log("resposne", data)
+                        }
+
+                        console.log("response", response)
+                    })
+                );
+
+                //trigger lambda
+                const test: string[] = []
+                const resp = await fetch("https://faas-ams3-2a2df116.doserverless.co/api/v1/web/fn-a6a1fb57-c9d7-48f2-a66e-2c63c851f203/default/comprssor", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Basic ODZmN2U3MzEtOTcwMi00ODk4LWFmYmItOGMwZmViYTQ1OWVjOk03c25YcG5reXRTUWROTWJEVGVqR283QUtqVkRQSTFFOUdFdGpRd2JoYkttcmE2d2d6UE1JR25jRlQ3ZHd2TjQ=",
+                    },
+                    body: JSON.stringify({
+                        images: uploadedKeys,
+                        quality: 75,
+                    }),
+                })
+                const data = await resp.json();
+                data.results.map((item: { url: string, success: boolean }) => {
+                    if (item.success) {
+                        test.push(item.url);
                     }
-                }
-            })
-        );
-
-
-        const uploadResp = await fetch('/api/upload', {
-            method: 'POST',
-            body: imgData,
-        });
-
-
-        const uploadData = await uploadResp.json();
-
-        if (!uploadResp.ok) {
-            toast.toast({
-                title: t("addProduct.errors.img_upload"),
-            })
-            return;
+                })
+                formData.all_img = test
+            } catch (error) {
+                console.error('Upload failed:', error);
+                toast.toast({
+                    title: t("addProduct.errors.upload_failed"),
+                });
+                return;
+            }
         }
+
+
+
         //update all_img with correct img data
-        formData.all_img = uploadData.data
-        if (initialData) {
+        // if (initialData) {
 
-            const changed_images = filterRemovedItems(initialData, data, false)
-            formData.all_img.push(...changed_images)
+            // const changed_images = filterRemovedItems(initialData, data, false)
+            // formData.all_img.push(...changed_images)
             // return
-        }
+        // }
 
         const response = await createProductAction(formData)
         if (response.status === 400) {

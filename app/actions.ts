@@ -22,6 +22,9 @@ import { ContactEmailData, EmailContent, EmailSendResult, OwnerInfo } from "@/ty
 import { prepareEmailContent, prepareSignupEmail } from "@/lib/utils";
 import type { Stripe } from "stripe";
 import { stripe } from "@/lib/stripe";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+
 
 
 export const signUpAction = async (formData: FormData) => {
@@ -480,4 +483,39 @@ export async function createPaymentIntent(
   void data
 
   return { client_secret: paymentIntent.client_secret as string };
+}
+
+const s3Client = new S3Client({
+  endpoint: "https://" + process.env.DO_SPACES_ENDPOINT,
+  region: process.env.DO_SPACES_REGION,
+  credentials: {
+    accessKeyId: process.env.DO_BUCKET_ACCESS_KEY!,
+    secretAccessKey: process.env.DO_SECRET_BUCKET_KEY!,
+  },
+});
+
+export async function generatePresignedUrls(fileNames: string[], userId: string) {
+  const presignedUrls = await Promise.all(
+    fileNames.map(async (fileName) => {
+      const key = `products/${userId}/${Date.now()}-${fileName}`;
+
+      const command = new PutObjectCommand({
+        Bucket: process.env.DO_SPACES_BUCKET!,
+        Key: key,
+        ContentType: "image/*",
+        ACL: "public-read",
+      });
+
+      console.log("s3 client", s3Client)
+      const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+
+      return {
+        url,
+        key: "https://" + process.env.DO_SPACES_BUCKET + "." + process.env.DO_SPACES_ENDPOINT + "/" + key,
+        fileName,
+      };
+    })
+  );
+
+  return presignedUrls;
 }
