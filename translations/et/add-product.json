@@ -10,7 +10,8 @@
       "generic": "Midagi läks valesti. Proovige uuesti.",
       "same_img": "Sama pilti ei saa 2 korda laadida",
       "unknown_file": "ei voimalda sellist failitüüpi. Ainult JPG, JPEG või PNG",
-      "max_size": "on liiga suur! Maksimaalne failisuurus on 20MB"
+      "max_size": "on liiga suur! Maksimaalne failisuurus on 20MB",
+      "upload_failed": "Pildi üleslaadimine ebaõnnestus. Proovige uuesti."
     },
     "toasts": {
       "edit_success": "Kuulutuse muutmine oli edukas.",
@@ -34,6 +35,6 @@
     "save_changes": "Salvesta muudatused",
     "confirm": "Kinnita",
     "cancel": "Tühista",
-    "add_img": "Lisa pildid" 
+    "add_img": "Lisa pildid"
   }
 }
