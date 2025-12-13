@@ -31,7 +31,6 @@ export default function ListingCard({ listing }: { listing: ProductAndCategories
     const handleDelete = async (product_id: number) => {
         try {
             const result = await deleteProductAction(product_id)
-            console.log(result)
             toast.toast({ title: result.data })
             setIsOpen(false)
             router.refresh()

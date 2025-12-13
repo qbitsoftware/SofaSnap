@@ -7,6 +7,7 @@ import { alias } from 'drizzle-orm/pg-core'
 import { AddressTS, CategoryJoin, CategoryTS, Product, ProductRealTS, ProductReviewTS, ProductWithAddress } from '../supabase.types'
 import { Review, TProductServer } from '@/lib/product-validation'
 import { GetUserInfo } from '@/app/actions'
+import { EProductStatus } from '@/types'
 
 export const fetchProductsByCategories = async (categories: string[], page: number, sort: string | undefined, limit = 30) => {
     const offset = (page - 1) * limit
@@ -783,7 +784,26 @@ export const getPendingProducts = async () => {
     try {
         const user = await GetUserInfo()
         if (user.data && user.data.user?.user_metadata.role == 1) {
-            const result = await db.select().from(product).where(and(eq(product.status, "pending"), isNull(product.deleted_at)))
+            const result = await db
+                .select()
+                .from(product)
+                .where(
+                    and(
+                        or(
+                            eq(product.status, EProductStatus.NOT_PAID),
+                            eq(product.status, EProductStatus.REJECTED)
+                        ),
+                        isNull(product.deleted_at)
+                    )
+                )
+                .orderBy(
+                    sql`CASE 
+                        WHEN ${product.status} = ${EProductStatus.NOT_PAID} THEN 0 
+                        WHEN ${product.status} = ${EProductStatus.REJECTED} THEN 1 
+                        ELSE 2 
+                    END`,
+                    desc(product.created_at)
+                )
             return {
                 data: result,
                 error: undefined

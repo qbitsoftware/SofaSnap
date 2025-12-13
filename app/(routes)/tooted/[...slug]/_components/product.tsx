@@ -3,17 +3,20 @@
 import { ProductWithAddress } from '@/utils/supabase/supabase.types'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
-import { ChevronLeft, ChevronRight, StarIcon } from 'lucide-react'
-import { addToFavoritesAction, removeFromFavoritesAction } from '@/app/actions'
-import { User } from '@/utils/supabase/supabase.types'
+import { ChevronLeft, ChevronRight, StarIcon, ShieldAlert, ShieldCheck, Ban } from 'lucide-react'
+import { addToFavoritesAction, removeFromFavoritesAction, updateProductStatusAction } from '@/app/actions'
+import type { User } from '@supabase/supabase-js'
 import { ContactOwnerForm } from './contact-owner-form'
 import { useRouter } from 'next/navigation'
 import { useTranslation } from '@/lib/i18n/i18n-provider'
 import { Separator } from '@/components/ui/separator'
+import { Button } from '@/components/ui/button'
+import { EProductStatus } from '@/types'
+import { useToast } from '@/components/hooks/use-toast'
 
 interface ProductProps {
     product: ProductWithAddress
-    user: User
+    user: User | null
 }
 
 export const ProductComponent: React.FC<ProductProps> = ({ product, user }) => {
@@ -21,6 +24,9 @@ export const ProductComponent: React.FC<ProductProps> = ({ product, user }) => {
     const [isFavorite, setIsFavorite] = useState(product.favorite ? true : false)
     const router = useRouter()
     const { t } = useTranslation()
+    const toast = useToast()
+
+    const isAdmin = user?.user_metadata?.role === 1
 
     useEffect(() => {
         setIsFavorite(Boolean(product.favorite))
@@ -44,6 +50,8 @@ export const ProductComponent: React.FC<ProductProps> = ({ product, user }) => {
     }
 
     const handleToggleFavorite = async () => {
+        if (!user) return
+
         const newFavoriteState = !isFavorite
         setIsFavorite(newFavoriteState)
 
@@ -58,6 +66,21 @@ export const ProductComponent: React.FC<ProductProps> = ({ product, user }) => {
             // Revert on error
             setIsFavorite(!newFavoriteState)
             console.error('Error toggling favorite:', error)
+        }
+    }
+
+    const handleAdminAction = async (status: string) => {
+        try {
+            await updateProductStatusAction(product.id, status)
+            if (status === EProductStatus.ACCEPTED) {
+                toast.toast({ title: "Kuulutus edukalt kinnitatud", variant: "default" })
+            } else if (status === EProductStatus.REJECTED) {
+                toast.toast({ title: "Kuulutus edukalt tagasi lükatud", variant: "default" })
+            }
+            router.refresh()
+        } catch (error) {
+            console.error('Error updating product status:', error)
+            toast.toast({ title: "Viga staatuse muutmisel", variant: "destructive" })
         }
     }
 
@@ -128,6 +151,61 @@ export const ProductComponent: React.FC<ProductProps> = ({ product, user }) => {
                         <span className='text-muted-foreground'>{isFavorite ? t('products.detail.removeFromFavorites') : t('products.detail.addToFavorites')}</span>
                     </div>
                 )}
+
+                {/* Admin Controls */}
+                {isAdmin && (
+                    <div className='bg-amber-50 border-2 border-amber-200 rounded-lg p-4'>
+                        <div className='flex items-center gap-2 mb-3'>
+                            <ShieldAlert className='h-5 w-5 text-amber-600' />
+                            <h3 className='font-semibold text-amber-900'>Admin kontrollid</h3>
+                        </div>
+                        <div className='flex flex-col gap-2'>
+                            <div className='flex items-center gap-2 mb-2'>
+                                <span className='text-sm text-gray-600'>Praegune staatus:</span>
+                                {product.status === EProductStatus.ACCEPTED && (
+                                    <span className='px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800'>
+                                        Vastu võetud
+                                    </span>
+                                )}
+                                {product.status === EProductStatus.REJECTED && (
+                                    <span className='px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800'>
+                                        Tagasi lükatud
+                                    </span>
+                                )}
+                                {product.status === EProductStatus.NOT_PAID && (
+                                    <span className='px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800'>
+                                        Maksmise ootel
+                                    </span>
+                                )}
+                            </div>
+                            <div className='flex gap-2'>
+                                {product.status !== EProductStatus.ACCEPTED && (
+                                    <Button
+                                        onClick={() => handleAdminAction(EProductStatus.ACCEPTED)}
+                                        size="sm"
+                                        variant="outline"
+                                        className="flex-1 border-green-300 text-green-700 hover:bg-green-50 hover:text-green-800"
+                                    >
+                                        <ShieldCheck className="h-4 w-4 mr-2" />
+                                        Kinnita
+                                    </Button>
+                                )}
+                                {product.status !== EProductStatus.REJECTED && (
+                                    <Button
+                                        onClick={() => handleAdminAction(EProductStatus.REJECTED)}
+                                        size="sm"
+                                        variant="outline"
+                                        className="flex-1 border-red-300 text-red-700 hover:bg-red-50 hover:text-red-800"
+                                    >
+                                        <Ban className="h-4 w-4 mr-2" />
+                                        Lükka tagasi
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div className='flex md:items-start flex-wrap xl:flex-row gap-4 items-center'>
                     <h1 className='md:text-4xl text-[20px] xl:max-w-[60%] font-medium md:font-semibold m-0 p-0'>{product.name}</h1>
                     <div className='bg-accent py-2 flex items-center max-h-[40px] px-3 rounded-full'>

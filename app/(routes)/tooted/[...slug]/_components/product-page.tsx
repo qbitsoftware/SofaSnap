@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { SimilarProducts } from './similar-products'
 import { GetUserInfo } from '@/app/actions'
-import { User } from '@/utils/supabase/supabase.types'
+import type { User } from '@supabase/supabase-js'
 
 interface ProductPageProps {
   product_id: number
