@@ -66,7 +66,15 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
 
     useEffect(() => {
         if (images) {
-            form.setValue("all_img", images.map(img => img.name))
+            let imgsToAdd: string[] = []
+            images.forEach((img) => {
+                if (img.preview.includes("blob:")) {
+                    imgsToAdd.push("")
+                } else {
+                    imgsToAdd.push(img.preview)
+                }
+            })
+            form.setValue("all_img", imgsToAdd)
         }
     }, [images])
 
@@ -96,6 +104,17 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                 const secondPart = parts.slice(5).join('-');
                 imagesToAdd.push({ name: secondPart, preview: url, id: Math.random().toString(36).substr(2, 9), file: undefined })
             })
+            // form.setValue("all_img", imagesToAdd.map(img => img.preview.includes("blob:") ? "" : img.preview))
+            const imgStrToAdd: string[] = []
+            imagesToAdd.forEach((img) => {
+                // if (img.preview.includes("blob:")) return
+                if (img.preview.includes("blob:")) {
+                    imgStrToAdd.push("")
+                } else {
+                    imgStrToAdd.push(img.preview)
+                }
+            })
+            form.setValue("all_img", imgStrToAdd)
             setImages(imagesToAdd)
         }
     }, [form, initialData]);
@@ -106,6 +125,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             start_date: data.start_date instanceof Date ? data.start_date.toISOString() : "",
             end_date: data.end_date instanceof Date ? data.end_date.toISOString() : "",
         };
+
         //validate with server stuff first
         const validationResult = productSchemaServer.safeParse(formData);
         if (validationResult.error) {
@@ -114,6 +134,16 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             })
             return
         }
+
+        let imagesToAdd: string[] = []
+        if (data.all_img && data.all_img.length > 0) {
+            data.all_img.forEach((img) => {
+                if (img != "") {
+                    imagesToAdd.push(img)
+                }
+            })
+        }
+        formData.all_img = imagesToAdd
 
         if (user_metadata.agreement == undefined || !user_metadata.agreement) {
             toast.toast({
@@ -131,26 +161,34 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
             return
         }
 
-        const filterRemovedItems = (initialData: Listing, data: Listing, option: boolean) => {
-            return initialData.all_img.filter(item => {
+        const filterRemovedItems = (initialData: Listing, data: Listing) => {
+            return data.all_img.filter(item => {
+                if (item.includes("blob:") || item === "") {
+                    return false
+                }
                 const fileName = item.slice(item.lastIndexOf('/') + 1);
 
                 const parts = fileName.split('-');
-                const secondPart = parts.slice(5).join('-');
-                if (option) {
-                    return !data.all_img.includes(secondPart);
-                } else {
-                    return data.all_img.includes(secondPart)
+
+                let foundMatch = false;
+                if (initialData && initialData.all_img) {
+                    initialData.all_img.forEach((img) => {
+                        if (img.search(parts[1]) !== -1) {
+                            foundMatch = true;
+                        }
+                    })
                 }
+                return !foundMatch;
+
             });
         };
         const imgData = new FormData();
         if (initialData) {
             // const removedItems = initialData.all_img.filter(item => !data.all_img.includes(item.slice(item.lastIndexOf('/') + 1)));
-            const removedItems = filterRemovedItems(initialData, data, true)
+            const removedItems = filterRemovedItems(initialData, data)
             if (removedItems.length > 0) {
                 removedItems.map((img) => {
-                    imgData.append('remove_images', img.split('/resources/')[1].trim())
+                    imgData.append('remove_images', img.split('/products/')[1].trim())
                 })
             }
         }
@@ -194,11 +232,7 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
 
                         if (response.ok) {
                             uploadedKeys.push(key);
-                            // const data = await response.json()
-                            // console.log("resposne", data)
                         }
-
-                        console.log("response", response)
                     })
                 );
 
@@ -221,7 +255,8 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
                         test.push(item.url);
                     }
                 })
-                formData.all_img = test
+                formData.all_img.push(...test)
+
             } catch (error) {
                 console.error('Upload failed:', error);
                 toast.toast({
@@ -236,9 +271,9 @@ export const AddProductForm = ({ id, categories, user_metadata, initialData, add
         //update all_img with correct img data
         // if (initialData) {
 
-            // const changed_images = filterRemovedItems(initialData, data, false)
-            // formData.all_img.push(...changed_images)
-            // return
+        // const changed_images = filterRemovedItems(initialData, data, false)
+        // formData.all_img.push(...changed_images)
+        // return
         // }
 
         const response = await createProductAction(formData)

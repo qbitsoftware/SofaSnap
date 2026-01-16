@@ -33,7 +33,17 @@ function AdvancedImageInput({ images, setImages, baseValue }: ImageInputProps) {
       return;
     }
 
-    const baseValueInput = images.map((img,) => img.name);
+    // const baseValueInput = images.map((img) => img.preview);
+    let baseValueInput: string[] = []
+    if (images && images.length > 0) {
+      images.forEach((img) => {
+        if (img.preview.includes("blob:")) {
+          baseValueInput.push("")
+        } else {
+          baseValueInput.push(img.preview)
+        }
+      })
+    }
     debouncedBaseValue(baseValueInput);
   }, [images, debouncedBaseValue]);
 
@@ -103,9 +113,9 @@ function AdvancedImageInput({ images, setImages, baseValue }: ImageInputProps) {
         baseValueInput.push(String(i))
       }
 
-      // baseValue(baseValueInput, true)
       return updatedImages
     });
+
 
   };
 

@@ -4,7 +4,7 @@ import db from '@/utils/supabase/db'
 import { category, category_join, product, address, address_join_product, review, product_review, favorite } from '@/utils/supabase/schema'
 import { eq, and, sql, desc, inArray, gte, asc, isNull, or } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
-import { AddressTS, CategoryJoin, CategoryTS, Product, ProductRealTS, ProductReviewTS, ProductWithAddress } from '../supabase.types'
+import { AddressTS, Category, CategoryJoin, CategoryTS, Product, ProductRealTS, ProductReviewTS, ProductWithAddress } from '../supabase.types'
 import { Review, TProductServer } from '@/lib/product-validation'
 import { GetUserInfo } from '@/app/actions'
 import { EProductStatus } from '@/types'
@@ -584,8 +584,13 @@ export type ProductAndCategory = {
     addresses: AddressTS,
 }
 
+export type CategoryJoinExtended = CategoryJoin & {
+    is_parent: boolean,
+    fullCategory: Category,
+}
+
 export type ProductAndCategories = {
-    categories: CategoryJoin[],
+    categories: CategoryJoinExtended[],
     product: Product,
     address: AddressTS,
 }
@@ -600,13 +605,17 @@ export const fetchUserProducts = async () => {
             }
         }
         const result = await db
-            .select()
+            .select({
+                products: product,
+                category_join: category_join,
+                category: category,
+            })
             .from(category_join)
             .innerJoin(product, eq(category_join.product_id, product.id))
-            // .innerJoin(address_join_product, eq(address_join_product.product_id, product.id))
-            // .innerJoin(address, eq(address_join_product.address_id, address.id))
+            .innerJoin(category, eq(category_join.category_name_slug, category.name_slug))
             .where(and(eq(product.user_id, user.data.user.id), isNull(product.deleted_at)))
-            .execute() as ProductAndCategory[];
+            .execute();
+
         if (result.length == 0) {
             return {
                 data: undefined,
@@ -616,15 +625,30 @@ export const fetchUserProducts = async () => {
 
         const productMap = new Map<number, ProductAndCategories>()
 
-        result.forEach(({ products, category_join, addresses }) => {
+        result.forEach(({ products, category_join, category: cat }) => {
+            const isParent = cat.sub_categories ? cat.sub_categories.length > 0 : false;
+            const categoryWithParentInfo: CategoryJoinExtended = {
+                ...category_join,
+                is_parent: isParent,
+                fullCategory: cat,
+            };
+
             if (!productMap.has(products.id)) {
                 productMap.set(products.id, {
                     product: products,
-                    categories: [category_join],
-                    address: addresses,
+                    categories: [categoryWithParentInfo],
+                    address: {
+                        full_address: products.address || "",
+                        location: { x: 0, y: 0 },
+                        postal_code: "",
+                        address_number: "",
+                        region: "",
+                        country_code: "",
+                        country_name: ""
+                    },
                 })
             } else {
-                productMap.get(products.id)?.categories.push(category_join)
+                productMap.get(products.id)?.categories.push(categoryWithParentInfo)
             }
         })
 
@@ -656,11 +680,16 @@ export const fetchUserProduct = async (product_id: number) => {
         }
 
         const result = await db
-            .select()
+            .select({
+                products: product,
+                category_join: category_join,
+                category: category,
+            })
             .from(category_join)
             .innerJoin(product, eq(category_join.product_id, product.id))
+            .innerJoin(category, eq(category_join.category_name_slug, category.name_slug))
             .where(and(eq(product.id, product_id), isNull(product.deleted_at)))
-            .execute() as { products: typeof product.$inferSelect, category_join: typeof category_join.$inferSelect }[];
+            .execute();
 
         if (result.length == 0) {
             return {
@@ -678,11 +707,18 @@ export const fetchUserProduct = async (product_id: number) => {
 
         const productMap = new Map<number, ProductAndCategories>()
 
-        result.forEach(({ products, category_join }) => {
+        result.forEach(({ products, category_join, category: cat }) => {
+            const isParent = cat.sub_categories ? cat.sub_categories.length > 0 : false;
+            const categoryWithParentInfo: CategoryJoinExtended = {
+                ...category_join,
+                is_parent: isParent,
+                fullCategory: cat,
+            };
+
             if (!productMap.has(products.id)) {
                 productMap.set(products.id, {
                     product: products,
-                    categories: [category_join],
+                    categories: [categoryWithParentInfo],
                     address: {
                         full_address: products.address || "",
                         location: { x: 0, y: 0 },
@@ -694,7 +730,7 @@ export const fetchUserProduct = async (product_id: number) => {
                     },
                 })
             } else {
-                productMap.get(products.id)?.categories.push(category_join)
+                productMap.get(products.id)?.categories.push(categoryWithParentInfo)
             }
         })
 

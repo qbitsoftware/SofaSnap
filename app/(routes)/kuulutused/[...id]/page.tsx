@@ -46,7 +46,7 @@ const Page = async ({ params }: PageProps): Promise<JSX.Element> => {
         category.map((cat, index) => {
             data.map((category_to_find) => {
                 if (category_to_find.name_slug == cat.category_name_slug) {
-                    if (index == 0) {
+                    if (cat.is_parent) {
                         c = category_to_find.name
                     } else {
                         c_sub = category_to_find.name
@@ -69,7 +69,7 @@ const Page = async ({ params }: PageProps): Promise<JSX.Element> => {
             end_date: prod.end_date ? new Date(prod.end_date) : undefined,
             type: prod.type || "",
             price: prod.price,
-            address: "",
+            address: prod.address,
             status: prod.status ? prod.status as EProductStatus : EProductStatus.NOT_PAID,
             all_img: prod.all_img || [],
             unique_id: prod.unique_id,
