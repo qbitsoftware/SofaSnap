@@ -40,10 +40,6 @@ const Footer = () => {
                 url: "/kontaktid",
             },
             {
-                title: t('footer.menu2.items.cancellationPolicy'),
-                url: "/tuhistamise-poliitika"
-            },
-            {
                 title: t('footer.menu2.items.reportUser'),
                 url: "/probleemne-kasutaja"
             },

@@ -97,9 +97,15 @@ export default function FAQ() {
           </div>
 
           {/* Question 13 */}
-          <div className='pb-[32px]'>
+          <div>
             <p><strong>13. {t('faq.questions.13.question')}</strong></p>
             <p>{t('faq.questions.13.answer')}</p>
+          </div>
+
+          {/* Question 14 */}
+          <div className='pb-[32px]'>
+            <p><strong>14. {t('faq.questions.14.question')}</strong></p>
+            <p>{t('faq.questions.14.answer')}</p>
           </div>
 
           <div className='text-center pb-[52px]'>

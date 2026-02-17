@@ -59,6 +59,10 @@
       "13": {
         "question": "Can I get a refund of the 1 € listing fee?",
         "answer": "The fee is refunded only if a technical error prevents the listing from being posted or it does not appear correctly on the platform. In other cases, the listing fee is not refunded."
+      },
+      "14": {
+        "question": "Is it possible to modify the listing after payment?",
+        "answer": "Yes. You can modify your listing after payment. All changes go through admin verification to ensure the content complies with platform guidelines."
       }
     },
     "conclusion": "This way you can easily rent or sell your furniture and contribute to the circular economy, giving idle items a new life!"

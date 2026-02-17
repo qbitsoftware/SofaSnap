@@ -59,6 +59,10 @@
       "13": {
         "question": "Kas ma saan tagastada 1 € kuulutustasu?",
         "answer": "Tasu tagastatakse vaid juhul, kui tehnilise vea tõttu ei õnnestu kuulutust üles panna või see ei ilmu platvormil korrektselt. Muudel juhtudel kuulutustasu ei tagastata."
+      },
+      "14": {
+        "question": "Kas on võimalik kuulutust pärast tasumist muuta?",
+        "answer": "Jah. Saad kuulutust pärast tasumist muuta. Kõik muudatused suunatakse administraatori kontrollile, et tagada sisu vastavus platvormi reeglitele."
       }
     },
     "conclusion": "Nii saad hõlpsalt oma mööbli välja rentida või müüa ja aidata kaasa ringmajandusele, andes seisma jäänud esemetele uue elu!"

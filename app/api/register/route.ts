@@ -59,7 +59,6 @@ export async function POST(request: Request) {
                     data
                 },
             });
-            console.log("result", result.data)
 
             if (error) {
                 return NextResponse.json({ error: 'Unexpected error occurred' + error, code: error.code }, { status: 500 });
